@@ -1,0 +1,29 @@
+The FreeIPA service is the corner stone of the security in a KAVE environment. 
+There are a lot of dependencies, timing and ordering constraints we've tried to 
+tackle with this service. The advantage of this is that we can create a truly 
+centralized single login, the drawback is that there is no flexibility in which 
+authentication provider you use. 
+
+Challenges which have been tackled in this service include: Order in which 
+server and client components are installed, distribution of administrator
+password for adding new machines to the cluster. 
+
+
+Risks: 
+We're dealing with security here so we'll try to be really clear about the 
+situations we considered and how we deal with them.
+
+    Database of ambari-server could be compromised. (Risk: low, impact: High)
+    Mitigated by not storing the administrator password in the database. The 
+    directory password however remains in there. The directory password is need 
+    by other services to bind the logins. This user does however have less
+    privileges than the administrator user. 
+
+    Communication of configuration between ambari-server and agent could be 
+    compromised. (Risk: mid, Impact: High)
+    Mitigated by introducing a limited lifetime robot-admin user accounts which 
+    password is distributed once and which password is destroyed after first use.
+
+    
+
+

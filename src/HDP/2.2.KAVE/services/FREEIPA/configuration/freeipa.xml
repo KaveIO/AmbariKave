@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>client_init_wait</name>
+        <value>600</value>
+        <description>
+            The time in seconds the client installation process will wait for a
+            admin password file. 
+        </description>
+    </property>
+    <property require-input = "true">
+        <name>directory_password</name>
+        <value></value>
+        <property-type>PASSWORD</property-type>
+        <description>
+            The directory_password will the ldap admin password. Must be at least 8 
+            characters long. This parameter will be used during the initial 
+            installation. After the installation reconfiguration of this password 
+            will not have any effect. 
+        </description>
+    </property>
+    <property>
+        <name>install_with_dns</name>
+        <value>True</value>
+        <description>
+            This will install the FreeIPA server with a DNS. This will also 
+            overwrite some dns related network settings. 
+            PLEASE NOTE! The network settings are NOT permanently overwriten. 
+            this is the machine owners responsibility. 
+            PLEASE NOTE! The install without dns is not tested.
+        </description>
+    </property>
+    <property>
+        <name>ldap_bind_user</name>
+        <value>kave_bind_user</value>
+        <description>
+            The name of the user created for binding services through LDAP. This
+            setting is not automatically picked up by the services which would 
+            want to bind. This only used to generate this specific user. Be sure
+            to set ipa_integration_enabled to True on the service you want to 
+            integrate and the ipa_bind_user to the same value as provided here. 
+        </description>
+    </property>
+    <property>
+        <name>ldap_bind_password</name>
+        <value></value>
+        <description>
+            The password of the user created for binding services through LDAP. This
+            setting is not automatically picked up by the services which would 
+            want to bind. This only used to generate this specific user. Be sure
+            to set ipa_integration_enabled to True on the service you want to 
+            integrate and the ipa_bind_password to the same value as provided here.
+            
+            If this setting is not set the give user is not generated during 
+            installation. If you at a later stage still want this option you'll
+            have to go through the ipa interface to generate itself. This setting
+            will not be interpreted twice. 
+        </description>
+    </property>
+    <property>
+        <name>app_timeline_server</name>
+        <value></value>
+        <description>
+            The FreeIPA installation is not able to find all service_components 
+            by itself. If your cluster contains an App Timeline Server please 
+            provide the exact hostname here. This allows for the correct keytabs
+            to be automatically installed on this machine. 
+            
+            Note: multiple entries can be provide in a comma separated list
+        </description>
+    </property>
+    <property>
+        <name>nagios_server</name>
+        <value></value>
+        <description>
+            The FreeIPA installation is not able to find all service_components 
+            by itself. If your cluster contains an Nagios Server please 
+            provide the exact hostname here. This allows for the correct keytabs
+            to be automatically installed on this machine.
+            
+            Note: multiple entries can be provide in a comma separated list
+            
+            In common cases this is identical to the Ambari Server host. By 
+            default this value is assumed. 
+        </description>
+    </property>
+    <property>
+        <name>falcon_server</name>
+        <value></value>
+        <description>
+            The FreeIPA installation is not able to find all service_components 
+            by itself. If your cluster contains an Falcon Server please 
+            provide the exact hostname here. This allows for the correct keytabs
+            to be automatically installed on this machine.
+            
+            Note: multiple entries can be provide in a comma separated list
+        </description>
+    </property>
+    <property>
+        <name>knox_server</name>
+        <value></value>
+        <description>
+            The FreeIPA installation is not able to find all service_components 
+            by itself. If your cluster contains an Knox Server please 
+            provide the exact hostname here. This allows for the correct keytabs
+            to be automatically installed on this machine.
+            
+            Note: multiple entries can be provide in a comma separated list
+        </description>
+    </property>
+    <property>
+        <name>storm_ui_server</name>
+        <value></value>
+        <description>
+            The FreeIPA installation is not able to find all service_components 
+            by itself. If your cluster contains an Storm UI Server please 
+            provide the exact hostname here. This allows for the correct keytabs
+            to be automatically installed on this machine.
+            
+            Note: multiple entries can be provide in a comma separated list
+        </description>
+    </property>
+    <property>
+        <name>storm_drpc_server</name>
+        <value></value>
+        <description>
+            The FreeIPA installation is not able to find all service_components 
+            by itself. If your cluster contains an Storm DRPC Server please 
+            provide the exact hostname here. This allows for the correct keytabs
+            to be automatically installed on this machine.
+            
+            Note: multiple entries can be provide in a comma separated list
+        </description>
+    </property>
+</configuration>

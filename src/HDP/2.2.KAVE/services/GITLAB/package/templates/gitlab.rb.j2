@@ -1,0 +1,34 @@
+# Change the external_url to the address your users will type in their browser
+external_url 'http://{{gitlab_url}}:{{gitlab_port}}'
+
+{% if ldap_enabled %}
+gitlab_rails['ldap_enabled'] = true
+gitlab_rails['ldap_host'] = '{{ldap_host}}'
+gitlab_rails['ldap_port'] = {{ldap_port}}
+gitlab_rails['ldap_uid'] = '{{ldap_uid}}'
+gitlab_rails['ldap_method'] = '{{ldap_method}}'
+gitlab_rails['ldap_allow_username_or_email_login'] = {{ldap_allow_username_or_email_login}}
+gitlab_rails['ldap_base'] = '{{ldap_base}}'
+{% endif %}
+
+{% if not gitlab_signin_enabled %}
+gitlab_rails['gitlab_signin_enabled'] = false
+{% endif %}
+
+{% if restrict_public_projects %}
+gitlab_rails['gitlab_restricted_visibility_levels'] = [ "public" ]
+{% endif %}
+
+{% if postgre_disabled %}
+# Disable the built-in Postgres? This doesn't work for the moment, leave here as a placeholder for the full solution
+postgresql['enable'] = false
+
+gitlab_rails['db_adapter'] = 'postgresql'
+gitlab_rails['db_encoding'] = 'unicode'
+# Create database manually and place its name here.
+gitlab_rails['db_database'] = 'gitlabhq_production'
+gitlab_rails['db_host'] = '127.0.0.1'
+gitlab_rails['db_port'] = '5432'
+gitlab_rails['db_username'] = 'git' # Database owner.
+gitlab_rails['db_password'] = '{{gitlab_admin_password}}' # Database owner's password.
+{% endif %}

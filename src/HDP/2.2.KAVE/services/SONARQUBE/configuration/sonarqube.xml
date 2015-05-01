@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>sonar_host</name>
+        <value>localhost</value>
+        <description>
+            Machine on which the SonarQube server is hosted.
+        </description>
+    </property>
+    <property>
+        <name>sonar_web_port</name>
+        <value>5051</value>
+        <description>
+            Port on which Sonar web UI will be hosted
+        </description>
+    </property>
+    <property>
+        <name>install_directory</name>
+        <value>/opt/sonar</value>
+        <description>
+            Install Location for Sonar
+        </description>
+    </property>
+    <property>
+        <name>sonarqube_plugins</name>
+        <value></value>
+        <description>
+            Comma seperated list of sonarqube plugins to be installed. Currently 
+            the follwing plugins are supported: sonar-python-plugin-1.5.jar
+        </description>
+    </property>
+    <property>
+        <name>sonar_database_url</name>
+        <value>localhost</value>
+        <description>
+            Url of the sonarqube database.
+        </description>
+    </property>
+    <property>
+        <name>sonar_database_user_name</name>
+        <value>sonarqube</value>
+        <description>
+            Name of the database user.
+        </description>
+    </property>
+    <property required-input="true">
+        <name>sonar_database_user_passwd</name>
+        <property-type>PASSWORD</property-type>
+        <value></value>
+        <description>          
+            Password of the database user. 
+        </description>
+    </property>
+</configuration>

@@ -1,0 +1,39 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "Domain" : {"Name": "kave.io"},
+  "InstanceGroups" : [
+  {
+    "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  {
+    "Name" : "gate",
+    "Count" : 1,
+    "InstanceType" : "c3.xlarge",
+    "AccessType" : "gateway",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  {
+    "Name" : "dev",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "node"
+  },
+  {
+    "Name" : "nno",
+    "Count" : 2,
+    "InstanceType" : "c3.large",
+    "AccessType" : "node",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  {
+    "Name" : "dn",
+    "Count" : 3,
+    "InstanceType" : "t2.small",
+    "AccessType" : "node",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  }
+  ]
+}

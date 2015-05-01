@@ -1,0 +1,23 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  {
+    "Name" : "test",
+    "Count" : 2,
+    "InstanceType" : "t2.small",
+    "AccessType" : "node",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
+                     {"Mount": "/something",   "Size" : 1, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc" },
+                     {"Mount": "/home",   "Size" : 1, "Attach" : "/dev/sdd", "Fdisk" : "/dev/xvdd"}
+                   ]
+  },
+  {
+    "Name" : "testing",
+    "Count" : 1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "node",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
+    				 {"Mount": "/hadoop",   "Size" : 1, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  } ]
+  }
+  ]
+}

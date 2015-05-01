@@ -1,0 +1,50 @@
+{
+  "configurations" : [
+    {
+      "ganglia-env" : {
+        "additional_clusters" : " ",
+        "ganglia_runtime_dir" : "/var/run/ganglia/hdp",
+        "gmetad_user" : "nobody",
+        "gmond_user" : "nobody",
+        "rrdcached_base_dir" : "/var/lib/ganglia/rrds",
+        "rrdcached_delay" : "1800",
+        "rrdcached_flush_timeout" : "7200",
+        "rrdcached_timeout" : "3600",
+        "rrdcached_write_threads" : "4"
+      }
+    },
+    {
+      "nagios-env" : {
+        "nagios_group" : "nagios",
+        "nagios_user" : "nagios",
+        "nagios_web_login" : "admin",
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "GANGLIA_SERVER"      },
+        { "name" : "NAGIOS_SERVER"       },
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "ZOOKEEPER_SERVER"    },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "NIMBUS_SD_MASTER"    },
+        { "name" : "SUPERVISOR_SD_SLAVE" },
+        { "name" : "STORMSD_UI_SERVER"   }
+      ],
+      "cardinality" : "1"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "default",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

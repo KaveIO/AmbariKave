@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>TWIKI</name>
+            <comment>An open source enterprise wiki</comment>
+            <displayName>TWiki</displayName>
+            <version>6.0.0</version>
+            <components>
+                <component>
+                    <name>TWIKI_SERVER</name>
+                    <displayName>TWiki Server</displayName>
+                    <category>MASTER</category>
+                    <commandScript>
+                        <script>scripts/Twiki.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                    	<package><name>wget</name></package>
+                        <package><name>httpd</name></package>
+                        <package><name>mod_authz_ldap</name></package>
+                    	<package><name>perl</name></package>
+                    	<package><name>rcs</name></package>
+                    	<package><name>zip</name></package>
+                    	<package><name>make</name></package>
+                    	<package><name>gcc</name></package>
+                    	<package><name>gd</name></package>
+                    	<package><name>gd-devel</name></package>
+                    	<package><name>perl-CPAN</name></package>
+                    	<package><name>perl-CGI</name></package>
+                    	<package><name>perl-YAML</name></package>
+                    	<package><name>perl-IPC-Cmd</name></package>
+                    	<package><name>perl-Module-CoreList</name></package>
+                    	<package><name>perl-ExtUtils-CBuilder</name></package>
+                    	<package><name>perl-Module-Build</name></package>
+                    	<package><name>perl-Time-HiRes</name></package>
+                    	<package><name>perl-CGI</name></package>
+                    	<package><name>perl-HTML-Parser</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

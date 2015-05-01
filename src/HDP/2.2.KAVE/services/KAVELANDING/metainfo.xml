@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>KAVELANDING</name>
+            <comment>The Kave Landing page, your simple user interface into your KAVE, should be installed on every gateway node.</comment>
+            <displayName>KaveLanding</displayName>
+            <version>2.0</version>
+            <components>
+                    <component>
+                    <name>KAVELANDING</name>
+                    <displayName>KaveLanding</displayName>
+                    <category>MASTER</category>
+                    <cardinality>1+</cardinality>
+                    <commandScript>
+                        <script>scripts/KaveLanding.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>wget</name></package>
+                        <package><name>httpd</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>archiva_jetty_port</name>
+        <value>5050</value>
+        <description>
+            Port on which archiva web UI will be hosted
+        </description>
+    </property>
+    <property>
+        <name>install_directory</name>
+        <value>/opt/archiva</value>
+        <description>
+            Install Location for Archiva
+        </description>
+    </property>
+</configuration>

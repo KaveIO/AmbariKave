@@ -1,0 +1,39 @@
+{
+    "blueprint" : "bbdemo",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "TEST@TEST.COM"
+      } }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [ ],
+	    "hosts" : [ { "fqdn" : "ambari.node.kave.kpmg.deltaforce.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "gateway.node.kave.kpmg.deltaforce.io" }
+	    ]
+	},
+	{
+	    "name" : "gitlabs",
+	    "configurations" : [ ],
+	    "hosts" : [ { "fqdn" : "namenode-001.node.kave.kpmg.deltaforce.io" }
+	    ]
+	},
+	{
+	    "name" : "jenkins",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "namenode-002.node.kave.kpmg.deltaforce.io" } ]
+	},
+	{
+	    "name" : "mongodb",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "datanode-001.node.kave.kpmg.deltaforce.io" } ]
+	}
+    ]
+}

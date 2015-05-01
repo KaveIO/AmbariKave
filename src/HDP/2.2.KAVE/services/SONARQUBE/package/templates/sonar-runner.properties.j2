@@ -1,0 +1,9 @@
+#----- Default SonarQube server
+sonar.host.url=http://{{sonar_host}}:{{sonar_web_port}}
+
+# Mysql configuration
+sonar.jdbc.url=jdbc:mysql://{{sonar_database_url}}:3306/sonar?useUnicode=true&amp;characterEncoding=utf8 
+
+#----- Global database settings
+sonar.jdbc.username={{sonar_database_user_name}}
+sonar.jdbc.password={{sonar_database_user_passwd}}

@@ -1,0 +1,8 @@
+dn: uid={{ldap_bind_user}},cn=sysaccounts,cn=etc,{{realm_ldap}}
+changetype: add
+objectclass: account
+objectclass: simplesecurityobject
+uid: {{ldap_bind_user}}
+userPassword: {{ldap_bind_password}}
+passwordExpirationTime: {{expiry_date}}
+nsIdleTimeout: 0

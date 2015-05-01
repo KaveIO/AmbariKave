@@ -1,0 +1,14 @@
+{
+    "blueprint" : "single",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "TEST@TEST.COM"} }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "single_node_group",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	}
+    ]
+}

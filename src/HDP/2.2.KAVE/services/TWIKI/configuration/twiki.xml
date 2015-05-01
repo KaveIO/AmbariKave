@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>PORT</name>
+        <value>80</value>
+        <description>HTTP PORT</description>
+    </property>
+    <property>
+        <name>www_folder</name>
+        <value>/var/www/html/</value>
+        <description>Where to put the web files?</description>
+    </property>
+    <property>
+        <name>servername</name>
+        <value>default</value>
+        <description>Default will use hostname</description>
+    </property>
+    <property>
+        <name>admin_user</name>
+        <value>twiki-admin</value>
+        <description>
+            Username of the twiki admin user.
+        </description>
+    </property>
+    <property>
+        <name>ldap_integration_enabled</name>
+        <value></value>
+        <description>Set to True if ldap_integration should be enabled</description>
+    </property>
+    <property>
+        <name>ldap_server</name>
+        <value></value>
+        <description>
+            Not required.
+            
+            URL to the ldap server. If kept empty it will be assumed the ldap 
+            is hosted on the ambari server.
+        </description>
+    </property>
+    <property>
+        <name>ldap_bind_user</name>
+        <value>kave_bind_user</value>
+        <description>
+            Username of the binding user.
+        </description>
+    </property>
+    <property>
+        <name>ldap_bind_password</name>
+        <value></value>
+        <description>
+            Password of the binding user
+        </description>
+    </property>
+    <property>
+        <name>ldap_base</name>
+        <value></value>
+        <description>
+            Not required.
+            
+            Base ldap path if kept empty it will be constructed from the 
+            ipa_server url.
+        </description>
+    </property>
+    <property>
+        <name>ldap_port</name>
+        <value>389</value>
+        <description></description>
+    </property>
+</configuration>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>hostname</name>
+        <value></value>
+        <description>Host name</description>
+    </property>
+    <property>
+        <name>domain</name>
+        <value></value>
+        <description>Domain</description>
+    </property>
+    <property>
+        <name>inet_interfaces</name>
+        <value>all</value>
+        <description>Inet interface</description>
+    </property>
+    <property>
+        <name>inet_protocols</name>
+        <value>ipv4</value>
+        <description>Inet Protocol to use</description>
+    </property>
+    <property>
+        <name>message_size</name>
+        <value>10485760</value>
+        <description>Message size limit</description>
+    </property>
+    <property>
+        <name>mailbox_size</name>
+        <value>1073741824</value>
+        <description>MailBox Limit</description>
+    </property>
+    <property>
+        <name>auth_mechanisms</name>
+        <value>login</value>
+        <description>Authentication mechanism</description>
+    </property>
+    <property>
+        <name>disable_planetext_auth</name>
+        <value>no</value>
+        <description>Disabling plaintext authentication</description>
+    </property>
+</configuration>

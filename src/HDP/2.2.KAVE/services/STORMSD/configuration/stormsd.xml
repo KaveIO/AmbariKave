@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+	<property   require-input = "true">
+		<name>storm.zookeeper.servers</name>
+		<value></value>
+		<description>ZookeeperServer, this MUST be the complete list of zookeeper servers, their fqdn, for a single node setup that will be localhost</description>
+	</property>
+	<property>
+		<name>storm.zookeeper.port</name>
+		<value>2181</value>
+		<description>The port Storm will use to connect to each of the
+			ZooKeeper servers.</description>
+	</property>
+	<property  require-input = "true">
+		<name>nimbus.host</name>
+		<value></value>
+		<description>This configuration parameter, MUST match the fqdn of the server where you want nimbus to be installed. If it's a single-node-setup, you could put localhost here</description>
+	</property>
+	<property>
+    	<name>nimbus.childopts</name>
+    	<value>-Xmx1024m -Djava.net.preferIPv4Stack=true</value>
+    	<description>This parameter is used by the storm-deploy project to configure the jvm options for the nimbus daemon.</description>
+    </property>
+	<property>
+		<name>ui.port</name>
+		<value>8744</value>
+		<description>Storm UI binds to this port.</description>
+	</property>
+	<property>
+		<name>ui.childopts</name>
+		<value>-Xmx768m -Djava.net.preferIPv4Stack=true</value>
+		<description>Childopts for Storm UI Java process.</description>
+	</property>
+	<property>
+		<name>supervisor.slots.ports</name>
+		<value>[6700, 6701]</value>
+		<description>A list of ports that can run workers on this supervisor.
+			Each worker uses one port, and
+			the supervisor will only run one worker per port. Use this configuration
+			to tune
+			how many workers run on each machine.
+		</description>
+	</property>
+	<property>
+		<name>supervisor.childopts</name>
+		<value>-Djava.net.preferIPv4Stack=true</value>
+		<description>This parameter is used by the storm-deploy project to
+			configure the jvm options for the supervisor daemon.</description>
+	</property>
+	<property>
+		<name>worker.childopts</name>
+		<value>-Xmx768m -Djava.net.preferIPv4Stack=true</value>
+		<description>The jvm opts provided to workers launched by this
+			supervisor. All \"%ID%\" substrings are replaced with an identifier
+			for this worker.</description>
+	</property>
+</configuration>

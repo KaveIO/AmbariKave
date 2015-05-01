@@ -1,0 +1,85 @@
+# We set an environment variable called blockAccess.
+    #
+    # Setting a BrowserMatchNoCase to ^$ is important. It prevents TWiki from
+    # including its own topics as URLs and also prevents other TWikis from
+    # doing the same. This is important to prevent the most obvious
+    # Denial of Service attacks.
+    #
+    # You can expand this by adding more BrowserMatchNoCase statements to
+    # block evil browser agents trying the impossible task of mirroring a twiki
+    #
+    # Example:
+    # BrowserMatchNoCase ^SiteSucker blockAccess
+    # BrowserMatchNoCase ^$ blockAccess
+
+
+    <VirtualHost *:80>
+        ServerAdmin hoekstra.maarten@kpmg.nl
+        ServerName twiki.dna.kpmglab.com
+        DocumentRoot {{install_dir}}pub/
+
+        BrowserMatchNoCase ^$ blockAccess
+
+        <IfModule mod_perl.c>
+            # Mod_perl preloading
+            PerlSwitches -T
+        </IfModule>
+
+        # The ScriptAlias defines the bin directory as a directory where CGI
+        # scripts are allowed.
+        # The first parameter will be part of the URL to your installation e.g.
+        # http://example.com/do/view/...
+        # The second parameter must point to the physical path on your disc.
+        ScriptAlias /do "{{install_dir}}bin"
+
+        # The Alias defines a url that points to the twiki pub directory, which
+        # is the root of file attachments.
+        # Secure file attachments by using ScriptAlias with viewfile script.
+        Alias       /pub/TWiki   "{{install_dir}}pub/TWiki"
+        ScriptAlias /pub         "{{install_dir}}bin/viewfile"
+
+        # This specifies the options on the TWiki scripts directory. The ExecCGI
+        # and SetHandler tell apache that it contains scripts. "Allow from all"
+        # lets any IP address access this URL.
+        <Directory "{{install_dir}}bin">
+            AllowOverride None
+            Order Allow,Deny
+            Allow from all
+            Deny from env=blockAccess
+
+            Options ExecCGI FollowSymLinks
+            SetHandler cgi-script
+
+
+            AuthBasicProvider ldap
+            AuthType Basic
+            AuthName "Kave Twiki | login with ldap credentials"
+            AuthLDAPURL ldap://ambari:389/ou=people,dc=kave,dc=org?uid
+            require valid-user
+
+            # File to return on access control error (e.g. wrong password)
+            ErrorDocument 401 /do/view/TWiki/TWikiRegistration
+
+        </Directory>
+
+        # This sets the options on the pub directory, which contains attachments and
+        # other files like CSS stylesheets and icons. AllowOverride None stops a
+        # user installing a .htaccess file that overrides these options.
+        # Note that files in pub are *not* protected by TWiki Access Controls,
+        # so if you want to control access to files attached to topics you need to
+        # block access to the specific directories same way as the ApacheConfigGenerator
+        # blocks access to the pub directory of the Trash web
+        <Directory "{{install_dir}}pub">
+            Options None
+            AllowOverride None
+            Order Allow,Deny
+            Allow from all
+            Deny from env=blockAccess
+
+            # Disable execusion of PHP scripts
+            php_admin_flag engine off
+
+            # This line will redefine the mime type for the most common types of scripts
+            AddType text/plain .shtml .php .php3 .phtml .phtm .pl .py .cgi
+        </Directory>
+</VirtualHost>

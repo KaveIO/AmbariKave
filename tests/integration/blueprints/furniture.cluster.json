@@ -1,0 +1,37 @@
+{
+    "blueprint" : "furniture",
+    "default_password" : "admin",
+    "configurations" : [ { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "test@test.com"} } ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "dev",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "dev.kave.io" } ]
+	},
+	{
+	    "name" : "dn",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "dn-001.kave.io" }, { "fqdn" : "dn-002.kave.io" }, { "fqdn" : "dn-003.kave.io" } ]
+	},
+	{
+	    "name" : "namenode-1",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "nno-001.kave.io" } ]
+	},
+	{
+	    "name" : "namenode-2",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "nno-002.kave.io" } ]
+	}
+    ]
+}

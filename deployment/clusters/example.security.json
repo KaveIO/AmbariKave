@@ -1,0 +1,9 @@
+{
+
+ "SecurityGroup" : "sg-e7c77f82",
+ "Subnet" : "subnet-9b5588fe",
+ "AccessKeys" : { "AWS" : { "KeyFile" : "~/.ssh/amazon_keys.pem", "KeyName" : "amazonkeypairname" },
+ 				  "SSH" : { "KeyFile" : "~/.ssh/amazon_keys.pem" },
+	  			  "GIT" : { "KeyFile" : "~/.ssh/git_keys.pem", "Origin" : "git@github.com:someorganization/ambarikaverepo.git" }
+	  			}
+}

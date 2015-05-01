@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>GITLAB</name>
+            <displayName>GitLab</displayName>
+            <comment>collaborate on your code with your team through git</comment>
+            <version>7.3.2</version>
+            <components>
+                    <component>
+                    <name>GITLAB_SERVER</name>
+                    <displayName>Gitlab Server</displayName>
+                    <category>MASTER</category>
+                    <commandScript>
+                        <script>scripts/gitlab.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>wget</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

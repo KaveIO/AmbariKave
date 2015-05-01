@@ -1,0 +1,5 @@
+SONARQUBE_PATH='{{sonarqube_runner_install_directory}}/current/bin'
+
+if [[ $PATH != *"$SONARQUBE_PATH"* ]]; then
+    export PATH=$SONARQUBE_PATH:$PATH
+fi

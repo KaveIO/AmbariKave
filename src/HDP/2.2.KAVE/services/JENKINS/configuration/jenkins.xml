@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+    <name>JENKINS_ADMIN</name>
+    <value>admin</value>
+    <description>Which username to use as admin in the jenkins interface?</description>
+  </property>
+  <property>
+    <name>JENKINS_HOME</name>
+    <value>/var/lib/jenkins</value>
+    <description>Where to run jenkins from?</description>
+  </property>
+  <property>
+    <name>JENKINS_USER</name>
+    <value>jenkins</value>
+    <description>Which username to use?</description>
+  </property>
+  <property>
+    <name>JENKINS_PORT</name>
+    <value>8080</value>
+    <description>Which port to use for the web interface</description>
+  </property>
+  <property>
+    <name>plugins</name>
+    <value>ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, gitlab-plugin, git-parameter, git-tag-message, matrix-project, scm-api, ssh-agent, sonar, sonargraph-plugin</value>
+    <description>list of plugins to install</description>
+  </property>
+</configuration>

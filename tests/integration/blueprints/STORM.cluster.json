@@ -1,0 +1,25 @@
+{
+    "blueprint" : "storm",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "nothing@nobody.com"} },
+      { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "nimbus",
+	    "configurations" : [  { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  } ],
+	    "hosts" : [ { "fqdn" : "nimbus.kave.io" } ]
+	},
+	{
+	    "name" : "supervisor",
+	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }  ],
+	    "hosts" : [ { "fqdn" : "supervisor-001.kave.io" } ]
+	}
+	]
+}

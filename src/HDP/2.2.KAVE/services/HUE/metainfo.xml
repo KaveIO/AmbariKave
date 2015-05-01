@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>HUE</name>
+            <comment>Hue, simple interface to many hadoop tools</comment>
+            <displayName>Hue</displayName>
+            <components>
+                    <component>
+                    <name>HUE_SERVER</name>
+                    <displayName>Hue Web Server</displayName>
+                    <category>MASTER</category>
+                    <commandScript>
+                        <script>scripts/hue.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>hue</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

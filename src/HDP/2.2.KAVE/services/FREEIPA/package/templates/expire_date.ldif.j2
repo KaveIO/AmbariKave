@@ -1,0 +1,4 @@
+dn: uid={{login}},cn=users,cn=accounts,{{realm_ldap}}
+changetype: modify
+replace: krbpasswordexpiration
+krbpasswordexpiration: {{expiry_date}}

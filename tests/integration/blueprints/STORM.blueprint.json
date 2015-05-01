@@ -1,0 +1,75 @@
+{
+  "configurations" : [
+    {
+      "ganglia-env" : {
+        "additional_clusters" : " ",
+        "ganglia_runtime_dir" : "/var/run/ganglia/hdp",
+        "gmetad_user" : "nobody",
+        "gmond_user" : "nobody",
+        "rrdcached_base_dir" : "/var/lib/ganglia/rrds",
+        "rrdcached_delay" : "1800",
+        "rrdcached_flush_timeout" : "7200",
+        "rrdcached_timeout" : "3600",
+        "rrdcached_write_threads" : "4"
+      }
+    },
+    {
+      "nagios-env" : {
+        "nagios_group" : "nagios",
+        "nagios_user" : "nagios",
+        "nagios_web_login" : "admin",
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin",
+        "AMBARI_SERVER" : "ambari"
+    	}
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  } ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "GANGLIA_SERVER"      },
+        { "name" : "NAGIOS_SERVER"       },
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "KAVELANDING"         },
+        { "name" : "STORMSD_UI_SERVER"   }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "nimbus",
+      "configurations" : [ { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  }],
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "ZOOKEEPER_SERVER" },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "NIMBUS_SD_MASTER"    }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "supervisor",
+      "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  } ],
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "SUPERVISOR_SD_SLAVE" }
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "storm",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

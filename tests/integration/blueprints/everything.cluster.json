@@ -1,0 +1,73 @@
+{
+    "blueprint" : "everything",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "TEST@TEST.COM"
+      } },
+      { "freeipa": {
+        "admin_password": "bla12345",
+        "directory_password": "bla12345"
+      } },
+      { "gitlab"     : {
+        "ldap_host" : "ambari.kave.io",
+        "ldap_password" : "bla123",
+        "gitlab_admin_password" : "admin",
+        "gitlab_url" : "gitlab-nl.test.com"
+      } },
+      { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin", "AMBARI_SERVER" : "ambari" } } ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "devel",
+	    "configurations" : [  { "gitlab" : { "freeipa_host" : "ambari.kave.io", "gitlab_url" : "gitlab-nl.test.com"} } ],
+	    "hosts" : [ { "fqdn" : "devel.kave.io" } ]
+	},
+	{
+	    "name" : "mongodb",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "mongo.kave.io" } ]
+	},
+	{
+	    "name" : "jboss",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "jboss-001.kave.io" } ]
+	},
+	{
+	    "name" : "web",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "web-001.kave.io" } ]
+	},
+	{
+	    "name" : "task",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "task-001.kave.io" }, { "fqdn" : "task-002.kave.io" }, { "fqdn" : "task-003.kave.io" } ]
+	},
+	{
+	    "name" : "namenode-1",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "nno-001.kave.io" } ]
+	},
+	{
+	    "name" : "nimbus",
+	    "configurations" : [  { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  }  ],
+	    "hosts" : [ { "fqdn" : "nimbus.kave.io" } ]
+	},
+	{
+	    "name" : "supervisor",
+	    "configurations" : [  { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }  ],
+	    "hosts" : [ { "fqdn" : "job-001.kave.io" }, { "fqdn" : "job-002.kave.io" }, { "fqdn" : "job-003.kave.io" } ]
+	}
+    ]
+}

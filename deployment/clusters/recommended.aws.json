@@ -1,0 +1,40 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "c3.large",
+    "AccessType" : "admin"
+  },
+  {
+    "Name" : "task",
+    "Count" : 6,
+    "InstanceType" : "c3.xlarge",
+    "AccessType" : "node"
+  },
+  {
+    "Name" : "nno",
+    "Count" : 2,
+    "InstanceType" : "c3.large",
+    "AccessType" : "node"
+  },
+  {
+    "Name" : "gitlabs",
+    "Count" : 1,
+    "InstanceType" : "c3.large",
+    "AccessType" : "node"
+  },
+  {
+    "Name" : "web",
+    "Count" : 1,
+    "InstanceType" : "c3.large",
+    "AccessType" : "node"
+  },
+  {
+    "Name" : "gate",
+    "Count" : -1,
+    "InstanceType" : "c3.xlarge",
+    "AccessType" : "gateway"
+  }
+  ]
+}

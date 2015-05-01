@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>MAIL</name>
+            <comment>Mail server (SMTP)</comment>
+            <displayName>e-Mail</displayName>
+            <version>2.0</version>
+            <components>
+                <component>
+                    <name>POSTFIX_SERVER</name>
+                    <displayName>Postfix Server</displayName>
+                    <category>MASTER</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/postfix_server.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                    <dependencies>
+                        <dependency>
+                            <name>MAIL/DOVECOT_SERVER</name>
+                            <scope>host</scope>
+                            <auto-deploy>
+                              <enabled>true</enabled>
+                            </auto-deploy>
+                        </dependency>
+                    </dependencies>
+                </component>
+                <component>
+                    <name>DOVECOT_SERVER</name>
+                    <displayName>Dovecot Server</displayName>
+                    <category>MASTER</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/Dovecot.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+            </components>
+            <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>postfix</name></package>
+                        <package><name>dovecot</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

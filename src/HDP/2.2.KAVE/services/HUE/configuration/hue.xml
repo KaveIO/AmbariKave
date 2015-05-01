@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>web_ui_port</name>
+        <value>8000</value>
+        <description>HTTP PORT</description>
+    </property>
+    <property>
+        <name>web_ui_host</name>
+        <value>0.0.0.0</value>
+        <description>HTTP Listen on which interface</description>
+    </property>
+    <property>
+        <name>yarn_api_port</name>
+        <value>8088</value>
+        <description>Where is yarn?</description>
+    </property>
+    <property>
+        <name>history_port</name>
+        <value>19888</value>
+        <description>Where is the history server?</description>
+    </property>
+    <property>
+        <name>nodemanager_port</name>
+        <value>8042</value>
+        <description>Where is the node manager server? </description>
+    </property>
+</configuration>

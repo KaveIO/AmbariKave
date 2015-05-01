@@ -1,0 +1,1 @@
+This directory is for files and scripts needed by the developers to speed up testing and development

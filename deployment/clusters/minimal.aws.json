@@ -1,0 +1,18 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "Domain" : {"Name": "kave.io"},
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  {
+    "Name" : "gate",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "gateway",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  }
+  ]
+}

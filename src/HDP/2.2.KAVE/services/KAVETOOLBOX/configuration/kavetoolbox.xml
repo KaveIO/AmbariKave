@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+    <name>releaseversion</name>
+    <value>1.1-Beta</value>
+    <description>Which version to use.</description>
+  </property>
+  <property>
+    <name>top_dir</name>
+    <value>/opt/</value>
+    <description>Directory, where to install the software.</description>
+  </property>
+  <property>
+    <name>alternative_download</name>
+    <value>none</value>
+    <description>List of alternative websites or local cache locations to download the kavetoolbox distribution</description>
+  </property>
+</configuration>

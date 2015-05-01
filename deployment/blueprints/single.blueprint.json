@@ -1,0 +1,88 @@
+{
+  "configurations" : [
+    {
+      "ganglia-env" : {
+        "additional_clusters" : " ",
+        "ganglia_runtime_dir" : "/var/run/ganglia/hdp",
+        "gmetad_user" : "nobody",
+        "gmond_user" : "nobody",
+        "rrdcached_base_dir" : "/var/lib/ganglia/rrds",
+        "rrdcached_delay" : "1800",
+        "rrdcached_flush_timeout" : "7200",
+        "rrdcached_timeout" : "3600",
+        "rrdcached_write_threads" : "4"
+      }
+    },
+    {
+      "nagios-env" : {
+        "nagios_group" : "nagios",
+        "nagios_user" : "nagios",
+        "nagios_web_login" : "admin",
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin",
+        "AMBARI_SERVER" : "ambari"
+    	}
+    },
+    { "core-site" : { "hadoop.proxyuser.hue.hosts"  : "*",
+    				  "hadoop.proxyuser.hue.groups" : "*",
+    				  "hadoop.proxyuser.hcat.groups": "*",
+    				  "hadoop.proxyuser.hcat.hosts" : "*"
+    				 } },
+    { "webhcat-site" : { "webhcat.proxyuser.hue.hosts"  : "*",
+    				     "webhcat.proxyuser.hue.groups" : "*"
+    				   } },
+    { "oozie-site" : { "oozie.service.ProxyUserService.proxyuser.hue.hosts"  : "*",
+    				   "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
+    				   } },
+    { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
+    { "hive-site" : { "hive.heapsize" : "1024", "javax.jdo.option.ConnectionPassword" : "admin" } }
+  ],
+  "host_groups":[
+    {
+      "name":"single_node_group",
+      "components" : [
+        { "name" : "AMBARI_SERVER"        },
+        { "name" : "NAGIOS_SERVER"        },
+        { "name" : "GANGLIA_SERVER"       },
+        { "name" : "KAVETOOLBOXGATE"      },
+        { "name" : "KAVELANDING"          },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "NAMENODE"             },
+        { "name" : "SECONDARY_NAMENODE"   },
+        { "name" : "ZOOKEEPER_SERVER"     },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "DATANODE"             },
+        { "name" : "HDFS_CLIENT"          },
+        { "name" : "YARN_CLIENT"          },
+        { "name" : "HISTORYSERVER"        },
+        { "name" : "RESOURCEMANAGER"      },
+        { "name" : "NODEMANAGER"          },
+        { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "APP_TIMELINE_SERVER"  },
+        { "name" : "PIG"                  },
+        { "name" : "HCAT"                 },
+        { "name" : "SQOOP"                },
+        { "name" : "OOZIE_SERVER"         },
+        { "name" : "OOZIE_CLIENT"         },
+        { "name" : "HIVE_SERVER"          },
+        { "name" : "HIVE_METASTORE"       },
+        { "name" : "HIVE_CLIENT"          },
+        { "name" : "WEBHCAT_SERVER"       },
+        { "name" : "TEZ_CLIENT"           },
+        { "name" : "HUE_SERVER"           },
+        { "name" : "MYSQL_SERVER"         }
+      ],
+      "cardinality" : "1"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "single",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

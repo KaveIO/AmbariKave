@@ -1,0 +1,31 @@
+{
+    "blueprint" : "management",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "TEST@TEST.COM"
+      } },
+      { "freeipa": {
+        "admin_password": "bla12345",
+        "directory_password": "bla12345"
+      } },
+      { "gitlab"     : {
+        "freeipa_host" : "ambari.kave.io",
+        "gitlab_admin_password" : "admin",
+        "gitlab_url" : "gitlab-nl.test.com"
+      } }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  { "freeipa": { "admin_password": "bla12345", "directory_password": "bla12345" } } ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gitlabs",
+	    "configurations" : [ { "gitlab" : { "freeipa_host" : "ambari.kave.io", "gitlab_url" : "gitlab-nl.test.com"} } ],
+	    "hosts" : [ { "fqdn" : "gitlabs-nl.kave.io" } ]
+	}
+    ]
+}

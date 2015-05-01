@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+    <name>gitlab_admin_login</name>
+    <value>admin</value>
+    <description>Gitlab admin.</description>
+  </property>
+  <property require-input = "true">
+    <name>gitlab_admin_password</name>
+    <value></value>
+    <property-type>PASSWORD</property-type>
+    <description>Gitlab Admin Password.</description>
+  </property>
+  <property>
+    <name>gitlab_port</name>
+    <value>80</value>
+    <description>Port on which gitlab will run.</description>
+  </property>
+  <property>
+    <name>gitlab_url</name>
+    <value>plain</value>
+    <description>
+        Alias URL of this server, what your users will use to get to this git, 
+        if blank, use hostname
+    </description>
+  </property>
+  <property>
+    <name>freeipa_host</name>
+    <value></value>
+    <description>
+        If a freeipa host is available this can be set. This setting will enable
+        ldap and assume some default parameters based on freeipa. 
+    </description>
+  </property>
+  <property>
+    <name>restrict_public_projects</name>
+    <value>true</value>
+    <description>
+        Disables the public visibility level for projects.
+    </description>
+  </property>
+  <property>
+    <name>gitlab_signin_enabled</name>
+    <value>true</value>
+    <description>
+        Toggles the availability of the standard signin dialog. If ldap is 
+        enabled than that would be the only login method.
+    </description>
+  </property>
+</configuration>

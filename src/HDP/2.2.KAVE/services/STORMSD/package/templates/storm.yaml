@@ -1,0 +1,15 @@
+storm.zookeeper.servers:
+    - "{{storm_zookeeper_servers}}"
+
+nimbus.host: "{{nimbus_host}}"
+nimbus.childopts: "{{nimbus_childopts}}"
+
+ui.childopts: "{{ui_childopts}}"
+
+supervisor.childopts: "{{supervisor_childopts}}"
+worker.childopts: "{{worker_childopts}}"
+
+storm.local.dir: "/app/storm"
+
+ui.port: {{ui_port}}
+ui.childopts: "{{ui_childopts}}"

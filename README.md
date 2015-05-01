@@ -10,7 +10,7 @@ Installation (on the 'ambari node' of your cluster, or one machine)
 ==================================================================
 
 
-* To download and install a released version from the repos server: http://repos.kave.io , e.g. 1.1-Beta
+* To download and install a released version from the repos server: http://repos.kave.io , e.g. 1.1-Beta, with username repos and password kaverepos
 ```
 yum -y install wget curl tar zip unzip gzip
 wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.1-Beta/ambarikave-installer-centos6-1.1-Beta.sh

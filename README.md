@@ -9,7 +9,7 @@ This repository has three parts:
 Installation (on the 'ambari node' of your cluster, or one large machine)
 =========================================================================
 
-* AmbariKave is intended to be installed within a large cluster of machines. For installation on one machine, consider [KaveToolbox](http://github.com/KaveToolbox)
+* AmbariKave is intended to be installed within a large cluster of machines. For installation on one machine, consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
 * To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 1.1-Beta, with username repos and password kaverepos
 ```

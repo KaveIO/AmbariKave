@@ -6,11 +6,12 @@ This repository has three parts:
 - Deployment tools for amazon and generic systems to automate the deployment and speed up testing. The deployment subdirectory.
 - Development tools and tests for developers of this project. The dev and tests subdirectories.
 
-Installation (on the 'ambari node' of your cluster, or one machine)
-==================================================================
+Installation (on the 'ambari node' of your cluster, or one large machine)
+=========================================================================
 
+* AmbariKave is intended to be installed within a large cluster of machines. For installation on one machine, consider [KaveToolbox](http://github.com/KaveToolbox)
 
-* To download and install a released version from the repos server: http://repos.kave.io , e.g. 1.1-Beta, with username repos and password kaverepos
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 1.1-Beta, with username repos and password kaverepos
 ```
 yum -y install wget curl tar zip unzip gzip
 wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.1-Beta/ambarikave-installer-centos6-1.1-Beta.sh
@@ -20,16 +21,16 @@ sudo bash ambarikave-installer-centos6-1.1-Beta.sh
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
   this password is intended to be widely known and is used here as an extension of the URL )
 
-* OR to install the HEAD from git: you will need ssh access to our gitlabs repo. For that you need to have already configured ssh keys.
+* OR to install the HEAD from git: example given with ssh copying from this github repo.
 ```
 #test ssh keys with
-ssh -T git@gitlab-nl.dna.kpmglab.com
+ssh -T git@github.com
 #if this works,
-git clone git@gitlab-nl.dna.kpmglab.com:kave/ambarikave.git
+git clone git@github.com:KaveIO/AmbariKave.git
 # Once you have a local checkout, install it with:
 sudo service iptables stop
 sudo chkconfig iptables off
-cd ambarikave
+cd AmbariKave
 sudo dev/install.sh
 sudo dev/patch.sh
 sudo ambari-server start

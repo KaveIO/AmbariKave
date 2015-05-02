@@ -5,6 +5,8 @@ This repository has three parts:
 - Additional services added as patches into the Ambari installer. This is "the payload". The src and bin subdirectories.
 - Deployment tools for amazon and generic systems to automate the deployment and speed up testing. The deployment subdirectory.
 - Development tools and tests for developers of this project. The dev and tests subdirectories.
+- 
+We also endeavor to provide an extensive [wiki documentation](https://github.com/KaveIO/AmbariKave/wiki)
 
 Installation (on the 'ambari node' of your cluster, or one large machine)
 =========================================================================

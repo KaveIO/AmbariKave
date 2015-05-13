@@ -57,6 +57,8 @@ This can be completed through the ambari web interface, using the command-line-t
 * <b>blueprints/</b>
    * directory with example configurations
 
+For more about blueprints see: https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
+
 ## **A, B, C** revisited, how simple it is on aws:
 
 The **A, B, C** method on amazon is super simple. You need an aws security config.json file, which points to all the keys you will use later then for each cluster you need

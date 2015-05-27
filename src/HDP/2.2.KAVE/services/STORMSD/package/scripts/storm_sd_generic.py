@@ -87,7 +87,7 @@ class StormGenericSD(StormGeneric):
             stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG + ' &')
         return stdout
 
-    def install(selfself,env):
+    def install(self,env):
         self.install_packages(env)
         self.installStorm(env)
         self.installSupervisor(env)

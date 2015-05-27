@@ -3,23 +3,28 @@
     "default_password" : "admin",
     "configurations" : [
       { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "nothing@nobody.com"} },
-      { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }
+      { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "localhost" }  }
     ],
     "host_groups" : [
 	{
 	    "name" : "admin",
-	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }  ],
+	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "localhost" }  }  ],
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
 	},
 	{
 	    "name" : "nimbus",
-	    "configurations" : [  { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  } ],
+	    "configurations" : [  { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost", "drpc.servers" : "ambari.kave.io" }  } ],
 	    "hosts" : [ { "fqdn" : "nimbus.kave.io" } ]
 	},
 	{
 	    "name" : "supervisor",
-	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }  ],
+	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "ambari.kave.io" }  }  ],
 	    "hosts" : [ { "fqdn" : "supervisor-001.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "ambari.kave.io" }  }  ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
 	}
 	]
 }

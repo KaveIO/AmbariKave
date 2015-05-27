@@ -137,11 +137,14 @@ function runConfigureService {
     SONARQUBE_RUNNER)
     buildConfiguration sonar_database_user_passwd
      ;;
+    STORMSD)
+    buildConfiguration drpc.servers nimbus.host zookeeper.servers
+     ;;
     STORMSD_DRPC_SERVER)
-    buildConfiguration drpc.servers numbus.host zookeeper.servers
+    buildConfiguration drpc.servers nimbus.host zookeeper.servers
      ;;
     STORMSD_CLIENT)
-    buildConfiguration drpc.servers numbus.host zookeeper.servers
+    buildConfiguration drpc.servers nimbus.host zookeeper.servers
      ;;
   esac
 }

@@ -137,6 +137,12 @@ function runConfigureService {
     SONARQUBE_RUNNER)
     buildConfiguration sonar_database_user_passwd
      ;;
+    STORMSD_DRPC_SERVER)
+    buildConfiguration drpc.servers numbus.host zookeeper.servers
+     ;;
+    STORMSD_CLIENT)
+    buildConfiguration drpc.servers numbus.host zookeeper.servers
+     ;;
   esac
 }
 
@@ -175,6 +181,8 @@ function runList {
   echo "	APACHE"
   echo "	ARCHIVA"
   echo "	JENKINS"
+  echo "	STORMSD_DRPC_SERVER"
+  echo "	STORMSD_CLIENT"
   echo "	TWIKI"
   echo "	HUE"
   echo ""
@@ -272,6 +280,12 @@ elif [ $service = "SONARQUBE" ]; then
   component="SONARQUBE_SERVER"
 elif [ $service = "SONARQUBE_RUNNER" ]; then
   component="SONARQUBE_RUNNER"
+elif [ $service = "STORMSD_DRPC_SERVER" ]; then
+  component="STORMSD_DRPC_SERVER"
+elif [ $service = "STORMSD_CLIENT" ]; then
+  component="STORMSD_CLIENT"
+elif [ $service = "HUE" ]; then
+  component="HUE_SERVER"
 elif [ $service = "HUE" ]; then
   component="HUE_SERVER"
 elif [ $service = "TWIKI" ]; then

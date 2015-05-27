@@ -15,5 +15,7 @@ ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
 
 
-drpc.servers: "{{drpc_servers}}"
+drpc.servers:
+    - "{{drpc_servers}}"
+
 drpc.childopts: "{{drpc_childopts}}"

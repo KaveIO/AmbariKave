@@ -32,7 +32,7 @@ security_config, will be read from $AWSSECCONF if not passed here
 
 import sys
 import os
-
+import json
 
 def help():
     print __doc__
@@ -47,7 +47,7 @@ if "--help" in sys.argv or "-h" in sys.argv:
     sys.exit(0)
 
 iid = sys.argv[1]
-mount_conf = {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb", "Fdisk": "/dev/xvdb"}
+mount_conf = {"Mount": "/data", "Size": 250, "Attach": "/dev/sdd", "Fdisk": "/dev/xvdd"}
 security_config = None
 
 if len(sys.argv) > 2:

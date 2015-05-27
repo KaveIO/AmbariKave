@@ -22,6 +22,7 @@ storm_conf_file = "/usr/local/storm/conf/storm.yaml"
 
 storm_zookeeper_servers = config['configurations']['stormsd']['storm.zookeeper.servers']
 nimbus_host = config['configurations']['stormsd']['nimbus.host']
+drpc_servers = config['configurations']['stormsd']['drpc.servers']
 
 storm_zookeeper_port = default('configurations/stormsd/storm.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/nimbus.childopts', '-Xmx1024m -Djava.net.preferIPv4Stack=true')
@@ -30,3 +31,4 @@ ui_childopts = default('configurations/stormsd/ui.childopts', '-Xmx768m -Djava.n
 supervisor_slots_port = default('configurations/stormsd/supervisor.slots.port', '[6700, 6701]')
 supervisor_childopts = default('configurations/stormsd/supervisor.childopts', '-Djava.net.preferIPv4Stack=true')
 worker_childopts = default('configurations/stormsd/worker.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
+drpc_childopts = default('configurations/stormsd/drpc.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')

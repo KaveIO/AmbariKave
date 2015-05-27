@@ -5,7 +5,7 @@
 	<property   require-input = "true">
 		<name>storm.zookeeper.servers</name>
 		<value></value>
-		<description>ZookeeperServer, this MUST be the complete list of zookeeper servers, their fqdn, for a single node setup that will be localhost</description>
+		<description>ZookeeperServer, comma-separated list, this MUST be the complete list of zookeeper servers, their fqdn, for a single node setup that will be localhost</description>
 	</property>
 	<property>
 		<name>storm.zookeeper.port</name>
@@ -17,6 +17,11 @@
 		<name>nimbus.host</name>
 		<value></value>
 		<description>This configuration parameter, MUST match the fqdn of the server where you want nimbus to be installed. If it's a single-node-setup, you could put localhost here</description>
+	</property>
+	<property  require-input = "true">
+		<name>drpc.servers</name>
+		<value></value>
+		<description>This configuration parameter, MUST match the fqdn of the server(s) where you have the drpc installed. If it's a single-node-setup, you could put localhost here</description>
 	</property>
 	<property>
     	<name>nimbus.childopts</name>
@@ -51,6 +56,13 @@
 	</property>
 	<property>
 		<name>worker.childopts</name>
+		<value>-Xmx768m -Djava.net.preferIPv4Stack=true</value>
+		<description>The jvm opts provided to workers launched by this
+			supervisor. All \"%ID%\" substrings are replaced with an identifier
+			for this worker.</description>
+	</property>
+	<property>
+		<name>drpc.childopts</name>
 		<value>-Xmx768m -Djava.net.preferIPv4Stack=true</value>
 		<description>The jvm opts provided to workers launched by this
 			supervisor. All \"%ID%\" substrings are replaced with an identifier

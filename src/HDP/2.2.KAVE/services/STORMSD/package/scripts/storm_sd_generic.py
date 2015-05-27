@@ -62,7 +62,7 @@ class StormGeneric(Script):
             Execute('chmod 750 /var/log/storm')
 
     def configure(self,env):
-        return configureStorm(self,env)
+        return self.configureStorm(env)
 
     def configureStorm(self,env):
         import params

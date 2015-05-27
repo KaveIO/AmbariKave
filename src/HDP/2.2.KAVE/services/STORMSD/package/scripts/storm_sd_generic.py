@@ -22,21 +22,13 @@ from resource_management import *
 
 
 class StormGeneric(Script):
-    PROG = None
 
-    def ctlcmd(self, cmd, bg=False):
-        stat, stdout, stderr = (0, "", "")
-        if not bg:
-            stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG)
-            if stat or "error" in stdout.lower() or "error" in stderr.lower() or "failed" in stdout.lower() or \
-                            "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
-                self.fail_with_error(cmd + ' ' + self.PROG + ' Failed!' + stdout + stderr)
-        else:
-            stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG + ' &')
-        return stdout
-
-    def install(self, env):
+    def install(self,env):
         self.install_packages(env)
+        self.installStorm(env)
+        self.configure(env)
+
+    def installStorm(self, env):
         #install ZeroMQ which is prerequisite for storm
         user_exist = os.system('grep storm /etc/passwd > /dev/null')
         if user_exist != 0:
@@ -69,6 +61,35 @@ class StormGeneric(Script):
             Execute('chown -R storm:storm /var/log/storm')
             Execute('chmod 750 /var/log/storm')
 
+    def configure(self,env):
+        return configureStorm(self,env)
+
+    def configureStorm(self,env):
+        import params
+        env.set_params(params)
+        File(params.storm_conf_file,
+             content=Template("storm.yaml"),
+             mode=0644
+             )
+
+
+class StormGenericSD(StormGeneric):
+    PROG = None
+
+    def ctlcmd(self, cmd, bg=False):
+        stat, stdout, stderr = (0, "", "")
+        if not bg:
+            stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG)
+            if stat or "error" in stdout.lower() or "error" in stderr.lower() or "failed" in stdout.lower() or \
+                            "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
+                self.fail_with_error(cmd + ' ' + self.PROG + ' Failed!' + stdout + stderr)
+        else:
+            stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG + ' &')
+        return stdout
+
+    def install(selfself,env):
+        self.install_packages(env)
+        self.installStorm(env)
         self.installSupervisor(env)
         self.configure(env)
 
@@ -109,9 +130,12 @@ class StormGeneric(Script):
         Execute('service supervisord status')
         self.ctlcmd('status')
 
-    def configure(self, env):
-        import params
+    def configure(self,env):
+        self.configureStorm(env)
+        return self.configureSD(env)
 
+    def configureSD(self, env):
+        import params
         params.PROG = self.PROG
         env.set_params(params)
         if not os.path.exists('/etc/supervisord.conf'):
@@ -122,10 +146,6 @@ class StormGeneric(Script):
         Execute('mkdir -p /etc/supervisord.d/')
         File("/etc/supervisord.d/" + self.PROG + ".conf",
              content=Template("prog.conf"),
-             mode=0644
-             )
-        File(params.storm_conf_file,
-             content=Template("storm.yaml"),
              mode=0644
              )
         Execute("cat /etc/supervisord.d/*.conf >> /etc/supervisord.conf")

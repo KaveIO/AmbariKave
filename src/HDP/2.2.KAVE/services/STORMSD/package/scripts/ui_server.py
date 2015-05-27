@@ -20,10 +20,10 @@ import kavecommon as kc
 import subprocess
 from resource_management import *
 
-from storm_sd_generic import StormGeneric
+from storm_sd_generic import StormGenericSD
 
 
-class UiServer(StormGeneric):
+class UiServer(StormGenericSD):
     PROG = "ui"
 
 

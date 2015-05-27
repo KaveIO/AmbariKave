@@ -21,12 +21,7 @@ import os
 import subprocess
 from resource_management import *
 
-from storm_sd_generic import StormGenericSD
-
-
-class StormSupervisor(StormGenericSD):
-    PROG = 'supervisor'
-
+from storm_sd_generic import StormGeneric as StormClient
 
 if __name__ == "__main__":
-    StormSupervisor().execute()
+    StormClient().execute()

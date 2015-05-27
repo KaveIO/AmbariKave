@@ -21,10 +21,10 @@ import os
 import subprocess
 from resource_management import *
 
-from storm_sd_generic import StormGeneric
+from storm_sd_generic import StormGenericSD
 
 
-class StormNimbus(StormGeneric):
+class StormNimbus(StormGenericSD):
     PROG = 'nimbus'
 
 

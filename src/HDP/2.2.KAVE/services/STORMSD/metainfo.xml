@@ -41,6 +41,26 @@
                         <timeout>600</timeout>
                     </commandScript>
                 </component>
+                <component>
+                    <name>STORMSD_DRPC_SERVER</name>
+                    <displayName>StormSD DRPC server</displayName>
+                    <category>MASTER</category>
+                    <commandScript>
+                        <script>scripts/storm_drpc.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>STORMSD_CLIENT</name>
+                    <displayName>StormSD client install</displayName>
+                    <category>CLIENT</category>
+                    <commandScript>
+                        <script>scripts/storm_client.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
             </components>
            <osSpecifics>
                 <osSpecific>

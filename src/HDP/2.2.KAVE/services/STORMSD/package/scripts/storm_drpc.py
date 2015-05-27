@@ -24,9 +24,9 @@ from resource_management import *
 from storm_sd_generic import StormGenericSD
 
 
-class StormSupervisor(StormGenericSD):
-    PROG = 'supervisor'
+class StormDrpc(StormGenericSD):
+    PROG = 'drpc'
 
 
 if __name__ == "__main__":
-    StormSupervisor().execute()
+    StormDrpc().execute()

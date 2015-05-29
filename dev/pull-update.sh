@@ -24,6 +24,7 @@ fi
 git pull
 if [ -n "$1" ]; then
 	git checkout $1
+	git pull
 fi
 ambari-server stop
 pwd

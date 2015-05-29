@@ -15,7 +15,7 @@
 #   limitations under the License.
 #
 ##############################################################################
-import os 
+import os
 
 from resource_management import *
 from kavecommon import ApacheScript
@@ -44,24 +44,24 @@ class Twiki(ApacheScript):
              content=Template("LocalLib.cfg.txt"),
              mode=0644
              )
-        
+
         orignal_config = False
-        
+
         if os.path.exists(params.install_dir + "lib/LocalSite.cfg"):
             with open(params.install_dir + "lib/LocalSite.cfg", 'r') as fp:
                 orignal_config = fp.readlines()
 
         with open(params.install_dir + "lib/LocalSite.cfg", 'w') as fp:
-            newstuff=Template("LocalSite.cfg.j2")
+            newstuff=str(Template("LocalSite.cfg.j2"))
             fp.write(newstuff)
             dontclobber=[n.split('=')[0].strip() for n in newstuff.split('\n') if len(n.strip()) and len(n.split('=')[0].strip())]
             if not orignal_config or not len(orignal_config):
                 fp.write('\n1;\n')
             else:
                 fp.write(''.join([o for o in orignal_config if o.split('=')[0].strip() not in dontclobber]))
-                
+
         Execute('chmod 644 %slib/LocalSite.cfg' % params.install_dir)
-        
+
         File('/etc/httpd/conf.d/twiki_httpd.conf',
              content=Template("twiki_httpd_conf.txt"),
              mode=0644

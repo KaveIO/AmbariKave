@@ -78,8 +78,8 @@ def nowhite(astring):
 class TestServiceKaveLanding(TestServiceBlueprint):
     def check(self, ambari):
         super(TestServiceKaveLanding, self).check(ambari)
-        ppp = ambari.run("AmbariKave/dev/scan.sh")
-        pph = ambari.run("AmbariKave/dev/scan.sh localhost html")
+        ppp = ambari.run("./[a,A]mbari[k,K]ave/dev/scan.sh")
+        pph = ambari.run("./[a,A]mbari[k,K]ave/dev/scan.sh localhost html")
         self.assertTrue(nowhite(__kavelanding_plain__) == nowhite(ppp),
                         "Incorrect response from KaveLanding, scan.sh \n" + __kavelanding_plain__ +
                         "\n-----------\nnot equal to\n-------\n" + ppp)

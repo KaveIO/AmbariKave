@@ -59,7 +59,7 @@ class TestCluster(base.LDTest):
         ambari.register()
         self.waitForAmbari(ambari)
         if self.branch:
-            ambari.run("AmbariKave/dev/pull-update.sh " + self.branch)
+            ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + self.branch)
         self.deployBlueprint(ambari, pref + ".blueprint.json", pref + ".cluster.json")
         return self.check(ambari)
 

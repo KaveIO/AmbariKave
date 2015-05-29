@@ -380,7 +380,7 @@ class LDTest(unittest.TestCase):
         abranch = ""
         if self.branch:
             abranch = self.branch
-        stdout = ambari.run("AmbariKave/dev/pull-update.sh " + abranch)
+        stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
         import time
 
         time.sleep(5)
@@ -393,7 +393,7 @@ class LDTest(unittest.TestCase):
         import libDeploy as lD
         #clean the existing blueprint ready for re-install
         stdout = ambari.run(
-            " bash -c 'yes | AmbariKave/dev/clean.sh; AmbariKave/dev/install.sh ; AmbariKave/dev/patch.sh; "
+            " bash -c 'yes | ./[a,A]mbari[k,K]ave/dev/clean.sh; ./[a,A]mbari[k,K]ave/dev/install.sh ; ./[a,A]mbari[k,K]ave/dev/patch.sh; "
             "ambari-server start; '")
         if lD.debug:
             print stdout
@@ -473,12 +473,12 @@ class LDTest(unittest.TestCase):
         e.g.: self.servicesh(ambari,"status",service)
         retries once after 5 seconds in case of being unable to connect
         """
-        stdout = ambari.run("AmbariKave/bin/service.sh " + call + " " + service + " -h " + host, exit=False)
+        stdout = ambari.run("./[a,A]mbari[k,K]ave/bin/service.sh " + call + " " + service + " -h " + host, exit=False)
         if "couldn't connect to host" in stdout:
             import time
 
             time.sleep(5)
-            stdout = ambari.run("AmbariKave/bin/service.sh " + call + " " + service + " -h " + host)
+            stdout = ambari.run("./[a,A]mbari[k,K]ave/bin/service.sh " + call + " " + service + " -h " + host)
         return stdout
 
 

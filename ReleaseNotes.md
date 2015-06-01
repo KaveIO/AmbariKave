@@ -5,7 +5,7 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
-## v1.1-Beta
+## v1.2-Beta
 
 * First version of the AmbariKave installer for public beta release (open source release)
 * Stack 2.2.KAVE derived from HDP 2.2

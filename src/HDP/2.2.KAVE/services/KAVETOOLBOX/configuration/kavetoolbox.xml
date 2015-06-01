@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>releaseversion</name>
-    <value>1.1-Beta</value>
+    <value>1.2-Beta-Pre</value>
     <description>Which version to use.</description>
   </property>
   <property>

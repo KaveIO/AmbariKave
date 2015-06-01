@@ -47,7 +47,7 @@ if "--help" in sys.argv or "-h" in sys.argv:
     sys.exit(0)
 
 iid = sys.argv[1]
-mount_conf = {"Mount": "/data", "Size": 250, "Attach": "/dev/sdd", "Fdisk": "/dev/xvdd"}
+mount_conf = {"Mount": "/tmp/anaskar", "Size": 20, "Attach": "/dev/sde", "Fdisk": "/dev/xvdi"}
 security_config = None
 
 if len(sys.argv) > 2:

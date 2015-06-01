@@ -31,7 +31,7 @@ class TestKaveToolbox(base.LDTest):
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari = self.deployDev()
+        ambari,iid = self.deployDev()
         stdout = lD.runQuiet(
             deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict")
         self.assertTrue("installing toolbox in background process (check before bringing down the machine)" in stdout,

@@ -284,7 +284,7 @@ class LDTest(unittest.TestCase):
     self.service='some-service-name'
     self.checklist=[list of websites or files to check exist after install]
     lD=self.preCheck()
-    ambari=self.deployDev()
+    ambari,iid=self.deployDev()
     self.waitForAmbari(ambari)
     stdout=ambari.run ... some installation commands
     self.assert("PASS" in stdout)
@@ -384,7 +384,7 @@ class LDTest(unittest.TestCase):
         import time
 
         time.sleep(5)
-        return ambari
+        return ambari, iid
 
     def resetambari(self, ambari):
         """
@@ -567,3 +567,14 @@ class LDTest(unittest.TestCase):
             elif len(check):
                 self.assertTrue(False, "don't know how to check existence of " + check)
         return
+
+######################
+# Any other helper functions?
+######################
+
+def d2j(adict):
+    """Replacements to take a literal string and return a dictionary, using ajson intermediate
+    """
+    replaced=adict.strip().replace('{u\'',"{'").replace(' [u\'',"['").replace(' (u\'',"('").replace(' u\''," '").replace("'",'"').replace('(',"[").replace(")","]")
+    import json
+    return json.loads(replaced)

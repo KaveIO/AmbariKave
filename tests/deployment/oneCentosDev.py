@@ -30,7 +30,7 @@ class DepCentos(base.LDTest):
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.service = "CentosDev"
-        ambari = self.deployDev()
+        ambari,iid = self.deployDev()
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
@@ -42,6 +42,13 @@ class DepCentos(base.LDTest):
         ma = lD.multiremotes(["ssh:root@" + ambari.host], access_key=ambari.access_key)
         stdout = ma.run("ls -l '/opt'")
         self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
+        #test add_ebsvol_to_instance script
+        import libAws as lA
+        region = lA.detectRegion()
+        fmount = "/dev/xvdc"
+        if region.startswith("ap-northeast") or region.startswith("ap-southeast"):
+            fmount = "/dev/xvdg"
+        stdout = lD.runQuiet(deploy_dir+"/aws/add_ebsvol_to_instance.py --not-strict "+iid+' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc", "Fdisk": "'+ fmount+'"}\'')
 
 
 def suite(verbose=False):

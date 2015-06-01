@@ -29,7 +29,7 @@ class TestAService(base.LDTest):
         known = [s for s, d in base.findServices()]
         self.assertTrue(self.service in known, "The service " + self.service + " is unknown, check the case")
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari = self.deployDev()
+        ambari,iid = self.deployDev()
         #restart ganglia and nagios
         if self.branch:
             abranch = self.service

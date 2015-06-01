@@ -38,8 +38,12 @@ class MicroCluster(base.LDTest):
             if "testing-001 connect remotely with" in stdout.split("\n")[line]:
                 connectcmd = stdout.split("\n")[line + 1].strip()
         adict = stdout.split("\n")[-2].replace("Complete, created:", "")
-        exec ("adict = " + adict)
-        print adict
+        #try interpreting as json
+        import json
+        #print adict
+        adict = base.d2j(adict)
+        #exec ("adict = " + adict)
+        #print adict
         iid, ip = adict["testing-001"]
         self.assertTrue(ip in connectcmd)
         jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))

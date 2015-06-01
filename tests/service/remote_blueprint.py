@@ -29,7 +29,7 @@ class TestBlueprint(base.LDTest):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         if not os.path.exists(os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"):
             raise ValueError("No blueprint with which to install " + self.service)
-        ambari = self.deployDev("c3.2xlarge")  #2xlarge needed for single node hadoop!
+        ambari,iid = self.deployDev("c3.2xlarge")  #2xlarge needed for single node hadoop!
         #clean the existing blueprint ready for re-install
         self.resetambari(ambari)
         self.deployBlueprint(ambari, os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json",

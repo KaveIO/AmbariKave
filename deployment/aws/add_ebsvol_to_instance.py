@@ -20,7 +20,7 @@
 Add a newly created ebs volume to a machine
 
 usage add_ebsvol_to_instance.py iid [mount_conf='{"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb",
-"Fdisk" : "/dev/xvdb"  }'] [security_config]
+"Fdisk" : "/dev/xvdb"  }'] [security_config] [--verbose] [--not-strict]
 
 iid: iid of machine to add to
 mount_conf : the standard JSON format we use to mount disks on Centos6 correctly, see the description of the
@@ -46,12 +46,22 @@ if "--help" in sys.argv or "-h" in sys.argv:
     help()
     sys.exit(0)
 
+verbose = False
+if "--verbose" in sys.argv or "--debug" in sys.argv:
+    sys.argv = [s for s in sys.argv if s not in ["--verbose", "--debug"]]
+    verbose = True
+
+strict=True
+if "--not-strict" in sys.argv:
+    sys.argv = [s for s in sys.argv if s not in ["--not-strict"]]
+    strict = False
+
 iid = sys.argv[1]
-mount_conf = {"Mount": "/tmp/anaskar", "Size": 20, "Attach": "/dev/sde", "Fdisk": "/dev/xvdi"}
+mount_conf = {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb", "Fdisk": "/dev/xvdb"}
 security_config = None
 
 if len(sys.argv) > 2:
-    mount_conf = sys.argv[2]
+    mount_conf = json.loads(sys.argv[2])
 
 if len(sys.argv) > 3:
     security_config = os.path.expanduser(sys.argv[3])
@@ -75,7 +85,9 @@ liblocation = os.path.realpath(installfrom + '/../lib')
 sys.path.append(liblocation)
 
 import libAws as lA
-import json
+import libDeploy as lD
+lD.debug = verbose
+lD.strict_host_key_checking = strict
 
 lA.testaws()
 lA.lD.testproxy()

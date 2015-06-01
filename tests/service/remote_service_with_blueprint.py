@@ -33,7 +33,7 @@ class TestServiceBlueprint(base.LDTest):
             raise ValueError(
                 "This test can only work for blueprints where the name of the blueprint matches a known service. Else "
                 "try remote_blueprint.py")
-        ambari = self.deployDev()
+        ambari,iid = self.deployDev()
         #clean the existing blueprint ready for re-install
         self.resetambari(ambari)
         self.deployBlueprint(ambari, os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json",

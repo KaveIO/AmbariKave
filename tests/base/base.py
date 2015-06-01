@@ -291,7 +291,7 @@ class LDTest(unittest.TestCase):
     self.check() #verify the checklist is present
     """
     debug = False
-    branch = None
+    branch = "__local__"
 
     def preCheck(self):
         """

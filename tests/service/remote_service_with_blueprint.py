@@ -95,7 +95,7 @@ if __name__ == "__main__":
     import sys
 
     verbose = False
-    branch = None
+    branch = "__local__"
     if "--verbose" in sys.argv:
         verbose = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]

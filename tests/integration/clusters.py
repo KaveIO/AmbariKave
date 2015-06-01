@@ -71,7 +71,7 @@ if __name__ == "__main__":
     if "--verbose" in sys.argv:
         verbose = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
-    branch = None
+    branch = "__local__"
     if "--branch" in sys.argv:
         branch = "__service__"
         sys.argv = [s for s in sys.argv if s != "--branch"]

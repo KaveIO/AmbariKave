@@ -23,13 +23,17 @@ I advise:
 * Uploading a second test keypair, and using this for tests, or using the same keypair as jenkins itself uses
 * renaming any unkillable machines to have the string \_dev\_ in their name-tag on aws
 
+# Treatment of branches
+
+By default the tests will run on the branch you have checked out. If you want to run on a different branch, check out a different branch. A lot of the tests also have the --branch argument which logically defines which branch to used based on the name of the service you are testing. Usually the default is good enough, though.
+
 # Common arguements
 
 Common arguements include --verbose, --branch and --this-branch.
 
 * **--verbose**: print commands run by the test. In tests where --verbose is implemented, it should print additional information during the running of the test.
-* **--branch**: checkout code from a branch *matching the arguement to the test* on the remote machine. In tests where --branch is implemented it should enable the switching onto a pre-defined git branch on some remote system before the test. The convention is that the tests usually take one arguement, such as "remote_blueprint.py JBOSS" adding --branch would switch this test to checking out the branch with the same name, i.e. JBOSS.
-* **--this-branch**: checkout code from the same branch as you are using here on the remote machine. In tests where --this-branch is implemented it should enable the switching onto the same branch remotely as is checked-out locally.
+* **--branch**: checkout code from a branch *matching the arguement to the test* on the remote machine. In tests where --branch is implemented it should enable the switching onto a pre-defined git branch on some remote system before the test. The convention is that the tests usually take one argument, such as "remote_blueprint.py JBOSS" adding --branch would switch this test to checking out the branch with the same name, i.e. JBOSS.
+* **--this-branch**: checkout code from the same branch as you are using here on the remote machine. In tests where --this-branch is implemented it should enable the switching onto the same branch remotely as is checked-out locally. --this-branch is the default.
 
 # Prerequisites for running deployment tests
 

@@ -92,11 +92,11 @@ defaults_host_guesses={
                        'app_timeline_server':default("/clusterHostInfo/rm_host", [])
                        }
 
-for k,v in defaults_host_guesses:
+for k,v in defaults_host_guesses.iteritems():
     if k in cluster_host_info and type(cluster_host_info[k]) is str and cluster_host_info[k]=="default":
         cluster_host_info[k]=v
 #overwrite "none" with empty string
-for k,v in cluster_host_info:
+for k,v in cluster_host_info.iteritems():
     if type(v) is str and v=='none':
         cluster_host_info[k]=''
 

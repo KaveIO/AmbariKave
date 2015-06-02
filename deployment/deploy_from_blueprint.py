@@ -224,12 +224,25 @@ if not ok:
         "Registration Error, the hosts" + missing.__str__() + " do not exist, try curl --user admin:admin http://" +
         thehost + ":8080/api/v1/hosts")
 
+##################################################################
+# Add pdsh groups, for all hostgroups
+##################################################################
+# for entire cluster
+clustername=clusterfile.split(os.sep)[-1].split('.')[0]
+ambari.run('mkdir -p ~/.dsh/group')
+for host in hosts:
+    ambari.run("echo "+host+" >> "+"~/.dsh/group/"+clustername)
+#for each hostgroup
+for group in cluster["host_groups"]:
+    hgname=group["name"]
+    for host in group["hosts"]:
+        ambari.run("echo "+host["fqdn"]+" >> "+"~/.dsh/group/"+clustername+"_"+hgname)
 
 ##################################################################
 # Register blueprint and cluster template
 ##################################################################
-print "Attempting to register blueprint ", blueprint["Blueprints"]["blueprint_name"], " and create cluster ", \
-clusterfile.split(os.sep)[-1].split('.')[0]
+print "Attempting to register blueprint ", blueprint["Blueprints"]["blueprint_name"], " and create cluster ", clustername
+
 sys.stdout.flush()
 
 #next, register blueprint by name to the ambari server
@@ -263,7 +276,7 @@ if blueprint["Blueprints"]["blueprint_name"] not in registered:
 
 #then add the cluster definition, should start all the processes
 regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/clusters/" + \
-         clusterfile.split(os.sep)[-1].split('.')[0] + " -d @" + os.path.expanduser(clusterfile)
+         clustername + " -d @" + os.path.expanduser(clusterfile)
 regcluster = lD.runQuiet(regcmd)
 if verbose:
     print regcluster

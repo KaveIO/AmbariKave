@@ -29,7 +29,7 @@ sonarqube_install_directory = default('configurations/sonarqube/sonarqube_instal
 sonarqube_runner_install_directory = default('configurations/sonarqube/sonarqube_runner_install_directory',
                                              '/opt/sonarqube_runner')
 sonarqube_plugins = set()
-for plugin in default('configurations/sonarqube/sonarqube_plugins', '').split(','):
+for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-python-plugin-1.5.jar').split(','):
     if plugin == '':
         continue
     elif plugin in sonarqube_supported_plugins:

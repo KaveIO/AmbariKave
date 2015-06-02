@@ -25,9 +25,9 @@
     </property>
     <property>
         <name>sonarqube_plugins</name>
-        <value></value>
+        <value>sonar-python-plugin-1.5.jar</value>
         <description>
-            Comma seperated list of sonarqube plugins to be installed. Currently 
+            Comma seperated list of sonarqube plugins to be installed. Currently
             the follwing plugins are supported: sonar-python-plugin-1.5.jar
         </description>
     </property>
@@ -49,8 +49,8 @@
         <name>sonar_database_user_passwd</name>
         <property-type>PASSWORD</property-type>
         <value></value>
-        <description>          
-            Password of the database user. 
+        <description>
+            Password of the database user.
         </description>
     </property>
 </configuration>

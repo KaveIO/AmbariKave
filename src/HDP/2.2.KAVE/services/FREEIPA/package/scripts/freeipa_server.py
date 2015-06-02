@@ -32,7 +32,7 @@ class FreeipaServer(Script):
         env.set_params(params)
 
         if params.ipa_server != params.hostname:
-            raise Exception('The FreeIPA server installation has a hard requirement to be installed on the ambari server. ambari_server: %s freeipa_server %s' % (ipa_server, hostname))
+            raise Exception('The FreeIPA server installation has a hard requirement to be installed on the ambari server. ambari_server: %s freeipa_server %s' % (params.ipa_server, params.hostname))
 
         freeipa.create_required_users(params.required_users)
 

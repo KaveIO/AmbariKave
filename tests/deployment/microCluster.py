@@ -29,6 +29,11 @@ class MicroCluster(base.LDTest):
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
+        import libAws as lA
+        region=lA.detectRegion()
+        clusterfile="micro.aws.json"
+        if region.startswith("ap"):
+            clusterfile="microtokyo.aws.json"
         stdout = lD.runQuiet(
             deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + blueprint_dir + "/micro.aws.json --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),

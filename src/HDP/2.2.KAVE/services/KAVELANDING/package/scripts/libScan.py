@@ -190,9 +190,20 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
                                        user=user, passwd=passwd)
             #print host_components
             components = [str(h["HostRoles"]["component_name"]) for h in host_components]
-            cluster_host_service[cluster][host] = components
             hostgroup = host_to_hostgroup(components, blueprint)
             myconfigs = resolve_config(blueprint, hostgroup)
+
+
+            #try adding AMBARI_SERVER if it's there in the hostgroup...
+            bp_components=[]
+            for group in blueprint["host_groups"]:
+                #print group
+                if group["name"]==hostgroup:
+                    bp_components=[c["name"] for c in group["components"]]
+            if "AMBARI_SERVER" in bp_components:
+                components.append("AMBARI_SERVER")
+
+            cluster_host_service[cluster][host] = components
 
             #print components
             for component in components:
@@ -208,16 +219,16 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
                             "<a href='http://" + host.split('.')[0] + ":" + str(
                                 pickprop(myconfigs, port)) + "'>" + linkname + "</a>")
 
-    #add ambari where the nagios server is...
+    #Fallback: add ambari where the nagios server is...
     for cluster in clusterlist:
-        if "NAGIOS_SERVER" in cluster_service_host[cluster]:
+        if "NAGIOS_SERVER" in cluster_service_host[cluster] and "AMBARI_SERVER" not in cluster_service_host[cluster]:
             cluster_service_host[cluster]["AMBARI_SERVER"] = cluster_service_host[cluster]["NAGIOS_SERVER"]
-        if "AMBARI_SERVER" in service_portproperty_dict:
-            cluster_service_link[cluster]["AMBARI_SERVER"] = []
-            for linkname, port in service_portproperty_dict["AMBARI_SERVER"].iteritems():
-                cluster_service_link[cluster]["AMBARI_SERVER"].append(
-                    "<a href='http://" + cluster_service_host[cluster]["AMBARI_SERVER"][0].split('.')[0] + ":" + str(
-                        pickprop(myconfigs, port)) + "'>" + linkname + "</a>")
+            if "AMBARI_SERVER" in service_portproperty_dict and "AMBARI_SERVER" in cluster_service_host[cluster]:
+                cluster_service_link[cluster]["AMBARI_SERVER"] = []
+                for linkname, port in service_portproperty_dict["AMBARI_SERVER"].iteritems():
+                    cluster_service_link[cluster]["AMBARI_SERVER"].append("<a href='http://"
+                                                                          + cluster_service_host[cluster]["AMBARI_SERVER"][0].split('.')[0]
+                                                                          + ":" + str(pickprop(myconfigs, port)) + "'>" + linkname + "</a>")
 
     #print cluster_service_host
     #print cluster_host_service

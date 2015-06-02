@@ -45,6 +45,9 @@ class TestServiceBlueprint(base.LDTest):
         self.check(ambari)
 
 
+#####
+# If you need to update this, go to the machine where this test fialed, and run ./AmbariKave/dev/scan.sh
+#####
 __kavelanding_plain__ = """Welcome to your KAVE
 ==================
 * 'default' cluster
@@ -57,6 +60,10 @@ __kavelanding_plain__ = """Welcome to your KAVE
 |--* Clients
 |  |--* ambari.kave.io ['GANGLIA_MONITOR', 'KAVELANDING']"""
 
+
+#####
+# If you need to update this, go to the machine where this test failed, and run ./AmbariKave/dev/scan.sh html
+#####
 __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 <b>Servers</b><p><ul>
   <li>Ambari <a href='http://ambari:8080'>admin</a></li>

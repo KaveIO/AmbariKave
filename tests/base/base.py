@@ -391,7 +391,12 @@ class LDTest(unittest.TestCase):
         Clean ambari, ready for a new install
         """
         import libDeploy as lD
-        #clean the existing blueprint ready for re-install
+        ##clean the existing blueprint ready for re-install, firstly, get the latest version!
+        #abranch = ""
+        #if self.branch:
+        #    abranch = self.branch
+        #stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
+        #now clean...
         stdout = ambari.run(
             " bash -c 'yes | ./[a,A]mbari[k,K]ave/dev/clean.sh; ./[a,A]mbari[k,K]ave/dev/install.sh ; ./[a,A]mbari[k,K]ave/dev/patch.sh; "
             "ambari-server start; '")

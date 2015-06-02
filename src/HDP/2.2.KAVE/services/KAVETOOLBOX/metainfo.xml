@@ -19,7 +19,7 @@
                     <commandScript>
                         <script>scripts/kavetoolboxgate.py</script>
                         <scriptType>PYTHON</scriptType>
-                        <timeout>3600</timeout>
+                        <timeout>6000</timeout>
                     </commandScript>
                 </component>
                 <component>
@@ -30,7 +30,7 @@
                     <commandScript>
                         <script>scripts/kavetoolbox.py</script>
                         <scriptType>PYTHON</scriptType>
-                        <timeout>3600</timeout>
+                        <timeout>6000</timeout>
                     </commandScript>
                 </component>
            </components>

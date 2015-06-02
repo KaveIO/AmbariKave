@@ -481,7 +481,7 @@ class multiremotes(object):
 #@TODO: Consolidate the two methods below!
 
 def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="workstation",
-                        toolbox_proj="KaveIO/KaveToolbox.git", branch="", background=True):
+                        toolbox_proj=None, branch="", background=True):
     """
     Add the KaveToolbox once a remote connection is established
     """
@@ -489,6 +489,17 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
         raise IOError("Your git access key must exist " + github_key_location)
     if dest_type not in known_dest_types:
         raise ValueError("dest_type can only be one of: " + known_dest_types.__str__() + " you asked for " + dest_type)
+    if toolbox_proj is None:
+        if "kavetoolbox" in git_origin.lower() and git_origin.startswith("git@"):
+            toolbox_proj=git_origin.split(':')[-1]
+        elif "github" in git_origin:
+            toolbox_proj="KaveIO/KaveToolbox.git"
+        elif "gitlab-nl" in git_origin:
+            toolbox_proj="kave/kavetoolbox.git"
+        elif "ambarikave.git" in git_origin.lower():
+            toolbox_proj=git_origin.split(':')[-1].replace("AmbariKave.git","KaveToolbox.git").replace("ambarikave.git","kavetoolbox.git")
+        else:
+            raise NameError("Cannot guess the toolbox project name from "+git_origin)
     remote.check()
     installcmd = "./" + prLc(toolbox_proj) + '/scripts/KaveInstall --quiet'
     if dest_type == "workstation":

@@ -40,8 +40,8 @@ class MongoBase(Script):
                  mode=0644
                  )
         print "installing mongodb..."
-        if mongo_packages is not None and len(mongo_packages):
-            for pack in mongo_packages:
+        if self.mongo_packages is not None and len(self.mongo_packages):
+            for pack in self.mongo_packages:
                 Package(pack)
 
     def configureMongo(self, env):

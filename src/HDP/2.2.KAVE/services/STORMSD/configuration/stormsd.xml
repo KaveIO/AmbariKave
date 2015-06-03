@@ -5,7 +5,7 @@
 	<property   require-input = "true">
 		<name>storm.zookeeper.servers</name>
 		<value></value>
-		<description>ZookeeperServer, comma-separated list, this MUST be the complete list of zookeeper servers, their fqdn, for a single node setup that will be localhost</description>
+		<description>ZookeeperServer, comma or space-separated list, this MUST be the complete list of zookeeper servers, their fqdn, for a single node setup that will be localhost</description>
 	</property>
 	<property>
 		<name>storm.zookeeper.port</name>
@@ -21,7 +21,7 @@
 	<property  require-input = "true">
 		<name>drpc.servers</name>
 		<value></value>
-		<description>This configuration parameter, MUST match the fqdn of the server(s) where you have the drpc installed. If it's a single-node-setup, you could put localhost here</description>
+		<description>This configuration parameter, MUST match the fqdn of the server(s) where you have the drpc installed. If it's a single-node-setup, you could put localhost here. Comma/space separated list.</description>
 	</property>
 	<property>
     	<name>nimbus.childopts</name>
@@ -40,12 +40,12 @@
 	</property>
 	<property>
 		<name>supervisor.slots.ports</name>
-		<value>[6700, 6701]</value>
+		<value>6700, 6701</value>
 		<description>A list of ports that can run workers on this supervisor.
 			Each worker uses one port, and
 			the supervisor will only run one worker per port. Use this configuration
-			to tune
-			how many workers run on each machine.
+			to tune how many workers run on each machine.
+			Comma or space separated list, must start from 6700, and then usually add one slot per core.
 		</description>
 	</property>
 	<property>
@@ -67,5 +67,10 @@
 		<description>The jvm opts provided to workers launched by this
 			supervisor. All \"%ID%\" substrings are replaced with an identifier
 			for this worker.</description>
+	</property>
+	<property>
+		<name>log_level</name>
+		<value>WARN</value>
+		<description>Configure the storm logging level, by default WARN is used.</description>
 	</property>
 </configuration>

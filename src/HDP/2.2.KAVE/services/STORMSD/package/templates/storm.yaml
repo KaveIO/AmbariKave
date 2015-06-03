@@ -1,5 +1,7 @@
 storm.zookeeper.servers:
-    - "{{storm_zookeeper_servers}}"
+{% for server in storm_zookeeper_servers %}
+  - "{{server}}"
+{% endfor %}
 
 nimbus.host: "{{nimbus_host}}"
 nimbus.childopts: "{{nimbus_childopts}}"
@@ -16,6 +18,13 @@ ui.childopts: "{{ui_childopts}}"
 
 
 drpc.servers:
-    - "{{drpc_servers}}"
+{% for server in drpc_servers %}
+  - "{{server}}"
+{% endfor %}
 
 drpc.childopts: "{{drpc_childopts}}"
+
+supervisor.slots.ports:
+{% for port in supervisor_slots_ports %}
+  - {{port}}
+{% endfor %}

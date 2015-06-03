@@ -179,7 +179,9 @@ def pickprop(myconfigs, tofind):
     prop = tofind[-1]
     comppath = prop.split(" ")[0].split("/")[0]
     compprop = prop.split(" ")[0].split("/")[-1]
-    arithmetic = ''.join(prop.split(" ")[1:])
+    arithmetic = ''
+    if " " in prop:
+        arithmetic=''.join(prop.split(" ")[1:])
     #print comppath, compprop
     #print myconfigs.keys()
     if comppath not in myconfigs:
@@ -189,9 +191,9 @@ def pickprop(myconfigs, tofind):
     if not len([c == compprop for c in myconfigs[comppath]]):
         #print "no comprop", myconfigs[comppath]
         return default_port
-    if not len(arithmatic):
+    if not len(arithmetic):
         return myconfigs[comppath][compprop]
-    return eval_expr(myconfigs[comppath][compprop]+arithmatic)
+    return eval_expr(myconfigs[comppath][compprop]+arithmetic)
 
 
 def collect_config_data(ambari="localhost", user=None, passwd=None, ):

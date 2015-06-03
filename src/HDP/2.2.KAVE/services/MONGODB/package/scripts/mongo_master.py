@@ -18,31 +18,21 @@
 import os
 
 from resource_management import *
+from mongo_base import MongoBase
 
-
-class MongoDb(Script):
-    repos_file_path = '/etc/yum.repos.d/mongodb.repo'
-    config_file_path = '/etc/mongod.conf'
+class MongoMaster(MongoBase):
+    mongo_packages=['mongodb-org']
 
     def install(self, env):
         import params
-
         env.set_params(params)
-
-        self.install_packages(env)
-
-        if os.path.exists(self.repos_file_path):
-            print "File exists"
-        else:
-            print "file not exists"
-            File(self.repos_file_path,
-                 content=Template("mongodb.repo"),
-                 mode=0644
-                 )
-        print "installing mongodb..."
-        Package('mongodb-org')
-        #Execute('yum install -y mongodb-org')
+        self.installMongo(env)
         self.configure(env)
+
+    def configure(self,env):
+        import params
+        env.set_params(params)
+        self.configureMongo(env)
 
     def start(self, env):
         print "start mongodb"
@@ -60,15 +50,6 @@ class MongoDb(Script):
         print "checking status..."
         Execute('service mongod status')
 
-    def configure(self, env):
-        import params
-
-        env.set_params(params)
-        File(self.config_file_path,
-             content=Template("mongod.conf.j2"),
-             mode=0644
-             )
-
 
 if __name__ == "__main__":
-    MongoDb().execute()
+    MongoMaster().execute()

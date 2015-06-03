@@ -15,17 +15,30 @@
 #   limitations under the License.
 #
 ##############################################################################
-from resource_management import *
-from resource_management.core.system import System
 import os
 
-config = Script.get_config()
+from resource_management import *
+from mongo_base import MongoBase
 
-db_path = default('configurations/mongodb/db_path', '/var/lib/mongo')
-bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
-tcp_port = default('configurations/mongodb/tcp_port', '27017')
-# The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
-mongo_host = default('configurations/mongodb/mongo_host', 'unknown')
-if mongo_host=="unknown":
-    if bind_ip not in ['0.0.0.0','127.0.0.1']:
-        mongo_host==bind_ip
+class MongoClient(MongoBase):
+    client_config_path="/etc/mongoclient.conf"
+    mongo_packages=['mongodb-org-shell', 'mongodb-org-tools']
+
+    def install(self, env):
+        import params
+        env.set_params(params)
+        self.installMongo(env)
+        self.configure(env)
+
+    def configure(self,env):
+        import params
+        env.set_params(params)
+        self.configureMongo(env)
+        File(self.client_config_path,
+             content=Template("mongoclient.conf.j2"),
+             mode=0644
+             )
+
+
+if __name__ == "__main__":
+    MongoClient().execute()

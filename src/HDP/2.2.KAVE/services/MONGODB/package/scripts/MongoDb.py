@@ -54,7 +54,7 @@ class MongoDb(Script):
 
     def restart(self, env):
         print "restart mongodb"
-        Execute('service mongod restart')
+        Execute('service mongod restart > /dev/null ')
 
     def status(self, env):
         print "checking status..."

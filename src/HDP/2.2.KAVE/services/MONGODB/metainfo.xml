@@ -13,7 +13,7 @@
                     <displayName>MongoDB Master</displayName>
                     <category>MASTER</category>
                     <commandScript>
-                        <script>scripts/mongodb_master.py</script>
+                        <script>scripts/mongo_master.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>
@@ -23,7 +23,7 @@
                     <displayName>MongoDB Clients</displayName>
                     <category>CLIENT</category>
                     <commandScript>
-                        <script>scripts/mongodb_client.py</script>
+                        <script>scripts/mongo_client.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>

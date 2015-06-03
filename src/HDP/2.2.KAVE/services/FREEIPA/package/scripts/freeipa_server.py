@@ -120,7 +120,7 @@ class FreeipaServer(Script):
             import kavecommon as kc
             _stat,_stdout,_stderr=kc.mycmd('ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'% (params.directory_password, params.ldap_bind_user))
             #is this user already added?
-            if "dn: uid="+params.ldap_bind_user not in stdout:
+            if "dn: uid="+params.ldap_bind_user not in _stdout:
                 Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/bind_user.ldif' % params.directory_password)
             for group in params.ldap_bind_services:
                 fi.create_group(group, group + ' user group', ['--nonposix'])

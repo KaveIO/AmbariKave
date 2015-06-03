@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>db_path</name>
+        <value>/var/lib/mongo</value>
+        <description>
+            Path where the mongodb is stored.
+        </description>
+    </property>
+    <property>
+        <name>bind_ip</name>
+        <value>0.0.0.0</value>
+        <description>
+            Interface on which to listen, by default all interfaces. Set for example, 127.0.0.1 to switch to the local loopback interface only.
+        </description>
+    </property>
+    <property>
+        <name>tcp_port</name>
+        <value>27017</value>
+        <description>
+            Port on which mongod listens for incoming client connections.
+            The Web Status page is always 1000 higher than this port number
+        </description>
+    </property>
+</configuration>

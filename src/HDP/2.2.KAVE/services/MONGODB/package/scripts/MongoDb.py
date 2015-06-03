@@ -25,6 +25,9 @@ class MongoDb(Script):
     config_file_path = '/etc/mongod.conf'
 
     def install(self, env):
+        import params
+
+        env.set_params(params)
 
         self.install_packages(env)
 
@@ -58,6 +61,9 @@ class MongoDb(Script):
         Execute('service mongod status')
 
     def configure(self, env):
+        import params
+
+        env.set_params(params)
         File(self.config_file_path,
              content=Template("mongod.conf.j2"),
              mode=0644

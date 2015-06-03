@@ -8,15 +8,20 @@ logappend=true
 # fork and run in background
 fork=true
 
-#port=27017
+port={{tcp_port}}
 
-dbpath=/var/lib/mongo
+#
+# The web status page is always accessible at a port number that is 1000 greater than the port determined by port.
+#
+
+dbpath={{db_path}}
 
 # location of pidfile
 pidfilepath=/var/run/mongodb/mongod.pid
 
-# Listen to local interface only. Comment out to listen on all interfaces. 
+# Listen to local interface only. Comment out to listen on all interfaces.
 # bind_ip=127.0.0.1
+bind_ip={{bind_ip}}
 
 # Disables write-ahead journaling
 # nojournal=true
@@ -50,7 +55,7 @@ pidfilepath=/var/run/mongodb/mongod.pid
 #nohints=true
 
 # Enable the HTTP interface (Defaults to port 28017).
-#httpinterface=true
+httpinterface=true
 
 # Turns off server-side scripting.  This will result in greatly limited
 # functionality

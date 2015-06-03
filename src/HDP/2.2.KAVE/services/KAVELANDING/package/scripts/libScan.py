@@ -19,6 +19,41 @@
 # print the list of services and their hosts
 # usage in stand-alone script: libScan.py [hostname=localhost] [username=admin] [password=admin]
 
+#
+# Library to evaluate mathematical expressions
+# Obtained as example from http://stackoverflow.com/questions/2371436/evaluating-a-mathematical-expression-in-a-string
+# Thanks to stackoverflow user J.F. Sebastian
+#
+import ast
+import operator as op
+
+# supported operators
+operators = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+             ast.Div: op.truediv, ast.Pow: op.pow, ast.BitXor: op.xor,
+             ast.USub: op.neg}
+
+def eval_expr(expr):
+    """
+    >>> eval_expr('2^6')
+    4
+    >>> eval_expr('2**6')
+    64
+    >>> eval_expr('1 + 2*3**(4^5) / (6 + -7)')
+    -5.0
+    """
+    return eval_(ast.parse(expr, mode='eval').body)
+
+def eval_(node):
+    if isinstance(node, ast.Num): # <number>
+        return node.n
+    elif isinstance(node, ast.BinOp): # <left> <operator> <right>
+        return operators[type(node.op)](eval_(node.left), eval_(node.right))
+    elif isinstance(node, ast.UnaryOp): # <operator> <operand> e.g., -1
+        return operators[type(node.op)](eval_(node.operand))
+    else:
+        raise TypeError(node)
+
+#######################################################################
 import subprocess
 import kavecommon as kc
 import json, os, sys
@@ -32,6 +67,8 @@ default_ambari_password = "admin"
 # syntax is { "SERVICE_NAME" : { "quick_link_name" : port_list }}
 # port_list is [default port , "path/to/configuration.if.set"]
 # the default port should always be given, even if it is 80
+# Simple addition, subtraction and multiplication is supported, when separated with a space from the parameter
+#  ["apache/APACHE_PORT +1000"] would return the result of adding 1000 to the apache port if set
 service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "NAGIOS_SERVER": {"alerts": ["80/nagios"]},
                              "AMBARI_SERVER": {"admin": [8080]},
@@ -41,7 +78,7 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "SONAR_SERVER": {"sonar": [5051, "sonarqube/sonar_web_port"]},
                              "APACHE_WEB_MASTER": {"webpage": [80, "apache/PORT"]},
                              "TWIKI_SERVER": {"twiki": ["80/twiki"]},
-                             "MONGODB_MASTER": {"mongo": [28017]},
+                             "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"], "mongo_web" : [28017, "mongodb/tcp_port +1000"]},#need to add 1000 to the port number if it exists!
                              "GITLAB_SERVER": {"gitlab": [80, "gitlab/gitlab_port"]},
                              "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/ui.port"]},
                              "HUE_SERVER": {"hue": [8744, "hue/web_ui_port"]},
@@ -130,6 +167,8 @@ def pickprop(myconfigs, tofind):
     Given a full configuration dictionary, and a tofind list, which looks like [default, "service/propertyname"]
     return the property requested, i.e. [8080] returns [8080], [80, "apache/APACHE_PORT"] returns the value set for
     APACHE_PORT or 80 if unset
+    Simple addition, subtraction and multiplication is supported (when separated by a space):
+    ["apache/APACHE_PORT +1000"] would return the result of adding 1000 to the apache port if set
     """
     #print "looking for", tofind
     #print "in", myconfigs
@@ -138,8 +177,9 @@ def pickprop(myconfigs, tofind):
         #print "no alternate suggested"
         return default_port
     prop = tofind[-1]
-    comppath = prop.split("/")[0]
-    compprop = prop.split("/")[-1]
+    comppath = prop.split(" ")[0].split("/")[0]
+    compprop = prop.split(" ")[0].split("/")[-1]
+    arithmetic = ''.join(prop.split(" ")[1:])
     #print comppath, compprop
     #print myconfigs.keys()
     if comppath not in myconfigs:
@@ -149,7 +189,9 @@ def pickprop(myconfigs, tofind):
     if not len([c == compprop for c in myconfigs[comppath]]):
         #print "no comprop", myconfigs[comppath]
         return default_port
-    return myconfigs[comppath][compprop]
+    if not len(arithmatic):
+        return myconfigs[comppath][compprop]
+    return eval_expr(myconfigs[comppath][compprop]+arithmatic)
 
 
 def collect_config_data(ambari="localhost", user=None, passwd=None, ):

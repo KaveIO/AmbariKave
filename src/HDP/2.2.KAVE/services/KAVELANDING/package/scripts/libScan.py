@@ -261,7 +261,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
                     for linkname, port in service_portproperty_dict[component].iteritems():
                         cluster_service_link[cluster][component].append(
                             "<a href='http://" + host.split('.')[0] + ":" + str(
-                                pickprop(myconfigs, port)) + "'>" + linkname + "</a>")
+                                pickprop(myconfigs, port)) + "'>" + linkname + "</a> ")
 
     #Fallback: add ambari where the nagios server is...
     for cluster in clusterlist:

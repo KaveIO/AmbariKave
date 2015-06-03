@@ -4,7 +4,7 @@
   {
     "Name" : "test",
     "Count" : 2,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "m1.small",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdf"  },
                      {"Mount": "/something",   "Size" : 1, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdg" },
@@ -14,7 +14,7 @@
   {
     "Name" : "testing",
     "Count" : 1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "m1.small",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdf"  },
     				 {"Mount": "/hadoop",   "Size" : 1, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdg"  } ]

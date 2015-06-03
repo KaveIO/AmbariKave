@@ -35,7 +35,7 @@ class MicroCluster(base.LDTest):
         if region.startswith("ap"):
             clusterfile="microtokyo.aws.json"
         stdout = lD.runQuiet(
-            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + blueprint_dir + "/micro.aws.json --not-strict")
+            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + blueprint_dir + "/"+clusterfile+" --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
         connectcmd = ""

@@ -46,7 +46,7 @@ class MongoDb(Script):
 
     def start(self, env):
         print "start mongodb"
-        Execute('service mongod start')
+        Execute('service mongod start > /dev/null ')
 
     def stop(self, env):
         print "stop services.."

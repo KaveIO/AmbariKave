@@ -75,7 +75,7 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "JENKINS_MASTER": {"jenkins": [8080, "jenkins/JENKINS_PORT"]},
                              "JBOSS_APP_SERVER": {"jboss": [8080, "jboss/http_port"]},
                              "ARCHIVA_SERVER": {"archiva": [5050, "archiva/archiva_jetty_port"]},
-                             "SONAR_SERVER": {"sonar": [5051, "sonarqube/sonar_web_port"]},
+                             "SONARQUBE_SERVER": {"sonar": [5051, "sonarqube/sonar_web_port"]},
                              "APACHE_WEB_MASTER": {"webpage": [80, "apache/PORT"]},
                              "TWIKI_SERVER": {"twiki": ["80/twiki"]},
                              "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"], "mongo_web" : [28017, "mongodb/tcp_port +1000"]},#need to add 1000 to the port number if it exists!
@@ -297,24 +297,28 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
         else:
             retstr = retstr + "<h3><font size=5px>'" + cluster + "' cluster</font></h3>\n"
         masters_with_links = [service for service in cluster_service_host[cluster] if
-                              ("SERVER" in service or "MASTER" in service or "NAMENODE" in service) and (
+                              ("SERVER" in service or "MASTER" in service or "NAMENODE" in service or "MANAGER" in service) and (
                               service in cluster_service_link[cluster])]
         masters_without_links = [service for service in cluster_service_host[cluster] if
-                                 ("SERVER" in service or "MASTER" in service or "NAMENODE" in service) and (
-                                 service not in cluster_service_link[cluster])]
+                                 ("SERVER" in service or "MASTER" in service or "NAMENODE" in service or "MANAGER" in service) and (
+                                 service not in cluster_service_link[cluster]) and (service not in masters_with_links)]
         others = [service for service in cluster_service_host[cluster] if
-                  service not in masters_without_links + masters_with_links]
+                  service not in (masters_without_links + masters_with_links)]
         #first print services with links!
         if format == "plain":
             retstr = retstr + "|--* Servers \n"
         else:
             retstr = retstr + "<b>Servers</b><p><ul>\n"
         for service in masters_with_links:
+            sprint=service
+            if "_" in service:
+                sprint=' '.join(service.split("_")[:-1])
+            sprint=sprint.upper()[0]+sprint.lower()[1:]
             if format == "plain":
                 retstr = retstr + "|  |--* "
             else:
                 retstr = retstr + "  <li>"
-            retstr = retstr + service.upper().split("_")[0][0] + service.lower().split("_")[0][1:] + " "
+            retstr = retstr + sprint + " "
             for link in cluster_service_link[cluster][service]:
                 retstr = retstr + link
             if format == "plain":
@@ -323,11 +327,15 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
                 retstr = retstr + "</li>\n"
         #then print masters without links
         for service in masters_without_links:
+            sprint=service
+            if "_" in service:
+                sprint=' '.join(service.split("_")[:-1])
+            sprint=sprint.upper()[0]+sprint.lower()[1:]
             if format == "plain":
                 retstr = retstr + "|  |--* "
             else:
                 retstr = retstr + "  <li>"
-            retstr = retstr + service.upper().split("_")[0][0] + service.lower().split("_")[0][1:] + " "
+            retstr = retstr + sprint + " "
             retstr = retstr + "(" + cluster_service_host[cluster][service].__str__() + ")"
             if format == "plain":
                 retstr = retstr + "\n"
@@ -345,7 +353,7 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
                 retstr = retstr + "|  |--* "
             else:
                 retstr = retstr + "  <li>"
-            retstr = retstr + host + " " + [c for c in cluster_host_service[cluster][host] if c in others].__str__()
+            retstr = retstr + host + " " + [c.lower() for c in cluster_host_service[cluster][host] if c in others].__str__()
             if format == "plain":
                 retstr = retstr + "\n"
             else:

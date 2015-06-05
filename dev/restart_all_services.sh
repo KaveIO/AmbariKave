@@ -26,8 +26,14 @@ ambari='localhost'
 user='admin'
 password='admin'
 
+if [ -z "$1" ]; then
+	echo "please state the name of the cluster to restart"
+	exit 1
+fi
+
 echo "restarting ambari server"
 ambari-server restart
+sleep 10
 
 echo "restarting all ambari agents"
 pdsh -R ssh -g $cluster ambari-agent restart

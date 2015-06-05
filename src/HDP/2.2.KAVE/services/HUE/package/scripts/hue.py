@@ -22,7 +22,8 @@ import kavecommon as kc
 
 
 class Hue(Script):
-    conf_dirs = ["/etc/hue/conf.empty", "/etc/hue/conf.d", "/etc/hue/conf"]
+    mandatory_conf_dirs = ["/etc/hue/conf.empty", "/etc/hue/conf"]
+    optional_conf_dirs=["/etc/hue/conf.d"]
 
     def install(self, env):
         import params
@@ -37,13 +38,17 @@ class Hue(Script):
 
         env.set_params(params)
         Execute('chkconfig --levels 235 hue on')
-        for dir in self.conf_dirs:
-            if not os.path.exists(dir):
-                continue
-            dir = os.path.realpath(dir)
-            File(dir + '/hue.ini', content=Template("hue.ini.j2"), mode=0755)
-            File(dir + '/hue_httpd.conf', content=Template("hue_httpd.conf.j2"), mode=0755)
-            Execute('chmod -R 755 ' + dir)
+        edit_dirs=self.mandatory_conf_dirs
+        for mdir in self.mandatory_conf_dirs:
+            Execute("mkdir -p "+mdir)
+        for odir in self.optional_conf_dirs:
+            if os.path.exists(odir):
+                edit_dirs.append(odir)
+        for edir in edit_dirs:
+            edir = os.path.realpath(edir)
+            File(edir + '/hue.ini', content=Template("hue.ini.j2"), mode=0755)
+            File(edir + '/hue_httpd.conf', content=Template("hue_httpd.conf.j2"), mode=0755)
+            Execute('chmod -R 755 ' + edir)
 
     def start(self, env):
         Execute("service hue start")

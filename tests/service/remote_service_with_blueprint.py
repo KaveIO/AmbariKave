@@ -69,7 +69,7 @@ __kavelanding_plain__ = """Welcome to your KAVE
 |  |--* Ganglia <a href='http://ambari:80/ganglia'>monitor</a>
 |
 |--* Clients
-|  |--* ambari.kave.io ['GANGLIA_MONITOR', 'KAVELANDING']"""
+|  |--* ambari.kave.io ['ganglia_monitor', 'kavelanding']"""
 
 
 #####
@@ -82,7 +82,7 @@ __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
   <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
   <li>Ganglia <a href='http://ambari:80/ganglia'>monitor</a></li>
 </ul><p><b>Clients</b><p><ul>
-  <li>ambari.kave.io ['GANGLIA_MONITOR', 'KAVELANDING']</li>
+  <li>ambari.kave.io ['ganglia_monitor', 'kavelanding']</li>
 </ul>"""
 
 

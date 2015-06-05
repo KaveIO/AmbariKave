@@ -31,7 +31,7 @@
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
         { "name" : "NAGIOS_SERVER"       },
-        { "name" : "JBOSS_APP_SERVER"      },
+        { "name" : "JBOSS_APP_SERVER"    },
         { "name" : "GANGLIA_MONITOR"     }
       ],
       "cardinality" : "1"

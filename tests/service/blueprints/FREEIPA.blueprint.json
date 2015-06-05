@@ -22,12 +22,12 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "freeipa": { "admin_password": "bla12345", "directory_password": "bla12345" } }
+    { "freeipa": { "directory_password": "bla12345" } }
   ],
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "freeipa": { "admin_password": "bla12345", "directory_password": "bla12345" } } ],
+      "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },

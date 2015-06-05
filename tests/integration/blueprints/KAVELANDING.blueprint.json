@@ -32,11 +32,13 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [  ],
+      "configurations" : [ { "mongodb" : {"tcp_port" : 29999, "mongo_host" : "localhost" } }  ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
         { "name" : "NAGIOS_SERVER"       },
+        { "name" : "MONGODB_MASTER"      },
+        { "name" : "MONGODB_CLIENT"      },
         { "name" : "GANGLIA_MONITOR"     }
       ],
       "cardinality" : "1"

@@ -4,8 +4,10 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "InstanceType" : "c3.large",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
+    				 {"Mount": "/var/lib/mongo",   "Size" : 10, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }  ]
   },
   { "Name" : "gate",
     "Count" : 1,

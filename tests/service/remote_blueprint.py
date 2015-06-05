@@ -23,17 +23,29 @@ class TestBlueprint(base.LDTest):
     def runTest(self):
         # create remote machine
         import os
-        import sys
+        import sys, json
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        if not os.path.exists(os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"):
+        bp=os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
+        cf=os.path.dirname(__file__) + "/blueprints/default.cluster.json"
+        if not os.path.exists(bp):
             raise ValueError("No blueprint with which to install " + self.service)
+        #check blueprint is valid json
+        #print ason
+        for ason in [bp,cf]:
+            f = open(ason)
+            l = f.read()
+            f.close()
+            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
+            try:
+                interp = json.loads(l)
+            except:
+                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
         ambari,iid = self.deployDev("c3.2xlarge")  #2xlarge needed for single node hadoop!
         #clean the existing blueprint ready for re-install
         self.resetambari(ambari)
-        self.deployBlueprint(ambari, os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json",
-                             os.path.dirname(__file__) + "/blueprints/default.cluster.json")
+        self.deployBlueprint(ambari, bp, cf)
         return self.check(ambari)
 
 

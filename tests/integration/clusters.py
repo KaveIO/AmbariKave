@@ -23,7 +23,7 @@ class TestCluster(base.LDTest):
     def runTest(self):
         # create remote machine
         import os
-        import sys
+        import sys, json
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
@@ -35,6 +35,15 @@ class TestCluster(base.LDTest):
             raise ValueError(
                 "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
                     b) + " .cluster " + str(c))
+        for ason in [pref + ".aws.json",pref + ".blueprint.json",pref + ".cluster.json"]:
+            f = open(ason)
+            l = f.read()
+            f.close()
+            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
+            try:
+                interp = json.loads(l)
+            except:
+                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
         stdout = lD.runQuiet(
             deploy_dir + "/aws/up_aws_cluster.py Test-" + self.service + " " + pref + ".aws.json  --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),

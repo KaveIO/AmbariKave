@@ -411,6 +411,34 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return True
 
+    def monitor_request(self,ambari,clustername,requestid=1, max_rounds=60):
+        """
+        Watch a request for failure/success
+        ambari: teh ambari host remote
+        clustername the name of the cluster
+        requestid: the request id to monitor
+        rounds, how many rounds
+        """
+        import libDeploy as lD
+        import time
+        rounds = 1
+        state="UNKNOWN"
+        while rounds <= max_rounds:
+            stdout = lD.runQuiet(
+                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/" + cname + "/requests/1")
+            if '"request_status" : "FAILED"' in stdout:
+                state="FAILED"
+                break
+            if '"request_status" : "ABORTED"' in stdout:
+                state="ABORTED"
+                break
+            if '"request_status" : "COMPLETED"' in stdout:
+                state="COMPLETED"
+                break
+            time.sleep(60)
+            rounds = rounds + 1
+        return state
+
     def deployBlueprint(self, ambari, blueprint, cluster):
         """
         Deploy a blueprint on this ambari node, and wait for it to be up!
@@ -425,25 +453,24 @@ class LDTest(unittest.TestCase):
         stdout = lD.runQuiet(
             deploy_dir + "/deploy_from_blueprint.py " + blueprint + " " + cluster + " " + ip + " $AWSSECCONF "
                                                                                                "--not-strict")
-        import time
+        state=self.monitor_request(ambari, cname)
+        if state=="ABORTED":
+            print "Trying to recover from aborted blueprint with restarts"
+            stdout=ambari.run("./[a,A]mbari[k,K]ave/dev/restart_all_services.sh "+cname)
+            reqid=stdout.strip().split("\n")[-1]
+            state=self.monitor_request(ambari, cname,requestid=reqid)
 
-        time.sleep(15)
-        rounds = 1
-        flag = False
-        while rounds <= 60:
-            stdout = lD.runQuiet(
-                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/" + cname + "/requests/1")
-            self.assertFalse('"request_status" : "FAILED"' in stdout,
-                             "deploy from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
-            self.assertFalse('"request_status" : "ABORTED"' in stdout,
-                             "deploy from blueprint aborted (" + ' '.join(ambari.sshcmd()) + ")")
-            if '"request_status" : "COMPLETED"' in stdout:
-                flag = True
-                break
-            time.sleep(60)
-            rounds = rounds + 1
-        self.assertTrue(flag, self.service + " did not install from blueprint after 60 minutes (" + ' '.join(
+        self.assertFalse(state=="FAILED",
+                         "deploy from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
+        self.assertFalse(state=="ABORTED",
+                         "deploy from blueprint aborted (" + ' '.join(ambari.sshcmd()) + ")")
+        self.assertFalse(state=="UNKNOWN", self.service + " did not install from blueprint after 60 minutes (" + ' '.join(
             ambari.sshcmd()) + ")")
+        if state=="COMPLETED":
+            #done!
+            return True
+        else:
+            raise ValueError("Unknown state: "+str(state)+" (" + ' '.join(ambari.sshcmd()) + ")")
         return
 
     def waitForAmbari(self, ambari):

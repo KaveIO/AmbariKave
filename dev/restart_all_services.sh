@@ -55,7 +55,19 @@ done
 echo "sleeping for 70 seconds (heartbeat duration)"
 sleep 70
 
-#start them
+#Always start FreeIPA first if it is in the list
+echo "starting FreeIPA"
+for service in $allnames; do
+	if [ "$service" != "FREEIPA" ]; then
+		continue
+	fi
+	echo $service
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+    sleep 70
+done
+
+
+#start everything
 for service in $allnames; do
 	echo $service
 	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"

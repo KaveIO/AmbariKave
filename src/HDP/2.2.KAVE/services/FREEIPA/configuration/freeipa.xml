@@ -22,6 +22,15 @@
         </description>
     </property>
     <property>
+        <name>initial_users_and_groups</name>
+        <value>{"Users": [], "Groups" : {}}</value>
+        <description>
+            Json description of intial users to add to FreeIPA, along with any groups.
+            If these users and groups already exist, nothing is done.
+            e.g.: {"Users" : ["bob","eve"], "Groups" : { "gitlab" : ["bob"], "scientists" : ["eve", "bob"] } }
+        </description>
+    </property>
+    <property>
         <name>install_with_dns</name>
         <value>True</value>
         <description>

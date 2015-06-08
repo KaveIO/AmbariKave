@@ -58,7 +58,7 @@ if has_rm:
         rm_port = get_port_from_url(config['configurations']['yarn-site']['yarn.resourcemanager.webapp.address'])
 
 hive_http_port = default('/configurations/hive-site/hive.server2.thrift.http.port', "10001")
-hive_port = default('/configurations/hive-site/hive.server2.thrift.http.port', "10000")
+hive_port = default('/configurations/hive-site/hive.server2.thrift.port', "10000")
 hive_http_path = default('/configurations/hive-site/hive.server2.thrift.http.path', "cliservice")
 hive_server_hosts = default("/clusterHostInfo/hive_server_host", None)
 if type(hive_server_hosts) is list:

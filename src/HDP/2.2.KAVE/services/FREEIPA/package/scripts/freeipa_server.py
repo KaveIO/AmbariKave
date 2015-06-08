@@ -70,17 +70,18 @@ class FreeipaServer(Script):
 
         self.create_base_accounts(env)
         #create initial users and groups
-        if "Users" in params.initial_users_and_groups:
-            for user in params.initial_users_and_groups["Users"]:
-                password=None
-                if user in params.initial_user_passwords:
-                    password=params.initial_user_passwords[user]
-                freeipa.create_user_principal(identity=user, password=password)
-        if "Groups" in params.initial_users_and_groups:
-            for group, users in params.initial_users_and_groups["Groups"].iteritems():
-                freeipa.create_group(group)
-                for user in users:
-                    freeipa.group_add_member(group,user)
+        with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
+            if "Users" in params.initial_users_and_groups:
+                for user in params.initial_users_and_groups["Users"]:
+                    password=None
+                    if user in params.initial_user_passwords:
+                        password=params.initial_user_passwords[user]
+                    fi.create_user_principal(identity=user, password=password)
+            if "Groups" in params.initial_users_and_groups:
+                for group, users in params.initial_users_and_groups["Groups"].iteritems():
+                    freeipa.create_group(group)
+                    for user in users:
+                        fi.group_add_member(group,user)
         #create robot admin
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)

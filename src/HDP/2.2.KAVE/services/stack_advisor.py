@@ -37,16 +37,17 @@ class HDP22KAVEStackAdvisor(HDP22StackAdvisor):
         return parentValidators
 
     def validateFreeIPAConfigurations(self, properties, recommendedDefaults, configurations):
-        validationItems = [{"config-name": 'directory_password', "item": self.validatorPasswordStrength(properties, 'directory_password')}]
+        validationItems = [{"config-name": 'directory_password', "item": self.validatorPasswordStrength(properties, 'directory_password')},
+                           {"config-name": 'ldap_bind_password', "item": self.validatorPasswordStrength(properties, 'directory_password')}]
         return self.toConfigurationValidationProblems(validationItems, "freeipa")
 
     def getConfigurationsValidationItems(self, services, hosts):
         """
-        Returns array of Validation objects about issues with configuration 
-        values provided in services. This is overridden from HDP206StackAdvisor. 
-        The added functionality is the use of validateWithoutRecommendedDefault. 
-        We want the passwords to be validated even if there are no suitable 
-        recommendedDefaults present in the blueprint. 
+        Returns array of Validation objects about issues with configuration
+        values provided in services. This is overridden from HDP206StackAdvisor.
+        The added functionality is the use of validateWithoutRecommendedDefault.
+        We want the passwords to be validated even if there are no suitable
+        recommendedDefaults present in the blueprint.
         """
         items = []
 
@@ -64,7 +65,7 @@ class HDP22KAVEStackAdvisor(HDP22StackAdvisor):
                     recommendedDefault = recommendedDefaults[siteName]["properties"]
                 else:
                     recommendedDefault = None
-        
+
                 if recommendedDefault is not None or siteName in self.validateWithoutRecommendedDefault:
                     siteProperties = getSiteProperties(configurations, siteName)
                     if siteProperties is not None:

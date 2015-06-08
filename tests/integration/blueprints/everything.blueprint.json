@@ -55,7 +55,7 @@
         }
     },
     { "freeipa": {
-        "admin_password": "bla12345",
+        "ldap_bind_password": "bla12345",
         "directory_password": "bla12345"
         }
     },

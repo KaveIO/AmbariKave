@@ -33,6 +33,10 @@ directory_password = default('configurations/freeipa/directory_password', False)
 if not directory_password or len(directory_password) < 8:
     raise Exception('FreeIPA directory_password: \'%s\' isn\'t acceptable (min 8 char long)' % directory_password)
 
+ldap_bind_password = default('configurations/freeipa/ldap_bind_password', False)
+if not ldap_bind_password or len(ldap_bind_password) < 8:
+    raise Exception('FreeIPA ldap_bind_password: \'%s\' isn\'t acceptable (min 8 char long)' % ldap_bind_password)
+
 hostname_components = config["hostname"].split('.')
 if len(hostname_components) < 3:
     raise Exception('FreeIPA hostname is not a FQDN. installation not possible')
@@ -143,7 +147,6 @@ service_users = {
 }
 
 ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
-ldap_bind_password = default('configurations/freeipa/ldap_bind_password', '')
 ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
 
 required_users = {

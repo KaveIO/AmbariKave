@@ -15,10 +15,27 @@
         <value></value>
         <property-type>PASSWORD</property-type>
         <description>
-            The directory_password will the ldap admin password. Must be at least 8
+            The directory_password will also be the ldap admin password. Must be at least 8
             characters long. This parameter will be used during the initial
             installation. After the installation reconfiguration of this password
             will not have any effect.
+        </description>
+    </property>
+    <property  require-input = "true">
+        <name>ldap_bind_password</name>
+        <value></value>
+        <property-type>PASSWORD</property-type>
+        <description>
+            The password of the user created for binding services through LDAP. Must be at least 8
+            characters long. This setting is not automatically picked up by the services which would
+            want to bind. This only used to generate this specific user. Be sure
+            to set ipa_integration_enabled to True on the service you want to
+            integrate and the ipa_bind_password to the same value as provided here.
+
+            If this setting is not set the give user is not generated during
+            installation. If you at a later stage still want this option you'll
+            have to go through the ipa interface to generate itself. This setting
+            will not be interpreted twice.
         </description>
     </property>
     <property>
@@ -50,22 +67,6 @@
             want to bind. This only used to generate this specific user. Be sure
             to set ipa_integration_enabled to True on the service you want to
             integrate and the ipa_bind_user to the same value as provided here.
-        </description>
-    </property>
-    <property>
-        <name>ldap_bind_password</name>
-        <value></value>
-        <description>
-            The password of the user created for binding services through LDAP. This
-            setting is not automatically picked up by the services which would
-            want to bind. This only used to generate this specific user. Be sure
-            to set ipa_integration_enabled to True on the service you want to
-            integrate and the ipa_bind_password to the same value as provided here.
-
-            If this setting is not set the give user is not generated during
-            installation. If you at a later stage still want this option you'll
-            have to go through the ipa interface to generate itself. This setting
-            will not be interpreted twice.
         </description>
     </property>
     <property>

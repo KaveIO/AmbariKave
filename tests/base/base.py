@@ -423,9 +423,10 @@ class LDTest(unittest.TestCase):
         import time
         rounds = 1
         state="UNKNOWN"
+        ip = ambari.host
         while rounds <= max_rounds:
             stdout = lD.runQuiet(
-                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/" + cname + "/requests/1")
+                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/" + clustername + "/requests/"+str(requestid))
             if '"request_status" : "FAILED"' in stdout:
                 state="FAILED"
                 break
@@ -445,10 +446,9 @@ class LDTest(unittest.TestCase):
         """
         cname = cluster.split('/')[-1].split('.')[0]
         import libDeploy as lD
-
+        ip = ambari.host
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         #wait until ambari server is up
-        ip = ambari.host
         self.waitForAmbari(ambari)
         stdout = lD.runQuiet(
             deploy_dir + "/deploy_from_blueprint.py " + blueprint + " " + cluster + " " + ip + " $AWSSECCONF "

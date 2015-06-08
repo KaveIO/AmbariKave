@@ -173,3 +173,14 @@ required_users = {
     'rrdcached': { 'comment': 'rrdcached', 'options': ['-d', '/var/rrdtool/rrdcached', '-M'] },
     'mysql': { 'comment': 'MySQL Server', 'options': ['-d', '/var/lib/mysql', '-M'] },
 }
+
+initial_users_and_groups=default('configurations/freeipa/initial_users_and_groups', '{"Users": [], "Groups" : {}}')
+import json
+initial_users_and_groups=json.loads(initial_users_and_groups)
+
+initial_user_passwords=default('configurations/freeipa/initial_user_passwords', '{ }')
+
+initial_user_passwords=json.loads(initial_user_passwords)
+for user,passwd in initial_user_passwords.iteritems():
+    if len(passwd)<8:
+        raise ValueError("User : "+user+" cannot be assigned an intital password less than 8 characters")

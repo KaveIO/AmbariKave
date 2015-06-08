@@ -44,7 +44,22 @@
         <description>
             Json description of intial users to add to FreeIPA, along with any groups.
             If these users and groups already exist, nothing is done.
-            e.g.: {"Users" : ["bob","eve"], "Groups" : { "gitlab" : ["bob"], "scientists" : ["eve", "bob"] } }
+            e.g.: {"Users" : ["bob","eve"], "Groups" : { "gitlab" : ["bob"], "scientists" : ["eve", "bob"], "admins" : ["bob"] } }
+            If you want to make some special admin users, you should add them here.
+            By default random passwords are assigned which must be changed on first login. If you want to specify the passwords yourself
+            then add a password to the initial_user_password field.
+        </description>
+    </property>
+    <property>
+        <name>initial_user_passwords</name>
+        <value>{ }</value>
+        <property-type>PASSWORD</property-type>
+        <description>
+            Json description of intial passwords to set in freeIPA.
+            This is only used if a new user is added.
+            e.g.: {"bob":"mynameisbobandIamanadminandthisisnotmypassword"}
+            All passwords set this way must be at least eight characters.
+            If set this way, passwords must be changed on the first login of this user.
         </description>
     </property>
     <property>

@@ -22,7 +22,11 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "freeipa": { "directory_password": "bla12345", "ldap_bind_password": "bla12345" } }
+    { "freeipa": { "directory_password": "bla12345", "ldap_bind_password": "bla12345",
+                   "initial_users_and_groups" : "{\"Users\" : [\"bob\"], \"Groups\": {\"admins\":"\bob\"} }",
+                   "initial_user_passwords" : "{\"bob\": \"mynameisbobandIamanadminandthisisnotmypass\"}"
+                   }
+      }
   ],
   "host_groups" : [
     {

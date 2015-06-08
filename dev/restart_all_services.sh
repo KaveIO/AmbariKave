@@ -75,6 +75,6 @@ for service in $allnames; do
 	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
 echo "All request hrefs"
-curl --user admin:admin http://localhost:8080/api/v1/clusters/default/requests | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
+curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
 echo "Final request ID for automatic monitoring:"
-curl --user admin:admin http://localhost:8080/api/v1/clusters/default/requests | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'
+curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'

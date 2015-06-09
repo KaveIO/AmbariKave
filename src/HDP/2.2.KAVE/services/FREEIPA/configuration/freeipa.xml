@@ -74,6 +74,13 @@
         </description>
     </property>
     <property>
+        <name>default_shell</name>
+        <value>/bin/bash</value>
+        <description>
+            Default shell for all users, if you intend to use KaveToolbox, this should be set to /bin/bash.
+        </description>
+    </property>
+    <property>
         <name>ldap_bind_user</name>
         <value>kave_bind_user</value>
         <description>

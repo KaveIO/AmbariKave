@@ -67,10 +67,13 @@ class FreeipaServer(Script):
                  content=Template("admin-password.j2", admin_password=admin_password),
                  mode=0600
             )
-
+        #set the default shell
+        with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
+            fi.set_default_shell(params.default_shell)
         self.create_base_accounts(env)
         #create initial users and groups
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
+
             if "Users" in params.initial_users_and_groups:
                 for user in params.initial_users_and_groups["Users"]:
                     password=None

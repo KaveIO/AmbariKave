@@ -22,7 +22,6 @@ import kavecommon as kc
 
 
 class Jenkins(Script):
-    repos_file_path = '/etc/yum.repos.d/mongodb.repo'
     config_file_path = '/etc/sysconfig/jenkins'
 
     def install(self, env):

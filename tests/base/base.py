@@ -592,10 +592,14 @@ class LDTest(unittest.TestCase):
                     rounds = rounds + 1
                 self.assertTrue(flag, "checking existence of " + check + " failed (" + ' '.join(
                     ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
-            elif check.startswith("http://") or check.startswith("https://"):
+            elif check.startswith("http://"):
                 stdout = ambari.run(" curl -i -I --keepalive-time 5 " + check, exit=False)
                 self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
                     ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+            elif check.startswith("https://"):
+                stdout = ambari.run(" curl -k -i -I --keepalive-time 5 " + check, exit=False)
+                self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
+                    ambari.sshcmd()) + " 'curl -k -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif len(check):
                 self.assertTrue(False, "don't know how to check existence of " + check)
         return

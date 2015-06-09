@@ -18,6 +18,10 @@
 # This is the install snippet file, it does the work of installing ambari and is
 # used in the dev install.sh command, and also catted into the packaged install script
 
+#abort at first failure
+set -e
+set -o pipefail
+
 yum install ambari-server -y
 yum install -y pdsh wget curl
 ambari-server setup -s

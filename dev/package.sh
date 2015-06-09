@@ -24,6 +24,12 @@
 #     4. Upload the tarball to the correct noarch repos directory
 #     5. Upload the install script to the correct centos6 (architecture specific directory)
 #
+
+
+#abort at first failure
+set -e
+set -o pipefail
+
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 BUILD_DIR=$PROJECT_DIR/build
 DEV_DIR=$PROJECT_DIR/dev
@@ -93,6 +99,9 @@ echo "Writing the centos6 installer: $RELEASE_INSTALLER"
 echo '#!/bin/bash' > $BUILD_DIR/$RELEASE_INSTALLER
 cat $PROJECT_DIR/LICENSE >> $BUILD_DIR/$RELEASE_INSTALLER
 echo '' >> $BUILD_DIR/$RELEASE_INSTALLER
+echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
+echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
+echo 'set -o pipefail' >> $BUILD_DIR/$RELEASE_INSTALLER
 echo 'CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"' >> $BUILD_DIR/$RELEASE_INSTALLER
 
 #Jump into cat until eof in order to write arbitrary things into the installer script

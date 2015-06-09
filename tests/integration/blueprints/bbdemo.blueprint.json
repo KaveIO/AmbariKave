@@ -23,7 +23,7 @@
       }
     },
     { "freeipa": { "ldap_bind_password": "bla12345", "directory_password": "bla12345" } },
-    { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin", "AMBARI_SERVER" : "ambari" } },
+    { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } },
     { "gitlab" : { "freeipa_host" : "ambari.node.kave.kpmg.deltaforce.io", "gitlab_admin_password" : "admin", "gitlab_url" : "namenode-001.node.kave.kpmg.deltaforce.io"} }
   ],
   "host_groups" : [

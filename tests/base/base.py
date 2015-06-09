@@ -414,7 +414,7 @@ class LDTest(unittest.TestCase):
     def monitor_request(self,ambari,clustername,requestid=1, max_rounds=60):
         """
         Watch a request for failure/success
-        ambari: teh ambari host remote
+        ambari: the ambari host remote
         clustername the name of the cluster
         requestid: the request id to monitor
         rounds, how many rounds
@@ -592,7 +592,7 @@ class LDTest(unittest.TestCase):
                     rounds = rounds + 1
                 self.assertTrue(flag, "checking existence of " + check + " failed (" + ' '.join(
                     ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
-            elif check.startswith("http://"):
+            elif check.startswith("http://") or check.startswith("https://"):
                 stdout = ambari.run(" curl -i -I --keepalive-time 5 " + check, exit=False)
                 self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
                     ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)

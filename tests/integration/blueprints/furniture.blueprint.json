@@ -54,7 +54,7 @@
         }
     },
     { "gitlab" : { "freeipa_host" : "ambari.kave.io", "gitlab_admin_password" : "admin", "gitlab_url" : "dev.kave.io"} },
-    { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin", "AMBARI_SERVER" : "ambari" } }
+    { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } }
   ],
   "host_groups" : [
     {

@@ -26,7 +26,7 @@
 	},
 	{
 	    "name" : "gateway",
-	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin", "AMBARI_SERVER" : "ambari" } } ],
+	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } } ],
 	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
 	},
 	{

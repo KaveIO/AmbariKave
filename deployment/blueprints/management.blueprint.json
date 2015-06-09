@@ -26,7 +26,7 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "freeipa": { "admin_password": "bla12345", "ldap_bind_password": "bla456789" } } ],
+      "configurations" : [ { "freeipa": { "directory_password": "bla12345", "ldap_bind_password": "bla456789" } } ],
       "components" : [
         { "name" : "AMBARI_SERVER"   },
         { "name" : "GANGLIA_SERVER"  },

@@ -17,4 +17,12 @@
     <value>none</value>
     <description>List of alternative websites or local cache locations to download the kavetoolbox distribution</description>
   </property>
+  <property>
+    <name>ignore_missing_groups</name>
+    <value>False</value>
+    <description>KaveToolbox installation fails if yum groups are not available.
+    If you have installed the contents of the groups Development Tools, Additional Development and X Window System manually where needed
+    then you can set this part to True. Otherwise, KaveToolbox installation will fail for sure.
+    </description>
+  </property>
 </configuration>

@@ -87,7 +87,7 @@
     {
       "name" : "gateway",
       "configurations" : [
-        { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin", "AMBARI_SERVER" : "ambari" } }
+        { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } }
       ],
       "components" : [
         { "name" : "KAVETOOLBOXGATE"  },

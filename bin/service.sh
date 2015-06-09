@@ -123,7 +123,7 @@ function runConfigureService {
       buildConfiguration gitlab gitlab_port freeipa_host restrict_public_projects gitlab_signin_enabled
       ;;
     FREEIPA)
-    buildConfiguration admin_password ldap_bind_password
+    buildConfiguration directory_password ldap_bind_password
       ;;
     KAVELANDING)
     buildConfiguration AMBARI_ADMIN AMBARI_ADMIN_PASS

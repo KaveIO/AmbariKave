@@ -50,7 +50,10 @@ class KaveToolbox(Script):
         for gits in glob.glob(self.sttmpdir + "/*.git"):
             if os.path.isdir(gits) and not gits.endswith("/.git"):
                 Execute('mv ' + gits + ' ' + gits[:-len(".git")])
-        Execute('./[k,K]ave[t,T]oolbox*/scripts/KaveInstall --' + self.kind)
+        extraopts=""
+        if params.ignore_missing_groups:
+            extraopts=" --ignore-missing-groups"
+        Execute('./[k,K]ave[t,T]oolbox*/scripts/KaveInstall --' + self.kind+extraopts)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
 

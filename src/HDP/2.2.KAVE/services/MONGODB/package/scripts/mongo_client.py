@@ -29,8 +29,8 @@ class MongoClient(MongoBase):
         env.set_params(params)
         self.installMongo(env)
         self.configure(env)
-        File('/usr/local/bin/kmongo',
-             content=Template("kmongo"),
+        File('/usr/local/bin/mongok',
+             content=Template("mongok"),
              mode=0644
              )
 

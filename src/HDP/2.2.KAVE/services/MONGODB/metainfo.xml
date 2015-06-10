@@ -20,7 +20,7 @@
                 </component>
                     <component>
                     <name>MONGODB_CLIENT</name>
-                    <displayName>MongoDB Clients</displayName>
+                    <displayName>MongoDB Clients. Installs the client libraries and the kmongo script for ease of use.</displayName>
                     <category>CLIENT</category>
                     <commandScript>
                         <script>scripts/mongo_client.py</script>

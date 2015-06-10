@@ -7,7 +7,7 @@
         "nagios_contact" : "TEST@TEST.COM"
       } },
       { "freeipa": {
-        ldap_bind_password": "bla456789",
+        "ldap_bind_password": "bla456789",
         "directory_password": "bla12345"
       } },
       { "gitlab"     : {

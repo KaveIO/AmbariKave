@@ -52,8 +52,6 @@ class Hue(Script):
 
     def start(self, env):
         Execute("service hue start")
-        #self.configure(env)
-        #Execute("service hue restart")
 
     def stop(self, env):
         Execute('service hue stop')

@@ -83,6 +83,8 @@ class FreeipaServer(Script):
                     if username in params.initial_user_passwords:
                         password=params.initial_user_passwords[username]
                     fi.create_user_principal(identity=username, password=password)
+                    if "email" in user:
+                        fi.set_user_email(user["name"],user["email"])
             if "Groups" in params.initial_users_and_groups:
                 groups=params.initial_users_and_groups["Groups"]
                 if type(groups) is dict:

@@ -233,6 +233,9 @@ class FreeIPA(object):
     def set_default_shell(self, shell):
         subprocess.call(['ipa', 'config-mod', '--defaultshell='+shell])
 
+    def set_user_email(self, user, email):
+        subprocess.call(['ipa', 'user-mod', '--email="'+email+'"'])
+
 
 def generate_random_password(length=16):
     """

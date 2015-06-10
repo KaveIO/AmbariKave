@@ -47,7 +47,7 @@
             you can use the simple format:
             e.g.: {"Users" : ["bob","eve"], "Groups" : { "gitlab" : ["bob"], "scientists" : ["eve", "bob"], "admins" : ["bob"] } }
             of the extended format:
-            e.g.: {"Users" : [{ "username" : "bob"},{"username": "eve"}], "Groups" : [ {"name":"gitlab", "members" : ["bob"]},{"name":"admins", "members" : ["bob"]}] }
+            e.g.: {"Users" : [{ "username" : "bob", "email":"bob@bob.bob"},{"username": "eve"}], "Groups" : [ {"name":"gitlab", "members" : ["bob"]},{"name":"admins", "members" : ["bob"]}] }
             If you want to make some special admin users, you should add them here.
             By default random passwords are assigned which must be changed on first login. If you want to specify the passwords yourself
             then add a password to the initial_user_password field.

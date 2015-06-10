@@ -54,8 +54,8 @@
         }
     },
     { "freeipa": {
-        "ldap_bind_password": "kpmg_wifi_ldap",
-        "directory_password": "kpmg_wifi_ipa_directory",
+        "ldap_bind_password": "testtestdirpass1234",
+        "directory_password": "testtestdirpass1234",
         "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
         "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
         }

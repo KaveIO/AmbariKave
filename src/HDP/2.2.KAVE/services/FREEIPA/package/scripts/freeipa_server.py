@@ -76,7 +76,7 @@ class FreeipaServer(Script):
 
             if "Users" in params.initial_users_and_groups:
                 for user in params.initial_users_and_groups["Users"]:
-                    if type(user) is str:
+                    if type(user) is str or type(user) is not dict:
                         user={"username":user}
                     username=user["username"]
                     password=None

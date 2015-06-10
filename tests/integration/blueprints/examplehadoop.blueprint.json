@@ -54,13 +54,15 @@
         }
     },
     { "freeipa": {
-        "ldap_bind_password": "bla12345",
-        "directory_password": "bla12345"
+        "ldap_bind_password": "testtestdirpass1234",
+        "directory_password": "testtestdirpass1234",
+        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
         }
     },
     { "sonarqube" : {
-    	"sonarhost" : "dev-001.kave.io",
-    	"sonar_database_url":"dev-001.kave.io",
+    	"sonarhost" : "ci.kave.io",
+    	"sonar_database_url":"ci.kave.io",
     	"sonar_database_user_passwd" : "admin"
     	}
     },
@@ -82,10 +84,7 @@
     },
     {
       "name" : "gateway",
-      "configurations" : [
-        { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } },
-        { "sonarqube" : { "sonarhost" : "dev-001.kave.io", "sonar_database_url":"dev-001.kave.io", "sonar_database_user_passwd" : "admin" } }
-      ],
+      "configurations" : [   ],
       "components" : [
         { "name" : "KAVETOOLBOXGATE"      },
 	    { "name" : "HDFS_CLIENT"          },
@@ -149,7 +148,7 @@
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1+"
-    }
+    },
     {
       "name" : "ci",
       "configurations" : [

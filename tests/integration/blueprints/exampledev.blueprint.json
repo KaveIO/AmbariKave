@@ -30,13 +30,13 @@
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups" : "{\"Users\" : [\"\"], \"Groups\" : {\"admins\" : [\"jvlier\"]}}",
-        "initial_user_passwords" : "{\"jvlier\": \"ProbablySwimmingNearestDriver\"}"
+        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
         }
     },
     { "sonarqube" : {
-    	"sonarhost" : "ci-001.kave.io",
-    	"sonar_database_url":"ci-001.kave.io",
+    	"sonarhost" : "ci.kave.io",
+    	"sonar_database_url":"ci.kave.io",
     	"sonar_database_user_passwd" : "admin"
     	}
     },

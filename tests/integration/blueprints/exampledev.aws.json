@@ -13,7 +13,7 @@
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
   },
   { "Name" : "ci",
-    "Count" : 1,
+    "Count" : -1,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]

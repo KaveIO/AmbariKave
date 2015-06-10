@@ -139,7 +139,12 @@ if [ -f /etc/kave/mirror ]; then
 		#echo \$line
 		if [ -z "\$line" ]; then
 			continue
-		elif [[ ! "\$line" =~ "http" ]]; then
+		fi
+		#always add a trailing /
+		if [ "\${line: -1}" != '/' ]; then
+			line=\${line}/
+		fi
+		if [[ ! "\$line" =~ "http" ]]; then
 			if [ -d "\$line" ]; then
 				checkout="cp"
 				repos_server=\${line}
@@ -162,7 +167,7 @@ fi
 
 if [ ! -f $RELEASE_PACKAGE ]; then
 	#echo \${checkout} \${repos_server}
-	\${checkout} \${repos_server}/noarch/AmbariKave/$TAG/$RELEASE_PACKAGE
+	\${checkout} \${repos_server}noarch/AmbariKave/$TAG/$RELEASE_PACKAGE
 fi
 tar -xzf $RELEASE_PACKAGE -C /var/lib/
 

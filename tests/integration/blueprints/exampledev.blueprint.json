@@ -77,7 +77,7 @@
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },
         { "name" : "JENKINS_MASTER"        },
-        { "name" : "TWIKI_MASTER"          },
+        { "name" : "TWIKI_SERVER"          },
         { "name" : "GITLAB_SERVER"         },
         { "name" : "SONARQUBE_SERVER"      },
         { "name" : "SONARQUBE_MYSQL_SERVER"},

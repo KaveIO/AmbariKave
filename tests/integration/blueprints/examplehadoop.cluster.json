@@ -31,7 +31,7 @@
 	{
 	    "name" : "data",
 	    "configurations" : [  ],
-	    "hosts" : [ { "fqdn" : "data-001.kave.io" }, { "fqdn" : "data-002.kave.io" }, { "fqdn" : "data-003.kave.io" }, { "fqdn" : "data-004.kave.io" } ]
+	    "hosts" : [ { "fqdn" : "data-001.kave.io" }, { "fqdn" : "data-002.kave.io" }, { "fqdn" : "data-003.kave.io" } ]
 	},
 	{
 	    "name" : "ci",

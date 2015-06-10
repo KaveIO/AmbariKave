@@ -28,7 +28,7 @@
 
 #abort at first failure
 set -e
-set -o pipefail
+#set -o pipefail #not a good idea, causes failures even in actual successful situations
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 BUILD_DIR=$PROJECT_DIR/build
@@ -101,7 +101,7 @@ cat $PROJECT_DIR/LICENSE >> $BUILD_DIR/$RELEASE_INSTALLER
 echo '' >> $BUILD_DIR/$RELEASE_INSTALLER
 echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
 echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
-echo 'set -o pipefail' >> $BUILD_DIR/$RELEASE_INSTALLER
+#echo 'set -o pipefail' >> $BUILD_DIR/$RELEASE_INSTALLER #not a good idea, causes failures even in actual successful situations
 echo 'CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"' >> $BUILD_DIR/$RELEASE_INSTALLER
 
 #Jump into cat until eof in order to write arbitrary things into the installer script

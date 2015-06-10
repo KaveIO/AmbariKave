@@ -1,0 +1,97 @@
+{
+  "configurations" : [
+    {
+      "ganglia-env" : {
+        "additional_clusters" : " ",
+        "ganglia_runtime_dir" : "/var/run/ganglia/hdp",
+        "gmetad_user" : "nobody",
+        "gmond_user" : "nobody",
+        "rrdcached_base_dir" : "/var/lib/ganglia/rrds",
+        "rrdcached_delay" : "1800",
+        "rrdcached_flush_timeout" : "7200",
+        "rrdcached_timeout" : "3600",
+        "rrdcached_write_threads" : "4"
+      }
+    },
+    {
+      "nagios-env" : {
+        "nagios_group" : "nagios",
+        "nagios_user" : "nagios",
+        "nagios_web_login" : "admin",
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    },
+    { "freeipa": {
+        "ldap_bind_password": "testtestdirpass1234",
+        "directory_password": "testtestdirpass1234",
+        "initial_users_and_groups" : "{\"Users\" : [\"\"], \"Groups\" : {\"admins\" : [\"jvlier\"]}}",
+        "initial_user_passwords" : "{\"jvlier\": \"ProbablySwimmingNearestDriver\"}"
+        }
+    },
+    { "sonarqube" : {
+    	"sonarhost" : "ci-001.kave.io",
+    	"sonar_database_url":"ci-001.kave.io",
+    	"sonar_database_user_passwd" : "admin"
+    	}
+    },
+    { "gitlab" : {"gitlab_port" : "8888"} }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"   },
+        { "name" : "GANGLIA_SERVER"  },
+        { "name" : "NAGIOS_SERVER"   },
+        { "name" : "FREEIPA_SERVER"  },
+        { "name" : "FREEIPA_CLIENT"  },
+        { "name" : "GANGLIA_MONITOR" }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "configurations" : [      ],
+      "components" : [
+        { "name" : "KAVELANDING"          },
+        { "name" : "KAVETOOLBOXGATE"      },
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "ci",
+      "configurations" : [
+      	{ "sonarqube" : { "sonarhost" : "localhost", "sonar_database_url":"localhost", "sonar_database_user_passwd" : "admin" } }
+      	],
+      "components" : [
+        { "name" : "ARCHIVA_SERVER"        },
+        { "name" : "JENKINS_MASTER"        },
+        { "name" : "TWIKI_MASTER"          },
+        { "name" : "GITLAB_SERVER"         },
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "KAVETOOLBOXNODE"       },
+        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "FREEIPA_CLIENT"        }
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "exampledev",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

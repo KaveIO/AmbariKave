@@ -1,0 +1,252 @@
+{
+  "configurations" : [
+    {
+      "ganglia-env" : {
+        "additional_clusters" : " ",
+        "ganglia_runtime_dir" : "/var/run/ganglia/hdp",
+        "gmetad_user" : "nobody",
+        "gmond_user" : "nobody",
+        "rrdcached_base_dir" : "/var/lib/ganglia/rrds",
+        "rrdcached_delay" : "1800",
+        "rrdcached_flush_timeout" : "7200",
+        "rrdcached_timeout" : "3600",
+        "rrdcached_write_threads" : "4"
+      }
+    },
+    {
+      "nagios-env" : {
+        "nagios_group" : "nagios",
+        "nagios_user" : "nagios",
+        "nagios_web_login" : "admin",
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    },
+    { "core-site" : {
+        "hadoop.proxyuser.hue.hosts"  : "*",
+        "hadoop.proxyuser.hue.groups" : "*",
+        "hadoop.proxyuser.hcat.groups": "*",
+        "hadoop.proxyuser.hcat.hosts" : "*"
+        }
+    },
+    { "webhcat-site" : {
+        "webhcat.proxyuser.hue.hosts"  : "*",
+        "webhcat.proxyuser.hue.groups" : "*"
+        }
+    },
+    { "oozie-site" : {
+        "oozie.service.ProxyUserService.proxyuser.hue.hosts"  : "*",
+        "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
+        }
+    },
+    { "hdfs-site" : {
+        "dfs.webhdfs.enabled" : "true"
+        }
+    },
+    { "hive-site" : {
+        "hive.heapsize" : "1024",
+        "javax.jdo.option.ConnectionPassword" : "admin"
+        }
+    },
+    { "freeipa": {
+        "ldap_bind_password": "kpmg_wifi_ldap",
+        "directory_password": "kpmg_wifi_ipa_directory",
+        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
+        }
+    },
+    { "sonarqube" : {
+    	"sonarhost" : "ci.kave.io",
+    	"sonar_database_url":"ci.kave.io",
+    	"sonar_database_user_passwd" : "admin"
+    	}
+    },
+    { "stormsd" : { "supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711", "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io, nno-001.kave.io, nno-002.kave.io", "drpc.servers" : "nimbus.kave.io" }  },
+    { "mongodb" : { "mongo_host" : "mongo.kave.io" }  },
+    { "gitlab" : {"gitlab_port" : "8888"} }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"   },
+        { "name" : "GANGLIA_SERVER"  },
+        { "name" : "NAGIOS_SERVER"   },
+        { "name" : "FREEIPA_SERVER"  },
+        { "name" : "GANGLIA_MONITOR" },
+        { "name" : "FREEIPA_CLIENT"  }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "configurations" : [      ],
+      "components" : [
+        { "name" : "KAVELANDING"          },
+        { "name" : "KAVETOOLBOXGATE"      },
+        { "name" : "SONARQUBE_RUNNER"     },
+	    { "name" : "HDFS_CLIENT"          },
+	    { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+		{ "name" : "SQOOP"                },
+		{ "name" : "HIVE_CLIENT"          },
+		{ "name" : "TEZ_CLIENT"           },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+		{ "name" : "STORMSD_CLIENT"       },
+		{ "name" : "MONGODB_CLIENT"       },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name":"namenode-1",
+      "components" : [
+        { "name" : "NAMENODE"             },
+        { "name" : "RESOURCEMANAGER"      },
+        { "name" : "APP_TIMELINE_SERVER"  },
+        { "name" : "HISTORYSERVER"        },
+        { "name" : "PIG"                  },
+        { "name" : "HCAT"                 },
+        { "name" : "HIVE_SERVER"          },
+        { "name" : "HIVE_METASTORE"       },
+        { "name" : "HIVE_CLIENT"          },
+        { "name" : "TEZ_CLIENT"           },
+        { "name" : "WEBHCAT_SERVER"       },
+        { "name" : "MYSQL_SERVER"         },
+		{ "name" : "HUE_SERVER"           },
+        { "name" : "ZOOKEEPER_SERVER"     },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVETOOLBOXNODE"      },
+		{ "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name":"namenode-2",
+      "components" : [
+        { "name" : "SECONDARY_NAMENODE"   },
+        { "name" : "ZOOKEEPER_SERVER"     },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVETOOLBOXNODE"      },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "data",
+      "components" : [
+        { "name" : "DATANODE"             },
+        { "name" : "NODEMANAGER"          },
+        { "name" : "KAVETOOLBOXNODE"      },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "mongo",
+      "configurations" : [ { "mongodb" : { "mongo_host" : "localhost" }  } ],
+      "components" : [
+        { "name" : "MONGODB_MASTER"       },
+        { "name" : "MONGODB_CLIENT"       },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "jboss",
+      "configurations" : [  ],
+      "components" : [
+        { "name" : "APACHE_WEB_MASTER"     },
+        { "name" : "JBOSS_APP_SERVER"      },
+        { "name" : "GANGLIA_MONITOR"       },
+		{ "name" : "MONGODB_CLIENT"        },
+        { "name" : "FREEIPA_CLIENT"        }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "ci",
+      "configurations" : [
+      	{ "sonarqube" : { "sonarhost" : "localhost", "sonar_database_url":"localhost", "sonar_database_user_passwd" : "admin" } }
+      	],
+      "components" : [
+        { "name" : "ARCHIVA_SERVER"        },
+        { "name" : "JENKINS_MASTER"        },
+        { "name" : "GITLAB_SERVER"         },
+        { "name" : "TWIKI_SERVER"          },
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "STORMSD_CLIENT"        },
+		{ "name" : "MONGODB_CLIENT"        },
+        { "name" : "HIVE_CLIENT"           },
+        { "name" : "TEZ_CLIENT"            },
+	    { "name" : "HDFS_CLIENT"           },
+	    { "name" : "YARN_CLIENT"           },
+	    { "name" : "MAPREDUCE2_CLIENT"     },
+		{ "name" : "STORMSD_CLIENT"        },
+		{ "name" : "MONGODB_CLIENT"        },
+        { "name" : "KAVETOOLBOXNODE"       },
+        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "FREEIPA_CLIENT"        }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "nimbus",
+      "configurations" : [ { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost, nno-001.kave.io, nno-002.kave.io", "drpc.servers" : "nimbus.kave.io" }  }],
+      "components" : [
+        { "name" : "NIMBUS_SD_MASTER"   },
+        { "name" : "STORMSD_UI_SERVER"  },
+        { "name" : "STORMSD_DRPC_SERVER"},
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "KAVETOOLBOXNODE"    },
+        { "name" : "GANGLIA_MONITOR"    },
+        { "name" : "FREEIPA_CLIENT"     }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "supervisor",
+      "configurations" : [  ],
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "KAVETOOLBOXNODE"  },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "SUPERVISOR_SD_SLAVE" },
+        { "name" : "FREEIPA_CLIENT"   }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "kafka",
+      "configurations" : [ { "kafka-broker" : { "zookeeper.connect" : "nimbus.kave.io:2181,nno-001.kave.io:2181,nno-002.kave.io:2181" }  } ],
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "KAVETOOLBOXNODE"  },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "KAFKA_BROKER"     },
+        { "name" : "FREEIPA_CLIENT"   }
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "examplelambda",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

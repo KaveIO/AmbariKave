@@ -24,8 +24,7 @@
     },
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
-        "AMBARI_ADMIN_PASS" : "admin",
-        "AMBARI_SERVER" : "ambari"
+        "AMBARI_ADMIN_PASS" : "admin"
     	}
     },
     { "core-site" : {
@@ -59,7 +58,13 @@
         "directory_password": "bla12345"
         }
     },
-    { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  }
+    { "sonarqube" : {
+    	"sonarhost" : "dev-001.kave.io",
+    	"sonar_database_url":"dev-001.kave.io",
+    	"sonar_database_user_passwd" : "admin"
+    	}
+    },
+    { "gitlab" : {"gitlab_port" : "8888"} }
   ],
   "host_groups" : [
     {
@@ -70,61 +75,31 @@
         { "name" : "GANGLIA_SERVER"  },
         { "name" : "NAGIOS_SERVER"   },
         { "name" : "GANGLIA_MONITOR" },
-        { "name" : "FREEIPA_SERVER"  }
+        { "name" : "FREEIPA_SERVER"  },
+        { "name" : "FREEIPA_CLIENT"  }
       ],
       "cardinality" : "1"
     },
     {
-      "name" : "web",
-      "configurations" : [ ],
-      "components" : [
-        { "name" : "APACHE_WEB_MASTER" },
-        { "name" : "TWIKI_SERVER"  },
-        { "name" : "GANGLIA_MONITOR" }
-      ],
-      "cardinality" : "0-10"
-    },
-    {
       "name" : "gateway",
       "configurations" : [
-        { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } }
+        { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } },
+        { "sonarqube" : { "sonarhost" : "dev-001.kave.io", "sonar_database_url":"dev-001.kave.io", "sonar_database_user_passwd" : "admin" } }
       ],
       "components" : [
-        { "name" : "KAVETOOLBOXGATE"  },
-        { "name" : "KAVELANDING"      },
-        { "name" : "GANGLIA_MONITOR"  }
-      ],
-      "cardinality" : "0-10"
-    },
-    {
-      "name" : "jboss",
-      "configurations" : [ ],
-      "components" : [
-        { "name" : "JBOSS_APP_SERVER" },
-        { "name" : "POSTFIX_SERVER"   },
-        { "name" : "DOVECOT_SERVER"   },
-        { "name" : "GANGLIA_MONITOR"  }
-      ],
-      "cardinality" : "0-10"
-    },
-    {
-      "name" : "mongodb",
-      "configurations" : [ ],
-      "components" : [
-        { "name" : "MONGODB_MASTER"  },
-        { "name" : "GANGLIA_MONITOR" }
-      ],
-      "cardinality" : "0-10"
-    },
-    {
-      "name" : "devel",
-      "configurations" : [ {"gitlab" : {"gitlab_port":"8899"}} ],
-      "components" : [
-        { "name" : "GITLAB_SERVER"   },
-        { "name" : "JENKINS_MASTER"   },
-        { "name" : "ARCHIVA_SERVER"   },
-        { "name" : "GANGLIA_MONITOR" },
-        { "name" : "KAVETOOLBOXNODE"  }
+        { "name" : "KAVETOOLBOXGATE"      },
+	    { "name" : "HDFS_CLIENT"          },
+	    { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "KAVELANDING"          },
+		{ "name" : "SQOOP"                },
+        { "name" : "GANGLIA_MONITOR"      },
+		{ "name" : "HIVE_CLIENT"          },
+		{ "name" : "TEZ_CLIENT"           },
+        { "name" : "FREEIPA_CLIENT"       },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "SONARQUBE_RUNNER"     }
+
       ],
       "cardinality" : "0-10"
     },
@@ -132,68 +107,71 @@
       "name":"namenode-1",
       "components" : [
         { "name" : "NAMENODE"             },
-        { "name" : "GANGLIA_MONITOR"      },
-        { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "RESOURCEMANAGER"      },
         { "name" : "APP_TIMELINE_SERVER"  },
-        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "HISTORYSERVER"        },
+        { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "PIG"                  },
         { "name" : "HCAT"                 },
-        { "name" : "SQOOP"                },
-        { "name" : "OOZIE_SERVER"         },
-        { "name" : "OOZIE_CLIENT"         },
         { "name" : "HIVE_SERVER"          },
         { "name" : "HIVE_METASTORE"       },
         { "name" : "HIVE_CLIENT"          },
-        { "name" : "WEBHCAT_SERVER"       },
         { "name" : "TEZ_CLIENT"           },
-        { "name" : "HUE_SERVER"           },
-        { "name" : "MYSQL_SERVER"         }
+        { "name" : "OOZIE_SERVER"         },
+        { "name" : "WEBHCAT_SERVER"       },
+        { "name" : "MYSQL_SERVER"         },
+		{ "name" : "HUE_SERVER"           },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVETOOLBOXNODE"      },
+		{ "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1"
     },
     {
-      "name":"nimbus",
-      "configurations" : [ { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  } ],
+      "name":"namenode-2",
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
-        { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "GANGLIA_MONITOR"      },
-        { "name" : "NIMBUS_SD_MASTER"     },
-        { "name" : "STORMSD_UI_SERVER"    },
-        { "name" : "ZOOKEEPER_CLIENT"     }
-
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1"
     },
     {
-      "name" : "task",
+      "name" : "data",
       "components" : [
         { "name" : "DATANODE"             },
-        { "name" : "HDFS_CLIENT"          },
         { "name" : "NODEMANAGER"          },
-        { "name" : "YARN_CLIENT"          },
-        { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "KAVETOOLBOXNODE"      },
-        { "name" : "ZOOKEEPER_CLIENT"     }
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1+"
-    },
+    }
     {
-      "name" : "supervisor",
-      "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io" }  } ],
+      "name" : "ci",
+      "configurations" : [
+      	{ "sonarqube" : { "sonarhost" : "localhost", "sonar_database_url":"localhost", "sonar_database_user_passwd" : "admin" } }
+      	],
       "components" : [
-        { "name" : "GANGLIA_MONITOR"  },
-        { "name" : "ZOOKEEPER_CLIENT" },
-        { "name" : "SUPERVISOR_SD_SLAVE" }
+        { "name" : "ARCHIVA_SERVER"        },
+        { "name" : "TWIKI_SERVER"          },
+        { "name" : "JENKINS_MASTER"        },
+        { "name" : "GITLAB_SERVER"         },
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "KAVETOOLBOXNODE"       },
+        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "everything",
+    "blueprint_name" : "examplehadoop",
     "stack_name" : "HDP",
     "stack_version" : "2.2.KAVE"
   }

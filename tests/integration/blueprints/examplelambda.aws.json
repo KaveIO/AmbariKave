@@ -1,0 +1,66 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  { "Name" : "gate",
+    "Count" : 1,
+    "InstanceType" : "c3.large",
+    "AccessType" : "gateway",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  { "Name" : "kafka",
+    "Count" : 1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  { "Name" : "jboss",
+    "Count" : -1,
+    "InstanceType" : "c3.large",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  { "Name" : "ci",
+    "Count" : -1,
+    "InstanceType" : "c3.xlarge",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  { "Name" : "mongo",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
+    				 {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }]
+  },
+  { "Name" : "nno",
+    "Count" : 2,
+    "InstanceType" : "c3.xlarge",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  { "Name" : "data",
+    "Count" : 3,
+    "InstanceType" : "c3.large",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
+    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }  ]
+  },
+  { "Name" : "nimbus",
+    "Count" : -1,
+    "InstanceType" : "c3.large",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  },
+  { "Name" : "wrk",
+    "Count" : 3,
+    "InstanceType" : "t2.small",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+  }
+  ]
+}

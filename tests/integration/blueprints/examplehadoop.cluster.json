@@ -1,0 +1,42 @@
+{
+    "blueprint" : "examplehadoop",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "TEST@TEST.COM"
+      } }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } } ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "namenode-1",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "nno-001.kave.io" } ]
+	},
+	{
+	    "name" : "namenode-2",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "nno-002.kave.io" } ]
+	},
+	{
+	    "name" : "data",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "data-001.kave.io" }, { "fqdn" : "data-002.kave.io" }, { "fqdn" : "data-003.kave.io" }, { "fqdn" : "data-004.kave.io" } ]
+	},
+	{
+	    "name" : "ci",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ci-001.kave.io" } ]
+	}
+    ]
+}

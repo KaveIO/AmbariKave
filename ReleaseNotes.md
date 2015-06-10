@@ -10,7 +10,24 @@ Contains a list of the released versions with a summary of the main changes in e
 * Bugfix release of AmbariKave with over 40 independent fixes
 * Thanks to the beta testing program for providing so much feedback
 
-New features:
+New features in services:
+
+* storm added to the path for all users when storm is installed
+* StormSD various parameters such as ports, zookeeper-servers, drpc servers, now allow for comma-separated-lists
+* FreeIPA service now has a parameter to set groups, users, and initial user passwords
+* FreeIPA now sets default user shell (bash as default, but it is configurable)
+* new MONGODB_CLIENT adds mongo libraries for gateway machines
+* MONGODB_CLIENT implements mongok script for simpler connectivity (mongok --help)
+* KaveLanding, small changes in website layout and better parsing of list of services
+
+
+New features in test and deployment framework:
+
+* current branch is now the default in tests
+* deploy\_from\_blueprint.py now also creates pdsh groups for simpler local cluster management
+* new restart\_all\_services.sh script to recover from aborted blueprint deploys
+* New more fully tested blueprints which match better the examples on the twiki
+* Cleaning script now also cleans content of the ambari-agent directory
 
 Major enhancements:
 

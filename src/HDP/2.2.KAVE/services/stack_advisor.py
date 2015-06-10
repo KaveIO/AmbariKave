@@ -38,7 +38,7 @@ class HDP22KAVEStackAdvisor(HDP22StackAdvisor):
 
     def validateFreeIPAConfigurations(self, properties, recommendedDefaults, configurations):
         validationItems = [{"config-name": 'directory_password', "item": self.validatorPasswordStrength(properties, 'directory_password')},
-                           {"config-name": 'ldap_bind_password', "item": self.validatorPasswordStrength(properties, 'directory_password')}]
+                           {"config-name": 'ldap_bind_password', "item": self.validatorPasswordStrength(properties, 'ldap_bind_password')}]
         return self.toConfigurationValidationProblems(validationItems, "freeipa")
 
     def getConfigurationsValidationItems(self, services, hosts):

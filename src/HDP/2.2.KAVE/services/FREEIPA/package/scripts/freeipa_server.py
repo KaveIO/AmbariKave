@@ -90,7 +90,7 @@ class FreeipaServer(Script):
                 for group in groups:
                     freeipa.create_group(group["name"])
                     for user in group["members"]:
-                        fi.group_add_member(group,user)
+                        fi.group_add_member(group["name"],user)
         #create robot admin
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)

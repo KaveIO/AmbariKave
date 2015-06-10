@@ -7,6 +7,17 @@ Contains a list of the released versions with a summary of the main changes in e
 
 ## v1.2-Beta
 
+* Bugfix release of AmbariKave with over 40 independent fixes
+* Thanks to the beta testing program for providing so much feedback
+
+New features:
+
+Major enhancements:
+
+Minor enhancements:
+
+## v1.1-Beta
+
 * First version of the AmbariKave installer for public beta release (open source release)
 * Stack 2.2.KAVE derived from HDP 2.2
 

@@ -20,7 +20,6 @@ New features in services:
 * MONGODB_CLIENT implements mongok script for simpler connectivity (mongok --help)
 * KaveLanding, small changes in website layout and better parsing of list of services
 
-
 New features in test and deployment framework:
 
 * current branch is now the default in tests
@@ -29,9 +28,15 @@ New features in test and deployment framework:
 * New more fully tested blueprints which match better the examples on the twiki
 * Cleaning script now also cleans content of the ambari-agent directory
 
-Major enhancements:
+Bugfixes:
 
-Minor enhancements:
+* HUE integration with beeswax/hive minor fix in port number resolution
+* add\_ebs\_volume script major fixes
+* FreeIPA previously made a bind user with no password
+* FreeIPA and SonarQube both had missing defaults in their configuration xml
+* FreeIPA throwing a certain exception caused a different exception to be raised, confusingly
+* FreeIPA now can be recovered from partial failures with a re-install
+
 
 ## v1.1-Beta
 

@@ -36,6 +36,7 @@ Bugfixes:
 * FreeIPA and SonarQube both had missing defaults in their configuration xml
 * FreeIPA throwing a certain exception caused a different exception to be raised, confusingly
 * FreeIPA now can be recovered from partial failures with a re-install
+* tWiki installation was failing on jinja template resolution
 
 
 ## v1.1-Beta

@@ -31,7 +31,7 @@ class MongoClient(MongoBase):
         self.configure(env)
         File('/usr/local/bin/mongok',
              content=Template("mongok"),
-             mode=0644
+             mode=0755
              )
 
     def configure(self,env):

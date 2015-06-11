@@ -231,8 +231,10 @@ class FreeIPA(object):
         p2.communicate()
 
     def set_default_shell(self, shell):
-        if not self.service_exists(principal):
-            subprocess.call(['ipa', 'config-mod', '--defaultshell='+shell])
+        subprocess.call(['ipa', 'config-mod', '--defaultshell='+shell])
+
+    def set_user_email(self, user, email):
+        subprocess.call(['ipa', 'user-mod', '--email="'+email+'"'])
 
 
 def generate_random_password(length=16):

@@ -90,7 +90,7 @@ if [[ $res -ne 0 ]] ; then
 	date --utc
 	exit 1
 fi
-exit 0
+
 ########## Kill stopped machines older than one day, kill machines younger than 6 hours with Test- in the name
 echo "============================= CLEANING ==============================="
 date --utc

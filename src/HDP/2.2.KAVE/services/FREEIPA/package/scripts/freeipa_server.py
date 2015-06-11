@@ -76,15 +76,23 @@ class FreeipaServer(Script):
 
             if "Users" in params.initial_users_and_groups:
                 for user in params.initial_users_and_groups["Users"]:
+                    if type(user) is str or type(user) is not dict:
+                        user={"username":user}
+                    username=user["username"]
                     password=None
-                    if user in params.initial_user_passwords:
-                        password=params.initial_user_passwords[user]
-                    fi.create_user_principal(identity=user, password=password)
+                    if username in params.initial_user_passwords:
+                        password=params.initial_user_passwords[username]
+                    fi.create_user_principal(identity=username, password=password)
+                    if "email" in user:
+                        fi.set_user_email(username,user["email"])
             if "Groups" in params.initial_users_and_groups:
-                for group, users in params.initial_users_and_groups["Groups"].iteritems():
-                    freeipa.create_group(group)
-                    for user in users:
-                        fi.group_add_member(group,user)
+                groups=params.initial_users_and_groups["Groups"]
+                if type(groups) is dict:
+                    groups=[{"name":gname,"members":groups[gname]} for gname in groups]
+                for group in groups:
+                    freeipa.create_group(group["name"])
+                    for user in group["members"]:
+                        fi.group_add_member(group["name"],user)
         #create robot admin
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)

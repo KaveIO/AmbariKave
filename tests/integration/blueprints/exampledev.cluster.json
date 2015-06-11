@@ -1,0 +1,27 @@
+{
+    "blueprint" : "exampledev",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "TEST@TEST.COM"
+      } }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } } ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "ci",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ci.kave.io" } ]
+	}
+    ]
+}

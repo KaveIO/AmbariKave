@@ -47,6 +47,7 @@ class StormGeneric(Script):
             Execute('mv /usr/local/apache-storm-0.9.3* /usr/local/storm-0.9.3')
             Execute('chown -R storm:storm /usr/local/storm-0.9.3')
             Execute('ln -s /usr/local/storm-0.9.3 /usr/local/storm')
+            Execute('ln -s /usr/local/storm/bin/storm /usr/local/bin/storm')
 
         storm_home_dir = os.path.isdir('/app/storm')
         if not storm_home_dir:

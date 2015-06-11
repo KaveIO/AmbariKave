@@ -20,7 +20,7 @@
 
 #abort at first failure
 set -e
-set -o pipefail
+#set -o pipefail #not a good idea, causes failures even in actual successful situations
 
 yum install ambari-server -y
 yum install -y pdsh wget curl

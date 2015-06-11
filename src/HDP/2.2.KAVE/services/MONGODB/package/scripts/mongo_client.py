@@ -29,6 +29,10 @@ class MongoClient(MongoBase):
         env.set_params(params)
         self.installMongo(env)
         self.configure(env)
+        File('/usr/local/bin/mongok',
+             content=Template("mongok"),
+             mode=0755
+             )
 
     def configure(self,env):
         import params

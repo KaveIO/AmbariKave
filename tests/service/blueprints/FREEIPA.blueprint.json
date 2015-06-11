@@ -23,7 +23,7 @@
       }
     },
     { "freeipa": { "directory_password": "bla12345", "ldap_bind_password": "bla12345",
-                   "initial_users_and_groups" : "{\"Users\" : [\"bob\"], \"Groups\": {\"admins\":\"bob\"} }",
+                   "initial_users_and_groups" : "{\"Users\" : [{\"username\":\"bob\",\"email\":\"bob@bob.bob\"}], \"Groups\": {\"admins\":\"bob\"} }",
                    "initial_user_passwords" : "{\"bob\": \"mynameisbobandIamanadminandthisisnotmypass\"}"
                    }
       }

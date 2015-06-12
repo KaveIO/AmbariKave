@@ -37,44 +37,58 @@ sleep 10
 
 #assumes deploy_from_blueprint was used...
 echo "restarting all ambari agents"
-pdsh -R ssh -g $cluster ambari-agent restart
+pdsh -R ssh -g $cluster ambari-agent stop 2>/dev/null
+sleep 5
+pdsh -R ssh -g $cluster ambari-agent start 2>/dev/null
+
 
 echo "sleeping for 70 seconds (heartbeat duration)"
 sleep 70
-
+op=`pdsh -R ssh -g $cluster ambari-agent status 2>/dev/null | grep "not running"`
+if [ ! -z "$op" ]; then
+	echo "Warning, at least one ambari agent is still not started, check the log files for that node: /var/log/ambari-agent/ambari-agent.log"
+	echo "$op"
+fi
 
 #find all service names
 allnames=`curl -i -X GET --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/ -H "X-Requested-By:ambari" | grep "service_name" | awk -F '"' '{print $4}'`
 
+echo "Restarting FreeIPA first, if it exists"
+#stop them
+if [[ "$allnames" == *"FREEIPA"* ]]; then
+	service="FREEIPA"
+	echo $service
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	echo "sleeping for 70 seconds, (heartbeat duration)"
+	sleep 70
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	echo "sleeping for 70 seconds (heartbeat duration)"
+	sleep 70
+fi
+
 echo "Stopping all services"
 #stop them
 for service in $allnames; do
-	echo $service
+	if [ "$service" == "FREEIPA" ]; then
+		continue
+	fi
+	echo "stopping" $service
 	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
 
 echo "sleeping for 70 seconds (heartbeat duration)"
 sleep 70
 
-#Always start FreeIPA first if it is in the list
 for service in $allnames; do
-	if [ "$service" != "FREEIPA" ]; then
+	if [ "$service" == "FREEIPA" ]; then
 		continue
 	fi
-    echo "starting FreeIPA"
-	echo $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
-	echo "sleeping for 70 seconds (heartbeat duration)"
-    sleep 70
-done
-
-
-#start everything
-for service in $allnames; do
-	echo $service
+    echo "starting" $service
 	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
+
+
 echo "All request hrefs"
-curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
-echo "Final request ID for automatic monitoring:"
-curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'
+curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
+echo "Final request ID for semi-automatic monitoring:"
+curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'

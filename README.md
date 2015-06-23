@@ -69,7 +69,7 @@ If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or de
 If you have git access, and are working from the git version, See the wiki.
 
 
-Insstallation of spark on a yarn cluster
+Installation of spark on a yarn cluster
 ==============================
 
 Currently spark is not directly installable through the ambarikave installer. If 

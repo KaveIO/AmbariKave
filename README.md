@@ -68,6 +68,18 @@ Installation of a full cluster
 If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
 If you have git access, and are working from the git version, See the wiki.
 
+
+Insstallation of spark on a yarn cluster
+==============================
+
+Currently spark is not directly installable through the ambarikave installer. If 
+you do want to experiment with spark follow this guide http://hortonworks.com/hadoop-tutorial/using-apache-spark-technical-preview-with-hdp-2-2/
+After installation modfify /etc/spark/conf/spark-defaults.conf so that it contains this: 
+
+   spark.driver.extraJavaOptions -Dhdp.version=2.2.0.0-2041
+   spark.yarn.am.extraJavaOptions -Dhdp.version=2.2.0.0-2041
+
+
 Deployment tools
 ==============================
 

@@ -327,7 +327,7 @@ class LDTest(unittest.TestCase):
             self.branch = self.service
         if self.branch is not None:
             stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
-            self.assertTrue("origin/" + self.branch + "\n" in stdout,
+            self.assertTrue("origin/" + self.branch in [s.strip() for s in stdout.split() if len(s.strip())],
                             "There is no remote branch called " + self.branch + " push your branch back to the origin "
                                                                                 "to run this automated test")
         return lD
@@ -483,7 +483,7 @@ class LDTest(unittest.TestCase):
         ip = ambari.host
         rounds = 1
         flag = False
-        while rounds <= 10:
+        while rounds <= 20:
             try:
                 stdout = ambari.run("service iptables stop")
             except RuntimeError:
@@ -496,7 +496,7 @@ class LDTest(unittest.TestCase):
                 pass
             time.sleep(60)
             rounds = rounds + 1
-        self.assertTrue(flag, "ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        self.assertTrue(flag, "ambari server not contactable after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
         return True
 
     def servicesh(self, ambari, call, service, host="ambari.kave.io"):

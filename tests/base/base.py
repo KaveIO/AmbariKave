@@ -386,6 +386,46 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return ambari, iid
 
+    def deployOS(self, osval, itype=None):
+        """
+        Up one centos machine with the scripts and return an lD.remoteHost to that machine
+        itype -> None: c3.large
+        """
+        import libDeploy as lD
+
+        deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+        stdout = ""
+        if itype is None:
+            stdout = lD.runQuiet(
+                deploy_dir + "/aws/deploy_known_instance.py "+osval+" Test-" +osval+"-"+ self.service + " --not-strict")
+        else:
+            stdout = lD.runQuiet(
+                deploy_dir + "/aws/deploy_known_instance.py "+osval+"Test-" +osval+"-"+ self.service + " "
+                + itype + " --not-strict")
+        self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
+        iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
+        ip = stdout.split("\n")[-1].strip().split(" ")[-1]
+        self.assertTrue(stdout.split("\n")[-3].startswith("connect remotely with:"))
+        connectcmd = stdout.split("\n")[-2]
+        self.assertTrue(ip in connectcmd, "wrong IP seen in (" + connectcmd + ")")
+        jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
+        import json
+
+        acconf = json.loads(jsondat.read())
+        jsondat.close()
+        keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
+        self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
+                        "wrong keyfile seen in (" + connectcmd + ")")
+        ambari = lD.remoteHost("root", ip, keyfile)
+        ambari.register()
+        import time
+        time.sleep(5)
+        if osval.startswith("Centos"):
+            #add 10GB to /opt
+            stdout = lD.runQuiet(
+                deploy_dir + "/aws/add_ebsvol_to_instance.py "+iid+ " --not-strict")
+        return ambari, iid
+
     def resetambari(self, ambari):
         """
         Clean ambari, ready for a new install

@@ -23,6 +23,7 @@ class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
     checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root', '/opt/eclipse', '/opt/anaconda',
                  '/opt/kettle']
+    ostype="Centos6"
 
     def runTest(self):
         # create remote machine
@@ -31,7 +32,13 @@ class TestKaveToolbox(base.LDTest):
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari,iid = self.deployDev()
+        ambari,iid=(None,None)
+        if self.ostype=="Centos6":
+            ambari,iid = self.deployDev()
+        else:
+            ambari,iid = self.deployOS(self.ostype)
+            if self.ostype.startswith("Ubuntu"):
+                ambari.run('apt-get update')
         stdout = lD.runQuiet(
             deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict")
         self.assertTrue("installing toolbox in background process (check before bringing down the machine)" in stdout,
@@ -92,8 +99,10 @@ if __name__ == "__main__":
     if "--verbose" in sys.argv:
         verbose = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
-    test = TestKaveToolbox()
-    test.debug = verbose
+    test1 = TestKaveToolbox()
+    test1.debug = verbose
+    if len(sys.argv)>1:
+        test1.ostype=sys.argv[1]
     suite = unittest.TestSuite()
-    suite.addTest(test)
+    suite.addTest(test1)
     base.run(suite)

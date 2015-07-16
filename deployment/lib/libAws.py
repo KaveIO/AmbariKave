@@ -55,26 +55,70 @@ def detectRegion():
     """
     return lD.runQuiet("aws configure get region")
 
+__region_ami_links__={ "Centos6" : {"default" : "ami-42718735",#only paravirtual, 6.5 release media
+                                    "eu-west" : "ami-30ff5c47", # good, centos 6 "with updates"
+                                    "ap-northeast":"ami-25436924",
+                                    "ap-southeast":"aami-0aaf8858"
+                                    },
+                      "Centos7" : {"default":"ami-e4ff5c93",
+                                   "eu-west":"ami-e4ff5c93",
+                                   "ap-northeast":"mi-89634988",
+                                   "ap-southeast":"ami-aea582fc"
+                                   },
+                      "Ubuntu14" : {"default":"ami-5da23a2a",
+                                    "eu-west":"ami-47a23a30",
+                                    "ap-northeast":"ami-936d9d93",
+                                    "ap-southeast":"ami-96f1c1c4"
+                                    }
+                      }
+
+def chooseamiid(os,region):
+    if os not in __region_ami_links__:
+        raise ValueError("OS "+os+" not known for linking to amiid")
+    try:
+        return __region_ami_links__[os][str(region)]
+    except KeyError:
+        pass
+    try:
+        return __region_ami_links__[os]['-'.join(str(region).split('-')[:-1])]
+    except KeyError:
+        pass
+    try:
+        return __region_ami_links__[os]['default']
+    except KeyError:
+        pass
+    raise ValueError("os/region combination could not be made "+os+str(region))
+    return ""
+
 
 def upCentos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
-    amiid = "ami-42718735"  #only paravirtual, 6.5 release media
+    region="default"
+    amiid=""
     if subnet is not None:
         region = detectRegion()
-        amiid = "ami-30ff5c47"  # good, centos 6 "with updates"
-        if region.startswith("ap-northeast"):
-            amiid = "ami-25436924"
-        if region.startswith("ap-southeast"):
-            amiid = "ami-0aaf8858"
-        if ambaridev:
-            import os
+    if ambaridev:
+        import os
+        if "AMIAMBDEV" in os.environ:
+            amiid = os.environ["AMIAMBDEV"]
+        else:
+            raise ValueError(
+                "To use the dev option, you must have set AMIAMBDEV environment variable to the ami of a centos6 "
+                "image with ambari pre-installed with your keys and in your region. See the script that generates "
+                "the dev image for that.")
+    else:
+        amiid=chooseamiid("Centos6",region)
+    return upamiid(amiid,type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
-            if "AMIAMBDEV" in os.environ:
-                amiid = os.environ["AMIAMBDEV"]
-            else:
-                raise ValueError(
-                    "To use the dev option, you must have set AMIAMBDEV environment variable to the ami of a centos6 "
-                    "image with ambari pre-installed with your keys and in your region. See the script that generates "
-                    "the dev image for that.")
+def upOS(os, type, secGroup, keys, count=1, subnet=None):
+    region="default"
+    amiid=""
+    if subnet is not None:
+        region = detectRegion()
+    amiid=chooseamiid(os,region)
+    return upamiid(amiid,type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+
+
+def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
     cmd = " ec2 run-instances --image-id " + amiid + " --count " + str(
         count) + " --instance-type " + type + " --key-name " + keys
     if subnet is not None:

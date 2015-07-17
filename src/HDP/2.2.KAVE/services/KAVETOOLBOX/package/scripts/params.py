@@ -27,6 +27,8 @@ top_dir = default("configurations/kavetoolbox/top_dir", "/opt/")
 releaseversion = default('configurations/kavetoolbox/releaseversion', "2.0-Beta-Pre")
 alternative_download = default('configurations/kavetoolbox/alternative_download', "")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', False)
+if type(ignore_missing_groups) is str:
+    ignore_missing_groups=(ignore_missing_groups.lower()=='true' or ignore_missing_groups.startswith('y'))
 if alternative_download == "none":
     alternative_download = ""
 

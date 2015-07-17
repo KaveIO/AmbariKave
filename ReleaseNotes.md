@@ -5,6 +5,23 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+## v2.0-Beta
+
+* Major release of AmbariKave to move to the next version of Ambari.
+
+Version changes of packaged software:
+
+* KaveToolbox -> 2.0-Beta.
+
+New features in services:
+
+New features in test and deployment framework:
+
+Bugfixes:
+
+* KaveLanding: lots of minor bugfixes...
+
+
 ## v1.2-Beta
 
 * Bugfix release of AmbariKave with over 40 independent fixes

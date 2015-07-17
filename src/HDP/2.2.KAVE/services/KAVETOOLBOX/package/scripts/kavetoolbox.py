@@ -77,7 +77,7 @@ class KaveToolbox(Script):
             f.write('\n')
             f.close()
         File("/etc/kave/CustomInstall.py",
-             content=Template("CustomInstall.py.j2"),
+             content=InlineTemplate(params.custominstall_template),
              mode=0644
              )
 

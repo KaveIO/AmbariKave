@@ -28,4 +28,11 @@
         <value>default</value>
         <description>Default will use local hostname</description>
     </property>
+    <property>
+        <name>customlinks</name>
+        <value>{}</value>
+        <description>JSON description of any custom links in your cluster.
+        Format like {"NameOfLink":"href"} e.g. {"MyDashboard":"http://node001:8275/dash"}
+        </description>
+    </property>
 </configuration>

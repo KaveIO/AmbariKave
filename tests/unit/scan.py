@@ -26,9 +26,9 @@ class TestScan(unittest.TestCase):
   <li>Ganglia (['elsewhere.com'])</li>
 </ul><p><b>Clients</b><p><ul>
   <li>elsewhere.com []</li>
+  <li>here.com ['kavetoolbox', 'ganglia_monitor']</li>
   <li>nowhere.none []</li>
   <li>there.com ['kavetoolbox', 'ganglia_monitor']</li>
-  <li>here.com ['kavetoolbox', 'ganglia_monitor']</li>
 </ul>"""
     resolves_to_plain = """==================
 * 'MOCK' cluster
@@ -38,9 +38,9 @@ class TestScan(unittest.TestCase):
 |
 |--* Clients
 |  |--* elsewhere.com []
+|  |--* here.com ['kavetoolbox', 'ganglia_monitor']
 |  |--* nowhere.none []
-|  |--* there.com ['kavetoolbox', 'ganglia_monitor']
-|  |--* here.com ['kavetoolbox', 'ganglia_monitor']"""
+|  |--* there.com ['kavetoolbox', 'ganglia_monitor']"""
 
     def runTest(self):
         """

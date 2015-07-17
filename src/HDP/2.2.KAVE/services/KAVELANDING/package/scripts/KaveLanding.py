@@ -28,33 +28,19 @@ class KaveLanding(ApacheScript):
         import kavecommon as kc
         super(KaveLanding,self).install(env)
         #needs installation of bower ...
-        Execute('yum -y groupinstall "Development Tools"')
-        kc.copyCacheOrRepo('nodejs-setup.sh')
+        #Execute('yum -y groupinstall "Development Tools"')
+        #kc.copyCacheOrRepo('nodejs-setup.sh')
         #Execute('wget https://rpm.nodesource.com/setup')
-        Execute('bash nodejs-setup.sh')
-        Package('nodejs')
+        #Execute('bash nodejs-setup.sh')
+        #Package('nodejs')
         #Execute('yum install -y nodejs')
-        Execute('npm install -g bower')
-        Execute('echo n | bower --allow-root --help')
-        Execute('bower install bootstrap --allow-root')
+        #Execute('npm install -g bower')
+        #Execute('echo n | bower --allow-root --help')
+        #Execute('bower install bootstrap --allow-root')
         import os
         Execute('cp '+os.path.dirname(__file__)+'/KAVE-logo-thin.png '+params.www_folder+'/')
         Execute('chmod 0644 '+params.www_folder+'/KAVE-logo-thin.png')
         self.configure(env)
-        #self.start(env)
-        super(KaveLanding, self).install(env)
-        #needs installation of bower ...
-        Execute('yum -y groupinstall "Development Tools"')
-        kc.copyCacheOrRepo('nodejs-setup.sh')
-        #Execute('wget https://rpm.nodesource.com/setup')
-        Execute('bash nodejs-setup.sh')
-        Package('nodejs')
-        #Execute('yum install -y nodejs')
-        Execute('npm install -g bower')
-        Execute('echo n | bower --allow-root --help')
-        Execute('bower install bootstrap --allow-root')
-        self.configure(env)
-        #self.start(env)
 
     def configure(self, env):
         import params, os
@@ -95,6 +81,17 @@ class KaveLanding(ApacheScript):
         ls.ambari_password=params.AMBARI_ADMIN_PASS
         cluster_service_host, cluster_host_service, cluster_service_link=ls.collect_config_data(params.AMBARI_SHORT_HOST)
         bodyhtml=ls.pretty_print(cluster_service_host, cluster_host_service, cluster_service_link, format="html")
+        if len(params.customlinks)>2:
+            import json
+            clinks=json.loads(params.customlinks)
+            if len(clinks.keys()):
+                custom_html="<b>Custom Links</b><p><ul>"
+                klist=clinks.keys()
+                klist.sort()
+                for lname in klist:
+                    custom_html=custom_html+'\n    <li><a href="'+clinks[lname]+'">'+lname+'</a></li>'
+                custom_html=custom_html+"</ul><p>\n"
+                bodyhtml.replace('<b>Servers</b>',custom_html+'<b>Servers</b>')
         #HINT: this can be replaced by the correct template language in future
         HUE_LINK_IF_KNOWN=""
         all_links=[]
@@ -131,10 +128,10 @@ class KaveLanding(ApacheScript):
 
     def status(self, env):
         #print "checking status..."
-        super(KaveLanding, self).status(env)
         import params
-
-        return os.path.exists(params.www_folder + '/index.html')
+        if not os.path.exists(params.www_folder + '/index.html'):
+            return False
+        super(KaveLanding, self).status(env)
 
 
 if __name__ == "__main__":

@@ -29,6 +29,7 @@ AMBARI_ADMIN_PASS = config['configurations']['kavelanding']['AMBARI_ADMIN_PASS']
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 #default('configurations/kavelanding/AMBARI_SERVER','ambari')
 www_folder = default('configurations/kavelanding/www_folder', '/var/www/html/')
+customlinks = default('configurations/kavelanding/customlinks', '{}')
 PORT = default('configurations/kavelanding/PORT', '80')
 AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
 servername = default('configurations/kavelanding/servername', hostname)

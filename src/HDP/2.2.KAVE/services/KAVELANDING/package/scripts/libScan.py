@@ -290,6 +290,7 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
     if format not in ["html", "plain"]:
         raise ValueError("Only html or plain formats known, not " + format)
     clusterlist = cluster_service_host.keys()
+    clusterlist.sort()
     for cluster in clusterlist:
         if format == "plain":
             retstr = retstr + "==================\n"
@@ -299,11 +300,14 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
         masters_with_links = [service for service in cluster_service_host[cluster] if
                               ("SERVER" in service or "MASTER" in service or "NAMENODE" in service or "MANAGER" in service) and (
                               service in cluster_service_link[cluster])]
+        masters_with_links.sort()
         masters_without_links = [service for service in cluster_service_host[cluster] if
                                  ("SERVER" in service or "MASTER" in service or "NAMENODE" in service or "MANAGER" in service) and (
                                  service not in cluster_service_link[cluster]) and (service not in masters_with_links)]
+        masters_without_links.sort()
         others = [service for service in cluster_service_host[cluster] if
                   service not in (masters_without_links + masters_with_links)]
+        others.sort()
         #first print services with links!
         if format == "plain":
             retstr = retstr + "|--* Servers \n"
@@ -348,7 +352,9 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
             retstr = retstr + "|--* Clients \n"
         else:
             retstr = retstr + "</ul><p><b>Clients</b><p><ul>\n"
-        for host in cluster_host_service[cluster]:
+        hosts=cluster_host_service[cluster].keys()
+        hosts.sort()
+        for host in hosts:
             if format == "plain":
                 retstr = retstr + "|  |--* "
             else:

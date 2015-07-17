@@ -64,9 +64,9 @@ __kavelanding_plain__ = """Welcome to your KAVE
 * 'default' cluster
 |--* Servers
 |  |--* Ambari <a href='http://ambari:8080'>admin</a>
-|  |--* Nagios <a href='http://ambari:80/nagios'>alerts</a>
-|  |--* Jenkins <a href='http://ambari:8888'>jenkins</a>
 |  |--* Ganglia <a href='http://ambari:80/ganglia'>monitor</a>
+|  |--* Jenkins <a href='http://ambari:8888'>jenkins</a>
+|  |--* Nagios <a href='http://ambari:80/nagios'>alerts</a>
 |
 |--* Clients
 |  |--* ambari.kave.io ['ganglia_monitor', 'kavelanding']"""
@@ -78,9 +78,9 @@ __kavelanding_plain__ = """Welcome to your KAVE
 __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 <b>Servers</b><p><ul>
   <li>Ambari <a href='http://ambari:8080'>admin</a></li>
-  <li>Nagios <a href='http://ambari:80/nagios'>alerts</a></li>
-  <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
   <li>Ganglia <a href='http://ambari:80/ganglia'>monitor</a></li>
+  <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
+  <li>Nagios <a href='http://ambari:80/nagios'>alerts</a></li>
 </ul><p><b>Clients</b><p><ul>
   <li>ambari.kave.io ['ganglia_monitor', 'kavelanding']</li>
 </ul>"""

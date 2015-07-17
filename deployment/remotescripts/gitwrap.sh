@@ -17,4 +17,4 @@
 #
 ##############################################################################
 #echo "Running git through gitwrap command"
-ssh -i ~/.rnadgithubnothingtoseehere $@
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.rnadgithubnothingtoseehere $@

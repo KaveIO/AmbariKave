@@ -26,7 +26,11 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin", "AMBARI_SERVER" : "ambari" } },
+      "configurations" : [ { "kavelanding" : {
+      										  "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin",
+      										  "AMBARI_SERVER" : "ambari",
+      										  "customizedlinks": "{\"Google\":\"http://google.com/\" }" }
+      										  },
                            { "jenkins" : { "JENKINS_PORT" : 8888 } }
                          ],
       "components" : [

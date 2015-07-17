@@ -39,6 +39,11 @@
                     <osFamily>any</osFamily>
                     <packages>
                         <package><name>wget</name></package>
+                        <package><name>rsync</name></package>
+                        <package><name>tar</name></package>
+                        <package><name>zip</name></package>
+                        <package><name>unzip</name></package>
+                        <package><name>gzip</name></package>
                     </packages>
                 </osSpecific>
             </osSpecifics>

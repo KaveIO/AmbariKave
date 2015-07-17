@@ -37,6 +37,8 @@ postgre_disabled = False
 # ldap configuration
 ldap_enabled = False
 freeipa_host = default('configurations/gitlab/freeipa_host', False)
+if freeipa_host.lower()=="None":
+    freeipa_host=False
 if freeipa_host:
     freeipa_host_components = freeipa_host.lower().split('.')
     if len(freeipa_host_components) >= 3:

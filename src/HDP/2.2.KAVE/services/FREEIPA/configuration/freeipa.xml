@@ -10,6 +10,14 @@
             admin password file.
         </description>
     </property>
+    <property>
+        <name>forwarders</name>
+        <value>8.8.8.8</value>
+        <description>
+            The IP address of the DNS server to whom FreeIPA should first forward requests.
+            Usually this is specific to your datacenter. This can be a comma-separated list.
+        </description>
+    </property>
     <property require-input = "true">
         <name>directory_password</name>
         <value></value>

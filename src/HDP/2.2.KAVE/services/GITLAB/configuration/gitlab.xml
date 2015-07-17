@@ -22,16 +22,16 @@
     <name>gitlab_url</name>
     <value>plain</value>
     <description>
-        Alias URL of this server, what your users will use to get to this git, 
+        Alias URL of this server, what your users will use to get to this git,
         if blank, use hostname
     </description>
   </property>
-  <property>
+  <property require-input = "true">
     <name>freeipa_host</name>
-    <value></value>
+    <value>none</value>
     <description>
         If a freeipa host is available this can be set. This setting will enable
-        ldap and assume some default parameters based on freeipa. 
+        ldap and assume some default parameters based on freeipa.
     </description>
   </property>
   <property>
@@ -45,7 +45,7 @@
     <name>gitlab_signin_enabled</name>
     <value>true</value>
     <description>
-        Toggles the availability of the standard signin dialog. If ldap is 
+        Toggles the availability of the standard signin dialog. If ldap is
         enabled than that would be the only login method.
     </description>
   </property>

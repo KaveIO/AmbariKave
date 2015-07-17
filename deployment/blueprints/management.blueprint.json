@@ -21,7 +21,8 @@
         "nagios_web_password" : "admin",
         "nagios_contact" : "test@test.com"
       }
-    }
+    },
+    { "gitlab": { "free_ipa_host": "ambari.kave.io" } }
   ],
   "host_groups" : [
     {
@@ -38,7 +39,7 @@
     },
     {
       "name" : "gitlabs",
-      "configurations" : [ ],
+      "configurations" : [  ],
       "components" : [
         { "name" : "GITLAB_SERVER" },
         { "name" : "GANGLIA_MONITOR" }

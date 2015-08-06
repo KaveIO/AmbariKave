@@ -53,7 +53,11 @@ class TestCluster(base.LDTest):
             for host in hg['hosts']:
                 need_hosts.append(host["fqdn"])
         supplies_hosts=[]
-        dn=jsons[0]["Domain"]["Name"]
+        dn="kave.io"
+        try:
+            dn=jsons[0]["Domain"]["Name"]
+        except KeyError:
+            pass
         for ig in jsons[0]["InstanceGroups"]:
             if ig["Count"]>0:
                 supplies_hosts=supplies_hosts+[ig["Name"]+'-00'+str(i+1)+'.'+dn for i in range(ig["Count"])]

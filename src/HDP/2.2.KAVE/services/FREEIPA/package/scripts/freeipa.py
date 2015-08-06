@@ -176,7 +176,7 @@ class FreeIPA(object):
         All other kwargs are passed as command line parameters --key=val
         """
         if not self.sudorule_exists(rulename):
-            cmd=['ipa', 'sudorule-add', rulename]+['--'+k+'='+val for k,v in kwargs.iteritems() if k!="Users" and k!="Groups"]
+            cmd=['ipa', 'sudorule-add', rulename]+['--'+k+'='+v for k,v in kwargs.iteritems() if k!="Users" and k!="Groups"]
             subprocess.call(cmd)
             if "Users" in kwargs and len(kwargs["Users"]):
                 subprocess.call(['ipa', 'sudorule-add-user', '--users='+','.join(kwargs["Users"]),rulename])

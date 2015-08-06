@@ -169,6 +169,22 @@ class FreeIPA(object):
         else:
             print 'Skipping user creation for %s. User already exists' % identity
 
+    def create_sudorule(self, rulename, **kwargs):
+        """
+        kwargs Users: users to add to the rule
+        kwargs Groups: groups to add to the rule
+        All other kwargs are passed as command line parameters --key=val
+        """
+        if not self.sudorule_exists(rulename):
+            cmd=['ipa', 'sudorule-add', rulename]+['--'+k+'='+val for k,v in kwargs.iteritems() if k!="Users" and k!="Groups"]
+            subprocess.call(cmd)
+            if "Users" in kwargs and len(kwargs["Users"]):
+                subprocess.call(['ipa', 'sudorule-add-user', '--users='+','.join(kwargs["Users"]),rulename])
+            if "Groups" in kwargs and len(kwargs["Groups"]):
+                subprocess.call(['ipa', 'sudorule-add-user', '--groups='+','.join(kwargs["Groups"]),rulename])
+        else:
+            print 'Skipping user creation for %s. Rule already exists' % rulename
+
     def create_service_principal(self, principal):
         if not self.service_exists(principal):
             subprocess.call(['ipa', 'service-add', principal])
@@ -192,6 +208,15 @@ class FreeIPA(object):
         try:
             with open(os.devnull, "w") as devnull:
                 subprocess.check_call(['ipa', 'user-show', user], stderr=devnull)
+            return True
+        except:
+            pass
+        return False
+
+    def sudorule_exists(self, sudorule):
+        try:
+            with open(os.devnull, "w") as devnull:
+                subprocess.check_call(['ipa', 'sudorule-show', sudorule], stderr=devnull)
             return True
         except:
             pass

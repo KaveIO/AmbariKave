@@ -74,6 +74,19 @@
         </description>
     </property>
     <property>
+        <name>initial_sudoers</name>
+        <value>{ "Users": [], "Groups":[], "cmdcat": "all", "hostcat": "all", "runasusercat": "all", "runasgroupcat": "all" }</value>
+        <description>
+            List of usernames and groups to add to sudoers list.
+            We automatically create the sudoer rule by the name of allsudo
+            Making users sudoers allows them full privilages on the machines in the cluster
+            'Users': list of users to add
+            'Groups': list of groups to add
+            Remaining options (cmdcat, hostcat, runasusercat, runasgroupcat) are the command-line args used when making the sudoers group
+            see ipa sudorule-add --help for details, or the freeipa documentation online
+        </description>
+    </property>
+    <property>
         <name>install_with_dns</name>
         <value>True</value>
         <description>

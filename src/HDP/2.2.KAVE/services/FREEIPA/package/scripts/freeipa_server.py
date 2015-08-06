@@ -93,6 +93,7 @@ class FreeipaServer(Script):
                     freeipa.create_group(group["name"])
                     for user in group["members"]:
                         fi.group_add_member(group["name"],user)
+            fi.create_sudorule('allsudo',**(params.initial_sudoers))
         #create robot admin
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)

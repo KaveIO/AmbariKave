@@ -19,7 +19,7 @@ import os
 
 from resource_management import *
 from kavecommon import ApacheScript
-
+from resource_management.core.exceptions import ComponentIsNotRunning
 
 class KaveLanding(ApacheScript):
     def install(self, env):
@@ -130,7 +130,7 @@ class KaveLanding(ApacheScript):
         #print "checking status..."
         import params
         if not os.path.exists(params.www_folder + '/index.html'):
-            return False
+            raise ComponentIsNotRunning()
         super(KaveLanding, self).status(env)
 
 

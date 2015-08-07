@@ -56,17 +56,17 @@ class Dovecot(Script):
         #return Execute('service dovecot start > /dev/null')
         # TODO: Ambari 2.0 method should be replacing the below call
         #since Ambari 1.7.3 execute method never returns the control to script
-        return os.system("service dovecot start")
+        return os.system("nohup service dovecot start 2> /dev/null > /dev/null < /dev/null &")
 
 
     def stop(self, env):
         print "stop dovecot.."
-        return Execute('service dovecot stop > /dev/null')
+        return Execute('nohup service dovecot stop  2> /dev/null > /dev/null < /dev/null &')
 
 
     def status(self, env):
         print "checking status..."
-        print Execute('service dovecot status > /dev/null')
+        Execute('service dovecot status')
 
 
 if __name__ == "__main__":

@@ -42,14 +42,14 @@ class PostfixSrv(Script):
             raise RuntimeError("Service not installed correctly")
 
     def start(self, env):
-        Execute('service postfix start & > /dev/null')
+        Execute('nohup service postfix start 2> /dev/null > /dev/null < /dev/null &')
 
     def stop(self, env):
-        Execute('service postfix stop & > /dev/null')
+        Execute('nohup service postfix stop 2> /dev/null > /dev/null < /dev/null &')
 
     def status(self, env):
-        print "checking status..."
-        print Execute('service postfix status & > /dev/null')
+        #print "checking status..."
+        Execute('service postfix status')
 
 
 if __name__ == "__main__":

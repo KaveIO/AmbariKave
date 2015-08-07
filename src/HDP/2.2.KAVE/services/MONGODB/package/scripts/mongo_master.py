@@ -36,7 +36,7 @@ class MongoMaster(MongoBase):
 
     def start(self, env):
         print "start mongodb"
-        Execute('service mongod start > /dev/null ')
+        Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
     def stop(self, env):
         print "stop services.."
@@ -44,7 +44,10 @@ class MongoMaster(MongoBase):
 
     def restart(self, env):
         print "restart mongodb"
-        Execute('service mongod restart > /dev/null ')
+        Execute('service mongod stop')
+        import time
+        time.sleep(3)
+        Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
     def status(self, env):
         print "checking status..."

@@ -19,6 +19,7 @@ import kavecommon as kc
 import os
 import subprocess
 from resource_management import *
+from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class StormGeneric(Script):
@@ -88,7 +89,7 @@ class StormGenericSD(StormGeneric):
                             "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
                 self.fail_with_error(cmd + ' ' + self.PROG + ' Failed!' + stdout + stderr)
         else:
-            stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG + ' &')
+            os.system('nohup supervisorctl ' + cmd + ' storm-' + self.PROG + ' 2> /dev/null > /dev/null < /dev/null &')
         return stdout
 
     def install(self,env):
@@ -128,11 +129,16 @@ class StormGenericSD(StormGeneric):
         self.ctlcmd('stop', bg=True)
 
     def restart(self, env):
-        self.ctlcmd('restart', bg=True)
+        self.ctlcmd('stop', bg=True)
+        import time
+        time.sleep(5)
+        self.start(env)
 
     def status(self, env):
         Execute('service supervisord status')
-        self.ctlcmd('status')
+        stdout = self.ctlcmd('status')
+        if "RUNNING" not in stdout:
+            raise ComponentIsNotRunning()
 
     def configure(self,env):
         self.configureStorm(env)
@@ -152,5 +158,5 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
-        Execute("cat /etc/supervisord.d/*.conf >> /etc/supervisord.conf")
+        Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
         kc.chownR('/etc/supervisord.d/', 'storm')

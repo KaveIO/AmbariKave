@@ -22,12 +22,12 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" }  }
+    { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost", "drpc.servers" : "localhost" }  }
   ],
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ ],
+      "configurations" : [  ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
@@ -37,7 +37,8 @@
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "NIMBUS_SD_MASTER"    },
         { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "STORMSD_UI_SERVER"   }
+        { "name" : "STORMSD_UI_SERVER"   },
+        { "name" : "STORMSD_DRPC_SERVER"   }
       ],
       "cardinality" : "1"
     }

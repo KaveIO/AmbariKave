@@ -39,7 +39,7 @@ DPM_DIR=$PROJECT_DIR/deployment
 cd $PROJECT_DIR
 #remove pyc files!
 find . -name "*.pyc" -exec rm '{}' ';'
-TAG=`git name-rev --tags --name-only $(git rev-parse HEAD) | sed s'/.$//'`
+TAG=`git name-rev --tags --name-only $(git rev-parse HEAD)`
 TAG=`echo ${TAG} | sed s'/\^0//' | sed s'/\^//'`
 echo $TAG
 

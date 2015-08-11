@@ -154,13 +154,24 @@ ambari.run("service iptables stop")
 admin = ambari.run("hostname")
 
 whole_cluster = lD.multiremotes(hosts, jump=ambari)
-#whole_cluster.check(firsttime=True)
+
+#Check if all nodes in the cluster are contactable
 try:
     whole_cluster.check(firsttime=True)
 except RuntimeError:
     print "Could not access machines with passwordless ssh, the ambari node must have passwordless ssh access to the " \
           "rest, fix and try again"
     raise
+
+#Verify that all nodes have similar system times
+ambtime=int(ambari.run("date -u '+%s'"))
+cltime=whole_cluster.run("date -u '+%s'")
+cltime=[(int(p.split(':')[-1])) for p in cltime.split('\n')]
+
+if (max(cltime)-min(cltime))>(10*60):
+   raise RuntimeError('The system clocks are not synchronized, a difference of '+str(max(cltime)-min(cltime))+' seconds was found')
+if min(cltime)<(ambtime-5):
+   raise RuntimeError('At least one machine has a too early system clock, a difference of '+str(ambtime-min(cltime))+' seconds was found')
 
 try:
     if "no ambari-agent" in whole_cluster.run("which ambari-agent"):

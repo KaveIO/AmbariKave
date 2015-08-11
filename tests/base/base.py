@@ -122,6 +122,7 @@ class RunFileInSubProcess(LockOnPrintThread):
         """
         threading.Thread.__init__(self)
         self.lock = lock
+        self.islockedbyme=False
         self.pool = pool
         self.done = False
         self.result = result
@@ -139,15 +140,18 @@ class RunFileInSubProcess(LockOnPrintThread):
                 item = self.pool.get_nowait()
                 if item is not None:
                     self.lock.acquire()
+                    self.islockedbyme=True
                     myname = item.replace(os.path.realpath(os.path.dirname(__file__) + "/../") + "/", "")
                     myname = myname.replace("python ", "").replace(".py", "")
                     print "started:", myname
                     sys.__stdout__.flush()
                     self.lock.release()
+                    self.islockedbyme=False
                     proc = sub.Popen(item, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
                     stdout, stderr = proc.communicate()
                     status = proc.returncode
                     self.lock.acquire()
+                    self.islockedbyme=True
                     self.result[item]["stdout"] = stdout
                     self.result[item]["stderr"] = stderr
                     self.result[item]["status"] = status
@@ -163,12 +167,25 @@ class RunFileInSubProcess(LockOnPrintThread):
                         print stderr
                     sys.__stdout__.flush()
                     self.lock.release()
+                    self.islockedbyme=False
             except Queue.Empty:
                 self.done = True
+                if self.islockedbyme:
+                    try:
+                        self.lock.release()
+                        self.islockedbyme=False
+                    except:
+                        self.islockedbyme=False
             except Exception as e:
                 print "Exiting a thread due to Error: " + str(e)
                 err1, err2, err3 = sys.exc_info()
                 self.errors.append(str(e) + " " + str(err1) + " " + str(err2) + "\n" + str(err3))
+                if self.islockedbyme:
+                    try:
+                        self.lock.release()
+                        self.islockedbyme=False
+                    except:
+                        self.islockedbyme=False
 
 
 def parallel(mods, modargs=[]):

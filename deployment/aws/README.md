@@ -4,7 +4,7 @@ If you have an Amazon EC2 account, upping a whole new cluster takes only minutes
 
 ## Pre requisites
 
-1. Linux machine with ssh, awscli, git, and python &gt;= 2.6
+1. Linux machine with ssh, awscli, git, bind-utils, and python &gt;= 2.6
 2. Git keypair, you must have a key pair for accessing Ambari on git without requiring a password, with a local copy of the private key, you must know where this key is located
 3. Amazon key pair, you must have a pre-existing amazon keypair with a copy of the private key locally, you must know where this key is located
 

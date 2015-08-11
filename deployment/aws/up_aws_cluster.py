@@ -260,6 +260,12 @@ if dnsiid is not None:
     date = dnsserv.run('date "+%Y%m%d%H%M"').strip()
     nameandprivip = []
     nameandprivip = [(name, lA.privIP(instance)) for instance, name in instance_to_name.iteritems()]
+    #resolve repos server
+    repos=lD.runQuiet('host repos.kave.io')
+    if repos.startswith("repos.kave.io has address "):
+        repos=repos[len("repos.kave.io has address "):]
+    else:
+        repos='94.143.213.26'
     #print nameandprivip
     forward = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
@@ -276,8 +282,8 @@ if dnsiid is not None:
 ns     IN      A       %PRIVATE%
 
 ; Define hostname -> IP pairs which you wish to resolve
-repos IN A 94.143.213.26
-""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", privip).replace("%DATE%", date)
+repos IN A %REPOS%
+""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", privip).replace("%DATE%", date).replace("%REPOS%", repos)
     reverse = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
         %DATE%  ;Serial

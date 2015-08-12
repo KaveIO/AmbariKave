@@ -56,5 +56,3 @@ if OSCheck.is_ubuntu_family():
     mysql_configname = '/etc/mysql/my.cnf'
 else:
     mysql_configname = '/etc/my.cnf'
-
-mysql_user = 'mysql'

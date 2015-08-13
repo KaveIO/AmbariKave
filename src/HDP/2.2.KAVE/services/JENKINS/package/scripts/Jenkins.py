@@ -44,7 +44,7 @@ class Jenkins(Script):
             extsources = ["http://updates.jenkins-ci.org/latest/" + plugin + h for h in [".hpi", ".jpi"]]
             mirrorsources=[]
             for mirror in kc.mirrors():
-                mirrorsources=intsources+[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch',repo=mirror) for h in [".hpi", ".jpi"]]
+                mirrorsources=mirrorsources+[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch',repo=mirror) for h in [".hpi", ".jpi"]]
             intsources=[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch') for h in [".hpi", ".jpi"]]
             source = kc.failoverSource(mirrorsources+intsources+extsources)
             dest = params.JENKINS_HOME + "/plugins/" + source.split('/')[-1]

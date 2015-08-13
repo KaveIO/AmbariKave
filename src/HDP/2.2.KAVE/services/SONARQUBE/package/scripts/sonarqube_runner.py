@@ -29,14 +29,14 @@ class SonarQubeRunner(Script):
 
         self.install_packages(env)
 
-        kc.copyCacheOrRepo(self.package,
-                           arch="noarch")  # http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner
-                           # -dist/2.4/sonar-runner-dist-2.4.zip
-        Execute('mkdir -p %s ' % params.sonarqube_runner_install_directory)
-        Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_runner_install_directory))
-        Execute('ln -sfn %s/sonar-runner-2.4 %s/current' % (
-            params.sonarqube_runner_install_directory,
-            params.sonarqube_runner_install_directory))
+        #protect against client downloading behind firewall
+        if not os.path.exists(params.sonarqube_runner_install_directory+'/current'):
+            kc.copyCacheOrRepo(self.package, arch="noarch")
+            Execute('mkdir -p %s ' % params.sonarqube_runner_install_directory)
+            Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_runner_install_directory))
+            Execute('ln -sfn %s/sonar-runner-2.4 %s/current' % (
+                                                                params.sonarqube_runner_install_directory,
+                                                                params.sonarqube_runner_install_directory))
 
         self.configure(env)
 

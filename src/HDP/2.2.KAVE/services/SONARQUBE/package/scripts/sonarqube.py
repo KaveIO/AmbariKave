@@ -31,13 +31,14 @@ class SonarQube(Script):
 
         env.set_params(params)
         self.install_packages(env)
-
-        kc.copyCacheOrRepo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
-        Execute('mkdir -p %s ' % params.sonarqube_install_directory)
-        Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
-        Execute('ln -sfn %s/sonarqube-5.0.1 %s/current' % (
-            params.sonarqube_install_directory,
-            params.sonarqube_install_directory))
+        #protect against client downloading behind firewall
+        if not os.path.exists(params.sonarqube_install_directory+'/current'):
+            kc.copyCacheOrRepo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
+            Execute('mkdir -p %s ' % params.sonarqube_install_directory)
+            Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
+            Execute('ln -sfn %s/sonarqube-5.0.1 %s/current' % (
+                                                               params.sonarqube_install_directory,
+                                                               params.sonarqube_install_directory))
 
         # Getting the processor architecture type(64 bit or 32 bit)
         p = subprocess.Popen(["uname", "-p"], stdout=subprocess.PIPE)

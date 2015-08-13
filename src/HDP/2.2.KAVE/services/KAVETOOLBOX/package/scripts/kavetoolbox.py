@@ -32,6 +32,9 @@ class KaveToolbox(Script):
 
         self.install_packages(env)
         env.set_params(params)
+        #no need to install if already installed ... does not work behind firewall after restart
+        if self.kind=="node" and os.path.exists('/etc/kave/toolbox_ok') and os.path.exists(params.top_dir+'/KaveToolbox'):
+            return True
         #configure first before installing, create custom install file and mirror file if necessary
         self.configure(env)
         if len(self.sttmpdir)<4:
@@ -40,28 +43,37 @@ class KaveToolbox(Script):
         Execute("mkdir -p " + self.sttmpdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         topdir = os.path.realpath(os.path.curdir)
-        os.chdir(self.sttmpdir)
-        kc.copyCacheOrRepo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch", ver=params.releaseversion,
-                           dir="KaveToolbox")
-        Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
-        #try to cope with the annoying way the tarball contains something with .git at the end!
-        import glob
-
-        for gits in glob.glob(self.sttmpdir + "/*.git"):
-            if os.path.isdir(gits) and not gits.endswith("/.git"):
-                Execute('mv ' + gits + ' ' + gits[:-len(".git")])
         extraopts=""
         if params.ignore_missing_groups:
             extraopts=" --ignore-missing-groups"
-        Execute('./[k,K]ave[t,T]oolbox*/scripts/KaveInstall --' + self.kind+extraopts)
+        instscript=params.top_dir+'/KaveToolbox/scripts/KaveInstall'
+        # no need to download if install script already exists
+        if not os.path.exists(instscript):
+            os.chdir(self.sttmpdir)
+            kc.copyCacheOrRepo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch", ver=params.releaseversion,
+                               dir="KaveToolbox")
+            Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
+            #try to cope with the annoying way the tarball contains something with .git at the end!
+            import glob
+
+            for gits in glob.glob(self.sttmpdir + "/*.git"):
+                if os.path.isdir(gits) and not gits.endswith("/.git"):
+                    Execute('mv ' + gits + ' ' + gits[:-len(".git")])
+            instscript='./KaveToolbox/scripts/KaveInstall'
+        Execute(instscript+' --' + self.kind+extraopts)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
+        Execute("mkdir -p /etc/kave")
+        Execute('touch /etc/kave/toolbox_ok')
+        Execute('chmod -R a+r /etc/kave')
 
     def configure(self, env):
         import params
 
         env.set_params(params)
         Execute("mkdir -p /etc/kave")
+        Execute("chmod -R a+r /etc/kave")
+        Execute("chmod a+x /etc/kave")
         alternatives = []
         if ',' in params.alternative_download:
             alternatives = [a.strip() for a in params.alternative_download.strip().split(',')]
@@ -80,6 +92,7 @@ class KaveToolbox(Script):
              content=InlineTemplate(params.custominstall_template),
              mode=0644
              )
+        Execute("chmod -R a+r /etc/kave")
 
 
 if __name__ == "__main__":

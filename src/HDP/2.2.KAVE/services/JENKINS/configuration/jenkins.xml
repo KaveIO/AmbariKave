@@ -27,4 +27,9 @@
     <value>ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, gitlab-plugin, git-parameter, git-tag-message, matrix-project, scm-api, ssh-agent, sonar, sonargraph-plugin</value>
     <description>list of plugins to install</description>
   </property>
+  <property>
+    <name>download_version</name>
+    <value>1.624</value>
+    <description>Which version of Jenkins to download initially</description>
+  </property>
 </configuration>

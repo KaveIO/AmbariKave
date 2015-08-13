@@ -29,10 +29,11 @@ class Jenkins(Script):
 
         env.set_params(params)
         self.install_packages(env)
-        Execute('wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo')
-        Execute('rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key')
-        Package('jenkins')
-        Execute('service iptables stop')
+        dlname='jenkins-'+params.download_version+'-1.1.noarch.rpm'
+        kc.copyCacheOrRepo(dlname,alternates='http://pkg.jenkins-ci.org/redhat/'+dlname)
+        #Execute('wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo')
+        Execute('yum -y install '+dlname)
+        #Execute('service iptables stop')
 
         self.configure(env)
         #wget all requested plugins
@@ -40,8 +41,12 @@ class Jenkins(Script):
             plugin = plugin.strip()
             if not len(plugin):
                 continue
-            sources = ["http://updates.jenkins-ci.org/latest/" + plugin + h for h in [".hpi", ".jpi"]]
-            source = kc.failoverSource(sources)
+            extsources = ["http://updates.jenkins-ci.org/latest/" + plugin + h for h in [".hpi", ".jpi"]]
+            mirrorsources=[]
+            for mirror in kc.mirrors():
+                mirrorsources=intsources+[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch',repo=mirror) for h in [".hpi", ".jpi"]]
+            intsources=[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch') for h in [".hpi", ".jpi"]]
+            source = kc.failoverSource(mirrorsources+intsources+extsources)
             dest = params.JENKINS_HOME + "/plugins/" + source.split('/')[-1]
             Execute(kc.copymethods(source, dest))
 

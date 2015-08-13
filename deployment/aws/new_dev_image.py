@@ -148,11 +148,7 @@ if iid is None:
     #nope! Don't want 443 as ssh by default any longer!
     #lD.confremotessh(remote)
     remote.run("service iptables stop")
-    region = lA.detectRegion()
-    fmount = "/dev/xvdb"
-    if region.startswith("ap-northeast") or region.startswith("ap-southeast"):
-        fmount = "/dev/xvdf"
-    lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb", "Fdisk": fmount}, keyloc)
+    lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip
 

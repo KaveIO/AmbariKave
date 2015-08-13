@@ -28,6 +28,11 @@ mount_conf : the standard JSON format we use to mount disks on Centos6 correctly
 security_config, will be read from $AWSSECCONF if not passed here
 --help: print this help and exit
 
+Fdisk is optional, if not given it will be guessed from "Attach" and the region.
+    i.e.:
+    region  Attach  FDisk
+    eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
+    ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
 """
 
 import sys
@@ -57,7 +62,7 @@ if "--not-strict" in sys.argv:
     strict = False
 
 iid = sys.argv[1]
-mount_conf = {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb", "Fdisk": "/dev/xvdb"}
+mount_conf = {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}
 security_config = None
 
 if len(sys.argv) > 2:

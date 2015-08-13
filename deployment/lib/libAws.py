@@ -209,11 +209,27 @@ def addNewEBSVol(iid, conf, access_key):
     "device_name_seen_by_fdisk"
     e.g.:
     "Mount": "/opt2",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"
+    Fdisk is optional, if not given it will be guessed from "Attach" and the region.
+    i.e.:
+    region  Attach  FDisk
+    eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
+    ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
     """
     try:
         i = descInstance(iid)
     except RuntimeError:
         raise ValueError(iid + " is not one of your instance IDs")
+    if "Fdisk" not in conf:
+        import string
+        alpha=string.ascii_lowercase
+        skip=0
+        if detectRegion().startswith('eu'):
+            #eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
+            skip=0
+        elif detectRegion().startswith('ap'):
+            #ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
+            skip=4
+        conf["Fdisk"]='/dev/xvd'+alpha[alpha.index(conf["Attach"][-1])+skip]
     ip = pubIP(iid)
     av_zone = i["Reservations"][0]["Instances"][0]["Placement"]["AvailabilityZone"]
     voljson = runawstojson("ec2 create-volume --size " + str(conf["Size"]) + " --availability-zone " + av_zone)

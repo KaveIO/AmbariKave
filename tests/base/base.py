@@ -383,10 +383,6 @@ class LDTest(unittest.TestCase):
         import libAws as lA
 
         region = lA.detectRegion()
-        #fmount="/dev/xvdb"
-        #if region.startswith( "ap-northeast"):
-        #    fmount="/dev/xvdf"
-        #lA.addNewEBSVol(iid,{"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : fmount  },keyfile)
         ambari = lD.remoteHost("root", ip, keyfile)
         ambari.register()
         #configure keyless access to itself! Needed for blueprints, but already done now by the new_dev_image script,

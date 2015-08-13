@@ -6,9 +6,9 @@
     "Count" : 2,
     "InstanceType" : "m1.small",
     "AccessType" : "node",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdf"  },
-                     {"Mount": "/something",   "Size" : 1, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdg" },
-                     {"Mount": "/home",   "Size" : 1, "Attach" : "/dev/sdd", "Fdisk" : "/dev/xvdh"}
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb"  },
+                     {"Mount": "/something",   "Size" : 1, "Attach" : "/dev/sdc" },
+                     {"Mount": "/home",   "Size" : 1, "Attach" : "/dev/sdd"}
                    ]
   },
   {
@@ -16,8 +16,8 @@
     "Count" : 1,
     "InstanceType" : "m1.small",
     "AccessType" : "node",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdf"  },
-    				 {"Mount": "/hadoop",   "Size" : 1, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdg"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 1, "Attach" : "/dev/sdb"  },
+    				 {"Mount": "/hadoop",   "Size" : 1, "Attach" : "/dev/sdc"  } ]
   }
   ]
 }

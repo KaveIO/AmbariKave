@@ -10,57 +10,57 @@
     "Count" : 1,
     "InstanceType" : "c3.large",
     "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "kafka",
     "Count" : 1,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "jboss",
     "Count" : -1,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "ci",
     "Count" : -1,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "mongo",
     "Count" : -1,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
-    				 {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc" }]
   },
   { "Name" : "nno",
     "Count" : 2,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "data",
     "Count" : 3,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
-    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }  ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdc" }  ]
   },
   { "Name" : "nimbus",
     "Count" : -1,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "wrk",
     "Count" : 3,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   }
   ]
 }

@@ -5,8 +5,8 @@
     "Count" : -1,
     "InstanceType" : "c3.2xlarge",
     "AccessType" : "admin",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
-    				 {"Mount": "/hadoop",   "Size" : 300, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }  ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/hadoop",   "Size" : 300, "Attach" : "/dev/sdc" }  ]
   }
   ]
 }

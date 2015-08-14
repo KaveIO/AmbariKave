@@ -10,28 +10,28 @@
     "Count" : 1,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
-                     {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  },
-                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd", "Fdisk" : "/dev/xvdd"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
+                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" } ]
   },
   { "Name" : "ci",
     "Count" : 1,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "nno",
     "Count" : 2,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "data",
     "Count" : 3,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  },
-    				 {"Mount": "/hadoop",   "Size" : 100, "Attach" : "/dev/sdc", "Fdisk" : "/dev/xvdc"  }  ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/hadoop",   "Size" : 100, "Attach" : "/dev/sdc" }  ]
   }
   ]
 }

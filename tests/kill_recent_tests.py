@@ -87,7 +87,7 @@ for existing in existing_sn["Subnets"]:
         found = True
         break
 if not found:
-    raise ValueError("no such subnet " + sn)
+    raise ValueError("no such subnet " + subnet)
 
 #
 # Find and kill all instances

@@ -11,7 +11,7 @@
     "Count" : -1,
     "InstanceType" : "t2.small",
     "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdb" } ]
   }
   ]
 }

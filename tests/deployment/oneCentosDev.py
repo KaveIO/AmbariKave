@@ -43,12 +43,12 @@ class DepCentos(base.LDTest):
         stdout = ma.run("ls -l '/opt'")
         self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
         #test add_ebsvol_to_instance script
-        import libAws as lA
-        region = lA.detectRegion()
+        #import libAws as lA
+        #region = lA.detectRegion()
         #fmount = "/dev/xvdc"
         #if region.startswith("ap-northeast") or region.startswith("ap-southeast"):
         #    fmount = "/dev/xvdg"
-        stdout = lD.runQuiet(deploy_dir+"/aws/add_ebsvol_to_instance.py --not-strict "+iid+' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc""}\'')#, "Fdisk": "'+ fmount+'
+        stdout = lD.runQuiet(deploy_dir+"/aws/add_ebsvol_to_instance.py --not-strict "+iid+' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc"}\'')#, "Fdisk": "'+ fmount+'
 
 
 def suite(verbose=False):

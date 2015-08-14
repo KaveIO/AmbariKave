@@ -5,7 +5,7 @@
     "Count" : -1,
     "InstanceType" : "c3.large",
     "AccessType" : "admin",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdf"  } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   }
   ]
 }

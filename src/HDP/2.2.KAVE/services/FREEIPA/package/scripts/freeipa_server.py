@@ -82,7 +82,13 @@ class FreeipaServer(Script):
                     password=None
                     if username in params.initial_user_passwords:
                         password=params.initial_user_passwords[username]
-                    fi.create_user_principal(identity=username, password=password)
+                    firstname=username
+                    lastname='auto_generated'
+                    if 'firstname' in user:
+                        firstname=user['firstname']
+                    if 'lastname' in user:
+                        lastname=user['lastname']
+                    fi.create_user_principal(identity=username, firstname=firstname, lastname=lastname, password=password)
                     if "email" in user:
                         fi.set_user_email(username,user["email"])
             if "Groups" in params.initial_users_and_groups:

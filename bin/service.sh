@@ -123,7 +123,7 @@ function runConfigureService {
       buildConfiguration gitlab freeipa_host
       ;;
     TWIKI)
-	buildConfiguration twiki freeipa_host
+	buildConfiguration twiki freeipa_host ldap_bind_password
       ;;
     FREEIPA)
     buildConfiguration freeipa directory_password ldap_bind_password

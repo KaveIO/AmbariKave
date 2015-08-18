@@ -71,7 +71,7 @@
     				"stormsd.zookeeper.servers" : "nimbus.kave.io, nno-001.kave.io, nno-002.kave.io",
     				"stormsd.drpc.servers" : "nimbus.kave.io" }  },
     { "mongodb" : { "mongo_host" : "mongo.kave.io" }  },
-    { "gitlab" : {"gitlab_port" : "8888", "free_ipa_server": "ambari.kave.io"} }
+    { "gitlab" : {"gitlab_port" : "8888", "freeipa_host": "ambari.kave.io"} }
   ],
   "host_groups" : [
     {

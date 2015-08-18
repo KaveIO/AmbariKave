@@ -22,26 +22,7 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "freeipa": {
-        "ldap_bind_password": "testtestdirpass1234",
-        "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
-        }
-    },
-    { "sonarqube" : {
-    	"sonarhost" : "ambari.kave.io",
-    	"sonar_database_url":"ambari.kave.io",
-    	"sonar_database_user_passwd" : "admin"
-    	}
-    },
-    { "gitlab" : {"gitlab_port" : "8888", "freeipa_host": "ambari.kave.io"} },
-    { "twiki" : { "ldap_bind_password": "testtestdirpass1234", "freeipa_host": "ambari.kave.io"} },
-    { "kavelanding" : {
-        "AMBARI_ADMIN" : "admin",
-        "AMBARI_ADMIN_PASS" : "admin"
-    	}
-    }
+    { "twiki" : { "ldap_bind_password": "testtestdirpass1234", "freeipa_host": "ambari.kave.io"} }
   ],
   "host_groups" : [
     {
@@ -51,14 +32,7 @@
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
         { "name" : "NAGIOS_SERVER"       },
-        { "name" : "KAVELANDING"         },
-        { "name" : "SONARQUBE_RUNNER"     },
-        { "name" : "SONARQUBE_SERVER"      },
-        { "name" : "SONARQUBE_MYSQL_SERVER"},
-        { "name" : "TWIKI_SERVER"          },
-        { "name" : "GITLAB_SERVER"         },
-        { "name" : "FREEIPA_SERVER"  },
-        { "name" : "FREEIPA_CLIENT"  },
+        { "name" : "TWIKI_SERVER"        },
         { "name" : "GANGLIA_MONITOR"     }
       ],
       "cardinality" : "1"

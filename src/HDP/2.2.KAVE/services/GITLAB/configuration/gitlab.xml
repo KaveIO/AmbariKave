@@ -30,8 +30,9 @@
     <name>freeipa_host</name>
     <value>none</value>
     <description>
-        If a freeipa host is available this can be set. This setting will enable
+        If an ldap (freeipa host) is available this can be set. This setting will enable
         ldap and assume some default parameters based on freeipa.
+        If "none" or empty then no ldap binding will be configured
     </description>
   </property>
   <property>
@@ -46,7 +47,21 @@
     <value>true</value>
     <description>
         Toggles the availability of the standard signin dialog. If ldap is
-        enabled than that would be the only login method.
+        enabled than this setting is ignored and only ldap is allowed.
+    </description>
+  </property>
+  <property>
+    <name>ldap_group</name>
+    <value>gitlab</value>
+    <description>
+        If you have ldap enabled, this entry corresponds to the name of the group which contains all gitlab users
+    </description>
+  </property>
+  <property>
+    <name>ldap_admin_group</name>
+    <value>admins</value>
+    <description>
+        If you have ldap enabled, this entry corresponds to the name of the group which contains all gitlab administrators
     </description>
   </property>
 </configuration>

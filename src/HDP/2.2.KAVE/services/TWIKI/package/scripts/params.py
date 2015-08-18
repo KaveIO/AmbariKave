@@ -28,28 +28,27 @@ servername = default('configurations/twiki/servername', hostname)
 if servername == "default":
     servername = hostname
 admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
-    
-ldap_integration_enabled = default('configurations/twiki/ldap_integration_enabled', False)
-if ldap_integration_enabled:
-    ldap_server = default("configurations/twiki/ldap_server", False)
-    ldap_bind_user = default('configurations/twiki/ldap_bind_user', False)
-    ldap_bind_password = default('configurations/twiki/ldap_bind_password', False)
-    ldap_base = default('configurations/twiki/ldap_base', False)
-    ldap_port = default('configurations/twiki/ldap_port', 389)
-    
-    if not ldap_server:
-        ldap_server = default("/clusterHostInfo/ambari_server_host", [False])[0]
-        if not ldap_server:
-            raise Exception('LDAP integration is enabled however ldap_server was False')
-    if not ldap_bind_user:
-        raise Exception('LDAP integration is enabled however ldap_bind_user was False')
-    if not ldap_bind_password:
-        raise Exception('LDAP integration is enabled however ldap_bind_password was False')
-    
-    if not ldap_base:
-        ldap_server_components = ldap_server.split('.')
-        if len(ldap_server_components) < 3:
-            raise Exception('LDAP hostname is not a FQDN. installation not possible')
-        ldap_base = 'dc='+',dc='.join(ldap_server_components[1:])
-else:    
+
+
+# ldap configuration
+ldap_enabled = False
+freeipa_host = default('configurations/twiki/freeipa_host', False)
+if freeipa_host.lower()=="none":
+    freeipa_host=False
+if freeipa_host:
+    freeipa_host_components = freeipa_host.lower().split('.')
+    if len(freeipa_host_components) >= 3:
+        ldap_enabled = True
+        ldap_host = freeipa_host
+        ldap_port = '636'
+        ldap_uid = 'uid'
+        ldap_bind_user = default('configurations/twiki/ldap_bind_user', 'kave_bind_user')
+        ldap_group = default('configurations/twiki/ldap_group', 'twiki')
+        ldap_bind_password = default('configurations/twiki/ldap_bind_password', False)
+        if not ldap_bind_password:
+            raise Exception('If you want to use ldap, you must have an ldap_bind_user with a known password')
+        ldap_base = ',dc='.join(['cn=accounts'] + freeipa_host_components[1:])
+    else:
+        raise Exception('freeipa_host was provided for twiki installation but no FQDN could be determined from this.')
+else:
     print 'ldap not integrated '

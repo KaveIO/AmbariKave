@@ -120,31 +120,34 @@ function runConfigureService {
   result=""
   case $service in
     GITLAB)
-      buildConfiguration gitlab gitlab_port freeipa_host restrict_public_projects gitlab_signin_enabled
+      buildConfiguration gitlab freeipa_host
+      ;;
+    TWIKI)
+	buildConfiguration twiki freeipa_host
       ;;
     FREEIPA)
-    buildConfiguration directory_password ldap_bind_password
+    buildConfiguration freeipa directory_password ldap_bind_password
       ;;
     KAVELANDING)
-    buildConfiguration AMBARI_ADMIN AMBARI_ADMIN_PASS
+    buildConfiguration kavelanding AMBARI_ADMIN AMBARI_ADMIN_PASS
       ;;
     MAIL)
-    buildConfiguration HOST_NAME HOST_DOMAIN MAIL_DIR
+    buildConfiguration mail HOST_NAME HOST_DOMAIN MAIL_DIR
       ;;
     SONARQUBE)
-    buildConfiguration sonar_database_user_passwd
+    buildConfiguration sonar sonar_database_user_passwd
      ;;
     SONARQUBE_RUNNER)
-    buildConfiguration sonar_database_user_passwd
+    buildConfiguration sonar sonar_database_user_passwd
      ;;
     STORMSD)
-    buildConfiguration stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
+    buildConfiguration stormsd stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
      ;;
     STORMSD_DRPC_SERVER)
-    buildConfiguration stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
+    buildConfiguration stormsd stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
      ;;
     STORMSD_CLIENT)
-    buildConfiguration stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
+    buildConfiguration stormsd stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
      ;;
   esac
 }

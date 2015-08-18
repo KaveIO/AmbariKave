@@ -24,7 +24,7 @@ import base
 mods = [test_kavetoolbox_head, remote_service_with_servicesh, remote_service_with_blueprint]
 
 #Ignore services which do not have a working default configuration, or have default ports which conflict with 8080
-ignoreServices = ["GITLAB", "FREEIPA", "JENKINS", "JBOSS", "KAVELANDING", "HUE", "STORMSD", "SONARQUBE", "MAIL"]
+ignoreServices = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS", "JBOSS", "KAVELANDING", "HUE", "STORMSD", "SONARQUBE", "MAIL"]
 
 services = [s for s, ds in base.findServices() if s not in ignoreServices]
 

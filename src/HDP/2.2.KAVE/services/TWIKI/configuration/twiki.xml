@@ -24,48 +24,35 @@
             Username of the twiki admin user.
         </description>
     </property>
-    <property>
-        <name>ldap_integration_enabled</name>
-        <value></value>
-        <description>Set to True if ldap_integration should be enabled</description>
+    <property require-input="true">
+        <name>freeipa_host</name>
+        <value>none</value>
+        <description>
+        If an ldap (freeipa host) is available this can be set. This setting will enable
+        ldap and assume some default parameters based on freeipa.
+        If "none" or empty then no ldap binding will be configured
+        </description>
     </property>
     <property>
-        <name>ldap_server</name>
-        <value></value>
+        <name>ldap_bind_password</name>
+        <value>0</value>
+    	<property-type>PASSWORD</property-type>
         <description>
-            Not required.
-            
-            URL to the ldap server. If kept empty it will be assumed the ldap 
-            is hosted on the ambari server.
+            Password of the binding user. If using ldap this must also be set!
+        </description>
+    </property>
+    <property>
+        <name>ldap_group</name>
+        <value>twiki</value>
+        <description>
+            Name of the ldap group holding twiki users.
         </description>
     </property>
     <property>
         <name>ldap_bind_user</name>
         <value>kave_bind_user</value>
         <description>
-            Username of the binding user.
+            Username of any ldap binding.
         </description>
-    </property>
-    <property>
-        <name>ldap_bind_password</name>
-        <value></value>
-        <description>
-            Password of the binding user
-        </description>
-    </property>
-    <property>
-        <name>ldap_base</name>
-        <value></value>
-        <description>
-            Not required.
-            
-            Base ldap path if kept empty it will be constructed from the 
-            ipa_server url.
-        </description>
-    </property>
-    <property>
-        <name>ldap_port</name>
-        <value>389</value>
-        <description></description>
     </property>
 </configuration>

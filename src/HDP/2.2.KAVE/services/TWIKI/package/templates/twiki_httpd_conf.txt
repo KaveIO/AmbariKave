@@ -61,7 +61,7 @@ BrowserMatchNoCase ^$ blockAccess
 	Options ExecCGI FollowSymLinks
 	SetHandler cgi-script
 
-        {% if ldap_integration_enabled %}
+        {% if ldap_enabled %}
 
         AuthType Basic
         AuthName "LDAP Authentication"
@@ -72,8 +72,8 @@ BrowserMatchNoCase ^$ blockAccess
         AuthLDAPBindPassword {{ldap_bind_password}}
         AuthLDAPGroupAttribute member
         AuthLDAPGroupAttributeIsDN on
-        Require ldap-group cn=twiki,cn=groups,cn=accounts,{{ldap_base}}
-        Require ldap-attribute memberOf=cn=twiki,cn=groups,cn=accounts,{{ldap_base}}
+        Require ldap-group cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
+        Require ldap-attribute memberOf=cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
 
         {% else %}
 

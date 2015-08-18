@@ -18,7 +18,7 @@
 ##############################################################################
 from resource_management import *
 import kavecommon as kc
-
+import os
 
 class SonarQubeRunner(Script):
     installer_cache_path = '/tmp/'

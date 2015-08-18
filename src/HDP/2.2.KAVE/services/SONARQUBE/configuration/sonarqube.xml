@@ -45,7 +45,7 @@
             Name of the database user.
         </description>
     </property>
-    <property required-input="true">
+    <property require-input="true">
         <name>sonar_database_user_passwd</name>
         <property-type>PASSWORD</property-type>
         <value></value>

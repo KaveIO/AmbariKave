@@ -22,7 +22,9 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost", "drpc.servers" : "localhost" }  },
+    { "stormsd" : { "stormsd.nimbus.host" : "localhost",
+    				"stormsd.zookeeper.servers" : "localhost",
+    				"stormsd.drpc.servers" : "localhost" }  },
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
@@ -32,7 +34,9 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "localhost" }  } ],
+      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "nimbus.kave.io",
+      									   "stormsd.zookeeper.servers" : "nimbus.kave.io",
+      									   "stormsd.drpc.servers" : "localhost" }  } ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
@@ -48,7 +52,9 @@
     },
     {
       "name" : "gateway",
-      "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "ambari.kave.io" }  } ],
+      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "nimbus.kave.io",
+      									   "stormsd.zookeeper.servers" : "nimbus.kave.io",
+      									   "stormsd.drpc.servers" : "ambari.kave.io" }  } ],
       "components" : [
         { "name" : "GANGLIA_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
@@ -59,7 +65,9 @@
     },
     {
       "name" : "nimbus",
-      "configurations" : [ { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost" , "drpc.servers" : "ambari.kave.io"}  }],
+      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "localhost",
+      									   "stormsd.zookeeper.servers" : "localhost" ,
+      									   "stormsd.drpc.servers" : "ambari.kave.io"}  }],
       "components" : [
         { "name" : "GANGLIA_MONITOR"  },
         { "name" : "ZOOKEEPER_SERVER" },
@@ -70,7 +78,9 @@
     },
     {
       "name" : "supervisor",
-      "configurations" : [ { "stormsd" : { "nimbus.host" : "nimbus.kave.io", "storm.zookeeper.servers" : "nimbus.kave.io", "drpc.servers" : "ambari.kave.io" }  } ],
+      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "nimbus.kave.io",
+      									   "stormsd.zookeeper.servers" : "nimbus.kave.io",
+      									   "stormsd.drpc.servers" : "ambari.kave.io" }  } ],
       "components" : [
         { "name" : "GANGLIA_MONITOR"  },
         { "name" : "ZOOKEEPER_CLIENT" },

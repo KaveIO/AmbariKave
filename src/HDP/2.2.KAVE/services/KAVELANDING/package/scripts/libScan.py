@@ -80,7 +80,7 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "TWIKI_SERVER": {"twiki": ["80/twiki"]},
                              "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"], "mongo_web" : [28017, "mongodb/tcp_port +1000"]},#need to add 1000 to the port number if it exists!
                              "GITLAB_SERVER": {"gitlab": [80, "gitlab/gitlab_port"]},
-                             "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/ui.port"]},
+                             "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/stormsd.ui.port"]},
                              "HUE_SERVER": {"hue": [8744, "hue/web_ui_port"]},
                              "FREEIPA_SERVER": {"users": [80]},
                              "NAMENODE": {"hdfs_nn1": [50070]},

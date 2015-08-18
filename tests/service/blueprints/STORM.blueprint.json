@@ -22,7 +22,9 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "stormsd" : { "nimbus.host" : "localhost", "storm.zookeeper.servers" : "localhost", "drpc.servers" : "localhost" }  }
+    { "stormsd" : { "stormsd.nimbus.host" : "localhost",
+                    "stormsd.zookeeper.servers" : "localhost",
+                    "stormsd.drpc.servers" : "localhost" }  }
   ],
   "host_groups" : [
     {

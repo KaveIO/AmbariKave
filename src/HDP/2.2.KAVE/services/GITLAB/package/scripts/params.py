@@ -24,6 +24,8 @@ hostname = config["hostname"]
 gitlab_conf_file = "/etc/gitlab/gitlab.rb"
 gitlab_port = default("configurations/gitlab/gitlab_port", "80")
 gitlab_url = default("configurations/gitlab/gitlab_url", hostname)
+if gitlab_url=='plain':
+    gitlab_url=hostname
 if not gitlab_url:
     raise Exception('gitlab_url set to an unusable value \'%s\'' % gitlab_url)
 

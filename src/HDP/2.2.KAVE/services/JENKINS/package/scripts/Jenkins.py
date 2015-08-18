@@ -30,7 +30,7 @@ class Jenkins(Script):
         env.set_params(params)
         self.install_packages(env)
         dlname='jenkins-'+str(params.download_version)+'-1.1.noarch.rpm'
-        kc.copyCacheOrRepo(dlname,alternates='http://pkg.jenkins-ci.org/redhat/'+dlname)
+        kc.copyCacheOrRepo(dlname,arch='noarch',alternates='http://pkg.jenkins-ci.org/redhat/'+dlname)
         #Execute('wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo')
         Execute('rpm -qa | grep -qw jenkins || yum -y install '+dlname)
         #Execute('service iptables stop')

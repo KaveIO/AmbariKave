@@ -57,6 +57,8 @@
         { "name" : "SONARQUBE_MYSQL_SERVER"},
         { "name" : "TWIKI_SERVER"          },
         { "name" : "GITLAB_SERVER"         },
+        { "name" : "FREEIPA_SERVER"  },
+        { "name" : "FREEIPA_CLIENT"  },
         { "name" : "GANGLIA_MONITOR"     }
       ],
       "cardinality" : "1"

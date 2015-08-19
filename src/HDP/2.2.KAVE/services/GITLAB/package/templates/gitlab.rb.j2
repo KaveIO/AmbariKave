@@ -9,9 +9,11 @@ gitlab_rails['ldap_uid'] = '{{ldap_uid}}'
 gitlab_rails['ldap_method'] = '{{ldap_method}}'
 gitlab_rails['ldap_allow_username_or_email_login'] = {{ldap_allow_username_or_email_login}}
 gitlab_rails['ldap_base'] = '{{ldap_base}}'
-gitlab_rails['ldap_user_filter'] = '(memberOf=CN={{ldap_group}},{{ldap_base}})'
-gitlab_rails['admin_group'] = '{{ldap_admin_group}}'
+#gitlab_rails['ldap_user_filter'] = '(memberOf=CN={{ldap_group}},{{ldap_base}})'
+#gitlab_rails['admin_group'] = '{{ldap_admin_group}}'
 {% endif %}
+
+gitlab_rails['initial_root_password'] = '{{gitlab_admin_password}}'
 
 {% if not gitlab_signin_enabled %}
 gitlab_rails['gitlab_signin_enabled'] = false

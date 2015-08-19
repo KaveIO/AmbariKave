@@ -2,11 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <property>
+  <!-- <property> <!-- never used!
     <name>gitlab_admin_login</name>
     <value>admin</value>
     <description>Gitlab admin.</description>
-  </property>
+  </property>-->
   <property require-input = "true">
     <name>gitlab_admin_password</name>
     <value></value>
@@ -50,7 +50,7 @@
         enabled than this setting is ignored and only ldap is allowed.
     </description>
   </property>
-  <property>
+  <!-- <property> <!-- currently this way of doing things does not work...
     <name>ldap_group</name>
     <value>gitlab</value>
     <description>
@@ -63,5 +63,5 @@
     <description>
         If you have ldap enabled, this entry corresponds to the name of the group which contains all gitlab administrators
     </description>
-  </property>
+  </property> -->
 </configuration>

@@ -44,6 +44,7 @@ class Gitlab(Script):
         self.configure(env)
 
     def start(self, env):
+        self.configure(env)
         Execute('gitlab-ctl start')
 
     def stop(self, env):

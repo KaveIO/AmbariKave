@@ -30,6 +30,7 @@ if not gitlab_url:
     raise Exception('gitlab_url set to an unusable value \'%s\'' % gitlab_url)
 
 gitlab_signin_enabled = default('configurations/gitlab/gitlab_signin_enabled', 'true')
+gitlab_admin_password = config['configurations']['gitlab']['gitlab_admin_password']
 restrict_public_projects = default('configurations/gitlab/restrict_public_projects', 'true')
 
 #postgre configuration in case it is already installed!
@@ -50,8 +51,8 @@ if freeipa_host:
         ldap_uid = 'uid'
         ldap_method = 'ssl'
         ldap_allow_username_or_email_login = 'true'
-        ldap_group = default('configurations/gitlab/ldap_group', 'gitlab')
-        ldap_admin_group = default('configurations/gitlab/ldap_admin_group', 'admins')
+        #ldap_group = default('configurations/gitlab/ldap_group', 'gitlab')
+        #ldap_admin_group = default('configurations/gitlab/ldap_admin_group', 'admins')
         ldap_base = ',dc='.join(['cn=accounts'] + freeipa_host_components[1:])
     else:
         raise Exception('freeipa_host was provided for gitlabs installation but no FQDN could be determined from this.')

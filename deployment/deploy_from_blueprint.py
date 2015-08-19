@@ -214,6 +214,9 @@ except RuntimeError:
     whole_cluster.run("ambari-agent start")
 time.sleep(5)
 
+#fix security of agent data and keys
+whole_cluster.run("chmod -R 0700 /var/lib/ambari-agent/data")
+whole_cluster.run('"chmod 0600 /var/lib/ambari-agent/keys/*.key"')
 
 ##################################################################
 # Check that all hosts exist now

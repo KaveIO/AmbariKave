@@ -59,12 +59,14 @@ class SonarQube(Script):
         self.configure(env)
 
     def start(self, env):
+        self.configure(env)
         Execute('service sonar start > /dev/null')
 
     def stop(self, env):
         Execute('service sonar stop')
 
     def restart(self, env):
+        self.configure(env)
         Execute('service sonar restart > /dev/null')
 
     def status(self, env):

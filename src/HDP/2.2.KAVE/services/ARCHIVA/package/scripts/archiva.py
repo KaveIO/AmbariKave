@@ -42,12 +42,14 @@ class Archiva(Script):
         self.configure(env)
 
     def start(self, env):
+        self.configure(env)
         Execute('service archiva start > /dev/null')
 
     def stop(self, env):
         Execute('service archiva stop')
 
     def restart(self, env):
+        self.configure(env)
         Execute('service archiva restart > /dev/null')
 
     def status(self, env):

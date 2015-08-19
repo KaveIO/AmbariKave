@@ -238,6 +238,7 @@ class ApacheScript(res.Script):
 
     def start(self, env):
         print "start apache"
+        self.configure(env)
         #Execute('service httpd start')
         res.Execute("apachectl graceful")
 

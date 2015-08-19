@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
-This file is a derivative of a file provided by the original Ambari Project. 
-This file was originally created with the following licence: 
+This file is a derivative of a file provided by the original Ambari Project.
+This file was originally created with the following licence:
 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -46,6 +46,7 @@ class Mysql(Script):
 
     def start(self, env):
         import params
+        self.configure(env)
 
         Execute('service %s start' % params.daemon_name)
 

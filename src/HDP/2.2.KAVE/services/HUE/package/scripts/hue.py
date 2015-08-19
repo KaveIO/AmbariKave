@@ -51,6 +51,7 @@ class Hue(Script):
             Execute('chmod -R 755 ' + edir)
 
     def start(self, env):
+        self.configure(env)
         Execute("service hue start")
 
     def stop(self, env):

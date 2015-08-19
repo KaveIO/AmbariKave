@@ -59,12 +59,14 @@ class Jenkins(Script):
         #self.start(env)
 
     def start(self, env):
+        self.configure(env)
         Execute('service jenkins start')
 
     def stop(self, env):
         Execute('service jenkins stop')
 
     def restart(self, env):
+        self.configure(env)
         Execute('service jenkins restart')
 
     def status(self, env):

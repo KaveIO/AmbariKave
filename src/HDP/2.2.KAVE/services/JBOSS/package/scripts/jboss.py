@@ -56,12 +56,14 @@ class Jboss(Script):
         # @fixme The jboss start doesn't return nicely if the output is not catched.
         # So the > /dev/null fixes this. However this not really a fundamental
         # solution
+        self.configure(env)
         Execute('service jboss start > /dev/null')
 
     def stop(self, env):
         Execute('service jboss stop')
 
     def restart(self, env):
+        self.configure(env)
         Execute('service jboss restart > /dev/null')
 
     def status(self, env):

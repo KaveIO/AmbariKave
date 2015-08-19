@@ -113,6 +113,7 @@ class StormGenericSD(StormGeneric):
         Execute('chkconfig supervisord on')
 
     def start(self, env):
+        self.configure(env)
         stat, stdout, stderr = kc.mycmd("service supervisord status")
         if "running" not in stdout:
             Execute('service supervisord start')

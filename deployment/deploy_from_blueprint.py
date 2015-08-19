@@ -238,6 +238,10 @@ if not ok:
         "Registration Error, the hosts" + missing.__str__() + " do not exist, try curl --user admin:admin http://" +
         thehost + ":8080/api/v1/hosts")
 
+#fix security of agent data and keys
+whole_cluster.run("chmod -R 0700 /var/lib/ambari-agent/data")
+whole_cluster.run('"chmod 0600 /var/lib/ambari-agent/keys/*.key"')
+
 ##################################################################
 # Add pdsh groups, for all hostgroups
 ##################################################################

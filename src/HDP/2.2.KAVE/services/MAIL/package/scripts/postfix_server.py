@@ -42,6 +42,7 @@ class PostfixSrv(Script):
             raise RuntimeError("Service not installed correctly")
 
     def start(self, env):
+        self.configure(env)
         Execute('nohup service postfix start 2> /dev/null > /dev/null < /dev/null &')
 
     def stop(self, env):

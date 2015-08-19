@@ -43,7 +43,7 @@ if freeipa_host:
         ldap_port = '636'
         ldap_uid = 'uid'
         ldap_bind_user = default('configurations/twiki/ldap_bind_user', 'kave_bind_user')
-        ldap_group = default('configurations/twiki/ldap_group', 'twiki')
+        #ldap_group = default('configurations/twiki/ldap_group', 'twiki')
         ldap_bind_password = default('configurations/twiki/ldap_bind_password', False)
         if not ldap_bind_password:
             raise Exception('If you want to use ldap, you must have an ldap_bind_user with a known password')

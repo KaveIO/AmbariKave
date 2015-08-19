@@ -41,13 +41,13 @@
             Password of the binding user. If using ldap this must also be set!
         </description>
     </property>
-    <property>
+    <!--  <property>
         <name>ldap_group</name>
         <value>twiki</value>
         <description>
             Name of the ldap group holding twiki users.
         </description>
-    </property>
+    </property>-->
     <property>
         <name>ldap_bind_user</name>
         <value>kave_bind_user</value>

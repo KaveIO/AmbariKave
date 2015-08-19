@@ -29,6 +29,7 @@ if servername == "default":
     servername = hostname
 admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
 
+ldap_group = 'twiki'
 
 # ldap configuration
 ldap_enabled = False

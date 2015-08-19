@@ -120,7 +120,7 @@ function runConfigureService {
   result=""
   case $service in
     GITLAB)
-      buildConfiguration gitlab freeipa_host
+    buildConfiguration gitlab freeipa_host gitlab_admin_password
       ;;
     TWIKI)
 	buildConfiguration twiki freeipa_host ldap_bind_password

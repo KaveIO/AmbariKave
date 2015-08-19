@@ -40,7 +40,7 @@
     	"sonar_database_user_passwd" : "admin"
     	}
     },
-    { "gitlab" : {"gitlab_port" : "8888", "freeipa_host": "ambari.kave.io"} },
+    { "gitlab" : {"gitlab_port" : "8888", "freeipa_host": "ambari.kave.io", "gitlab_admin_password": "temptest999999"} },
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234", "freeipa_host": "ambari.kave.io"} }
   ],
   "host_groups" : [

@@ -36,6 +36,8 @@ restrict_public_projects = default('configurations/gitlab/restrict_public_projec
 #postgre configuration in case it is already installed!
 postgre_disabled = False
 # doesn't work at the moment, check in gitlabs explicitly and throw an exception instead
+ldap_group = ''
+ldap_admin_group = ''
 
 # ldap configuration
 ldap_enabled = False

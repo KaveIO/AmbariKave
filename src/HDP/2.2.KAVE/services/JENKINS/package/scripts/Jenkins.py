@@ -94,6 +94,7 @@ class Jenkins(Script):
                         orig_jhome = orig_jhome_parse
 
         import params
+        env.set_params(params)
         #If jenkins user has changed, create the new user
         if params.JENKINS_USER != orig_juser:
             Execute('useradd ' + params.JENKINS_USER)

@@ -42,9 +42,17 @@ for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-pytho
 sonar_host = default('clusterHostInfo/sonarqube_server_hosts', [None])[0]
 if sonar_host==hostname:
     sonar_host="localhost"
+if not sonar_host:
+    raise ValueError("Could not locate sonar server, did you install it in the cluster?")
+
 sonar_web_port = default('configurations/sonarqube/sonar_web_port', '5051')
 
-sonar_database_url = default('configurations/sonarqube/sonar_database_url', 'localhost')
+sonar_database_url = default('/clusterHostInfo/sonarqube_mysql_server_hosts', [None])[0]
+if sonar_database_url==hostname:
+    sonar_database_url='localhost'
+if not sonar_database_url:
+    raise ValueError("Could not locate sonarqube sql server, did you install it in the cluster?")
+
 sonar_database_user_name = default('configurations/sonarqube/sonar_database_user_name', 'sonarqube')
 sonar_database_user_passwd = config['configurations']['sonarqube']['sonar_database_user_passwd']
 

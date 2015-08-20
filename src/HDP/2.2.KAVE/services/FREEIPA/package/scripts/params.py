@@ -82,29 +82,12 @@ cluster_host_info = {
     'kdc_host': set(default("/clusterHostInfo/kdc_host", [])),
     'kerberos_adminclient_host': set(default("/clusterHostInfo/kerberos_adminclient_host", [])),
     'nagios_server': default('/clusterHostInfo/nagios_server_host', []),
-    # Although we know where our own stormsd servies are, we don't know how to find the YARN storm services yet ..
-    'storm_drpc_server': set(default('/clusterHostInfo/stormsd_drpc_server_hosts', [])+default('configurations/freeipa/storm_drpc_server', '').split(',')),
-    'storm_ui_server': set(default('/clusterHostInfo/stormsd_ui_server_hosts', [])+default('configurations/freeipa/storm_ui_server', '').split(',')),
-
-    # Don't know how to find these three services yet ..
-    'app_timeline_server': default('configurations/freeipa/app_timeline_server', 'default').split(','),
-    'falcon_server': default('configurations/freeipa/falcon_server', 'none').split(','),
-    'knox_server': default('configurations/freeipa/knox_server', 'none').split(',')
+    'storm_drpc_server': set(default('/clusterHostInfo/stormsd_drpc_server_hosts', [])+default('/clusterHostInfo/drpc_server_hosts', [])),
+    'storm_ui_server': set(default('/clusterHostInfo/stormsd_ui_server_hosts', [])+default('/clusterHostInfo/storm_ui_server_hosts', [])),
+    'app_timeline_server': set(default('/clusterHostInfo/app_timeline_server_hosts', [])),
+    'falcon_server': set(default('/clusterHostInfo/falcon_server_hosts', [])),
+    'knox_server': set(default('/clusterHostInfo/knox_gateway_hosts', []))
 }
-
-#overwrite default values
-defaults_host_guesses={
-                       'nagios_server': default("/clusterHostInfo/ambari_server_host", [''])[0],
-                       'app_timeline_server':default("/clusterHostInfo/rm_host", [])
-                       }
-
-for k,v in defaults_host_guesses.iteritems():
-    if k in cluster_host_info and type(cluster_host_info[k]) is str and cluster_host_info[k]=="default":
-        cluster_host_info[k]=v
-#overwrite "none" with empty string
-for k,v in cluster_host_info.iteritems():
-    if type(v) is str and v=='none':
-        cluster_host_info[k]=''
 
 
 headless_users = {

@@ -61,8 +61,6 @@
         }
     },
     { "sonarqube" : {
-    	"sonarhost" : "ci.kave.io",
-    	"sonar_database_url":"ci.kave.io",
     	"sonar_database_user_passwd" : "admin"
     	}
     },
@@ -178,7 +176,8 @@
     {
       "name" : "ci",
       "configurations" : [
-      	{ "sonarqube" : { "sonarhost" : "localhost", "sonar_database_url":"localhost", "sonar_database_user_passwd" : "admin" } }
+      	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } },
+      	{ "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999"} }
       	],
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },

@@ -20,6 +20,7 @@ from resource_management.core.system import System
 import os
 
 config = Script.get_config()
+hostname = config["hostname"]
 
 db_path = default('configurations/mongodb/db_path', '/var/lib/mongo')
 bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
@@ -29,3 +30,5 @@ mongo_host = default('clusterHostInfo/mongodb_master_hosts', ['unknown'])[0]
 if mongo_host=="unknown":
     if bind_ip not in ['0.0.0.0','127.0.0.1']:
         mongo_host==bind_ip
+if mongo_host==hostname:
+    mongo_host='localhost'

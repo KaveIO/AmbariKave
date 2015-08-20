@@ -67,8 +67,8 @@ class KaveLanding(ApacheScript):
            content = Template("LICENSE"),
            mode = 0644
            )
-        File(params.www_folder+'/LICENCE-DOCUMENTATION-IMAGE-SUBCLAUSE',
-           content = Template("LICENCE-DOCUMENTATION-IMAGE-SUBCLAUSE"),
+        File(params.www_folder+'/LICENSE-DOCUMENTATION-IMAGE-SUBCLAUSE',
+           content = Template("LICENSE-DOCUMENTATION-IMAGE-SUBCLAUSE"),
            mode = 0644
            )
         File(params.www_folder+'/NOTICE',

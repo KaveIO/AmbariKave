@@ -215,8 +215,8 @@ except RuntimeError:
 time.sleep(5)
 
 #fix security of agent data and keys
-whole_cluster.run('bash -c "if [ -d /var/lib/ambari-agent/data ]; then chmod -R 0700 /var/lib/ambari-agent/data; fi;"')
-whole_cluster.run('bash -c "if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi"')
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then chmod -R 0700 /var/lib/ambari-agent/data; fi;\\""')
+whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
 ##################################################################
 # Check that all hosts exist now
@@ -239,8 +239,8 @@ if not ok:
         thehost + ":8080/api/v1/hosts")
 
 #fix security of agent data and keys
-whole_cluster.run('bash -c "if [ -d /var/lib/ambari-agent/data ]; then chmod -R 0700 /var/lib/ambari-agent/data; fi;"')
-whole_cluster.run('bash -c "if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi"')
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then chmod -R 0700 /var/lib/ambari-agent/data; fi;\\""')
+whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
 ##################################################################
 # Add pdsh groups, for all hostgroups

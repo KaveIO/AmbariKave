@@ -31,7 +31,7 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "mongodb" : {"tcp_port" : 29999, "mongo_host" : "localhost" } }  ],
+      "configurations" : [ { "mongodb" : {"tcp_port" : 29999 } }  ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },

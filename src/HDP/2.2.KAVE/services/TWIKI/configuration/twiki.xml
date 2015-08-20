@@ -24,7 +24,7 @@
             Username of the twiki admin user.
         </description>
     </property>
-    <property require-input="true">
+    <!-- <property require-input="true">
         <name>freeipa_host</name>
         <value>none</value>
         <description>
@@ -32,7 +32,7 @@
         ldap and assume some default parameters based on freeipa.
         If "none" or empty then no ldap binding will be configured
         </description>
-    </property>
+    </property> -->
     <property>
         <name>ldap_bind_password</name>
         <value>0</value>

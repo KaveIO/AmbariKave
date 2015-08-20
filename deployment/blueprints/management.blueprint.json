@@ -22,7 +22,7 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "gitlab": { "free_ipa_host": "ambari.kave.io", "gitlab_admin_password": "temptest999999" } }
+    { "gitlab": { "gitlab_admin_password": "temptest999999" } }
   ],
   "host_groups" : [
     {

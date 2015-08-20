@@ -132,21 +132,6 @@
         </description>
     </property>
     <property>
-        <name>nagios_server</name>
-        <value>default</value>
-        <description>
-            The FreeIPA installation is not able to find all service_components
-            by itself. If your cluster contains an Nagios Server please
-            provide the exact hostname here. This allows for the correct keytabs
-            to be automatically installed on this machine.
-
-            Note: multiple entries can be provide in a comma separated list
-
-            In common cases this is identical to the Ambari Server host. By
-            default this value is assumed.
-        </description>
-    </property>
-    <property>
         <name>falcon_server</name>
         <value>none</value>
         <description>

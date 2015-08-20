@@ -22,9 +22,6 @@
         "nagios_contact" : "test@test.com"
       }
     },
-    { "stormsd" : { "stormsd.nimbus.host" : "localhost",
-    				"stormsd.zookeeper.servers" : "localhost",
-    				"stormsd.drpc.servers" : "localhost" }  },
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
@@ -34,9 +31,6 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "nimbus.kave.io",
-      									   "stormsd.zookeeper.servers" : "nimbus.kave.io",
-      									   "stormsd.drpc.servers" : "localhost" }  } ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
@@ -52,10 +46,6 @@
     },
     {
       "name" : "gateway",
-      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "nimbus.kave.io",
-      									   "stormsd.zookeeper.servers" : "nimbus.kave.io",
-      									   "stormsd.drpc.servers" : "ambari.kave.io" }  } ],
-      "components" : [
         { "name" : "GANGLIA_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
@@ -65,9 +55,6 @@
     },
     {
       "name" : "nimbus",
-      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "localhost",
-      									   "stormsd.zookeeper.servers" : "localhost" ,
-      									   "stormsd.drpc.servers" : "ambari.kave.io"}  }],
       "components" : [
         { "name" : "GANGLIA_MONITOR"  },
         { "name" : "ZOOKEEPER_SERVER" },
@@ -78,9 +65,6 @@
     },
     {
       "name" : "supervisor",
-      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "nimbus.kave.io",
-      									   "stormsd.zookeeper.servers" : "nimbus.kave.io",
-      									   "stormsd.drpc.servers" : "ambari.kave.io" }  } ],
       "components" : [
         { "name" : "GANGLIA_MONITOR"  },
         { "name" : "ZOOKEEPER_CLIENT" },

@@ -26,7 +26,7 @@
         if blank, use hostname
     </description>
   </property>
-  <property require-input = "true">
+  <!-- <property require-input = "true">
     <name>freeipa_host</name>
     <value>none</value>
     <description>
@@ -34,7 +34,7 @@
         ldap and assume some default parameters based on freeipa.
         If "none" or empty then no ldap binding will be configured
     </description>
-  </property>
+  </property> -->
   <property>
     <name>restrict_public_projects</name>
     <value>true</value>

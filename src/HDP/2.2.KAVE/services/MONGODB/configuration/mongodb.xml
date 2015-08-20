@@ -28,12 +28,12 @@
             The Web Status page is always 1000 higher than this port number
         </description>
     </property>
-    <property>
+    <!-- <property>
         <name>mongo_host</name>
         <value>unknown</value>
         <description>
             You only need to set this if you haven't set bind_ip to a specific internal IP.
             If you know either the internal IP or the mongodb host name in advance, this will make client connections easier.
         </description>
-    </property>
+    </property> -->
 </configuration>

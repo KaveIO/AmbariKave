@@ -23,6 +23,8 @@ from ambari_commons.os_check import OSCheck
 config = Script.get_config()
 tmp_dir = Script.get_tmp_dir()
 
+hostname = config["hostname"]
+
 sonarqube_supported_plugins = ['sonar-python-plugin-1.5.jar']
 
 sonarqube_install_directory = default('configurations/sonarqube/sonarqube_install_directory', '/opt/sonarqube')
@@ -37,7 +39,9 @@ for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-pytho
     else:
         print 'Ignoring unsupported plugin: %s' % plugin
 
-sonar_host = default('configurations/sonarqube/sonar_host', 'localhost')
+sonar_host = default('clusterHostInfo/sonarqube_server_hosts', [None])[0]
+if sonar_host==hostname:
+    sonar_host="localhost"
 sonar_web_port = default('configurations/sonarqube/sonar_web_port', '5051')
 
 sonar_database_url = default('configurations/sonarqube/sonar_database_url', 'localhost')

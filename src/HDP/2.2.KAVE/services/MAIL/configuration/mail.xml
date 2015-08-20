@@ -4,12 +4,12 @@
 <configuration>
     <property>
         <name>hostname</name>
-        <value></value>
+        <value>default</value>
         <description>Host name</description>
     </property>
     <property>
         <name>domain</name>
-        <value></value>
+        <value>default</value>
         <description>Domain</description>
     </property>
     <property>

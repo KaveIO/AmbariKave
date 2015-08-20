@@ -20,7 +20,12 @@ from resource_management import *
 config = Script.get_config()
 
 hostname = default('configurations/mail/hostname', config['hostname'])
+if hostname=='default':
+    hostname=config['hostname']
 domain = default('configurations/mail/domain', '.'.join(hostname.split('.')[1:]))
+if domain=='default':
+    domain='.'.join(hostname.split('.')[1:])
+
 inet_interfaces = default('configurations/mail/inet_interfaces', 'all')
 inet_protocols = default('configurations/mail/inet_protocols', 'ipv4')
 message_size = default('configurations/mail/message_size', '10485760')

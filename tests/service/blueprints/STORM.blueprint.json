@@ -21,10 +21,7 @@
         "nagios_web_password" : "admin",
         "nagios_contact" : "test@test.com"
       }
-    },
-    { "stormsd" : { "stormsd.nimbus.host" : "localhost",
-                    "stormsd.zookeeper.servers" : "localhost",
-                    "stormsd.drpc.servers" : "localhost" }  }
+    }
   ],
   "host_groups" : [
     {

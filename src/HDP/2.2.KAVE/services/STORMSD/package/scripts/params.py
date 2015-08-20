@@ -27,6 +27,12 @@ drpc_servers = default("/clusterHostInfo/stormsd_drpc_server_hosts", None)#confi
 if None in [storm_zookeeper_servers, nimbus_host, drpc_servers]:
     raise NameError("Could not find required services from clusterHostInfo : "+str(config['clusterHostInfo']))
 
+#find/replace localhost
+if nimbus_host==hostname:
+    nimbus_host="localhost"
+storm_zookeeper_servers=[s if s!=hostname else 'localhost' for s in storm_zookeeper_servers]
+drpc_servers=[s if s!=hostname else 'localhost' for s in drpc_servers]
+
 storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts', '-Xmx1024m -Djava.net.preferIPv4Stack=true')
 ui_port = default('configurations/stormsd/stormsd.ui.port', "8744")

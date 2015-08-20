@@ -120,10 +120,10 @@ function runConfigureService {
   result=""
   case $service in
     GITLAB)
-    buildConfiguration gitlab freeipa_host gitlab_admin_password
+    buildConfiguration gitlab gitlab_admin_password
       ;;
     TWIKI)
-	buildConfiguration twiki freeipa_host ldap_bind_password
+	buildConfiguration twiki ldap_bind_password
       ;;
     FREEIPA)
     buildConfiguration freeipa directory_password ldap_bind_password
@@ -139,15 +139,6 @@ function runConfigureService {
      ;;
     SONARQUBE_RUNNER)
     buildConfiguration sonar sonar_database_user_passwd
-     ;;
-    STORMSD)
-    buildConfiguration stormsd stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
-     ;;
-    STORMSD_DRPC_SERVER)
-    buildConfiguration stormsd stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
-     ;;
-    STORMSD_CLIENT)
-    buildConfiguration stormsd stormsd.drpc.servers stormsd.nimbus.host stormsd.zookeeper.servers
      ;;
   esac
 }

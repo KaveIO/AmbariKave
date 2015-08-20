@@ -66,13 +66,9 @@
     	"sonar_database_user_passwd" : "admin"
     	}
     },
-    { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711",
-    				"stormsd.nimbus.host" : "nimbus.kave.io",
-    				"stormsd.zookeeper.servers" : "nimbus.kave.io, nno-001.kave.io, nno-002.kave.io",
-    				"stormsd.drpc.servers" : "nimbus.kave.io" }  },
-    { "mongodb" : { "mongo_host" : "mongo.kave.io" }  },
-    { "gitlab" : {"gitlab_port" : "8888", "freeipa_host": "ambari.kave.io", "gitlab_admin_password": "temptest999999"} },
-    { "twiki" : {"ldap_bind_password": "testtestdirpass1234", "freeipa_host": "ambari.kave.io"} }
+    { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711" }  },
+    { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999"} },
+    { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} }
   ],
   "host_groups" : [
     {
@@ -159,7 +155,6 @@
     },
     {
       "name" : "mongo",
-      "configurations" : [ { "mongodb" : { "mongo_host" : "localhost" }  } ],
       "components" : [
         { "name" : "MONGODB_MASTER"       },
         { "name" : "MONGODB_CLIENT"       },
@@ -210,9 +205,6 @@
     },
     {
       "name" : "nimbus",
-      "configurations" : [ { "stormsd" : { "stormsd.nimbus.host" : "localhost",
-                                           "stormsd.zookeeper.servers" : "localhost, nno-001.kave.io, nno-002.kave.io",
-                                           "stormsd.drpc.servers" : "nimbus.kave.io" }  }],
       "components" : [
         { "name" : "NIMBUS_SD_MASTER"   },
         { "name" : "STORMSD_UI_SERVER"  },

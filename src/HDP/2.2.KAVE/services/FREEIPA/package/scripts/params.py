@@ -81,14 +81,15 @@ cluster_host_info = {
     'mapred_tt_hosts': set(default("/clusterHostInfo/mapred_tt_hosts", [])),
     'kdc_host': set(default("/clusterHostInfo/kdc_host", [])),
     'kerberos_adminclient_host': set(default("/clusterHostInfo/kerberos_adminclient_host", [])),
+    'nagios_server': default('/clusterHostInfo/nagios_server_host', []),
+    # Although we know where our own stormsd servies are, we don't know how to find the YARN storm services yet ..
+    'storm_drpc_server': set(default('/clusterHostInfo/stormsd_drpc_server_hosts', [])+default('configurations/freeipa/storm_drpc_server', '').split(',')),
+    'storm_ui_server': set(default('/clusterHostInfo/stormsd_ui_server_hosts', [])+default('configurations/freeipa/storm_ui_server', '').split(',')),
 
-    # For some services there exist no build in cluster_host_info_parameter. We allow these to be specified manually
+    # Don't know how to find these three services yet ..
     'app_timeline_server': default('configurations/freeipa/app_timeline_server', 'default').split(','),
-    'nagios_server': default('configurations/freeipa/nagios_server', 'default').split(','),
     'falcon_server': default('configurations/freeipa/falcon_server', 'none').split(','),
-    'knox_server': default('configurations/freeipa/knox_server', 'none').split(','),
-    'storm_ui_server': default('configurations/freeipa/storm_ui_server', 'none').split(','),
-    'storm_drpc_server': default('configurations/freeipa/storm_drpc_server', 'none').split(',')
+    'knox_server': default('configurations/freeipa/knox_server', 'none').split(',')
 }
 
 #overwrite default values

@@ -19,6 +19,7 @@ from resource_management import *
 
 config = Script.get_config()
 storm_conf_file = "/usr/local/storm/conf/storm.yaml"
+hostname = config["hostname"]
 
 storm_zookeeper_servers = default("/clusterHostInfo/zookeeper_hosts", None)#config['configurations']['stormsd']['stormsd.zookeeper.servers'].replace(", "," ").replace(","," ").split()
 nimbus_host = default("/clusterHostInfo/nimbus_sd_master_hosts", [None])[0]

@@ -20,7 +20,8 @@
                 </component>
                     <component>
                     <name>MONGODB_CLIENT</name>
-                    <displayName>MongoDB Clients. Installs the client libraries and the mongok script for ease of use.</displayName>
+                    <displayName>MongoDB Client</displayName>
+                    <comment>Installs the client libraries and the mongok script for ease of use.</comment>
                     <category>CLIENT</category>
                     <commandScript>
                         <script>scripts/mongo_client.py</script>

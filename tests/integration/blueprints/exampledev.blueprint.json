@@ -71,9 +71,7 @@
     },
     {
       "name" : "ci",
-      "configurations" : [
-      	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } }
-      	],
+      "configurations" : [ ],
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },
         { "name" : "JENKINS_MASTER"        },

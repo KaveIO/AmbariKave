@@ -45,7 +45,7 @@
 	},
 	{
 	    "name" : "ci",
-	    "configurations" : [   ],
+	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "ci.kave.io" } ]
 	},
 	{

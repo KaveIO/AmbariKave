@@ -2,11 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <!-- <property> <!-- never used!
+  <!-- <property>
     <name>gitlab_admin_login</name>
     <value>admin</value>
-    <description>Gitlab admin.</description>
-  </property>-->
+    <description>Gitlab admin. Commented out because it is not used anywhere right now.</description>
+  </property> -->
   <property require-input = "true">
     <name>gitlab_admin_password</name>
     <value></value>
@@ -26,15 +26,6 @@
         if blank, use hostname
     </description>
   </property>
-  <!-- <property require-input = "true">
-    <name>freeipa_host</name>
-    <value>none</value>
-    <description>
-        If an ldap (freeipa host) is available this can be set. This setting will enable
-        ldap and assume some default parameters based on freeipa.
-        If "none" or empty then no ldap binding will be configured
-    </description>
-  </property> -->
   <property>
     <name>restrict_public_projects</name>
     <value>true</value>
@@ -50,11 +41,12 @@
         enabled than this setting is ignored and only ldap is allowed.
     </description>
   </property>
-  <!-- <property> <!-- currently this way of doing things does not work...
+  <!-- <property>
     <name>ldap_group</name>
     <value>gitlab</value>
     <description>
         If you have ldap enabled, this entry corresponds to the name of the group which contains all gitlab users
+        Commented out because there is no way to pass this to gitlab right now.
     </description>
   </property>
   <property>
@@ -62,6 +54,7 @@
     <value>admins</value>
     <description>
         If you have ldap enabled, this entry corresponds to the name of the group which contains all gitlab administrators
+        Commented out because there is no way to pass this to gitlab right now.
     </description>
   </property> -->
 </configuration>

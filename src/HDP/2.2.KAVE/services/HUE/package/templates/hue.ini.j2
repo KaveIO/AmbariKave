@@ -111,9 +111,13 @@
     # - desktop.auth.backend.PamBackend
     # - desktop.auth.backend.SpnegoDjangoBackend
     # - desktop.auth.backend.RemoteUserDjangoBackend
+    {% if enable_pam_auth %}
+    backend=desktop.auth.backend.PamBackend
+    pam_service=login
+    {% else %}
     backend=desktop.auth.backend.AllowFirstUserDjangoBackend
+    {% endif %}
 
-    ## pam_service=login
 
     # When using the desktop.auth.backend.RemoteUserDjangoBackend, this sets
     # the normalized name of the header that contains the remote user.

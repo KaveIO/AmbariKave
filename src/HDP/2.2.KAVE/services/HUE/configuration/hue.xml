@@ -27,4 +27,11 @@
         <value>8042</value>
         <description>Where is the node manager server? </description>
     </property>
+    <property>
+        <name>enable_pam_auth</name>
+        <value>True</value>
+        <description>Use PAM  (Pluggable Authentication Modules) for hue to find users and authenticate them.
+        This will automatically create accounts in hue for users registered on the system, and so integrate with FreeIPA if you have it installed
+        </description>
+    </property>
 </configuration>

@@ -25,28 +25,15 @@ BrowserMatchNoCase ^$ blockAccess
         AuthLDAPGroupAttributeIsDN on
         #Require ldap-group cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
         #Require ldap-attribute memberOf=cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
-
-        {% else %}
-
-	# Password file for TWiki users
-	AuthUserFile {{install_dir}}data/.htpasswd
-	AuthName 'Enter your WikiName: (First name and last name, no space, no dots, capitalized, e.g. JohnSmith)'
-	AuthType Basic
+	    require valid-user
 
         {% endif %}
 
 	# File to return on access control error (e.g. wrong password)
-	ErrorDocument 401 /twiki/bin/view/TWiki/TWikiRegistration
+	# ErrorDocument 401 /twiki/bin/view/TWiki/TWikiRegistration
 	# Alternatively if your users are all known to be registered you may want
 	# to redirect them to the ResetPassword page.
 	# ErrorDocument 401 /twiki/bin/view/TWiki/ResetPassword
 
-# When using Apache type login the following defines the TWiki scripts
-# that makes Apache ask the browser to authenticate. It is correct that
-# scripts such as view, resetpasswd & passwd are not authenticated.
-# (un-comment to activate)
-#<FilesMatch "(attach|edit|manage|rename|save|upload|mail|logon|rest|.*auth).*">
-#	require valid-user
-#</FilesMatch>
 
 </Directory>

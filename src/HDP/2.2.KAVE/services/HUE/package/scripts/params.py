@@ -23,6 +23,9 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
+enable_pam_auth = default('configurations/hue/enable_pam_auth', 'True')
+enable_pam_auth = (enable_pam_auth.lower()=='true' or enable_pam_auth.lower().startswith('y'))
+
 ############## Copied from knox configuration!! #######################
 namenode_hosts = default("/clusterHostInfo/namenode_host", None)
 if type(namenode_hosts) is list:

@@ -33,7 +33,7 @@ ldap_group = 'twiki'
 
 # ldap configuration
 ldap_enabled = False
-freeipa_host = default('clusterHostInfo/freeipa_server_hosts', [False])[0]
+freeipa_host = default('/clusterHostInfo/freeipa_server_hosts', [False])[0]
 if freeipa_host:
     freeipa_host_components = freeipa_host.lower().split('.')
     if len(freeipa_host_components) >= 3:

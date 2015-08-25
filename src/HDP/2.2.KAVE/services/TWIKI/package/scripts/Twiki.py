@@ -45,7 +45,7 @@ class Twiki(ApacheScript):
              mode=0644
              )
         env.set_params(params)
-        File(params.install_dir + "bin/authtest.html",
+        File(params.install_dir + "pub/authtest.html",
              content=Template("authtest.html.j2"),
              mode=0644
              )

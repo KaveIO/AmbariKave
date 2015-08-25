@@ -39,7 +39,7 @@ for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-pytho
     else:
         print 'Ignoring unsupported plugin: %s' % plugin
 
-sonar_host = default('clusterHostInfo/sonarqube_server_hosts', [None])[0]
+sonar_host = default('/clusterHostInfo/sonarqube_server_hosts', [None])[0]
 if sonar_host==hostname:
     sonar_host="localhost"
 if not sonar_host:

@@ -46,7 +46,7 @@ if freeipa_host and ldap_enabled:
         ldap_bind_password = default('configurations/twiki/ldap_bind_password', False)
         if not ldap_bind_password:
             raise Exception('If you want to use ldap, you must have an ldap_bind_user with a known password')
-        ldap_base = ',dc='.join(['dc='],freeipa_host_components[1:])
+        ldap_base = 'dc='+',dc='.join(freeipa_host_components[1:])
     else:
         raise Exception('freeipa_host was provided for twiki installation but no FQDN could be determined from this.')
 else:

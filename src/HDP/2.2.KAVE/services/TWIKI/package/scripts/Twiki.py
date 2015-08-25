@@ -69,8 +69,9 @@ class Twiki(ApacheScript):
 
         File('/etc/httpd/conf.d/twiki_httpd.conf',
              content=Template("twiki_httpd_conf.txt"),
-             mode=0644
+             mode=0600
              )
+        Execute('chown apache:apache /etc/httpd/conf.d/twiki_httpd.conf')
         super(Twiki, self).configure(env)
 
 

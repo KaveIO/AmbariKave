@@ -57,7 +57,7 @@ class Gitlab(Script):
 
         File(params.gitlab_conf_file,
              content=Template("gitlab.rb.j2"),
-             mode=0644
+             mode=0600
              )
 
         Execute('gitlab-ctl reconfigure')

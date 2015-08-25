@@ -62,11 +62,11 @@ class Archiva(Script):
 
         File(params.install_directory + "/conf/jetty.xml",
              content=Template("jetty.xml.j2"),
-             mode=0644
+             mode=0600
              )
         File(params.install_directory + "/conf/security.properties",
              content=Template("security.properties.j2"),
-             mode=0644
+             mode=0600
              )
 
 

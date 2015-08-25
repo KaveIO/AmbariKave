@@ -112,7 +112,7 @@ class Jenkins(Script):
 
         File(self.config_file_path,
              content=Template("jenkins.j2"),
-             mode=0644
+             mode=0600
              )
         kc.chmodUp(self.config_file_path, "a+rx")
         kc.chmodUp(params.JENKINS_HOME, "a+rx")

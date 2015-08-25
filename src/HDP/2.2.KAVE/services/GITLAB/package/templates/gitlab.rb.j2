@@ -38,4 +38,4 @@ gitlab_rails['db_password'] = '{{gitlab_admin_password}}' # Database owner's pas
 {% endif %}
 
 unicorn['port']={{unicorn_port}}
-unicorn['listen']={{unicorn_interface}}
+unicorn['listen']='{{unicorn_interface}}'

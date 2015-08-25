@@ -44,6 +44,11 @@ class Twiki(ApacheScript):
              content=Template("LocalLib.cfg.txt"),
              mode=0644
              )
+        env.set_params(params)
+        File(params.install_dir + "bin/authtest.html",
+             content=Template("authtest.html.j2"),
+             mode=0644
+             )
 
         orignal_config = False
 
@@ -52,7 +57,7 @@ class Twiki(ApacheScript):
                 orignal_config = fp.readlines()
 
         with open(params.install_dir + "lib/LocalSite.cfg", 'w') as fp:
-            newstuff=str(Template("LocalSite.cfg.j2"))
+            newstuff=Template("LocalSite.cfg.j2").get_content()
             fp.write(newstuff)
             dontclobber=[n.split('=')[0].strip() for n in newstuff.split('\n') if len(n.strip()) and len(n.split('=')[0].strip())]
             if not orignal_config or not len(orignal_config):

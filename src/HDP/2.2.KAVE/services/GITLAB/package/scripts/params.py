@@ -24,6 +24,9 @@ hostname = config["hostname"]
 gitlab_conf_file = "/etc/gitlab/gitlab.rb"
 gitlab_port = default("configurations/gitlab/gitlab_port", "80")
 gitlab_url = default("configurations/gitlab/gitlab_url", hostname)
+unicorn_port = default("configurations/gitlab/unicorn_port", "8080")
+unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
+
 if gitlab_url=='plain':
     gitlab_url=hostname
 if not gitlab_url:

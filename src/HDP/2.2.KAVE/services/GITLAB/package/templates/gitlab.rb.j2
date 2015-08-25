@@ -36,3 +36,6 @@ gitlab_rails['db_port'] = '5432'
 gitlab_rails['db_username'] = 'git' # Database owner.
 gitlab_rails['db_password'] = '{{gitlab_admin_password}}' # Database owner's password.
 {% endif %}
+
+unicorn['port']={{unicorn_port}}
+unicorn['listen']={{unicorn_interface}}

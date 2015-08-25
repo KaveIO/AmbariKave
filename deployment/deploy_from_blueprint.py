@@ -193,7 +193,12 @@ except RuntimeError:
     whole_cluster.run(
         "\"bash -c 'if [ ! -e /etc/yum.repos.d/ambari.repo ] ; then cp /tmp/ambari.repo /etc/yum.repos.d/ambari.repo "
         "; fi; rm -f /tmp/ambari.repo ;'\"")
-    whole_cluster.run("yum -y install ambari-agent curl wget")
+    try:
+        #try and retry
+        whole_cluster.run("yum -y install ambari-agent curl wget")
+    except RuntimeError:
+        time.sleep(5)
+        whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
 
 try:
     whole_cluster.cp(liblocation + "/../remotescripts/set_ambari_node.py", "set_ambari_node.py")

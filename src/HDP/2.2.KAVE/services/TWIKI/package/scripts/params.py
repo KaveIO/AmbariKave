@@ -32,12 +32,12 @@ admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
 ldap_group = 'twiki'
 
 # ldap configuration
-ldap_enabled = False
+ldap_enabled = default('configurations/twiki/ldap_enabled', 'False')
+ldap_enabled = (ldap_enabled.lower()=='true' or ldap_enabled.lower().startswith('y'))
 freeipa_host = default('/clusterHostInfo/freeipa_server_hosts', [False])[0]
-if freeipa_host:
+if freeipa_host and ldap_enabled:
     freeipa_host_components = freeipa_host.lower().split('.')
     if len(freeipa_host_components) >= 3:
-        ldap_enabled = True
         ldap_host = freeipa_host
         ldap_port = '636'
         ldap_uid = 'uid'
@@ -46,7 +46,7 @@ if freeipa_host:
         ldap_bind_password = default('configurations/twiki/ldap_bind_password', False)
         if not ldap_bind_password:
             raise Exception('If you want to use ldap, you must have an ldap_bind_user with a known password')
-        ldap_base = ',dc='.join(['cn=accounts'] + freeipa_host_components[1:])
+        ldap_base = ',dc='.join(['dc='],freeipa_host_components[1:])
     else:
         raise Exception('freeipa_host was provided for twiki installation but no FQDN could be determined from this.')
 else:

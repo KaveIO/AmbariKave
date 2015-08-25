@@ -30,6 +30,7 @@ class Twiki(ApacheScript):
         kc.copyCacheOrRepo('TWiki-6.0.0.zip')
         Execute("mkdir -p " + params.install_dir)
         Execute("unzip -o -q TWiki-6.0.0.zip -d " + params.install_dir)
+        Execute("mkdir -p " + params.install_dir+'authtest')
         kc.chownR(params.install_dir, "apache")
         Execute("cp " + params.install_dir + "/bin/LocalLib.cfg.txt " + params.install_dir + "/bin/LocalLib.cfg")
         Execute("chown apache:apache " + params.install_dir + "/bin/LocalLib.cfg")
@@ -45,7 +46,7 @@ class Twiki(ApacheScript):
              mode=0644
              )
         env.set_params(params)
-        File(params.install_dir + "pub/authtest.html",
+        File(params.install_dir + "authtest/index.html",
              content=Template("authtest.html.j2"),
              mode=0644
              )
@@ -72,6 +73,11 @@ class Twiki(ApacheScript):
              mode=0600
              )
         Execute('chown apache:apache /etc/httpd/conf.d/twiki_httpd.conf')
+        File('/etc/httpd/conf.d/authtest_httpd.conf',
+             content=Template("authtest_httpd_conf.j2"),
+             mode=0600
+             )
+        Execute('chown apache:apache /etc/httpd/conf.d/authtest_httpd.conf')
         super(Twiki, self).configure(env)
 
 

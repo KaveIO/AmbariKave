@@ -24,6 +24,13 @@
             Username of the twiki admin user.
         </description>
     </property>
+    <property>
+        <name>ldap_enabled</name>
+        <value>False</value>
+        <description>
+            Flag to enable LDAP if FreeIPA is installed in the cluster. This experimental feature does not currently work.
+        </description>
+    </property>
     <!-- <property require-input="true">
         <name>freeipa_host</name>
         <value>none</value>

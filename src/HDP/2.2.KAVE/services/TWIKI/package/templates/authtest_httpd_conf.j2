@@ -23,10 +23,16 @@ BrowserMatchNoCase ^$ blockAccess
         AuthLDAPBindPassword {{ldap_bind_password}}
         AuthLDAPGroupAttribute member
         AuthLDAPGroupAttributeIsDN on
-        #Require ldap-group cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
-        #Require ldap-attribute memberOf=cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
+        #Require ldap-group cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
+        #Require ldap-attribute memberOf=cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
 	    require valid-user
 
+        {% elif enable_pam_auth %}
+		AuthPAM_Enabled on
+    	AllowOverride None
+    	AuthName "KAVE Login"
+    	AuthType Basic
+    	require group {{auth_group}}
         {% endif %}
 
 	# File to return on access control error (e.g. wrong password)

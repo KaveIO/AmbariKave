@@ -72,8 +72,31 @@ BrowserMatchNoCase ^$ blockAccess
         AuthLDAPBindPassword {{ldap_bind_password}}
         AuthLDAPGroupAttribute member
         AuthLDAPGroupAttributeIsDN on
-        #Require ldap-group cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
-        #Require ldap-attribute memberOf=cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
+        #Require ldap-group cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
+        #Require ldap-attribute memberOf=cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
+	    #require valid-user
+		# When using Apache type login the following defines the TWiki scripts
+		# that makes Apache ask the browser to authenticate. It is correct that
+		# scripts such as view, resetpasswd & passwd are not authenticated.
+		# (un-comment to activate)
+		<FilesMatch "(attach|edit|manage|rename|save|upload|mail|logon|rest|.*auth).*">
+			require valid-user
+		</FilesMatch>
+
+        {% elif enable_pam_auth %}
+
+		AuthPAM_Enabled on
+    	AllowOverride None
+    	AuthName "KAVE login"
+    	AuthType Basic
+    	require group {{auth_group}}
+		# When using Apache type login the following defines the TWiki scripts
+		# that makes Apache ask the browser to authenticate. It is correct that
+		# scripts such as view, resetpasswd & passwd are not authenticated.
+		# (un-comment to activate)
+		<FilesMatch "(attach|edit|manage|rename|save|upload|mail|logon|rest|.*auth).*">
+			require valid-user
+		</FilesMatch>
 
         {% else %}
 

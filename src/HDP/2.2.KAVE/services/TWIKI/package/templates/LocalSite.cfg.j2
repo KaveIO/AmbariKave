@@ -1,4 +1,4 @@
-{% if ldap_enabled %}
+{% if ldap_enabled or enable_pam_auth %}
 $TWiki::cfg{TemplateDir} = '{{install_dir}}templates';
 $TWiki::cfg{DataDir} = '{{install_dir}}data';
 $TWiki::cfg{LoginManager} = 'TWiki::LoginManager::ApacheLogin';

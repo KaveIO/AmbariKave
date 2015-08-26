@@ -31,6 +31,10 @@ admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
 
 ldap_group = 'twiki'
 
+# enable_pam_auth configuration
+enable_pam_auth = default('configurations/twiki/enable_pam_auth', 'False')
+enable_pam_auth = (enable_pam_auth.lower()=='true' or enable_pam_auth.lower().startswith('y'))
+
 # ldap configuration
 ldap_enabled = default('configurations/twiki/ldap_enabled', 'False')
 ldap_enabled = (ldap_enabled.lower()=='true' or ldap_enabled.lower().startswith('y'))

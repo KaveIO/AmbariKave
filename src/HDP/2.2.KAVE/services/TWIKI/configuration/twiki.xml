@@ -25,6 +25,13 @@
         </description>
     </property>
     <property>
+        <name>enable_pam_auth</name>
+        <value>True</value>
+        <description>Use PAM  (Pluggable Authentication Modules) for hue to find users and authenticate them.
+        This will automatically create accounts in hue for users registered on the system, and so integrate with FreeIPA if you have it installed
+        </description>
+    </property>
+    <property>
         <name>ldap_enabled</name>
         <value>False</value>
         <description>
@@ -48,18 +55,18 @@
             Password of the binding user. If using ldap this must also be set!
         </description>
     </property>
-    <!--  <property>
-        <name>ldap_group</name>
+    <property>
+        <name>auth_group</name>
         <value>twiki</value>
         <description>
-            Name of the ldap group holding twiki users.
+            Name of the authorization group where twiki will look for its users.
         </description>
-    </property>-->
-    <property>
+    </property>
+    <!-- <property>
         <name>ldap_bind_user</name>
         <value>kave_bind_user</value>
         <description>
             Username of any ldap binding.
         </description>
-    </property>
+    </property> -->
 </configuration>

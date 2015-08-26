@@ -15,7 +15,7 @@
     <property>
         <name>servername</name>
         <value>default</value>
-        <description>Default will use hostname</description>
+        <description>'default' will use hostname</description>
     </property>
     <property>
         <name>admin_user</name>
@@ -28,7 +28,7 @@
         <name>authentication_method</name>
         <value>HBAC</value>
         <description>Which method to use in twiki authentication?. Options are HBAC, LDAP or NONE.
-        HBAC: Use PAM  (Pluggable Authentication Modules) for hue to find users and authenticate them.
+        HBAC: Use PAM  (Pluggable Authentication Modules) for twiki to find users and authenticate them.
         	 This will automatically create accounts in hue for users registered on the system, and so integrate with FreeIPA if you have it installed.
         	 You can control access using HBAC rules to the machine. If a user can login to the machine, they can reach the twiki.
        	LDAP: Use Active Directory provided by FreeIPA, in this case you will need a bind user and also the bind user password.

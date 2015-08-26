@@ -29,7 +29,7 @@ if servername == "default":
     servername = hostname
 admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
 
-ldap_group = 'twiki'
+auth_group = default('configurations/twiki/auth_group', 'twiki')
 
 # enable_pam_auth configuration
 enable_pam_auth = default('configurations/twiki/enable_pam_auth', 'False')

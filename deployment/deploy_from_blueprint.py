@@ -43,6 +43,7 @@ this if they wish.
 import sys
 import os
 import json
+import time
 
 if "--help" in sys.argv or "-h" in sys.argv:
     print __doc__
@@ -206,7 +207,6 @@ except RuntimeError:
     whole_cluster.register()
     whole_cluster.cp(liblocation + "/../remotescripts/set_ambari_node.py", "set_ambari_node.py")
 
-import time
 #turn off se linux across the cluster ...
 whole_cluster.run("'echo 0 >/selinux/enforce'")
 whole_cluster.run("python set_ambari_node.py " + admin)

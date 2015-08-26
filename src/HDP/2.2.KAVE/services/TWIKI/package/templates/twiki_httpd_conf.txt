@@ -84,11 +84,12 @@ BrowserMatchNoCase ^$ blockAccess
 		</FilesMatch>
 
         {% elif enable_pam_auth %}
-
-		AuthPAM_Enabled on
+		#AuthPAM_Enabled on
     	AllowOverride None
-    	AuthName "KAVE login"
+    	AuthName "KAVE Login"
     	AuthType Basic
+    	AuthBasicProvider external
+    	AuthExternal pwauth
     	require group {{auth_group}}
 		# When using Apache type login the following defines the TWiki scripts
 		# that makes Apache ask the browser to authenticate. It is correct that

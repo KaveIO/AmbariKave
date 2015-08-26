@@ -1,0 +1,44 @@
+{
+  "configurations" : [
+    {
+      "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "freeipa" : { "directory_password": "testtestdirpass1234", "ldap_bind_password": "testtestdirpass1234",
+                   "initial_users_and_groups" : "{\"Users\" : [{\"username\":\"bob\",\"email\":\"bob@bob.bob\",\"firstname\":\"Robert\",\"lastname\":\"Jones\"}], \"Groups\": {\"admins\":\"bob\"} }",
+                   "initial_user_passwords" : "{\"bob\": \"mynameisbobandIamanadminandthisisnotmypass\"}"
+                   }
+      }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [  ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "GANGLIA_SERVER"      },
+        { "name" : "NAGIOS_SERVER"       },
+        { "name" : "HUE_SERVER"          },
+        { "name" : "FREEIPA_SERVER"      },
+        { "name" : "FREEIPA_CLIENT"      },
+        { "name" : "GANGLIA_MONITOR"     }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "default",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "GANGLIA_MONITOR" }
+      ],
+      "cardinality" : "0-10"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "default",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

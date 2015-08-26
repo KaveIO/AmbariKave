@@ -18,24 +18,20 @@ BrowserMatchNoCase ^$ blockAccess
         AuthName "LDAP Authentication"
         AuthBasicProvider ldap
         AuthzLDAPAuthoritative on
-        AuthLDAPURL ldap://{{ldap_host}}:{{ldap_port}}/cn=users,cn=accounts,{{ldap_base}}?uid NONE
-        AuthLDAPBindDN uid={{ldap_bind_user}},cn=sysaccounts,cn=etc,{{ldap_base}}
+        AuthLDAPURL ldap://{{ldap_host}}:{{ldap_port}}/cn=users,cn=accounts,{{ldap_base}}?{{ldap_uid}} NONE
+        AuthLDAPBindDN {{ldap_uid}}={{ldap_bind_user}},cn=sysaccounts,cn=etc,{{ldap_base}}
         AuthLDAPBindPassword {{ldap_bind_password}}
-        AuthLDAPGroupAttribute member
         AuthLDAPGroupAttributeIsDN on
-        #Require ldap-group cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
-        #Require ldap-attribute memberOf=cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
-	    require valid-user
+        Require ldap-group cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
 
         {% elif enable_pam_auth %}
-		#AuthPAM_Enabled on
-    	AllowOverride None
+		AllowOverride None
     	AuthName "KAVE Login"
     	AuthType Basic
+    	AuthBasicAuthoritative on
     	AuthBasicProvider external
     	AuthExternal pwauth
-    	require group {{auth_group}}
-	    require valid-user
+    	require valid-user
         {% endif %}
 
 	# File to return on access control error (e.g. wrong password)

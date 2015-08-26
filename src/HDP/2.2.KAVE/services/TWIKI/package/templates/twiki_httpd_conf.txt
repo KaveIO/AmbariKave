@@ -67,45 +67,29 @@ BrowserMatchNoCase ^$ blockAccess
         AuthName "LDAP Authentication"
         AuthBasicProvider ldap
         AuthzLDAPAuthoritative on
-        AuthLDAPURL ldap://{{ldap_host}}:{{ldap_port}}/cn=users,cn=accounts,{{ldap_base}}?uid NONE
-        AuthLDAPBindDN uid={{ldap_bind_user}},cn=sysaccounts,cn=etc,{{ldap_base}}
+        AuthLDAPURL ldap://{{ldap_host}}:{{ldap_port}}/cn=users,cn=accounts,{{ldap_base}}?{{ldap_uid}} NONE
+        AuthLDAPBindDN {{ldap_uid}}={{ldap_bind_user}},cn=sysaccounts,cn=etc,{{ldap_base}}
         AuthLDAPBindPassword {{ldap_bind_password}}
-        AuthLDAPGroupAttribute member
         AuthLDAPGroupAttributeIsDN on
-        #Require ldap-group cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
-        #Require ldap-attribute memberOf=cn={{auth_group}},cn=groups,cn=accounts,{{ldap_base}}
-	    #require valid-user
-		# When using Apache type login the following defines the TWiki scripts
-		# that makes Apache ask the browser to authenticate. It is correct that
-		# scripts such as view, resetpasswd & passwd are not authenticated.
-		# (un-comment to activate)
-		<FilesMatch "(attach|edit|manage|rename|save|upload|mail|logon|rest|.*auth).*">
-			require valid-user
-		</FilesMatch>
+        Require ldap-group cn={{ldap_group}},cn=groups,cn=accounts,{{ldap_base}}
 
         {% elif enable_pam_auth %}
-		#AuthPAM_Enabled on
-    	AllowOverride None
+		AllowOverride None
     	AuthName "KAVE Login"
     	AuthType Basic
+    	AuthBasicAuthoritative on
     	AuthBasicProvider external
     	AuthExternal pwauth
-    	require group {{auth_group}}
-		# When using Apache type login the following defines the TWiki scripts
-		# that makes Apache ask the browser to authenticate. It is correct that
-		# scripts such as view, resetpasswd & passwd are not authenticated.
-		# (un-comment to activate)
+    	require valid-user
+        {% else %}
+
+		# Password file for TWiki users
+		AuthUserFile /home/httpd/twiki/data/.htpasswd
+		AuthName 'Enter your WikiName: (First name and last name, no space, no dots, capitalized, e.g. JohnSmith)'
+		AuthType Basic
 		<FilesMatch "(attach|edit|manage|rename|save|upload|mail|logon|rest|.*auth).*">
 			require valid-user
 		</FilesMatch>
-
-        {% else %}
-
-	# Password file for TWiki users
-	AuthUserFile /home/httpd/twiki/data/.htpasswd
-	AuthName 'Enter your WikiName: (First name and last name, no space, no dots, capitalized, e.g. JohnSmith)'
-	AuthType Basic
-
         {% endif %}
 
 	# File to return on access control error (e.g. wrong password)

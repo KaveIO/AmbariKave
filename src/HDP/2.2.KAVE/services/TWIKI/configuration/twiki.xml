@@ -25,28 +25,17 @@
         </description>
     </property>
     <property>
-        <name>enable_pam_auth</name>
-        <value>True</value>
-        <description>Use PAM  (Pluggable Authentication Modules) for hue to find users and authenticate them.
-        This will automatically create accounts in hue for users registered on the system, and so integrate with FreeIPA if you have it installed
+        <name>authentication_method</name>
+        <value>HBAC</value>
+        <description>Which method to use in twiki authentication?. Options are HBAC, LDAP or NONE.
+        HBAC: Use PAM  (Pluggable Authentication Modules) for hue to find users and authenticate them.
+        	 This will automatically create accounts in hue for users registered on the system, and so integrate with FreeIPA if you have it installed.
+        	 You can control access using HBAC rules to the machine. If a user can login to the machine, they can reach the twiki.
+       	LDAP: Use Active Directory provided by FreeIPA, in this case you will need a bind user and also the bind user password.
+        	You can control the user access here based upon ldap groups
+        NONE: Use default TWiki authentication based on user registration
         </description>
     </property>
-    <property>
-        <name>ldap_enabled</name>
-        <value>False</value>
-        <description>
-            Flag to enable LDAP if FreeIPA is installed in the cluster. This experimental feature does not currently work.
-        </description>
-    </property>
-    <!-- <property require-input="true">
-        <name>freeipa_host</name>
-        <value>none</value>
-        <description>
-        If an ldap (freeipa host) is available this can be set. This setting will enable
-        ldap and assume some default parameters based on freeipa.
-        If "none" or empty then no ldap binding will be configured
-        </description>
-    </property> -->
     <property>
         <name>ldap_bind_password</name>
         <value>0</value>
@@ -56,17 +45,17 @@
         </description>
     </property>
     <property>
-        <name>auth_group</name>
+        <name>ldap_group</name>
         <value>twiki</value>
         <description>
-            Name of the authorization group where twiki will look for its users.
+            Name of the ldap group where twiki will look for its users.
         </description>
     </property>
-    <!-- <property>
+    <property>
         <name>ldap_bind_user</name>
         <value>kave_bind_user</value>
         <description>
             Username of any ldap binding.
         </description>
-    </property> -->
+    </property>
 </configuration>

@@ -28,11 +28,14 @@ BrowserMatchNoCase ^$ blockAccess
 	    require valid-user
 
         {% elif enable_pam_auth %}
-		AuthPAM_Enabled on
+		#AuthPAM_Enabled on
     	AllowOverride None
     	AuthName "KAVE Login"
     	AuthType Basic
+    	AuthBasicProvider external
+    	AuthExternal pwauth
     	require group {{auth_group}}
+	    require valid-user
         {% endif %}
 
 	# File to return on access control error (e.g. wrong password)

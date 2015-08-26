@@ -26,6 +26,7 @@
                     	<package><name>wget</name></package>
                         <package><name>httpd</name></package>
                         <package><name>mod_authz_ldap</name></package>
+                        <package><name>mod_authz_external_pwauth</name></package>
                     	<package><name>perl</name></package>
                     	<package><name>rcs</name></package>
                     	<package><name>zip</name></package>

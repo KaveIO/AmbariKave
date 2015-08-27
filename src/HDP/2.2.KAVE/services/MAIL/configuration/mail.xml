@@ -4,13 +4,13 @@
 <configuration>
     <property>
         <name>hostname</name>
-        <value>default</value>
-        <description>Host name</description>
+        <value>hostname</value>
+        <description>The name of the server. if blank or set to 'hostname', use the evaluated hostname (probably fqdn)</description>
     </property>
     <property>
         <name>domain</name>
-        <value>default</value>
-        <description>Domain</description>
+        <value>hostdomain</value>
+        <description>The domain name to use for the server. if blank or set to 'hostdomain', use the evaluated host's domain (probably fqdn)</description>
     </property>
     <property>
         <name>inet_interfaces</name>

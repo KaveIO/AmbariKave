@@ -27,7 +27,7 @@ gitlab_url = default("configurations/gitlab/gitlab_url", hostname)
 unicorn_port = default("configurations/gitlab/unicorn_port", "8080")
 unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
 
-if gitlab_url=='plain':
+if gitlab_url=='hostname':
     gitlab_url=hostname
 if not gitlab_url:
     raise Exception('gitlab_url set to an unusable value \'%s\'' % gitlab_url)

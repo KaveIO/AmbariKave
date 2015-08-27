@@ -26,5 +26,5 @@ hostname = config["hostname"]
 www_folder = default('configurations/apache/www_folder', '/var/www/html/')
 PORT = default('configurations/apache/PORT', '80')
 servername = default('configurations/apache/servername', hostname)
-if servername == "default":
+if servername == "hostname":
     servername = hostname

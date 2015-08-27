@@ -175,5 +175,9 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
+        ## This is quite annoying, supervisord is supposed to understand import statements,
+        ## However, it does not work correctly. So in order to avoid clobbering I need to
+        ## Append to the end of the supervisord.conf file each time I restart. This is very silly
+        ## And it really should be fixed, I just don't know how at the moment.
         Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
         kc.chownR('/etc/supervisord.d/', 'storm')

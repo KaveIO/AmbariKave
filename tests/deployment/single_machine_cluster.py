@@ -28,7 +28,7 @@ class SingleMachineCluster(base.LDTest):
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        import libAws as lA
+        import kaveaws as lA
         region=lA.detectRegion()
         clusterfile="single.aws.json"
         if region.startswith("ap"):

@@ -50,11 +50,11 @@ if "--verbose" in sys.argv or "--debug" in sys.argv:
     sys.argv = [s for s in sys.argv if s not in ["--verbose", "--debug"]]
     verbose = True
 
-import libDeploy as lD
+import kavedeploy as lD
 
 lD.debug = verbose
 lD.testproxy()
-import libAws as lA
+import kaveaws as lA
 
 keyfile = ""
 

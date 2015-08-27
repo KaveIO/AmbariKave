@@ -17,7 +17,7 @@
 #
 ###############################################################################
 # print the list of services and their hosts
-# usage in stand-alone script: libScan.py [hostname=localhost] [username=admin] [password=admin]
+# usage in stand-alone script: kavescan.py [hostname=localhost] [username=admin] [password=admin]
 
 #
 # Library to evaluate mathematical expressions

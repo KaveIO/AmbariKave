@@ -22,4 +22,4 @@
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PYTHONPATH=$CURRENT_DIR/../deployment:$CURRENT_DIR/../tests/base:$CURRENT_DIR/../src/shared:$CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts:$PYTHONPATH
 
-python $CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts/libScan.py $@
+python $CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts/kavescan.py $@

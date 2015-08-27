@@ -314,8 +314,8 @@ class LDTest(unittest.TestCase):
         """
         Check that security config exists and that lD library is importable
         """
-        import libDeploy as lD
-        import libAws as lA
+        import kavedeploy as lD
+        import kaveaws as lA
 
         lD.debug = self.debug
         lD.strict_host_key_checking = False
@@ -354,7 +354,7 @@ class LDTest(unittest.TestCase):
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
         itype -> None: c3.large
         """
-        import libDeploy as lD
+        import kavedeploy as lD
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = ""
@@ -380,7 +380,7 @@ class LDTest(unittest.TestCase):
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
         #add 10GB as /opt by default!
-        import libAws as lA
+        import kaveaws as lA
 
         region = lA.detectRegion()
         ambari = lD.remoteHost("root", ip, keyfile)
@@ -404,7 +404,7 @@ class LDTest(unittest.TestCase):
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
         itype -> None: c3.large
         """
-        import libDeploy as lD
+        import kavedeploy as lD
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = ""
@@ -443,7 +443,7 @@ class LDTest(unittest.TestCase):
         """
         Clean ambari, ready for a new install
         """
-        import libDeploy as lD
+        import kavedeploy as lD
         ##clean the existing blueprint ready for re-install, firstly, get the latest version!
         #abranch = ""
         #if self.branch:
@@ -472,7 +472,7 @@ class LDTest(unittest.TestCase):
         requestid: the request id to monitor
         rounds, how many rounds
         """
-        import libDeploy as lD
+        import kavedeploy as lD
         import time
         rounds = 1
         state="UNKNOWN"
@@ -498,7 +498,7 @@ class LDTest(unittest.TestCase):
         Deploy a blueprint on this ambari node, and wait for it to be up!
         """
         cname = cluster.split('/')[-1].split('.')[0]
-        import libDeploy as lD
+        import kavedeploy as lD
         ip = ambari.host
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         #wait until ambari server is up
@@ -530,7 +530,7 @@ class LDTest(unittest.TestCase):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
-        import libDeploy as lD
+        import kavedeploy as lD
         import time
         #wait until ambari server is up
         ip = ambari.host

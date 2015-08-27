@@ -14,7 +14,7 @@
                     <category>MASTER</category>
                     <cardinality>1+</cardinality>
                     <commandScript>
-                        <script>scripts/KaveLanding.py</script>
+                        <script>scripts/kavelanding.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>

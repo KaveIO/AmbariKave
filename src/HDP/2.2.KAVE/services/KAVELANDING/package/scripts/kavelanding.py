@@ -66,7 +66,7 @@ class KaveLanding(ApacheScript):
            mode = 0644
            )
         # HINT: Use this in future: http://jinja.pocoo.org/docs/dev/templates/
-        import libScan as ls
+        import kavescan as ls
         ls.ambari_user=params.AMBARI_ADMIN
         ls.ambari_password=params.AMBARI_ADMIN_PASS
         cluster_service_host, cluster_host_service, cluster_service_link=ls.collect_config_data(params.AMBARI_SHORT_HOST)

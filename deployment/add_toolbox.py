@@ -45,7 +45,7 @@ installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/lib')
 sys.path.append(liblocation)
 
-import libDeploy as lD
+import kavedeploy as lD
 
 lD.debug = False
 
@@ -101,8 +101,8 @@ if __name__ == "__main__":
     security_config = json.loads(jsondat.read())
     jsondat.close()
     sys.path.append(liblocation)
-    import libDeploy as lD
-    import libAws as lA
+    import kavedeploy as lD
+    import kaveaws as lA
 
     lA.checksecjson(security_config, requirefield=[], requirekeys=["SSH"])
     if ip is None:

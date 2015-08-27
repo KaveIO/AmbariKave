@@ -20,11 +20,11 @@ import kavecommon as kc
 from resource_management import *
 
 
-class ApacheWeb(kc.ApacheScript):
+class apachehttpd(kc.ApacheScript):
     def install(self, env):
-        super(ApacheWeb, self).install(env)
+        super(apachehttpd, self).install(env)
         self.configure(env)
 
 
 if __name__ == "__main__":
-    ApacheWeb().execute()
+    apachehttpd().execute()

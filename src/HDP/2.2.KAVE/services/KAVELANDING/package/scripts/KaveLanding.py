@@ -71,6 +71,8 @@ class KaveLanding(ApacheScript):
         ls.ambari_password=params.AMBARI_ADMIN_PASS
         cluster_service_host, cluster_host_service, cluster_service_link=ls.collect_config_data(params.AMBARI_SHORT_HOST)
         bodyhtml=ls.pretty_print(cluster_service_host, cluster_host_service, cluster_service_link, format="html")
+        # It's nice to accept " " and '' as values for customlinks without throwing json errors
+        # smallest valid json will be {}
         if len(params.customlinks)>2:
             import json
             clinks=json.loads(params.customlinks)

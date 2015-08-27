@@ -21,6 +21,7 @@ New features in services:
 * FreeIPA: Full usernames (first and last) can now be added through the configuration
 * KaveLanding: Links are now sorted
 * KaveLanding: Custom links can be provided
+* TWiki: HBAC and LDAP access supported, thus integrated with FreeIPA
 * All services reviewed to ensure they can be restarted effectively without downloads after installation
 * Ambari /clusterHostInfo/ can be used to determine most server locations in the cluster
 

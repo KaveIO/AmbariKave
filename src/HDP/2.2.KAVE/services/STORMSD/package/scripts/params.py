@@ -23,16 +23,18 @@ hostname = config["hostname"]
 
 storm_zookeeper_servers = default("/clusterHostInfo/zookeeper_hosts", None)#config['configurations']['stormsd']['stormsd.zookeeper.servers'].replace(", "," ").replace(","," ").split()
 nimbus_host = default("/clusterHostInfo/nimbus_sd_master_hosts", [None])[0]
-drpc_servers = default("/clusterHostInfo/stormsd_drpc_server_hosts", None)#config['configurations']['stormsd']['stormsd.drpc.servers'].replace(", "," ").replace(","," ").split()
-
-if None in [storm_zookeeper_servers, nimbus_host, drpc_servers]:
+drpc_servers = default("/clusterHostInfo/stormsd_drpc_server_hosts", False)#config['configurations']['stormsd']['stormsd.drpc.servers'].replace(", "," ").replace(","," ").split()
+use_drpc=(drpc_servers is not False)
+if None in [storm_zookeeper_servers, nimbus_host]:
     raise NameError("Could not find required services from clusterHostInfo : "+str(config['clusterHostInfo']))
 
 #find/replace localhost
 if nimbus_host==hostname:
     nimbus_host="localhost"
 storm_zookeeper_servers=[s if s!=hostname else 'localhost' for s in storm_zookeeper_servers]
-drpc_servers=[s if s!=hostname else 'localhost' for s in drpc_servers]
+
+if use_drpc:
+    drpc_servers=[s if s!=hostname else 'localhost' for s in drpc_servers]
 
 storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts', '-Xmx1024m -Djava.net.preferIPv4Stack=true')

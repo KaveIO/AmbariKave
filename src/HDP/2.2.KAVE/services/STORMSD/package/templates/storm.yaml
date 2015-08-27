@@ -16,11 +16,12 @@ storm.local.dir: "/app/storm"
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
 
-
+{% if use_drpc %}
 drpc.servers:
 {% for server in drpc_servers %}
   - "{{server}}"
 {% endfor %}
+{% endif %}
 
 drpc.childopts: "{{drpc_childopts}}"
 

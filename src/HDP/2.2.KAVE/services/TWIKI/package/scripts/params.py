@@ -25,7 +25,7 @@ www_folder = default('configurations/twiki/www_folder', '/var/www/html/')
 install_dir = www_folder + "twiki/"
 PORT = default('configurations/twiki/PORT', '80')
 servername = default('configurations/twiki/servername', hostname)
-if servername == "default":
+if servername == "hostname":
     servername = hostname
 admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
 

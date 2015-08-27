@@ -46,7 +46,7 @@ class SonarQubeRunner(Script):
         env.set_params(params)
         File(params.sonarqube_runner_install_directory + "/current/conf/sonar-runner.properties",
              content=Template("sonar-runner.properties.j2"),
-             mode=0600
+             mode=0644
              )
         File('/etc/profile.d/sonar-runner.sh',
              content=Template("sonar-runner.sh.j2"),

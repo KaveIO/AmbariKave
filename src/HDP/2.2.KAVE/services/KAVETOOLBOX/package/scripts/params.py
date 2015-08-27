@@ -27,7 +27,7 @@ top_dir = default("configurations/kavetoolbox/top_dir", "/opt/")
 releaseversion = default('configurations/kavetoolbox/releaseversion', "1.3-Beta-Pre")
 alternative_download = default('configurations/kavetoolbox/alternative_download', "")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
-custominstall_template_default="""
+custom_install_template_default="""
 # -------------------------------
 import DefaultConfig as cnf
 
@@ -35,7 +35,7 @@ cnf.li.InstallTopDir="{{top_dir}}"
 
 # -------------------------------
 """
-custominstall_template = default('configurations/kavetoolbox/custominstall_template', custominstall_template_default)
+custom_install_template = default('configurations/kavetoolbox/custom_install_template', custom_install_template_default)
 ignore_missing_groups=(ignore_missing_groups.lower()=='true' or ignore_missing_groups.lower().startswith('y'))
 if alternative_download == "none":
     alternative_download = ""

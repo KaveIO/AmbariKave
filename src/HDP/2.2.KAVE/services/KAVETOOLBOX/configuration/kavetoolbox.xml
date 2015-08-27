@@ -26,7 +26,7 @@
     </description>
   </property>
   <property>
-    <name>custominstall_template</name>
+    <name>custom_install_template</name>
     <value># -------------------------------
 import DefaultConfig as cnf
 

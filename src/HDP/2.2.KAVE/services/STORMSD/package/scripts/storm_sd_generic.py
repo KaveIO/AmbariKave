@@ -113,6 +113,13 @@ class StormGenericSD(StormGeneric):
         Execute('chkconfig supervisord on')
 
     def start(self, env):
+        """
+        The start method for Storm is pretty convoluted. Supervisord may already be running due to other storm modules.
+        Then there is the generic problem that the storm serivce start/stop/restart commands don't return control to the script,
+        so they need to be executed with nohup, and then we need to wait for supevisord to actually be started properly
+        before trying to start our supervised programs
+        Tests indicated 5s is enough of a wait for this
+        """
         self.configure(env)
         stat, stdout, stderr = kc.mycmd("service supervisord status")
         if "running" not in stdout:
@@ -130,7 +137,13 @@ class StormGenericSD(StormGeneric):
         self.ctlcmd('stop', bg=True)
 
     def restart(self, env):
-        self.ctlcmd('stop', bg=True)
+        """
+        Akin to the start method, the storm restart method must also be treated with care
+        Since the stop command is run in the background, we must wait unitl the service is actually stopped before
+        trying to start it.
+        Tests indicated 5s is enough of a wait for this
+        """
+        self.stop(env)
         import time
         time.sleep(5)
         self.start(env)

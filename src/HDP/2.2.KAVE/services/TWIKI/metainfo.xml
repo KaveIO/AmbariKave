@@ -13,7 +13,7 @@
                     <displayName>TWiki Server</displayName>
                     <category>MASTER</category>
                     <commandScript>
-                        <script>scripts/Twiki.py</script>
+                        <script>scripts/twiki.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>

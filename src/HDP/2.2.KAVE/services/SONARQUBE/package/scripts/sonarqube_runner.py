@@ -50,7 +50,7 @@ class SonarQubeRunner(Script):
              )
         File('/etc/profile.d/sonar-runner.sh',
              content=Template("sonar-runner.sh.j2"),
-             mode=0644
+             mode=0755
              )
 
 

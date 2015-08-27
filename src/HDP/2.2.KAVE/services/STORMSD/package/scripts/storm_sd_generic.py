@@ -89,6 +89,9 @@ class StormGenericSD(StormGeneric):
                             "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
                 self.fail_with_error(cmd + ' ' + self.PROG + ' Failed!' + stdout + stderr)
         else:
+            # TODO: Ambari 2.0 method should be replacing the below call
+            # since Ambari 1.7.3 execute method never returns the control to script
+            # So, we use nohup to detach the start process, and we also need to redirect all the input and output
             os.system('nohup supervisorctl ' + cmd + ' storm-' + self.PROG + ' 2> /dev/null > /dev/null < /dev/null &')
         return stdout
 

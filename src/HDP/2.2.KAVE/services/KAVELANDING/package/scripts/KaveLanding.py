@@ -27,16 +27,6 @@ class KaveLanding(ApacheScript):
         import params
         import kavecommon as kc
         super(KaveLanding,self).install(env)
-        #needs installation of bower ...
-        #Execute('yum -y groupinstall "Development Tools"')
-        #kc.copyCacheOrRepo('nodejs-setup.sh')
-        #Execute('wget https://rpm.nodesource.com/setup')
-        #Execute('bash nodejs-setup.sh')
-        #Package('nodejs')
-        #Execute('yum install -y nodejs')
-        #Execute('npm install -g bower')
-        #Execute('echo n | bower --allow-root --help')
-        #Execute('bower install bootstrap --allow-root')
         import os
         Execute('cp '+os.path.dirname(__file__)+'/KAVE-logo-thin.png '+params.www_folder+'/')
         Execute('chmod 0644 '+params.www_folder+'/KAVE-logo-thin.png')

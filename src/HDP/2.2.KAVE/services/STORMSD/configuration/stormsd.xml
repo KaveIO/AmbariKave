@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
+<!-- Notice that parameters in this file are prefixed with stormsd
+During testing we noticed fragility if these parameters have the same
+names as those of existing services (notably the existing yarn-storm service)
+A prefix was added to avoid such collisions which were seen to produce problems
+in the ambari configuration web interface.
+ -->
+
 <configuration>
 	<property>
 		<name>stormsd.zookeeper.port</name>

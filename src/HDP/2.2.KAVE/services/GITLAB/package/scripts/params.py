@@ -16,6 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 
@@ -33,8 +34,10 @@ if not gitlab_url:
     raise Exception('gitlab_url set to an unusable value \'%s\'' % gitlab_url)
 
 gitlab_signin_enabled = default('configurations/gitlab/gitlab_signin_enabled', 'true')
+gitlab_signin_enabled = kc.trueorfalse(gitlab_signin_enabled)
 gitlab_admin_password = config['configurations']['gitlab']['gitlab_admin_password']
 restrict_public_projects = default('configurations/gitlab/restrict_public_projects', 'true')
+restrict_public_projects = kc.trueorfalse(restrict_public_projects)
 
 #postgre configuration in case it is already installed!
 postgre_disabled = False

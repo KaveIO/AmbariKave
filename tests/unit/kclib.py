@@ -51,6 +51,16 @@ class TestKaveCommonLib(unittest.TestCase):
         self.assertTrue(os.path.exists(tempdir + "/test.test") and os.path.exists(
             tempdir + "/this/is/test.test") and os.path.exists(tempdir + "/this/test.test"),
                         tempdir + " copy/caching failed")
+        #Test the trueorfalse method
+        cnv={'true':True,'y':True,'ye':True,'yes':True,
+             'false':False,'n':False,'no':False,'none':False,
+             ' false':False,'y ':True}
+        for k,v in cnv.iteritems():
+            self.assertTrue(kc.trueorfalse(k)==v)
+            self.assertTrue(kc.trueorfalse(k.upper())==v)
+        self.assertRaises(TypeError,kc.trueorfalse,{})
+        self.assertRaises(TypeError,kc.trueorfalse,'GAAAH')
+
         #remove this temporary file when done
         if os.path.exists(tempdir) and len(tempdir)>4:
             os.system("rm -rf " + tempdir)

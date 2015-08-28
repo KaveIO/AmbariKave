@@ -13,11 +13,11 @@ Installation (on the 'ambari node' of your cluster, or one large machine)
 
 * AmbariKave is intended to be installed within a large cluster of machines. For installation on one machine, consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
-* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 1.2-Beta, with username repos and password kaverepos
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 1.3-Beta, with username repos and password kaverepos
 ```
 yum -y install wget curl tar zip unzip gzip
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.2-Beta/ambarikave-installer-centos6-1.2-Beta.sh
-sudo bash ambarikave-installer-centos6-1.2-Beta.sh
+wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.3-Beta/ambarikave-installer-centos6-1.3-Beta.sh
+sudo bash ambarikave-installer-centos6-1.3-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -31,8 +31,6 @@ ssh -T git@github.com
 git clone git@github.com:KaveIO/AmbariKave.git
 # Once you have a local checkout, install it with:
 sudo service iptables stop
-sudo chkconfig iptables off
-cd AmbariKave
 sudo dev/install.sh
 sudo dev/patch.sh
 sudo ambari-server start
@@ -55,8 +53,8 @@ pull-update also respects git branches, as a command-line argument and is linked
 To update between released versions, simply install the new version over the old version after stopping the ambari server:
 ```
 sudo ambari-server stop
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.2-Beta/ambarikave-installer-centos6-1.2-Beta.sh
-sudo bash ambarikave-installer-centos6-1.2-Beta.sh
+wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.3-Beta/ambarikave-installer-centos6-1.3-Beta.sh
+sudo bash ambarikave-installer-centos6-1.3-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks

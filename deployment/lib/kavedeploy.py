@@ -563,7 +563,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "1.2-Beta"
+        version = "1.3-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:

@@ -43,9 +43,25 @@ class PostfixSrv(Script):
 
     def start(self, env):
         self.configure(env)
+        # TODO: Ambari 2.0 method should be replacing the below call
+        # since Ambari 1.7.3 execute method never returns the control to script
+        # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         Execute('nohup service postfix start 2> /dev/null > /dev/null < /dev/null &')
 
+    def restart(self,env):
+        """In cases where we run the starting and stopping in the background,
+        a specific restart method is needed to ensure we wait between the two calls
+        3s was seen to be enough in tests
+        """
+        self.stop(env)
+        import time
+        time.sleep(3)
+        self.start(env)
+
     def stop(self, env):
+        # TODO: Ambari 2.0 method should be replacing the below call
+        # since Ambari 1.7.3 execute method never returns the control to script
+        # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         Execute('nohup service postfix stop 2> /dev/null > /dev/null < /dev/null &')
 
     def status(self, env):

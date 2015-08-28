@@ -62,6 +62,29 @@ def mirrors():
             __mirror_list__.append(mirror)
     return __mirror_list__
 
+def trueorfalse(astring):
+    """
+    Boolean cast from a string, understanding most ways of saying yes
+    if I don't understand it, raise a TypeError
+    """
+    cnv={'true':True,'y':True,'ye':True,'yes':True,'positive':True,'affirmative':True,
+         'false':False,'n':False,'no':False,'none':False, 'negative':False}
+    ts=type(astring)
+    if ts is bool:
+        return astring
+    elif ts is str or ts is unicode:
+        astring=astring.lower().strip()
+        try:
+            return cnv[astring]
+        except KeyError:
+            pass
+        if not len(astring):
+            return False
+    elif astring is None:
+        return False
+    elif ts is int:
+        return bool(astring)
+    raise TypeError("Cannot guess boolean value equivalent for "+str(astring))
 
 def mycmd(cmd):
     proc = sub.Popen(cmd, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)

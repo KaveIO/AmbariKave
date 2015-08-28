@@ -44,13 +44,13 @@ class TestScan(unittest.TestCase):
 
     def runTest(self):
         """
-        Test libScan, the library which polls our ambari installer.
+        Test kavescan, the library which polls our ambari installer.
         """
         import os, sys
 
         dir = os.path.realpath(os.path.dirname(__file__) + "/../../")
         sys.path.append(os.path.realpath(dir + "/src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts"))
-        import libScan as ls
+        import kavescan as ls
 
         mockd1 = {"gah": {"fish": "food"}, "nah": {"foo": "bar"}}
         mockd2 = {"gah": {"chips": "food", "fish": "pie"}}

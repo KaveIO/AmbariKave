@@ -33,7 +33,7 @@ class TestServiceSH(unittest.TestCase):
 
         dir = os.path.realpath(os.path.dirname(__file__) + "/../../")
         #check they exist at least twice in service.sh
-        import libDeploy as lD
+        import kavedeploy as lD
 
         lD.debug = False
         for service, sdir in base.findServices():

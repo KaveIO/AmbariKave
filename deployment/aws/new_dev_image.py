@@ -43,11 +43,11 @@ installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/../lib')
 sys.path.append(liblocation)
 
-import libDeploy as lD
+import kavedeploy as lD
 
 lD.debug = False
 lD.strict_host_key_checking = False
-import libAws as lA
+import kaveaws as lA
 
 skip_ambari = False
 skip_blueprint = False
@@ -119,7 +119,7 @@ if iid is None:
     if lD.detect_proxy() and lD.proxy_blocks_22:
         raise SystemError(
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
-            "skip this check set libDeploy.proxy_blocks_22 to false and libDeploy.proxy_port=22")
+            "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
     upped = lA.upCentos6("c3.large", secGroup, keypair, subnet=subnet)
     print "submitted"

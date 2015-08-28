@@ -87,7 +87,7 @@
     <property>
         <name>mail_server</name>
         <value>localhost</value>
-        <description>Address of the default mail server</description>
+        <description>Address of the default mail server. Localhost used by default.</description>
     </property>
     <property>
         <name>mail_port</name>

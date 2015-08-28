@@ -21,7 +21,7 @@ python functions for interacting with aws
 #
 # Functions specific to AWS
 #
-import libDeploy as lD
+import kavedeploy as lD
 import commands
 import subprocess as sub
 import json

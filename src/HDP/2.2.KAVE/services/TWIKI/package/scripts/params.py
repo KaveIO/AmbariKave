@@ -16,6 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 

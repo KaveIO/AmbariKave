@@ -20,9 +20,10 @@ import kclib
 import servicesh
 import scan
 import license
+import pyfilenames
 import base
 
-mods = [deploylib, kclib, servicesh, scan, license]
+mods = [deploylib, kclib, servicesh, scan, license,pyfilenames]
 
 if __name__ == "__main__":
     #base.paralell(suite())

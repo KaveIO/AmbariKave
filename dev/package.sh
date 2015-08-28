@@ -76,7 +76,7 @@ cp -r $DPM_DIR $BUILD_DIR/ambarikave-deployment
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/ambarikave-deployment
 #remove aws parts
 rm -rf $BUILD_DIR/ambarikave-deployment/aws
-rm -rf $BUILD_DIR/ambarikave-deployment/lib/libAws.py
+rm -rf $BUILD_DIR/ambarikave-deployment/lib/kaveaws.py
 rm -rf $BUILD_DIR/ambarikave-deployment/clusters
 rm -rf $BUILD_DIR/ambarikave-deployment/add_toolbox.py
 #copy the repo directory

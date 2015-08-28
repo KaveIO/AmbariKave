@@ -29,7 +29,7 @@ class MicroCluster(base.LDTest):
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
-        import libAws as lA
+        import kaveaws as lA
         region=lA.detectRegion()
         clusterfile="micro.aws.json"
         if region.startswith("ap"):
@@ -71,7 +71,7 @@ class MicroCluster(base.LDTest):
         self.assertTrue("has address" in stdout, "Lookup broken on testing-001.kave.io! (" + connectcmd + ")")
         stdout = ahost.run("host test-001.kave.io")
         self.assertTrue("has address" in stdout, "Lookup broken on test-001.kave.io! (" + connectcmd + ")")
-        import libAws as lA
+        import kaveaws as lA
 
         privip = lA.privIP(iid)
         stdout = ahost.run("host " + privip)

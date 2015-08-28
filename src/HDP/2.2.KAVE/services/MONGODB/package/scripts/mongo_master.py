@@ -37,6 +37,9 @@ class MongoMaster(MongoBase):
     def start(self, env):
         print "start mongodb"
         self.configure(env)
+        # TODO: Ambari 2.0 method should be replacing the below call
+        # since Ambari 1.7.3 execute method never returns the control to script
+        # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
     def stop(self, env):
@@ -44,12 +47,18 @@ class MongoMaster(MongoBase):
         Execute('service mongod stop')
 
     def restart(self, env):
+        """MongoDB service is not very quick to shut down.
+        Restarting without waiting for stop is causes quite a few problems along the lines of 'cannot bind to port blah already in use.'
+        A specific restart method is useful to ensure ambari waits between start and stop.
+        """
+        #Stop first
         print "restart mongodb"
-        Execute('service mongod stop')
+        self.stop(env)
+        #3 seconds seems long enough in most cases to wait for the stop
         import time
         time.sleep(3)
-        self.configure(env)
-        Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
+        #now configure and start normally
+        self.start(env)
 
     def status(self, env):
         print "checking status..."

@@ -16,6 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 
@@ -27,14 +28,16 @@ gitlab_url = default("configurations/gitlab/gitlab_url", hostname)
 unicorn_port = default("configurations/gitlab/unicorn_port", "8080")
 unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
 
-if gitlab_url=='plain':
+if gitlab_url=='hostname':
     gitlab_url=hostname
 if not gitlab_url:
     raise Exception('gitlab_url set to an unusable value \'%s\'' % gitlab_url)
 
 gitlab_signin_enabled = default('configurations/gitlab/gitlab_signin_enabled', 'true')
+gitlab_signin_enabled = kc.trueorfalse(gitlab_signin_enabled)
 gitlab_admin_password = config['configurations']['gitlab']['gitlab_admin_password']
 restrict_public_projects = default('configurations/gitlab/restrict_public_projects', 'true')
+restrict_public_projects = kc.trueorfalse(restrict_public_projects)
 
 #postgre configuration in case it is already installed!
 postgre_disabled = False

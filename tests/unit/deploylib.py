@@ -24,7 +24,7 @@ class TestDeployLib(unittest.TestCase):
         """
         Tests which do not need any environment parameters or access to aws
         """
-        import libDeploy as lD
+        import kavedeploy as lD
 
         lD.testproxy()
         self.assertIsNot(lD.which("ls"), None)
@@ -45,7 +45,7 @@ class TestJSON(unittest.TestCase):
         """
         Checks that every json file under the deployment or tests dir is correct json!
         """
-        import libDeploy as lD
+        import kavedeploy as lD
         import os
 
         deploydir = os.path.dirname(lD.__file__)

@@ -15,12 +15,12 @@
 #   limitations under the License.
 #
 ##############################################################################
-import oneCentosDev
-import singleMachineCluster
-import microCluster
+import one_centos_dev
+import single_machine_cluster
+import micro_cluster
 import base
 
-mods = [oneCentosDev, singleMachineCluster, microCluster]
+mods = [one_centos_dev, single_machine_cluster, micro_cluster]
 
 if __name__ == "__main__":
     base.parallel(mods)

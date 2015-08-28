@@ -220,7 +220,7 @@ except RuntimeError:
 time.sleep(5)
 
 #Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
                   'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
 whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
@@ -245,7 +245,7 @@ if not ok:
         thehost + ":8080/api/v1/hosts")
 
 #Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
                   'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
 whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 

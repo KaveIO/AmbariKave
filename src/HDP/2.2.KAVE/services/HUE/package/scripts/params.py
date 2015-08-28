@@ -18,13 +18,14 @@
 from resource_management import *
 from resource_management.core.system import System
 import os
+import kavecommon as kc
 
 config = Script.get_config()
 
 hostname = config["hostname"]
 
 enable_pam_auth = default('configurations/hue/enable_pam_auth', 'True')
-enable_pam_auth = (enable_pam_auth.lower()=='true' or enable_pam_auth.lower().startswith('y'))
+enable_pam_auth = kc.trueorfalse(enable_pam_auth)
 
 ############## Copied from knox configuration!! #######################
 namenode_hosts = default("/clusterHostInfo/namenode_host", None)

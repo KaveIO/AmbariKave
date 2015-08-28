@@ -123,7 +123,7 @@ installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/lib')
 sys.path.append(liblocation)
 
-import libDeploy as lD
+import kavedeploy as lD
 
 lD.debug = verbose
 lD.strict_host_key_checking = strict
@@ -219,8 +219,9 @@ except RuntimeError:
     whole_cluster.run("ambari-agent start")
 time.sleep(5)
 
-#fix security of agent data and keys
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then chmod -R 0700 /var/lib/ambari-agent/data; fi;\\""')
+#Modify permissions of installed ambari agent components
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
+                  'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
 whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
 ##################################################################
@@ -243,8 +244,9 @@ if not ok:
         "Registration Error, the hosts" + missing.__str__() + " do not exist, try curl --user admin:admin http://" +
         thehost + ":8080/api/v1/hosts")
 
-#fix security of agent data and keys
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then chmod -R 0700 /var/lib/ambari-agent/data; fi;\\""')
+#Modify permissions of installed ambari agent components
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent/data ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
+                  'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
 whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
 ##################################################################

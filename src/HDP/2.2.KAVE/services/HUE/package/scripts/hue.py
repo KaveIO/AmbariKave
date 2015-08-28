@@ -47,8 +47,8 @@ class Hue(Script):
         for edir in edit_dirs:
             edir = os.path.realpath(edir)
             Execute('chmod -R 755 ' + edir)
-            File(edir + '/hue.ini', content=Template("hue.ini.j2"), mode=0700)
-            File(edir + '/hue_httpd.conf', content=Template("hue_httpd.conf.j2"), mode=0755)
+            File(edir + '/hue.ini', content=Template("hue.ini.j2"), mode=0600)
+            File(edir + '/hue_httpd.conf', content=Template("hue_httpd.conf.j2"), mode=0644)
             kc.chownR(edir,'hue')
 
     def start(self, env):

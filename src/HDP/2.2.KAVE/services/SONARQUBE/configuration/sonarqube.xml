@@ -3,13 +3,6 @@
 
 <configuration>
     <property>
-        <name>sonar_host</name>
-        <value>localhost</value>
-        <description>
-            Machine on which the SonarQube server is hosted.
-        </description>
-    </property>
-    <property>
         <name>sonar_web_port</name>
         <value>5051</value>
         <description>
@@ -29,13 +22,6 @@
         <description>
             Comma seperated list of sonarqube plugins to be installed. Currently
             the follwing plugins are supported: sonar-python-plugin-1.5.jar
-        </description>
-    </property>
-    <property>
-        <name>sonar_database_url</name>
-        <value>localhost</value>
-        <description>
-            Url of the sonarqube database.
         </description>
     </property>
     <property>

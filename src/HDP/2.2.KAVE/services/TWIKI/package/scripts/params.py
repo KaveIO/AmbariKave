@@ -16,6 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 
@@ -33,6 +34,7 @@ ldap_group = 'twiki'
 
 # ldap configuration
 ldap_enabled = default('configurations/twiki/ldap_enabled', 'False')
+ldap_enabled = kc.trueorfalse(ldap_enabled)
 ldap_enabled = (ldap_enabled.lower()=='true' or ldap_enabled.lower().startswith('y'))
 freeipa_host = default('/clusterHostInfo/freeipa_server_hosts', [False])[0]
 if freeipa_host and ldap_enabled:

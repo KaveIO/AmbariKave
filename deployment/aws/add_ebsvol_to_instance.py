@@ -89,8 +89,8 @@ installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/../lib')
 sys.path.append(liblocation)
 
-import libAws as lA
-import libDeploy as lD
+import kaveaws as lA
+import kavedeploy as lD
 lD.debug = verbose
 lD.strict_host_key_checking = strict
 

@@ -13,7 +13,7 @@
                     <displayName>Jenkins</displayName>
                     <category>MASTER</category>
                     <commandScript>
-                        <script>scripts/Jenkins.py</script>
+                        <script>scripts/jenkins.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>1200</timeout>
                     </commandScript>

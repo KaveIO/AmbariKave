@@ -35,3 +35,12 @@ AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
 servername = default('configurations/kavelanding/servername', hostname)
 if servername == "default":
     servername = hostname
+
+# It's nice to accept " " and '' as values for customlinks without throwing json errors
+# smallest valid json will be {}
+if len(customlinks.strip())<=2:
+    customlinks='{}'
+
+import json
+#test that custom links is valid json
+json.loads(customlinks)

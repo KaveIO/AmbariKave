@@ -89,7 +89,7 @@ class KaveToolbox(Script):
             f.write('\n')
             f.close()
         File("/etc/kave/CustomInstall.py",
-             content=InlineTemplate(params.custominstall_template),
+             content=InlineTemplate(params.custom_install_template),
              mode=0644
              )
         Execute("chmod -R a+r /etc/kave")

@@ -30,10 +30,10 @@
   </property>
   <property>
     <name>gitlab_url</name>
-    <value>plain</value>
+    <value>hostname</value>
     <description>
         Alias URL of this server, what your users will use to get to this git,
-        if blank, use hostname
+        if blank or set to 'hostname', use the evaluated hostname (probably fqdn)
     </description>
   </property>
   <property>
@@ -47,8 +47,9 @@
     <name>gitlab_signin_enabled</name>
     <value>true</value>
     <description>
-        Toggles the availability of the standard signin dialog. If ldap is
-        enabled than this setting is ignored and only ldap is allowed.
+        Toggles the availability of the standard signin dialog.
+        The default here is True so that the admin user can still be used initially,
+        however this can be turned off once a human administrator is allocated.
     </description>
   </property>
   <!-- <property>

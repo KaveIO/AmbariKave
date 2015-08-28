@@ -34,7 +34,7 @@
                     <category>MASTER</category>
                     <cardinality>1</cardinality>
                     <commandScript>
-                        <script>scripts/Dovecot.py</script>
+                        <script>scripts/dovecot.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>

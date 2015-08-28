@@ -29,6 +29,6 @@ tcp_port = default('configurations/mongodb/tcp_port', '27017')
 mongo_host = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])[0]
 if mongo_host=="unknown":
     if bind_ip not in ['0.0.0.0','127.0.0.1']:
-        mongo_host==bind_ip
+        mongo_host=bind_ip
 if mongo_host==hostname:
     mongo_host='localhost'

@@ -25,8 +25,8 @@
     </property>
     <property>
         <name>servername</name>
-        <value>default</value>
-        <description>Default will use local hostname</description>
+        <value>hostname</value>
+        <description>The name of the server. if blank or set to 'hostname', use the evaluated hostname (probably fqdn)</description>
     </property>
     <property>
         <name>customlinks</name>

@@ -8,7 +8,52 @@ Contains a list of the released versions with a summary of the main changes in e
 ## v1.3-Beta
 
 * Bugfix release in preparation for migration to Ambari 2.X
+* Over 50 independent fixes
 
+New features in services:
+
+* KaveToolbox: move to 1.3-Beta (lots of minor improvements), e.g. the ProtectNotebooks.sh script
+* KaveToolbox: Possibility to customize CustomInstall.py added as configuration parameter
+* Hue: now integrated with HBAC (host-based access control) and thus also with FreeIPA
+* Jenkins: Migration to latest stable version
+* Jenkins: Installer and list of default plugins now cached on our repo server
+* FreeIPA: you can now specify also a list of sudoers in the initial configuration
+* FreeIPA: Full usernames (first and last) can now be added through the configuration
+* KaveLanding: Links are now sorted
+* KaveLanding: Custom links can be provided
+* TWiki: HBAC and LDAP access supported, thus integrated with FreeIPA
+* All services reviewed to ensure they can be restarted effectively without downloads after installation
+* Ambari /clusterHostInfo/ can be used to determine most server locations in the cluster
+
+New features in test and deployment framework:
+
+* restart\_all\_services.sh script: recovers from most aborted blueprints see the in-built help
+* Add check for datetime (ntp) in deploy\_from\_blueprint.py to avoid unknown timing issues for ambari agents
+* Default blueprints updated, several spurious parameters no longer need to be specified in current ambari versions
+* Slight modification to host authentication in the gitwrap script used for testing
+* FDisk part of mount command is now guessed per region, simplifying the test scripts
+* In tests, threads now unlock if an exception is thrown
+* Small bug in packaging script fixed
+
+Bugfixes:
+
+* TWiki: LocalSiteCfg was broken through misapplication of a template
+* TWiki: different default parameters being required through webUI vs blueprints fixed with defaults
+* StormSD: Parameters renamed so that the install also works through the web interface
+* StormSD: Partial fix for multiply writing the same configuration files into supervisord.conf, now less common
+* StormSD: Start/Stop/Restart methods heavily modified to spawn background processes, otherwise they hung forever
+* KaveLanding: bootstrap/bower not actually needed in most cases
+* KaveLanding: removal of duplicate code
+* KaveLanding: False positive status fixed (see status methods below)
+* KaveToolbox: --ignore-missing-groups accidentally always applied, new logic added
+* KaveToolbox: missing git install
+* FreeIPA: did not declare it's forwarders configuration parameter
+* Gitlab: Unicorn port (8080) was not configurable leading to port conflicts, fixed
+* SonarQube: Unused parameters removed
+* MongoDB: in the case a user-specified and IP address for a mongo server, it was not actually being applied
+* Start and Install methods need to both call configure in most cases so that web interface reconfiguring is possible
+* Status method needs to throw an exception when service not running
+* Start/Stop/Restart methods reviewed especially for backgrounded-services
 
 ## v1.2-Beta
 

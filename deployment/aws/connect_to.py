@@ -52,11 +52,11 @@ else:
         raise IOError("please specify keyfile or set AWSSECCONF environment variable!")
     keyfile = os.path.expanduser(os.environ["AWSSECCONF"])
 
-import libDeploy as lD
+import kavedeploy as lD
 
 lD.debug = verbose
 lD.testproxy()
-import libAws as lA
+import kaveaws as lA
 
 import json
 

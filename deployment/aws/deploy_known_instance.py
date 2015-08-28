@@ -17,7 +17,7 @@
 #
 ##############################################################################
 """
-up one instance from the amiids stored in libAws
+up one instance from the amiids stored in kaveaws
 
 usage deploy_known_instance.py os hostname [security_config.json] [instance_type] [--verbose] [--ambari-dev]
     os: Choose from known os-es, Centos6, Centos7 and Ubuntu14
@@ -40,10 +40,10 @@ installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/../lib')
 sys.path.append(liblocation)
 
-import libDeploy as lD
+import kavedeploy as lD
 
 lD.debug = False
-import libAws as lA
+import kaveaws as lA
 
 
 def help():
@@ -108,7 +108,7 @@ lA.testaws()
 if lD.detect_proxy() and lD.proxy_blocks_22:
     raise SystemError(
         "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
-        "skip this check set libDeploy.proxy_blocks_22 to false and libDeploy.proxy_port=22")
+        "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
 
 lD.testproxy()
 

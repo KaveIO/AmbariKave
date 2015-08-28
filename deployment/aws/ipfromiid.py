@@ -36,8 +36,8 @@ if "--help" in sys.argv or "-h" in sys.argv:
     print __doc__
     sys.exit(0)
 
-import libDeploy as lD
-import libAws as lA
+import kavedeploy as lD
+import kaveaws as lA
 
 ips = ""
 for iid in sys.argv[1:]:

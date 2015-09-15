@@ -35,6 +35,14 @@
                     	<package><name>gcc</name></package>
                     	<package><name>gd</name></package>
                     	<package><name>gd-devel</name></package>
+                        <package><name>php-mysql</name></package>
+                    	<package><name>php-devel</name></package>
+                    	<package><name>php-gd</name></package>
+                    	<package><name>php-pecl-memcache</name></package>
+                    	<package><name>php-pspell</name></package>
+                    	<package><name>php-snmp</name></package>
+                    	<package><name>php-xmlrpc</name></package>
+                    	<package><name>php-xml</name></package>
                     	<package><name>perl-CPAN</name></package>
                     	<package><name>perl-CGI</name></package>
                     	<package><name>perl-YAML</name></package>

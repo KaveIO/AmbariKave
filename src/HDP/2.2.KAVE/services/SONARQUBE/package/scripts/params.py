@@ -40,7 +40,7 @@ for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-pytho
         print 'Ignoring unsupported plugin: %s' % plugin
 
 
-known_authentication_methods=['HBAC','LDAP','NONE']
+known_authentication_methods=['HBAC','NONE']
 authentication_method=default('configurations/twiki/authentication_method', 'HBAC')
 authentication_method=authentication_method.upper()
 if authentication_method not in known_authentication_methods:

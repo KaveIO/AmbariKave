@@ -18,6 +18,19 @@
 sonar.jdbc.username={{sonar_database_user_name}}
 sonar.jdbc.password={{sonar_database_user_passwd}}
 
+
+{% if enable_pam_auth %}
+# --PAM-----------------------------------------------------------------------------------------
+sonar.properties
+sonar.security.realm: PAM
+pam.serviceName=system-auth
+# Automatically create users.
+# When set to true, user will be created after successful authentication, if doesn't exists.
+# The default group affected to new users can be defined online, in SonarQube general settings. The default value is "sonar-users".
+# Default is false.
+sonar.authenticator.createUsers: true
+{% endif %}
+
 #----- Embedded Database (default)
 # It does not accept connections from remote hosts, so the
 # server and the analyzers must be executed on the same host.
@@ -253,6 +266,10 @@ sonar.web.port={{sonar_web_port}}
 # Defaults are respectively <installation home>/data and <installation home>/temp
 #sonar.path.data=data
 #sonar.path.temp=temp
+
+#--------------------------------------------------------------------------------------------------
+# Security Settings
+
 
 
 #--------------------------------------------------------------------------------------------------

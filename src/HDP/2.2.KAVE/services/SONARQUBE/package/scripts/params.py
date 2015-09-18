@@ -39,6 +39,18 @@ for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-pytho
     else:
         print 'Ignoring unsupported plugin: %s' % plugin
 
+
+known_authentication_methods=['HBAC','LDAP','NONE']
+authentication_method=default('configurations/twiki/authentication_method', 'HBAC')
+authentication_method=authentication_method.upper()
+if authentication_method not in known_authentication_methods:
+    raise ValueError("Authentication method not recognised, I only know "
+                     +str(known_authentication_methods)
+                     +" but you asked for "+authentication_method)
+# enable_pam_auth configuration
+enable_pam_auth = (authentication_method=="HBAC")
+
+
 sonar_host = default('/clusterHostInfo/sonarqube_server_hosts', [None])[0]
 if sonar_host==hostname:
     sonar_host="localhost"

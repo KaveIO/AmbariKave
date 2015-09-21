@@ -16,6 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
+
 class HDP22KAVEStackAdvisor(HDP22StackAdvisor):
 
     # List of validators which should also be evaluated if there is not recommended default present.
@@ -37,18 +39,21 @@ class HDP22KAVEStackAdvisor(HDP22StackAdvisor):
         return parentValidators
 
     def validateFreeIPAConfigurations(self, properties, recommendedDefaults, configurations):
-        validationItems = [{"config-name": 'directory_password', "item": self.validatorPasswordStrength(properties, 'directory_password')},
-                           {"config-name": 'ldap_bind_password', "item": self.validatorPasswordStrength(properties, 'ldap_bind_password')}]
+        validationItems = [{"config-name": 'directory_password',
+                            "item": self.validatorPasswordStrength(properties, 'directory_password')},
+                           {"config-name": 'ldap_bind_password',
+                            "item": self.validatorPasswordStrength(properties, 'ldap_bind_password')}
+                           ]
         return self.toConfigurationValidationProblems(validationItems, "freeipa")
 
     def getConfigurationsValidationItems(self, services, hosts):
         """
-        Returns array of Validation objects about issues with configuration
-        values provided in services. This is overridden from HDP206StackAdvisor.
-        The added functionality is the use of validateWithoutRecommendedDefault.
-        We want the passwords to be validated even if there are no suitable
-        recommendedDefaults present in the blueprint.
-        """
+Returns array of Validation objects about issues with configuration
+values provided in services. This is overridden from HDP206StackAdvisor.
+The added functionality is the use of validateWithoutRecommendedDefault.
+We want the passwords to be validated even if there are no suitable
+recommendedDefaults present in the blueprint.
+"""
         items = []
 
         recommendations = self.recommendConfigurations(services, hosts)

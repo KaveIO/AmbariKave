@@ -21,6 +21,7 @@ from resource_management import *
 
 
 class apachehttpd(kc.ApacheScript):
+
     def install(self, env):
         super(apachehttpd, self).install(env)
         self.configure(env)

@@ -20,6 +20,7 @@ import base
 
 
 class TestDeployLib(unittest.TestCase):
+
     def runTest(self):
         """
         Tests which do not need any environment parameters or access to aws
@@ -41,6 +42,7 @@ class TestDeployLib(unittest.TestCase):
 
 
 class TestJSON(unittest.TestCase):
+
     def runTest(self):
         """
         Checks that every json file under the deployment or tests dir is correct json!
@@ -50,12 +52,13 @@ class TestJSON(unittest.TestCase):
 
         deploydir = os.path.dirname(lD.__file__)
         testdir = os.path.dirname(__file__)
-        import glob, json
+        import glob
+        import json
 
         jsons = glob.glob(deploydir + "/*/*.json") + glob.glob(testdir + "/../*/*.json") + glob.glob(
             testdir + "/../*/*/*.json")
         for ason in jsons:
-            #print ason
+            # print ason
             f = open(ason)
             l = f.read()
             f.close()

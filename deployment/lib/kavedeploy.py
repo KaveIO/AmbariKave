@@ -22,7 +22,9 @@ deployment
 import commands
 import subprocess as sub
 import json
-import os, sys, time
+import os
+import sys
+import time
 import re
 #
 # use for configuration
@@ -30,11 +32,11 @@ import re
 
 known_dest_types = ["workstation", "node"]
 debug = True
-#whether to turn off ssl checking if a proxy is detected
+# whether to turn off ssl checking if a proxy is detected
 no_ssl_over_proxy = True
-#whether the proxy blocks port 22
+# whether the proxy blocks port 22
 proxy_blocks_22 = True
-#which port to ssh over when a proxy is discovered
+# which port to ssh over when a proxy is discovered
 proxy_port = 443
 # warn about proxy
 proxywarn = True
@@ -44,9 +46,6 @@ strict_host_key_checking = True
 # General subprocess helper functions
 #
 
-
-#ambari_branch=""
-#toolbox_branch=""
 
 def prLc(loc):
     """
@@ -112,7 +111,6 @@ def runQuiet(cmd, exit=True, shell=True):
     proc = sub.Popen(cmd, shell=shell, stdout=sub.PIPE, stderr=sub.PIPE)
     output, err = proc.communicate()
     status = proc.returncode
-    #status,output = commands.getstatusoutput(cmd)
     if status and exit:
         raise RuntimeError("Problem running: \n" + cmdstr + "\n got:\n\t" + str(
             status) + "\n from stdout: \n" + output + " stderr: \n" + err)
@@ -200,7 +198,7 @@ class remoteHost(object):
         """
         if not self.strict:
             return
-        #try to prevent filesystem collisions with random 50-->500ms wait ...
+        # try to prevent filesystem collisions with random 50-->500ms wait ...
         from random import randint
         from time import sleep
 
@@ -211,7 +209,6 @@ class remoteHost(object):
         runQuiet("ssh-keygen -R " + self.host)
         runQuiet("ssh-keyscan -H " + self.host + " >> ~/.ssh/known_hosts ")
         return
-
 
     def sshcmd(self, extrasshopts=[]):
         """
@@ -284,7 +281,7 @@ class remoteHost(object):
         """
         Which flavour of linux is running?
         """
-        #first look into the redhat release
+        # first look into the redhat release
         def find_return(output):
             if "centos" in output.lower() and "release 6" in output.lower():
                 return "Centos6"
@@ -294,7 +291,7 @@ class remoteHost(object):
                 return "Ubuntu"
             return None
 
-        #try commands first...
+        # try commands first...
         for cmd in ["cat /etc/redhat-release", "lsb_release -a"]:
             try:
                 output = self.run(cmd)
@@ -303,7 +300,7 @@ class remoteHost(object):
                     return v
             except RuntimeError:
                 pass
-        #then try running uname
+        # then try running uname
         output = self.run("uname -r")
         if "el6" in output:
             return "Centos6"
@@ -315,7 +312,7 @@ class remoteHost(object):
         """
         prepare the destination to be able to git clone
         """
-        #hardcoded because of need to use gitwrap.sh, not exactly 100% secure...
+        # hardcoded because of need to use gitwrap.sh, not exactly 100% secure...
         github_key_remote = "~/.rnadgithubnothingtoseehere"
         if self.gitprep and not force:
             return True
@@ -336,7 +333,7 @@ class remoteHost(object):
                 else:
                     self.run("apt-get -y install git")
             except RuntimeError:
-                #back off and retry once, ABK-207
+                # back off and retry once, ABK-207
                 import time
 
                 time.sleep(5)
@@ -409,7 +406,7 @@ class multiremotes(object):
                 remote.register()
             return
         self.jump.register()
-        #register remotes anyway, even though the strict checking is none for the local machine!
+        # register remotes anyway, even though the strict checking is none for the local machine!
         for host in self.hosts:
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
             self.jump.run("ssh-keygen -R " + host + "")
@@ -420,13 +417,13 @@ class multiremotes(object):
         """
         Verify keyless access to all destinations
         """
-        #if there's no jump, I need keyless access from here
+        # if there's no jump, I need keyless access from here
         if self.jump is None:
             for host in self.hosts:
                 remote = remoteHost("root", host)
                 remote.check(firsttime=firsttime)
             return True
-        #if there is a jump, I need keyless access from there
+        # if there is a jump, I need keyless access from there
         extrasshopts = []
         if firsttime:
             extrasshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
@@ -439,7 +436,6 @@ class multiremotes(object):
             if "Hello World" not in out or "HOSTNAME" in out:
                 raise ValueError("Unable to contact machine root@" + host + "! or machine did not respond correctly")
             return True
-
 
     def run(self, cmd, exit=True):
         """
@@ -478,7 +474,7 @@ class multiremotes(object):
                 self.jump.run(cmd + remotefile + " " + host + ":" + remotefile)
 
 
-#@TODO: Consolidate the two methods below!
+# @TODO: Consolidate the two methods below!
 
 def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="workstation",
                         toolbox_proj=None, branch="", background=True):
@@ -491,24 +487,26 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
         raise ValueError("dest_type can only be one of: " + known_dest_types.__str__() + " you asked for " + dest_type)
     if toolbox_proj is None:
         if "kavetoolbox" in git_origin.lower() and git_origin.startswith("git@"):
-            toolbox_proj=git_origin.split(':')[-1]
+            toolbox_proj = git_origin.split(':')[-1]
         elif "github" in git_origin:
-            toolbox_proj="KaveIO/KaveToolbox.git"
+            toolbox_proj = "KaveIO/KaveToolbox.git"
         elif "gitlab-nl" in git_origin:
-            toolbox_proj="kave/kavetoolbox.git"
+            toolbox_proj = "kave/kavetoolbox.git"
         elif "ambarikave.git" in git_origin.lower():
-            toolbox_proj=git_origin.split(':')[-1].replace("AmbariKave.git","KaveToolbox.git").replace("ambarikave.git","kavetoolbox.git")
+            toolbox_proj = git_origin.split(':')[-1].replace("AmbariKave.git",
+                                                             "KaveToolbox.git"
+                                                             ).replace("ambarikave.git", "kavetoolbox.git")
         else:
-            raise NameError("Cannot guess the toolbox project name from "+git_origin)
+            raise NameError("Cannot guess the toolbox project name from " + git_origin)
     remote.check()
     installcmd = "./" + prLc(toolbox_proj) + '/scripts/KaveInstall --quiet'
     if dest_type == "workstation":
-        #default at the moment
+        # default at the moment
         installcmd = installcmd
     elif dest_type == "node":
-        #add the --node flag
-        installcmd=installcmd+" --node"
-    #remote.run("rm -rf "+prLc(toolbox_proj))
+        # add the --node flag
+        installcmd = installcmd + " --node"
+    # remote.run("rm -rf "+prLc(toolbox_proj))
     remote.prepGit(github_key_location)
     br = ""
     if len(branch) and branch != "HEAD" and branch != "head" and branch != "master":
@@ -519,7 +517,7 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
     else:
         remote.run("nohup " + installcmd + " < /dev/null > inst.stdout 2> inst.stderr &")
         print "installing toolbox in background process (check before bringing down the machine)"
-        #remote.cleanGit()
+        # remote.cleanGit()
 
 
 def _addambaritoremote(remote, github_key_location, git_origin, branch="", background=True):
@@ -544,8 +542,8 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
         print "installing ambari in background process (check before bringing down the machine)"
 
 
-#@TODO: Implement the local functionality!
-#@TODO: Consolidate the repo functionality from kavecommon!
+# @TODO: Implement the local functionality!
+# @TODO: Consolidate the repo functionality from kavecommon!
 def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambarikave",
                   repo="http://repos:kaverepos@repos.kave.io", background=True, options=""):
     """
@@ -572,7 +570,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
         raise ValueError("Unknown package " + pack + " I knew " + ["ambarikave", "kavetoolbox"].__str())
     pack = pack.lower()
     remote.check()
-    #get directly from repo
+    # get directly from repo
     if not git:
         remote.run("yum -y install wget curl")
         arch = "centos6"
@@ -590,11 +588,11 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
             remote.run("nohup bash " + dfile + " " + options + " < /dev/null > inst.stdout 2> inst.stderr &")
             print "installing " + pack + " in background process (check before bringing down the machine)"
             return
-            #return True
+            # return True
     elif version == "local":
         raise ValueError("Local mode not implemented yet, sorry!")
     else:
-        #extract info from git env
+        # extract info from git env
         github_key_location = gitenv["KeyFile"]
         git_origin = gitenv["Origin"]
         if pack == "ambarikave":
@@ -615,7 +613,7 @@ def waitforambari(ambari):
     Wait until ambari server is up and running, error if it doesn't appear!
     """
     import time
-    #wait until ambari server is up
+    # wait until ambari server is up
     rounds = 1
     flag = False
     while rounds <= 10:
@@ -641,7 +639,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
     Wait until a certain request succeeds, error if it fails!
     """
     import time
-    #wait until ambari server is up
+    # wait until ambari server is up
     rounds = 1
     flag = False
     while rounds <= timeout:
@@ -665,17 +663,17 @@ def confremotessh(remote, port=443):
     Open 443 and allow reverse tunnelling on gateway machines
     http://marcofalchi.blogspot.nl/2013/05/centos-64-redhat-64-fedora-18-change.html
     """
-    #selinux tools
+    # selinux tools
     remote.run("yum -y install policycoreutils-python")
     remote.run("semanage port -m -t ssh_port_t -p tcp " + str(port))
-    #modify iptables
+    # modify iptables
     remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
     remote.run("python add_incoming_port.py " + str(port))
-    #modify sshconfig
+    # modify sshconfig
     remote.run("echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
-    #restart services
+    # restart services
     remote.run("/etc/init.d/sshd restart")
     import time
 
@@ -736,14 +734,14 @@ def configureKeyless(source, destination, dest_internal_ip=None, preservehostnam
     if os.path.exists(localcopy):
         runQuiet("rm -rf " + localcopy)
     getsshid(source, localcopy)
-    #copy public key
+    # copy public key
     destination.cp(localcopy, "~/.ssh/" + source.host + ".pub")
     if os.path.exists(localcopy):
         runQuiet("rm -rf " + localcopy)
-    #append to authorized_keys
+    # append to authorized_keys
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
-    #ensure no prompt because of the silly not recognised host yhingy
+    # ensure no prompt because of the silly not recognised host yhingy
     source.run("ssh-keyscan -H " + dest_internal_ip + " >> .ssh/known_hosts")
     source.run("ssh-keygen -R " + dest_internal_ip)
     source.run("ssh-keyscan -H " + dest_internal_ip + " >> .ssh/known_hosts")
@@ -756,7 +754,7 @@ def configureKeyless(source, destination, dest_internal_ip=None, preservehostnam
         source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
         source.run("ssh-keygen -R " + hostname)
         source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-    #test access by trying a double-hopping ssh
+    # test access by trying a double-hopping ssh
     output = source.run("ssh " + destination.user + "@" + dest_internal_ip + " echo Hello friend from \\$HOSTNAME")
     if "friend" not in output or "HOST" in output:
         raise SystemError("Setting up keyless access failed!")
@@ -772,16 +770,14 @@ def renameRemoteHost(remote, new_name, newdomain=None):
     rename a remote host to new_name.
     If newdomain is given, also add the new domain, if not given, use localdomain
     """
-    #print os.path.realpath(os.path.dirname(__file__))
     remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
     cmd = "python rename_me.py " + new_name
     if newdomain is not None:
         cmd = cmd + " " + newdomain
     remote.run(cmd)
-    #remote.run("nohup "+cmd+" </dev/null  >ren.stdout 2>ren.stderr &")
 
 
-def addAsHost(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):  #["localdomain"]):
+def addAsHost(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):  # ["localdomain"]):
     """
     will add 'ip hostname' of add_remote as a host shortcut in edit_remote
 
@@ -813,8 +809,7 @@ def addAsHost(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):
     all_domains = " ".join(fq + rest + no_dots)
     if dest_internal_ip is None:
         dest_internal_ip = add_remote.host
-    #first remove this host if it is already defined ...
+    # first remove this host if it is already defined ...
     edit_remote.run("grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile ")
     edit_remote.run("mv -f tmpfile /etc/hosts")
     edit_remote.run("echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts")
-

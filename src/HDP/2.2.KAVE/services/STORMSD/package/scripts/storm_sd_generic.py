@@ -24,13 +24,13 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 class StormGeneric(Script):
 
-    def install(self,env):
+    def install(self, env):
         self.install_packages(env)
         self.installStorm(env)
         self.configure(env)
 
     def installStorm(self, env):
-        #install ZeroMQ which is prerequisite for storm
+        # install ZeroMQ which is prerequisite for storm
         user_exist = os.system('grep storm /etc/passwd > /dev/null')
         if user_exist != 0:
             kc.copyCacheOrRepo('zeromq-2.1.7-1.el6.x86_64.rpm')
@@ -42,7 +42,7 @@ class StormGeneric(Script):
 
         storm_dir_present = os.path.isdir('/usr/local/storm')
         if not storm_dir_present:
-            #download storm
+            # download storm
             kc.copyCacheOrRepo('storm-9.3.zip')
             Execute('unzip -o -q storm-9.3.zip -d /usr/local')
             Execute('mv /usr/local/apache-storm-0.9.3* /usr/local/storm-0.9.3')
@@ -52,21 +52,21 @@ class StormGeneric(Script):
 
         storm_home_dir = os.path.isdir('/app/storm')
         if not storm_home_dir:
-            #Creating local directory for storm
+            # Creating local directory for storm
             Execute('mkdir -p /app/storm')
             Execute('chown -R storm:storm /app/storm')
             Execute('chmod 750 /app/storm')
         storm_log_dir = os.path.isdir('/var/log/storm')
         if not storm_home_dir:
-            #Creating local directory for storm
+            # Creating local directory for storm
             Execute('mkdir -p /var/log/storm')
             Execute('chown -R storm:storm /var/log/storm')
             Execute('chmod 750 /var/log/storm')
 
-    def configure(self,env):
+    def configure(self, env):
         return self.configureStorm(env)
 
-    def configureStorm(self,env):
+    def configureStorm(self, env):
         import params
         env.set_params(params)
         File(params.storm_conf_file,
@@ -86,7 +86,7 @@ class StormGenericSD(StormGeneric):
         if not bg:
             stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG)
             if stat or "error" in stdout.lower() or "error" in stderr.lower() or "failed" in stdout.lower() or \
-                            "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
+                    "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
                 self.fail_with_error(cmd + ' ' + self.PROG + ' Failed!' + stdout + stderr)
         else:
             # TODO: Ambari 2.0 method should be replacing the below call
@@ -95,7 +95,7 @@ class StormGenericSD(StormGeneric):
             os.system('nohup supervisorctl ' + cmd + ' storm-' + self.PROG + ' 2> /dev/null > /dev/null < /dev/null &')
         return stdout
 
-    def install(self,env):
+    def install(self, env):
         self.install_packages(env)
         self.installStorm(env)
         self.installSupervisor(env)
@@ -117,9 +117,12 @@ class StormGenericSD(StormGeneric):
 
     def start(self, env):
         """
-        The start method for Storm is pretty convoluted. Supervisord may already be running due to other storm modules.
-        Then there is the generic problem that the storm serivce start/stop/restart commands don't return control to the script,
-        so they need to be executed with nohup, and then we need to wait for supevisord to actually be started properly
+        The start method for Storm is pretty convoluted.
+        Supervisord may already be running due to other storm modules.
+        Then there is the generic problem that the storm serivce start/stop/restart
+        commands don't return control to the script,
+        so they need to be executed with nohup,
+        and then we need to wait for supevisord to actually be started properly
         before trying to start our supervised programs
         Tests indicated 5s is enough of a wait for this
         """
@@ -157,7 +160,7 @@ class StormGenericSD(StormGeneric):
         if "RUNNING" not in stdout:
             raise ComponentIsNotRunning()
 
-    def configure(self,env):
+    def configure(self, env):
         self.configureStorm(env)
         return self.configureSD(env)
 
@@ -175,9 +178,9 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
-        ## This is quite annoying, supervisord is supposed to understand import statements,
-        ## However, it does not work correctly. So in order to avoid clobbering I need to
-        ## Append to the end of the supervisord.conf file each time I restart. This is very silly
-        ## And it really should be fixed, I just don't know how at the moment.
+        # This is quite annoying, supervisord is supposed to understand import statements,
+        # However, it does not work correctly. So in order to avoid clobbering I need to
+        # Append to the end of the supervisord.conf file each time I restart. This is very silly
+        # And it really should be fixed, I just don't know how at the moment.
         Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
         kc.chownR('/etc/supervisord.d/', 'storm')

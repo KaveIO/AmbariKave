@@ -15,11 +15,13 @@
 #   limitations under the License.
 #
 ##############################################################################
-import unittest, sys
+import unittest
+import sys
 import base
 
 
 class MicroCluster(base.LDTest):
+
     def runTest(self):
         """
         Create a single centos instance with the up_aws_cluster script, the minimal test of this script
@@ -30,12 +32,12 @@ class MicroCluster(base.LDTest):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
         import kaveaws as lA
-        region=lA.detectRegion()
-        clusterfile="micro.aws.json"
+        region = lA.detectRegion()
+        clusterfile = "micro.aws.json"
         if region.startswith("ap"):
-            clusterfile="microtokyo.aws.json"
+            clusterfile = "microtokyo.aws.json"
         stdout = lD.runQuiet(
-            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + blueprint_dir + "/"+clusterfile+" --not-strict")
+            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + blueprint_dir + "/" + clusterfile + " --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
         connectcmd = ""
@@ -43,12 +45,9 @@ class MicroCluster(base.LDTest):
             if "testing-001 connect remotely with" in stdout.split("\n")[line]:
                 connectcmd = stdout.split("\n")[line + 1].strip()
         adict = stdout.split("\n")[-2].replace("Complete, created:", "")
-        #try interpreting as json
+        # try interpreting as json
         import json
-        #print adict
         adict = base.d2j(adict)
-        #exec ("adict = " + adict)
-        #print adict
         iid, ip = adict["testing-001"]
         self.assertTrue(ip in connectcmd)
         jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))

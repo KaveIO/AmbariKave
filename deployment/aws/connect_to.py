@@ -17,10 +17,11 @@
 #
 ##############################################################################
 """
-Very simple script, gives you back a ssh session on the destination machine. All running machines are listed and you
-can choose
+Very simple script, gives you back a ssh session on the destination machine.
+All running machines are listed and you can choose
 
-Only arguement is the amazon/access keyfile or security config file, if none is given, reads the value of $AWSSECCONF
+Only arguement is the amazon/access keyfile or security config file,
+if none is given, reads the value of $AWSSECCONF
 """
 import sys
 import os
@@ -28,7 +29,7 @@ import os
 installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/../lib')
 sys.path.append(liblocation)
-#print liblocation
+# print liblocation
 if "--help" in sys.argv or "-h" in sys.argv:
     print __doc__
     sys.exit(0)
@@ -83,7 +84,7 @@ print "Name,      iid,     SecGroup(s),   itype,   publicIP, status"
 json = lA.descInstance()
 for reservation in json["Reservations"]:
     for instance in reservation["Instances"]:
-        #print instance
+        # print instance
         if "PublicIpAddress" not in instance or not len(instance["PublicIpAddress"]):
             continue
         else:
@@ -103,15 +104,14 @@ ip = None
 while ip is None:
     ip = raw_input("Choose iid or name or ip: ")
     if ip in ips:
-        break  #it was an ip
+        break  # it was an ip
     if ip in iidtoip:
         ip = iidtoip[ip]
-        break  #it was an iid
+        break  # it was an iid
     if ip in nametoip:
         ip = nametoip[ip]
-        break  #it was a name
+        break  # it was a name
     print "Error, please try again"
     ip = None
 
 os.system("ssh " + ' '.join(lD.proxopts()) + " -i " + keyfile + " root@" + ip)
-

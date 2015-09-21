@@ -21,6 +21,7 @@ from resource_management import *
 
 
 class Dovecot(Script):
+
     def install(self, env):
         import params
 
@@ -54,13 +55,13 @@ class Dovecot(Script):
     def start(self, env):
         print "start dovecot"
         self.configure(env)
-        #return Execute('service dovecot start > /dev/null')
+        # return Execute('service dovecot start > /dev/null')
         # TODO: Ambari 2.0 method should be replacing the below call
         # since Ambari 1.7.3 execute method never returns the control to script
         # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         return os.system("nohup service dovecot start 2> /dev/null > /dev/null < /dev/null &")
 
-    def restart(self,env):
+    def restart(self, env):
         """In cases where we run the starting and stopping in the background,
         a specific restart method is needed to ensure we wait between the two calls
         3s was seen to be enough in tests
@@ -76,7 +77,6 @@ class Dovecot(Script):
         # since Ambari 1.7.3 execute method never returns the control to script
         # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         return Execute('nohup service dovecot stop  2> /dev/null > /dev/null < /dev/null &')
-
 
     def status(self, env):
         print "checking status..."

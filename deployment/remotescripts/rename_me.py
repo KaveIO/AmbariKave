@@ -23,6 +23,8 @@ http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-hostname.html
 usage: rename_me hostname [domainname]
 """
 import sys
+import os
+import commands
 
 newname = sys.argv[1]
 domain = "localdomain"
@@ -49,10 +51,9 @@ f = open("/etc/sysconfig/network", "w")
 f.write("\n".join(newlines) + "\n")
 f.close()
 
-import os, commands
 
 if domain == "localdomain":
-    #support machine with no domain name / DNS ...
+    # support machine with no domain name / DNS ...
     stat, out = commands.getstatusoutput("hostname -d")
     dom = ""
     if not stat and len(out):

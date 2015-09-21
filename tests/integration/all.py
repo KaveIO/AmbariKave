@@ -17,10 +17,11 @@
 ##############################################################################
 import clusters
 import base
+import glob
+import os
 
 mods = [clusters]
 
-import glob, os
 
 blueprints = glob.glob(os.path.dirname(__file__) + "/blueprints/*.blueprint.json")
 
@@ -30,6 +31,4 @@ blueprints = [b.split("/")[-1].split(".")[0] for b in blueprints]
 blueprints = [b for b in blueprints if b not in disabled]
 
 if __name__ == "__main__":
-    #base.paralell(suite())
-    #base.run(mods)
     base.parallel(mods, blueprints)

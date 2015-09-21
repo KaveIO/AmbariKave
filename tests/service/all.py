@@ -20,11 +20,14 @@ import remote_service_with_blueprint
 import remote_blueprint
 import test_kavetoolbox_head
 import base
+import glob
+import os
 
 mods = [test_kavetoolbox_head, remote_service_with_servicesh, remote_service_with_blueprint]
 
-#Ignore services which do not have a working default configuration, or have default ports which conflict with 8080
-ignoreServices = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS", "JBOSS", "KAVELANDING", "HUE", "STORMSD", "SONARQUBE", "MAIL"]
+# Ignore services which do not have a working default configuration, or have default ports which conflict with 8080
+ignoreServices = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS",
+                  "JBOSS", "KAVELANDING", "HUE", "STORMSD", "SONARQUBE", "MAIL"]
 
 services = [s for s, ds in base.findServices() if s not in ignoreServices]
 
@@ -41,7 +44,7 @@ checks = {"APACHE": ["http://localhost/"],
           "GITLAB": ["http://localhost:7777/"]
           }
 
-#service.sh will do all services apart from the ignored services
+# service.sh will do all services apart from the ignored services
 serviceargs = []
 for service in services:
     if service in checks:
@@ -49,10 +52,8 @@ for service in services:
     else:
         serviceargs.append(service)
 
-#blueprints will just do all the defined blueprints
+# blueprints will just do all the defined blueprints
 
-import glob
-import os
 
 blueprints = glob.glob(os.path.dirname(__file__) + "/blueprints/*.blueprint.json")
 
@@ -78,14 +79,11 @@ for service in blueprint_not_services:
     else:
         blueprint_not_serviceargs.append(service)
 
-modargs = {test_kavetoolbox_head: ['Centos6','Centos7','Ubuntu14'],
+modargs = {test_kavetoolbox_head: ['Centos6', 'Centos7', 'Ubuntu14'],
            remote_service_with_servicesh: serviceargs,
            remote_service_with_blueprint: blueprint_serviceargs,
            remote_blueprint: blueprint_not_serviceargs
            }
 
 if __name__ == "__main__":
-    #base.paralell(suite())
-    #base.run(mods)
-    #print mods, modargs
     base.parallel(mods, modargs)

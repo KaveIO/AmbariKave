@@ -21,6 +21,8 @@ limitations under the License.
 from resource_management import *
 
 # Used to add hive access to the needed components
+
+
 def mysql_adduser():
     import params
 

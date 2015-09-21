@@ -20,9 +20,10 @@ import os
 from resource_management import *
 from mongo_base import MongoBase
 
+
 class MongoClient(MongoBase):
-    client_config_path="/etc/mongoclient.conf"
-    mongo_packages=['mongodb-org-shell', 'mongodb-org-tools']
+    client_config_path = "/etc/mongoclient.conf"
+    mongo_packages = ['mongodb-org-shell', 'mongodb-org-tools']
 
     def install(self, env):
         import params
@@ -34,7 +35,7 @@ class MongoClient(MongoBase):
              mode=0755
              )
 
-    def configure(self,env):
+    def configure(self, env):
         import params
         env.set_params(params)
         self.configureMongo(env)

@@ -20,16 +20,18 @@ import base
 
 
 class TestLicense(unittest.TestCase):
+
     def runTest(self):
         """
         Tests which do not need any environment parameters or access to aws
         """
-        #this list is a list of things that we don't want to check
+        # this list is a list of things that we don't want to check
         ignore_regex = ['.*/build/.*']
         accept_regex = ['.*\.sh$', '.*\.py$']
-        #check they exist at least twice in service.sh
-        import os, sys, re
-        #import fnmatch
+        # check they exist at least twice in service.sh
+        import os
+        import sys
+        import re
         dir = os.path.realpath(os.path.dirname(__file__) + "/../../")
         all_files = []
         skip = False
@@ -53,7 +55,7 @@ class TestLicense(unittest.TestCase):
         for tofind in accept_regex:
             r = re.compile(tofind)
             matches = matches + filter(r.match, all_files)
-        #print matches[:10], ignore[:10]
+        # print matches[:10], ignore[:10]
         matches = [f for f in matches if f not in ignore]
         for f in matches:
             fop = open(f)

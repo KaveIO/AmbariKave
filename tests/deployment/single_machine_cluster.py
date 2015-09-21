@@ -15,11 +15,13 @@
 #   limitations under the License.
 #
 ##############################################################################
-import unittest, sys
+import unittest
+import sys
 import base
 
 
 class SingleMachineCluster(base.LDTest):
+
     def runTest(self):
         """
         Create a single centos instance with the up_aws_cluster script, the minimal test of this script
@@ -29,12 +31,13 @@ class SingleMachineCluster(base.LDTest):
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         import kaveaws as lA
-        region=lA.detectRegion()
-        clusterfile="single.aws.json"
+        region = lA.detectRegion()
+        clusterfile = "single.aws.json"
         if region.startswith("ap"):
-            clusterfile="singletokyo.aws.json"
+            clusterfile = "singletokyo.aws.json"
         stdout = lD.runQuiet(
-            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + deploy_dir + "/clusters/"+clusterfile+" --not-strict")
+            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + deploy_dir
+            + "/clusters/" + clusterfile + " --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
 

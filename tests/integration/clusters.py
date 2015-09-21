@@ -20,10 +20,12 @@ import unittest
 
 
 class TestCluster(base.LDTest):
+
     def runTest(self):
         # create remote machine
         import os
-        import sys, json
+        import sys
+        import json
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
@@ -35,9 +37,9 @@ class TestCluster(base.LDTest):
             raise ValueError(
                 "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
                     b) + " .cluster " + str(c))
-        #check the files can be opened, and then check that the cluster contains the machines from the aws file
-        jsons=[]
-        for ason in [pref + ".aws.json",pref + ".blueprint.json",pref + ".cluster.json"]:
+        # check the files can be opened, and then check that the cluster contains the machines from the aws file
+        jsons = []
+        for ason in [pref + ".aws.json", pref + ".blueprint.json", pref + ".cluster.json"]:
             f = open(ason)
             l = f.read()
             f.close()
@@ -47,27 +49,28 @@ class TestCluster(base.LDTest):
                 jsons.append(interp)
             except:
                 self.assertTrue(False, "json file " + ason + " is not complete or not readable")
-        #check that the aws file has everything needed for the cluster
-        need_hosts=[]
+        # check that the aws file has everything needed for the cluster
+        need_hosts = []
         for hg in jsons[-1]["host_groups"]:
             for host in hg['hosts']:
                 need_hosts.append(host["fqdn"])
-        supplies_hosts=[]
-        dn="kave.io"
+        supplies_hosts = []
+        dn = "kave.io"
         try:
-            dn=jsons[0]["Domain"]["Name"]
+            dn = jsons[0]["Domain"]["Name"]
         except KeyError:
             pass
         for ig in jsons[0]["InstanceGroups"]:
-            if ig["Count"]>0:
-                supplies_hosts=supplies_hosts+[ig["Name"]+'-00'+str(i+1)+'.'+dn for i in range(ig["Count"])]
+            if ig["Count"] > 0:
+                supplies_hosts = supplies_hosts + [ig["Name"] + '-00' +
+                                                   str(i + 1) + '.' + dn for i in range(ig["Count"])]
             else:
-                supplies_hosts.append(ig["Name"]+'.'+dn)
-        missing=[f for f in need_hosts if f not in supplies_hosts]
-        extra=[f for f in supplies_hosts if f not in need_hosts]
-        self.assertFalse(len(missing),"Missing creation of the hosts called "+str(missing))
-        self.assertFalse(len(extra),"Asked to create hosts I won't later use "+str(extra))
-        #return True
+                supplies_hosts.append(ig["Name"] + '.' + dn)
+        missing = [f for f in need_hosts if f not in supplies_hosts]
+        extra = [f for f in supplies_hosts if f not in need_hosts]
+        self.assertFalse(len(missing), "Missing creation of the hosts called " + str(missing))
+        self.assertFalse(len(extra), "Asked to create hosts I won't later use " + str(extra))
+        # return True
         stdout = lD.runQuiet(
             deploy_dir + "/aws/up_aws_cluster.py Test-" + self.service + " " + pref + ".aws.json  --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
@@ -77,10 +80,8 @@ class TestCluster(base.LDTest):
             if "ambari connect remotely with" in stdout.split("\n")[line]:
                 connectcmd = stdout.split("\n")[line + 1].strip()
         adict = stdout.split("\n")[-2].replace("Complete, created:", "")
-        #try interpreting as json
-        #import json
+        # try interpreting as json
         adict = base.d2j(adict)
-        #exec ("adict = " + adict.replace("u'","").replace("'",'"'))
         iid, ip = adict["ambari"]
         self.assertTrue(ip in connectcmd)
         jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))

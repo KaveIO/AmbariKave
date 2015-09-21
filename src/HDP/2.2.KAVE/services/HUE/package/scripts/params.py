@@ -18,6 +18,8 @@
 from resource_management import *
 from resource_management.core.system import System
 import os
+import random
+import string
 import kavecommon as kc
 
 config = Script.get_config()
@@ -27,7 +29,7 @@ hostname = config["hostname"]
 enable_pam_auth = default('configurations/hue/enable_pam_auth', 'True')
 enable_pam_auth = kc.trueorfalse(enable_pam_auth)
 
-############## Copied from knox configuration!! #######################
+# Copied from knox configuration!!
 namenode_hosts = default("/clusterHostInfo/namenode_host", None)
 if type(namenode_hosts) is list:
     namenode_host = namenode_hosts[0]
@@ -111,39 +113,39 @@ has_hs = (history_host is not None)
 namenode = namenode_host
 if namenode is None or namenode == "":
     namenode = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
 yarn_host = rm_host
 if yarn_host is None or yarn_host == "":
     yarn_host = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
 yarn_host = rm_host
 if yarn_host is None or yarn_host == "":
     yarn_host = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
 oozie_host = oozie_server_host
 if oozie_host is None or oozie_host == "":
     oozie_host = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
 hcat_host = webhcat_server_host
 if hcat_host is None or hcat_host == "":
     hcat_host = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
 hive_host = hive_server_host
 if hive_host is None or hive_host == "":
     hive_host = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
 history_host = history_host
 if history_host is None or history_host == "":
     history_host = 'localhost'
-    #can reconfigure later?
+    # can reconfigure later?
 
-############## PORTS #######################
+# PORTS
 
 
 web_ui_port = default('configurations/hue/web_ui_port', '8000')
@@ -159,10 +161,8 @@ hive_port = hive_port
 oozie_port = oozie_server_port
 hcat_port = templeton_port
 
-############## OTHERS ######################
+# OTHERS #
 
-import random, string
 # new random key with each reconfigure ... I hope this is OK!
 secret_key = ''.join(
     [random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(random.randint(40, 55))])
-

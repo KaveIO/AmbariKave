@@ -58,7 +58,7 @@ lD.testproxy()
 
 def help():
     print __doc__
-    #sys.exit(code)
+    # sys.exit(code)
 
 
 def checkOpts():
@@ -126,14 +126,14 @@ if "CloudFormation" in cluster_config:
     print "Create a new VPC from cloud formation script"
     print "============================================"
     sys.stdout.flush()
-    #replace default keys with those from the security config file?
+    # replace default keys with those from the security config file?
     import datetime
 
     _vpc_name = cluster_name + "-" + amazon_keypair_name + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
     lA.createCloudFormation(_vpc_name, cluster_config["CloudFormation"]["Script"],
                             parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
     _info = lA.waitForStack(_vpc_name)
-    #print _info["Outputs"]
+    # print _info["Outputs"]
     for _output in _info["Outputs"]:
         if _output['OutputKey'] == "SubnetId":
             subnet = _output['OutputValue']
@@ -141,13 +141,13 @@ if "CloudFormation" in cluster_config:
             security_group = _output['OutputValue']
         elif _output['OutputKey'] == "DNSId":
             dnsiid = _output['OutputValue']
-    #authorize group members to see themselves
-    #print security_group, subnet, dnsiid
+    # authorize group members to see themselves
+    # print security_group, subnet, dnsiid
     lA.addGroupToGroup(security_group, security_group)
-    #auto assign public IPs here
+    # auto assign public IPs here
     lA.runawstojson("ec2 modify-subnet-attribute --subnet-id " + subnet + " --map-public-ip-on-launch")
     print "Created stack:", _vpc_name
-    #sys.exit(1)
+    # sys.exit(1)
 
 print "===================================="
 print "up the instance groups"
@@ -221,7 +221,7 @@ for instancegroup in cluster_config["InstanceGroups"]:
         instance_to_name[instance] = instancegroup["Name"] + ("-%03d" % (num + 1))
         lA.nameInstance(instance, cluster_name + '-' + instancegroup["Name"] + ("-%03d" % (num + 1)))
 
-#Also name the attached volumes
+# Also name the attached volumes
 for instance, iname in instance_to_name.iteritems():
     idesc = lA.descInstance(instance)
     vols = idesc["Reservations"][0]["Instances"][0]["BlockDeviceMappings"]
@@ -229,7 +229,7 @@ for instance, iname in instance_to_name.iteritems():
         if "Ebs" in v and "DeviceName" in v:
             lA.nameInstance(v["Ebs"]["VolumeId"], cluster_name + '-' + iname + v["DeviceName"].replace("/", "_"))
 
-#TODO: use a proper dns configuration here instead of writing into the host file
+# TODO: use a proper dns configuration here instead of writing into the host file
 print "=============================================="
 print "Configure machine names"
 print "=============================================="
@@ -238,9 +238,9 @@ for instance, remote in instance_to_remote.iteritems():
     domainName = 'kave.io'
     if "Domain" in cluster_config:
         domainName = cluster_config["Domain"]["Name"]
-    #print "configuring", remote.host, "->", instance_to_name[instance]
+    # print "configuring", remote.host, "->", instance_to_name[instance]
     lD.renameRemoteHost(remote, instance_to_name[instance].lower(), domainName)
-    if domainName=="kave.io":
+    if domainName == "kave.io":
         allremotes.run("mkdir -p /etc/kave/")
         allremotes.run("'/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror'")
 
@@ -253,20 +253,20 @@ if dnsiid is not None:
         domainName = cluster_config["Domain"]["Name"]
     ip = lA.pubIP(dnsiid)
     privip = lA.privIP(dnsiid)
-    #print ip, privip
+    # print ip, privip
     dnsserv = lD.remoteHost("root", ip, amazon_keyfile)
     lD.waitUntilUp(dnsserv, 20)
     dnsserv.register()
     date = dnsserv.run('date "+%Y%m%d%H%M"').strip()
     nameandprivip = []
     nameandprivip = [(name, lA.privIP(instance)) for instance, name in instance_to_name.iteritems()]
-    #resolve repos server
-    repos=lD.runQuiet('host repos.kave.io')
+    # resolve repos server
+    repos = lD.runQuiet('host repos.kave.io')
     if repos.startswith("repos.kave.io has address "):
-        repos=repos[len("repos.kave.io has address "):]
+        repos = repos[len("repos.kave.io has address "):]
     else:
-        repos='94.143.213.26'
-    #print nameandprivip
+        repos = '94.143.213.26'
+    # print nameandprivip
     forward = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
         %DATE%  ;Serial
@@ -305,15 +305,15 @@ ns     IN      A       %PRIVATE%
     reverse = reverse + '\n' + '\n'.join(
         ['.'.join(reversed(ip.split('.'))) + ".in-addr.arpa. IN PTR " + n + "." + domainName + "." for n, ip in
          nameandprivip])
-    #write into temp local file and then copy it
+    # write into temp local file and then copy it
     ff = open("/tmp/forward" + domainName + dnsiid, 'w')
     ff.write(forward)
     ff.close()
     rf = open("/tmp/reverse" + domainName + dnsiid, 'w')
     rf.write(reverse)
     rf.close()
-    #print forward
-    #print reverse
+    # print forward
+    # print reverse
     dnsserv.cp("/tmp/forward" + domainName + dnsiid, "/var/named/forward." + domainName)
     dnsserv.cp("/tmp/reverse" + domainName + dnsiid, "/var/named/reverse." + domainName)
     lD.runQuiet("rm -rf /tmp/reverse" + domainName + dnsiid)
@@ -328,10 +328,10 @@ else:
     print "(as backup)"
 print "=============================================="
 sys.stdout.flush()
-#write into etc/hosts file for all machines
+# write into etc/hosts file for all machines
 for instance, remote in instance_to_remote.iteritems():
     for otherinstance, othername in instance_to_name.iteritems():
-        #if otherinstance==instance:
+        # if otherinstance==instance:
         #    continue
         lD.addAsHost(edit_remote=remote, add_remote=instance_to_remote[otherinstance],
                      dest_internal_ip=lA.privIP(otherinstance))
@@ -359,9 +359,9 @@ print "==================================="
 sys.stdout.flush()
 for instancegroup in cluster_config["InstanceGroups"]:
     if instancegroup["AccessType"] == "gateway":
-        #print "found group", instancegroup["Name"]
+        # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
-            #print "found instance"+instance
+            # print "found instance"+instance
             lD.confremotessh(instance_to_remote[instance])
 
 print "=============================================="
@@ -370,12 +370,12 @@ print "=============================================="
 sys.stdout.flush()
 for instancegroup in cluster_config["InstanceGroups"]:
     if instancegroup["AccessType"] == "admin":
-        #print "found group", instancegroup["Name"]
+        # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
-            #print "found instance"+instance
+            # print "found instance"+instance
             for otherinstance in instance_to_remote:
                 if otherinstance:
-                    #give itself also keyless root access to itself!
+                    # give itself also keyless root access to itself!
                     lD.configureKeyless(instance_to_remote[instance], instance_to_remote[otherinstance],
                                         lA.privIP(otherinstance), preservehostname=True)
 
@@ -385,9 +385,9 @@ print "=============================================="
 sys.stdout.flush()
 for instancegroup in cluster_config["InstanceGroups"]:
     if instancegroup["AccessType"] == "admin":
-        #print "found group", instancegroup["Name"]
+        # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
-            #lD.confremotessh(instance_to_remote[instance])
+            # lD.confremotessh(instance_to_remote[instance])
             lD.deployOurSoft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave")
 
 print "=============================================="

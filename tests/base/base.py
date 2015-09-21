@@ -27,8 +27,12 @@ LDTest is a derived test case class from unittest.TestCase, adding common method
 aws machines
 """
 import unittest
-import sys, os, glob
-import threading, thread, Queue
+import sys
+import os
+import glob
+import threading
+import thread
+import Queue
 import subprocess as sub
 
 
@@ -56,8 +60,8 @@ def run(mods):
         suite = unittest.TestSuite([mod.suite() for mod in mods])
 
     res = unittest.TextTestRunner(verbosity=2).run(suite)
-    #print dir(res)
-    #print res.errors, res.failures
+    # print dir(res)
+    # print res.errors, res.failures
     if len(res.errors) == 0 and len(res.failures) == 0:
         sys.exit(0)
     sys.exit(1)
@@ -105,7 +109,7 @@ class LockOnPrintThread(threading.Thread):
         A const method on any class variables, must return a string
         or an exception
         """
-        raise ImportError, "do not call the baseclass method!"
+        raise ImportError("do not call the baseclass method!")
 
 
 class RunFileInSubProcess(LockOnPrintThread):
@@ -122,7 +126,7 @@ class RunFileInSubProcess(LockOnPrintThread):
         """
         threading.Thread.__init__(self)
         self.lock = lock
-        self.islockedbyme=False
+        self.islockedbyme = False
         self.pool = pool
         self.done = False
         self.result = result
@@ -140,18 +144,18 @@ class RunFileInSubProcess(LockOnPrintThread):
                 item = self.pool.get_nowait()
                 if item is not None:
                     self.lock.acquire()
-                    self.islockedbyme=True
+                    self.islockedbyme = True
                     myname = item.replace(os.path.realpath(os.path.dirname(__file__) + "/../") + "/", "")
                     myname = myname.replace("python ", "").replace(".py", "")
                     print "started:", myname
                     sys.__stdout__.flush()
                     self.lock.release()
-                    self.islockedbyme=False
+                    self.islockedbyme = False
                     proc = sub.Popen(item, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
                     stdout, stderr = proc.communicate()
                     status = proc.returncode
                     self.lock.acquire()
-                    self.islockedbyme=True
+                    self.islockedbyme = True
                     self.result[item]["stdout"] = stdout
                     self.result[item]["stderr"] = stderr
                     self.result[item]["status"] = status
@@ -167,15 +171,15 @@ class RunFileInSubProcess(LockOnPrintThread):
                         print stderr
                     sys.__stdout__.flush()
                     self.lock.release()
-                    self.islockedbyme=False
+                    self.islockedbyme = False
             except Queue.Empty:
                 self.done = True
                 if self.islockedbyme:
                     try:
                         self.lock.release()
-                        self.islockedbyme=False
+                        self.islockedbyme = False
                     except:
-                        self.islockedbyme=False
+                        self.islockedbyme = False
             except Exception as e:
                 print "Exiting a thread due to Error: " + str(e)
                 err1, err2, err3 = sys.exc_info()
@@ -183,9 +187,9 @@ class RunFileInSubProcess(LockOnPrintThread):
                 if self.islockedbyme:
                     try:
                         self.lock.release()
-                        self.islockedbyme=False
+                        self.islockedbyme = False
                     except:
-                        self.islockedbyme=False
+                        self.islockedbyme = False
 
 
 def parallel(mods, modargs=[]):
@@ -209,8 +213,8 @@ def parallel(mods, modargs=[]):
         python bar.__file__ spam and eggs
         python fish.__file__
     """
-    #loop over threads, see the class for more details
-    #create list of packages as a queue
+    # loop over threads, see the class for more details
+    # create list of packages as a queue
     itemPool = Queue.Queue()
     result = {}
     items = []
@@ -228,11 +232,11 @@ def parallel(mods, modargs=[]):
                 items.append("python " + mod.__file__.replace('.pyc', ".py"))
                 continue
             args = modargs[mod]
-            #just a single arguement
+            # just a single arguement
             if type(args) is not list:
                 items.append("python " + mod.__file__.replace('.pyc', ".py") + " " + args)
                 continue
-            #empty list
+            # empty list
             if not len(args):
                 items.append("python " + mod.__file__.replace('.pyc', ".py"))
                 continue
@@ -242,7 +246,7 @@ def parallel(mods, modargs=[]):
                 items.append("python " + mod.__file__.replace('.pyc', ".py") + " " + arg)
     else:
         raise ValueError("failed to interpret mod and modargs")
-    #print items
+    # print items
     for item in items:
         result[item] = {}
         itemPool.put(item)
@@ -251,9 +255,8 @@ def parallel(mods, modargs=[]):
     for _i in range(20):
         t = RunFileInSubProcess(itemPool, lock, result)
         thethreads.append(t)
-        #t = checkExistanceAndDiffs( packagePool,lock,diff_package_versions)
         t.start()
-    #setup a timeout to prevent really infinite loops!
+    # setup a timeout to prevent really infinite loops!
     import datetime
     import time
 
@@ -270,7 +273,7 @@ def parallel(mods, modargs=[]):
         errs = errs + t.errors
     if len(errs):
         raise RuntimeError("Exceptions encountered while running tests as threads, as: \n" + '\n'.join(errs))
-    #print result
+    # print result
     FAILED = len([f for f in result if result[f]["status"] != 0])
     TIMES = []
     TESTS = []
@@ -332,9 +335,9 @@ class LDTest(unittest.TestCase):
         jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
         l = jsondat.read()
         jsondat.close()
-        #print l
+        # print l
         security_config = json.loads(l)
-        #print lD.checksecjson(security_config)
+        # print lD.checksecjson(security_config)
         self.assertTrue(lA.checksecjson(security_config),
                         "Security config not readable correctly or does not contain enough keys!")
         if self.branch == "__local__":
@@ -379,16 +382,18 @@ class LDTest(unittest.TestCase):
         keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
-        #add 10GB as /opt by default!
+        # add 10GB as /opt by default!
         import kaveaws as lA
 
         region = lA.detectRegion()
         ambari = lD.remoteHost("root", ip, keyfile)
         ambari.register()
-        #configure keyless access to itself! Needed for blueprints, but already done now by the new_dev_image script,
+        #
+        # configure keyless access to itself! Needed for blueprints, but already done now by the new_dev_image script,
         #  but the internal ip will be different here!
-        #lD.addAsHost(edit_remote=ambari,add_remote=ambari,dest_internal_ip=lA.privIP(iid)) #done in the deploy
+        # lD.addAsHost(edit_remote=ambari,add_remote=ambari,dest_internal_ip=lA.privIP(iid)) #done in the deploy
         # script...
+        #
         lD.configureKeyless(ambari, ambari, dest_internal_ip=lA.privIP(iid), preservehostname=True)
         abranch = ""
         if self.branch:
@@ -410,10 +415,11 @@ class LDTest(unittest.TestCase):
         stdout = ""
         if itype is None:
             stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_known_instance.py "+osval+" Test-" +osval+"-"+ self.service + " --not-strict")
+                deploy_dir + "/aws/deploy_known_instance.py "
+                + osval + " Test-" + osval + "-" + self.service + " --not-strict")
         else:
             stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_known_instance.py "+osval+"Test-" +osval+"-"+ self.service + " "
+                deploy_dir + "/aws/deploy_known_instance.py " + osval + "Test-" + osval + "-" + self.service + " "
                 + itype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
@@ -434,9 +440,9 @@ class LDTest(unittest.TestCase):
         import time
         time.sleep(5)
         if osval.startswith("Centos"):
-            #add 10GB to /opt
+            # add 10GB to /opt
             stdout = lD.runQuiet(
-                deploy_dir + "/aws/add_ebsvol_to_instance.py "+iid+ " --not-strict")
+                deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict")
         return ambari, iid
 
     def resetambari(self, ambari):
@@ -444,14 +450,9 @@ class LDTest(unittest.TestCase):
         Clean ambari, ready for a new install
         """
         import kavedeploy as lD
-        ##clean the existing blueprint ready for re-install, firstly, get the latest version!
-        #abranch = ""
-        #if self.branch:
-        #    abranch = self.branch
-        #stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
-        #now clean...
         stdout = ambari.run(
-            " bash -c 'yes | ./[a,A]mbari[k,K]ave/dev/clean.sh; ./[a,A]mbari[k,K]ave/dev/install.sh ; ./[a,A]mbari[k,K]ave/dev/patch.sh; "
+            " bash -c 'yes | ./[a,A]mbari[k,K]ave/dev/clean.sh; ./[a,A]mbari[k,K]ave/dev/install.sh ;"
+            " ./[a,A]mbari[k,K]ave/dev/patch.sh; "
             "ambari-server start; '")
         if lD.debug:
             print stdout
@@ -464,7 +465,7 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return True
 
-    def monitor_request(self,ambari,clustername,requestid=1, max_rounds=60):
+    def monitor_request(self, ambari, clustername, requestid=1, max_rounds=60):
         """
         Watch a request for failure/success
         ambari: the ambari host remote
@@ -475,19 +476,20 @@ class LDTest(unittest.TestCase):
         import kavedeploy as lD
         import time
         rounds = 1
-        state="UNKNOWN"
+        state = "UNKNOWN"
         ip = ambari.host
         while rounds <= max_rounds:
             stdout = lD.runQuiet(
-                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/" + clustername + "/requests/"+str(requestid))
+                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/"
+                + clustername + "/requests/" + str(requestid))
             if '"request_status" : "FAILED"' in stdout:
-                state="FAILED"
+                state = "FAILED"
                 break
             if '"request_status" : "ABORTED"' in stdout:
-                state="ABORTED"
+                state = "ABORTED"
                 break
             if '"request_status" : "COMPLETED"' in stdout:
-                state="COMPLETED"
+                state = "COMPLETED"
                 break
             time.sleep(60)
             rounds = rounds + 1
@@ -501,29 +503,29 @@ class LDTest(unittest.TestCase):
         import kavedeploy as lD
         ip = ambari.host
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        #wait until ambari server is up
+        # wait until ambari server is up
         self.waitForAmbari(ambari)
         stdout = lD.runQuiet(
             deploy_dir + "/deploy_from_blueprint.py " + blueprint + " " + cluster + " " + ip + " $AWSSECCONF "
                                                                                                "--not-strict")
-        state=self.monitor_request(ambari, cname)
-        if state=="ABORTED":
+        state = self.monitor_request(ambari, cname)
+        if state == "ABORTED":
             print "Trying to recover from aborted blueprint with restarts"
-            stdout=ambari.run("./[a,A]mbari[k,K]ave/dev/restart_all_services.sh "+cname)
-            reqid=stdout.strip().split("\n")[-1]
-            state=self.monitor_request(ambari, cname,requestid=reqid)
+            stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/restart_all_services.sh " + cname)
+            reqid = stdout.strip().split("\n")[-1]
+            state = self.monitor_request(ambari, cname, requestid=reqid)
 
-        self.assertFalse(state=="FAILED",
+        self.assertFalse(state == "FAILED",
                          "deploy from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
-        self.assertFalse(state=="ABORTED",
+        self.assertFalse(state == "ABORTED",
                          "deploy from blueprint aborted (" + ' '.join(ambari.sshcmd()) + ")")
-        self.assertFalse(state=="UNKNOWN", self.service + " did not install from blueprint after 60 minutes (" + ' '.join(
-            ambari.sshcmd()) + ")")
-        if state=="COMPLETED":
-            #done!
+        self.assertFalse(state == "UNKNOWN", self.service + " did not install from blueprint after 60 minutes ("
+                         + ' '.join(ambari.sshcmd()) + ")")
+        if state == "COMPLETED":
+            # done!
             return True
         else:
-            raise ValueError("Unknown state: "+str(state)+" (" + ' '.join(ambari.sshcmd()) + ")")
+            raise ValueError("Unknown state: " + str(state) + " (" + ' '.join(ambari.sshcmd()) + ")")
         return
 
     def waitForAmbari(self, ambari):
@@ -532,7 +534,7 @@ class LDTest(unittest.TestCase):
         """
         import kavedeploy as lD
         import time
-        #wait until ambari server is up
+        # wait until ambari server is up
         ip = ambari.host
         rounds = 1
         flag = False
@@ -566,7 +568,6 @@ class LDTest(unittest.TestCase):
             stdout = ambari.run("./[a,A]mbari[k,K]ave/bin/service.sh " + call + " " + service + " -h " + host)
         return stdout
 
-
     def waitForService(self, ambari, service=None):
         """
         Wait until service is installed
@@ -590,11 +591,11 @@ class LDTest(unittest.TestCase):
             rounds = rounds + 1
         self.assertTrue(flag, self.service + " did not install after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
         if service == "KAVETOOLBOX":
-            #KAVETOOLBOX is a client and does not have a status method
+            # KAVETOOLBOX is a client and does not have a status method
             return True
         stdout = self.servicesh(ambari, "status", service)
         if '"state" : "STARTED"' in stdout:
-            #all good, no need to explicitly restart the service
+            # all good, no need to explicitly restart the service
             return True
         stdout = self.servicesh(ambari, "stop", service)
         time.sleep(10)
@@ -661,9 +662,11 @@ class LDTest(unittest.TestCase):
 # Any other helper functions?
 ######################
 
+
 def d2j(adict):
     """Replacements to take a literal string and return a dictionary, using ajson intermediate
     """
-    replaced=adict.strip().replace('{u\'',"{'").replace(' [u\'',"['").replace(' (u\'',"('").replace(' u\''," '").replace("'",'"').replace('(',"[").replace(")","]")
+    replaced = adict.strip().replace('{u\'', "{'").replace(' [u\'', "['").replace(
+        ' (u\'', "('").replace(' u\'', " '").replace("'", '"').replace('(', "[").replace(")", "]")
     import json
     return json.loads(replaced)

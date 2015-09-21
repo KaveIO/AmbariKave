@@ -20,7 +20,9 @@ import os
 from resource_management import *
 from kavecommon import ApacheScript
 
+
 class Twiki(ApacheScript):
+
     def install(self, env):
         import params
         import kavecommon as kc
@@ -30,7 +32,7 @@ class Twiki(ApacheScript):
         kc.copyCacheOrRepo('TWiki-6.0.0.zip')
         Execute("mkdir -p " + params.install_dir)
         Execute("unzip -o -q TWiki-6.0.0.zip -d " + params.install_dir)
-        Execute("mkdir -p " + params.install_dir+'authtest')
+        Execute("mkdir -p " + params.install_dir + 'authtest')
         kc.chownR(params.install_dir, "apache")
         Execute("cp " + params.install_dir + "/bin/LocalLib.cfg.txt " + params.install_dir + "/bin/LocalLib.cfg")
         Execute("chown apache:apache " + params.install_dir + "/bin/LocalLib.cfg")
@@ -58,9 +60,10 @@ class Twiki(ApacheScript):
                 orignal_config = fp.readlines()
 
         with open(params.install_dir + "lib/LocalSite.cfg", 'w') as fp:
-            newstuff=Template("LocalSite.cfg.j2").get_content()
+            newstuff = Template("LocalSite.cfg.j2").get_content()
             fp.write(newstuff)
-            dontclobber=[n.split('=')[0].strip() for n in newstuff.split('\n') if len(n.strip()) and len(n.split('=')[0].strip())]
+            dontclobber = [n.split('=')[0].strip() for n in newstuff.split(
+                '\n') if len(n.strip()) and len(n.split('=')[0].strip())]
             if not orignal_config or not len(orignal_config):
                 fp.write('\n1;\n')
             else:
@@ -81,6 +84,6 @@ class Twiki(ApacheScript):
         super(Twiki, self).configure(env)
 
 
-#modify both the file and you are done
+# modify both the file and you are done
 if __name__ == "__main__":
     Twiki().execute()

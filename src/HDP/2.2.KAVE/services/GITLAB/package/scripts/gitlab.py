@@ -26,7 +26,7 @@ class Gitlab(Script):
     installer_cache_path = '/tmp/'
 
     def install(self, env):
-        #TODO: instead of throwing an exception here, I should enter gitlabs into the existing postgre database
+        # TODO: instead of throwing an exception here, I should enter gitlabs into the existing postgre database
         # correctly
         if os.path.exists('/var/lib/pgsql/data/pg_hba.conf'):
             raise SystemError(

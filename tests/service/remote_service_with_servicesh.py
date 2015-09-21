@@ -20,6 +20,7 @@ import unittest
 
 
 class TestAService(base.LDTest):
+
     def runTest(self):
         # create remote machine
         import os
@@ -29,8 +30,8 @@ class TestAService(base.LDTest):
         known = [s for s, d in base.findServices()]
         self.assertTrue(self.service in known, "The service " + self.service + " is unknown, check the case")
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari,iid = self.deployDev()
-        #restart ganglia and nagios
+        ambari, iid = self.deployDev()
+        # restart ganglia and nagios
         if self.branch:
             abranch = self.service
         for restart in ["GANGLIA", "NAGIOS"]:
@@ -40,7 +41,7 @@ class TestAService(base.LDTest):
         import time
 
         time.sleep(15)
-        #install the component on top of the blueprint
+        # install the component on top of the blueprint
         stdout = self.servicesh(ambari, "install", self.service)
         self.assertTrue("InProgress" in stdout,
                         "Was unable to install " + self.service + " through service.sh, (" + ' '.join(

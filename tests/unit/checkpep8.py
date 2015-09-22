@@ -45,12 +45,12 @@ class TestCodeFormat(unittest.TestCase):
         for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
             allpyfiles = allpyfiles + [os.path.join(root, f) for f in files if f.endswith('.py')]
         result = pep8style.check_files(allpyfiles)
-        print result.counters
         self.assertEqual(result.total_errors, 0,
                          "Found " + str(result.total_errors)
                          + " code style errors (and warnings)."
                          + " Try running 'autopep8 --max-line-length 120 -r --in-place *'"
-                         + " from the top dir")
+                         + " from the top dir \n"
+                         + str(result.counters))
 
 
 def suite():

@@ -16,7 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
-from resource_management.core.system import System
+#from resource_management.core.system import System
 import os
 import kavecommon as kc
 

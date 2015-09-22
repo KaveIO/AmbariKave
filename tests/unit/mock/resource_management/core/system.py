@@ -15,16 +15,8 @@
 #   limitations under the License.
 #
 ##############################################################################
-from resource_management import *
-#from resource_management.core.system import System
-import os
-
-config = Script.get_config()
-
-hostname = config["hostname"]
-
-www_folder = default('configurations/apache/www_folder', '/var/www/html/')
-PORT = default('configurations/apache/PORT', '80')
-servername = default('configurations/apache/servername', hostname)
-if servername == "hostname":
-    servername = hostname
+class System(object):
+    os_family='centos'
+    @staticmethod
+    def get_instance():
+        return System()

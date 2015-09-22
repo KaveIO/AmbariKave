@@ -15,7 +15,10 @@
 #   limitations under the License.
 #
 ##############################################################################
+
+
 class OSCheck(object):
+
     @staticmethod
     def is_ubuntu_family():
         return False

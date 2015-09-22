@@ -15,8 +15,11 @@
 #   limitations under the License.
 #
 ##############################################################################
+
+
 class System(object):
-    os_family='centos'
+    os_family = 'centos'
+
     @staticmethod
     def get_instance():
         return System()

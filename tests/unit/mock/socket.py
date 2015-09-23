@@ -15,12 +15,5 @@
 #   limitations under the License.
 #
 ##############################################################################
-from resource_management import *
-from resource_management.core.system import System
-
-config = Script.get_config()
-
-if System.get_instance().os_family == "suse" or System.get_instance().os_family == "ubuntu":
-    daemon_name = 'mysql'
-else:
-    daemon_name = 'mysqld'
+def gethostbyname(astr):
+    return '0.0.0.0'

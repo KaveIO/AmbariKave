@@ -61,7 +61,8 @@ def help():
     print __doc__
     # sys.exit(code)
 
-version="latest"
+version = "latest"
+
 
 def checkOpts():
     if "-h" in sys.argv or "--help" in sys.argv:

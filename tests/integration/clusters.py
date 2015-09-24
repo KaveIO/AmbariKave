@@ -70,14 +70,8 @@ class TestCluster(base.LDTest):
         extra = [f for f in supplies_hosts if f not in need_hosts]
         self.assertFalse(len(missing), "Missing creation of the hosts called " + str(missing))
         self.assertFalse(len(extra), "Asked to create hosts I won't later use " + str(extra))
-        # return True
-        cmd = deploy_dir + "/aws/up_aws_cluster.py Test-" + self.service + " " + pref + ".aws.json  --not-strict"
-        if self.branchtype in ["__local__"]:
-            cmd = cmd + " --this-branch"
-        stdout = lD.runQuiet(
-            deploy_dir + "/aws/up_aws_cluster.py Test-" + self.service + " " + pref + ".aws.json  --not-strict")
-        self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
-                        "failed to create cluster, \n" + stdout)
+        # Deploy the cluster
+        stdout = self.deploycluster(pref + ".aws.json")
         connectcmd = ""
         for line in range(len(stdout.split('\n'))):
             if "ambari connect remotely with" in stdout.split("\n")[line]:
@@ -125,7 +119,7 @@ if __name__ == "__main__":
     test.service = service
     test.debug = verbose
     test.branch = branch
-    test.branchtype=branch
+    test.branchtype = branch
     test.checklist = []
     if len(sys.argv) > 2:
         test.checklist = sys.argv[2:]

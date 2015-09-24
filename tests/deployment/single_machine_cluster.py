@@ -35,17 +35,17 @@ class SingleMachineCluster(base.LDTest):
         clusterfile = "single.aws.json"
         if region.startswith("ap"):
             clusterfile = "singletokyo.aws.json"
-        stdout = lD.runQuiet(
-            deploy_dir + "/aws/up_aws_cluster.py TestDeploy " + deploy_dir
-            + "/clusters/" + clusterfile + " --not-strict")
+        stdout = self.deploycluster(deploy_dir + "/clusters/" + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
 
 
-def suite(verbose=False):
+def suite(verbose=False, branch="__local__"):
     suite = unittest.TestSuite()
     test = SingleMachineCluster()
     test.debug = verbose
+    test.branch = branch
+    test.branchtype = branch
     suite.addTest(test)
     return suite
 
@@ -54,4 +54,11 @@ if __name__ == "__main__":
     verbose = False
     if "--verbose" in sys.argv:
         verbose = True
-    base.run(suite(verbose))
+    branch = "__local__"
+    if "--branch" in sys.argv:
+        branch = "__service__"
+        sys.argv = [s for s in sys.argv if s != "--branch"]
+    if "--this-branch" in sys.argv:
+        branch = "__local__"
+        sys.argv = [s for s in sys.argv if s != "--this-branch"]
+    base.run(suite(verbose, branch))

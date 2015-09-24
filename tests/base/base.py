@@ -312,6 +312,7 @@ class LDTest(unittest.TestCase):
     """
     debug = False
     branch = "__local__"
+    branchtype = "__local__"
 
     def preCheck(self):
         """
@@ -444,6 +445,19 @@ class LDTest(unittest.TestCase):
             stdout = lD.runQuiet(
                 deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict")
         return ambari, iid
+
+    def deploycluster(self, clusterfile, cname=None):
+        """
+        Wrapper around up_aws_cluster.py
+        """
+        if cname is None:
+            cname = "Test-" + self.service
+        import kavedeploy as lD
+        deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+        cmd = deploy_dir + "/aws/up_aws_cluster.py " + cname + " " + clusterfile + "  --not-strict"
+        if self.branchtype in ["__local__"]:
+            cmd = cmd + " --this-branch"
+        return lD.runQuiet(cmd)
 
     def resetambari(self, ambari):
         """

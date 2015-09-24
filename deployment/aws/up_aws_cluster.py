@@ -80,7 +80,7 @@ def checkOpts():
         global version
         version = lD.runQuiet("bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
         stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
-        if not ("origin/" + self.branch in [s.strip() for s in stdout.split() if len(s.strip())]):
+        if not ("origin/" + version in [s.strip() for s in stdout.split() if len(s.strip())]):
             raise NameError("There is no remote branch called "
                             + version
                             + " push your branch back to the origin and try again")

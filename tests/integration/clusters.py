@@ -71,6 +71,9 @@ class TestCluster(base.LDTest):
         self.assertFalse(len(missing), "Missing creation of the hosts called " + str(missing))
         self.assertFalse(len(extra), "Asked to create hosts I won't later use " + str(extra))
         # return True
+        cmd = deploy_dir + "/aws/up_aws_cluster.py Test-" + self.service + " " + pref + ".aws.json  --not-strict"
+        if self.branchtype in ["__local__"]:
+            cmd = cmd + " --this-branch"
         stdout = lD.runQuiet(
             deploy_dir + "/aws/up_aws_cluster.py Test-" + self.service + " " + pref + ".aws.json  --not-strict")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
@@ -122,6 +125,7 @@ if __name__ == "__main__":
     test.service = service
     test.debug = verbose
     test.branch = branch
+    test.branchtype=branch
     test.checklist = []
     if len(sys.argv) > 2:
         test.checklist = sys.argv[2:]

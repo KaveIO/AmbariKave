@@ -18,12 +18,12 @@
 from resource_management import *
 
 config = Script.get_config()
-installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as')
+installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as/')
 jboss_conf_file = installation_dir + "/standalone/configuration/standalone.xml"
 mgmt_users_file = installation_dir + "/standalone/configuration/mgmt-users.properties"
 
 management_user = 'admin'
-management_password = default('configurations/jboss/management_password', False)
+management_password = default('configurations/jboss/management_password', "NOTAPASSWORD")
 if management_password == "NOTAPASSWORD":
     management_password = False
 

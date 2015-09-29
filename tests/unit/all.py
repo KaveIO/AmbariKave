@@ -22,10 +22,11 @@ import scan
 import license
 import pyfilenames
 import testpythonimport
+import verifyxml
 import checkpep8
 import base
 
-mods = [deploylib, kclib, servicesh, scan, license, pyfilenames, checkpep8, testpythonimport]
+mods = [checkpep8, testpythonimport, deploylib, kclib, servicesh, scan, license, pyfilenames, verifyxml]
 
 if __name__ == "__main__":
     base.parallel(mods)

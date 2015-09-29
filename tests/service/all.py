@@ -28,6 +28,7 @@ mods = [test_kavetoolbox_head, remote_service_with_servicesh, remote_service_wit
 # Ignore services which do not have a working default configuration, or have default ports which conflict with 8080
 ignoreServices = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS",
                   "JBOSS", "KAVELANDING", "HUE", "STORMSD", "SONARQUBE", "MAIL"]
+# Gitlab cannot be installed on the ambari server because of the conflicting SQL databases
 
 services = [s for s, ds in base.findServices() if s not in ignoreServices]
 

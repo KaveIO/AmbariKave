@@ -142,7 +142,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         lD.waitUntilUp(remote, 20)
         remote.register()
         if uname != 'root':
-            remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t','-t'])
+            remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t', '-t'])
         remote.describe()
     except KeyboardInterrupt:
         pass

@@ -31,7 +31,7 @@ class DepCentos7(base.LDTest):
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        self.service = "Centos7"
+        self.service = "Deploy"
         self.ostype = "Centos7"
         ambari, iid = self.deployOS(self.ostype)
         if self.ostype.startswith("Ubuntu"):
@@ -39,17 +39,6 @@ class DepCentos7(base.LDTest):
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
-        self.waitForAmbari(ambari)
-        # test other features of ambari.run
-        stdout = ambari.run("ls -l '/opt'")
-        stdout = ambari.run('ls -l "/opt"')
-        self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
-        ma = lD.multiremotes(["ssh:root@" + ambari.host], access_key=ambari.access_key)
-        stdout = ma.run("ls -l '/opt'")
-        self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
-        stdout = lD.runQuiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
-                             ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc"}\'')
-
 
 def suite(verbose=False):
     suite = unittest.TestSuite()

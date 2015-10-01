@@ -80,7 +80,7 @@ class TestCluster(base.LDTest):
         missing = [f for f in need_groups if f not in created_groups]
         self.assertFalse(len(missing), "Missing creation of the host groups called " + str(missing))
         # check that the supplied blueprint is the one which is given in the clusterfile
-        self.assertEqual(jsons[1]["Blueprints"]["blueprint_name"],jsons[-1]["blueprint"],
+        self.assertEqual(jsons[1]["Blueprints"]["blueprint_name"], jsons[-1]["blueprint"],
                          "Blueprint name is not the same in your blueprint c.f. your clusterfile")
         # Deploy the cluster
         stdout = self.deploycluster(pref + ".aws.json")

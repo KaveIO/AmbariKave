@@ -49,12 +49,16 @@ class TestCluster(base.LDTest):
                 jsons.append(interp)
             except:
                 self.assertTrue(False, "json file " + ason + " is not complete or not readable")
-        # check that the aws file has everything needed for the cluster
+        # Find what is needed for the cluster
         need_hosts = []
+        need_groups = []
         for hg in jsons[-1]["host_groups"]:
+            need_groups.append(hg['name'])
             for host in hg['hosts']:
                 need_hosts.append(host["fqdn"])
         supplies_hosts = []
+        created_groups = []
+        # check that the aws file creates the machines
         dn = "kave.io"
         try:
             dn = jsons[0]["Domain"]["Name"]
@@ -70,6 +74,14 @@ class TestCluster(base.LDTest):
         extra = [f for f in supplies_hosts if f not in need_hosts]
         self.assertFalse(len(missing), "Missing creation of the hosts called " + str(missing))
         self.assertFalse(len(extra), "Asked to create hosts I won't later use " + str(extra))
+        # check that the blueprint file creates the hostgroups
+        for ig in jsons[1]["host_groups"]:
+            created_groups.append(ig["name"])
+        missing = [f for f in need_groups if f not in created_groups]
+        self.assertFalse(len(missing), "Missing creation of the host groups called " + str(missing))
+        # check that the supplied blueprint is the one which is given in the clusterfile
+        self.assertEqual(jsons[1]["Blueprints"]["blueprint_name"],jsons[-1]["blueprint"],
+                         "Blueprint name is not the same in your blueprint c.f. your clusterfile")
         # Deploy the cluster
         stdout = self.deploycluster(pref + ".aws.json")
         connectcmd = ""

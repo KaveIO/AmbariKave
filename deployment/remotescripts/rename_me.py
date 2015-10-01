@@ -31,26 +31,30 @@ domain = "localdomain"
 if len(sys.argv) > 2:
     domain = sys.argv[2]
 
-f = open("/etc/sysconfig/network")
-l = f.readlines()
-f.close()
-found = False
-newlines = []
-for line in l:
-    if line.startswith("#"):
-        newlines.append(line.strip())
-    elif "HOSTNAME=" in line:
+if os.path.exists("/etc/sysconfig/network"):
+    # CENTOS
+    f = open("/etc/sysconfig/network")
+    l = f.readlines()
+    f.close()
+    found = False
+    newlines = []
+    for line in l:
+        if line.startswith("#"):
+            newlines.append(line.strip())
+        elif "HOSTNAME=" in line:
+            newlines.append("HOSTNAME=" + newname + "." + domain)
+            found = True
+        else:
+            newlines.append(line.strip())
+    if not found:
         newlines.append("HOSTNAME=" + newname + "." + domain)
-        found = True
-    else:
-        newlines.append(line.strip())
-if not found:
-    newlines.append("HOSTNAME=" + newname + "." + domain)
 
-f = open("/etc/sysconfig/network", "w")
-f.write("\n".join(newlines) + "\n")
-f.close()
-
+    f = open("/etc/sysconfig/network", "w")
+    f.write("\n".join(newlines) + "\n")
+    f.close()
+elif os.path.exists('/etc/hostname'):
+    # UBUNTU
+    os.system('echo ' + newname + ' > /etc/hostname ')
 
 if domain == "localdomain":
     # support machine with no domain name / DNS ...
@@ -58,8 +62,27 @@ if domain == "localdomain":
     dom = ""
     if not stat and len(out):
         dom = "." + out
+        domain = out
     os.system("hostname " + newname + dom)
 else:
     os.system("hostname " + newname + "." + domain)
 
-os.system("/etc/init.d/network restart; service network restart;")
+if len(domain) and os.path.exists('/etc/hostname'):
+    if os.path.exists('/etc/hosts'):
+        # UBUNTU
+        f = open("/etc/hosts")
+        l = f.readlines()
+        l = [i.rstrip() for i in l]
+        f.close()
+        if '127.0.0.1' in l[0]:
+            l = ["127.0.0.1 " + newname + "." + domain + " localhost.localdomain localhost " + newname] + l[1:]
+        f = open("/etc/hosts", 'w')
+        f.write('\n'.join(l))
+        f.close()
+
+if os.path.exists("/etc/sysconfig/network"):
+    # CENTOS
+    os.system("/etc/init.d/network restart; service network restart;")
+elif os.path.exists('/etc/hostname'):
+    # UBUNTU
+    os.system("service hostname restart")

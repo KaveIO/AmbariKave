@@ -40,6 +40,7 @@ class DepCentos7(base.LDTest):
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
 
+
 def suite(verbose=False):
     suite = unittest.TestSuite()
     test = DepCentos7()

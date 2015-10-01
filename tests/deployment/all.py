@@ -16,11 +16,12 @@
 #
 ##############################################################################
 import one_centos_dev
+import centos7
 import single_machine_cluster
 import micro_cluster
 import base
 
-mods = [one_centos_dev, single_machine_cluster, micro_cluster]
+mods = [micro_cluster, single_machine_cluster, centos7, one_centos_dev]
 
 if __name__ == "__main__":
     base.parallel(mods)

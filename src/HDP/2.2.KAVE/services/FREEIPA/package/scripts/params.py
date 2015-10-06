@@ -32,10 +32,14 @@ if not ipa_server_ip_address:
 directory_password = default('configurations/freeipa/directory_password', False)
 if not directory_password or len(directory_password) < 8:
     raise Exception('FreeIPA directory_password: \'%s\' isn\'t acceptable (min 8 char long)' % directory_password)
+else:
+    Logger.sensitive_strings[directory_password] = "[PROTECTED]"
 
 ldap_bind_password = default('configurations/freeipa/ldap_bind_password', False)
 if not ldap_bind_password or len(ldap_bind_password) < 8:
     raise Exception('FreeIPA ldap_bind_password: \'%s\' isn\'t acceptable (min 8 char long)' % ldap_bind_password)
+else:
+    Logger.sensitive_strings[ldap_bind_password] = "[PROTECTED]"
 
 hostname_components = config["hostname"].split('.')
 if len(hostname_components) < 3:
@@ -241,3 +245,5 @@ initial_sudoers = json.loads(initial_sudoers)
 for user, passwd in initial_user_passwords.iteritems():
     if len(passwd) < 8:
         raise ValueError("User : " + user + " cannot be assigned an intital password less than 8 characters")
+    else:
+        Logger.sensitive_strings[passwd] = "[PROTECTED]"

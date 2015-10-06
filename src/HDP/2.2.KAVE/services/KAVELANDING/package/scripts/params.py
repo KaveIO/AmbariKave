@@ -26,6 +26,8 @@ short_host = config["hostname"].split('.')[0]
 
 AMBARI_ADMIN = config['configurations']['kavelanding']['AMBARI_ADMIN']
 AMBARI_ADMIN_PASS = config['configurations']['kavelanding']['AMBARI_ADMIN_PASS']
+Logger.sensitive_strings[AMBARI_ADMIN_PASS] = "[PROTECTED]"
+
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')
 www_folder = default('configurations/kavelanding/www_folder', '/var/www/html/')

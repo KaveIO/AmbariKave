@@ -26,6 +26,7 @@ import pwd
 import grp
 from resource_management import *
 
+
 class RobotAdmin():
     """ A helper class for delegating credentials and tasks to client nodes.
 

@@ -161,7 +161,7 @@
       "name" : "ci",
       "configurations" : [
       	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } },
-      	{ "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999"} }
+      	{ "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
       	],
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },

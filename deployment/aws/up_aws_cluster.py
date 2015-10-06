@@ -30,6 +30,7 @@ optional:
     not set I will follow the AWSSECCONF environment variable.
     --verbose : print all remotely running commands
     --not-strict : turn off strict host-key checking
+    --this-branch : read what this branch is called and deploy software direct from this branch
 """
 
 import sys
@@ -60,6 +61,8 @@ def help():
     print __doc__
     # sys.exit(code)
 
+version = "latest"
+
 
 def checkOpts():
     if "-h" in sys.argv or "--help" in sys.argv:
@@ -73,6 +76,15 @@ def checkOpts():
     if "--not-strict" in sys.argv:
         sys.argv = [s for s in sys.argv if s not in ["--not-strict"]]
         lD.strict_host_key_checking = False
+    if "--this-branch" in sys.argv:
+        sys.argv = [s for s in sys.argv if s not in ["--this-branch"]]
+        global version
+        version = lD.runQuiet("bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
+        stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
+        if not ("origin/" + version in [s.strip() for s in stdout.split() if len(s.strip())]):
+            raise NameError("There is no remote branch called "
+                            + version
+                            + " push your branch back to the origin and try again")
     if len(sys.argv) < 3:
         help()
         raise AttributeError("You did not supply enough parameters")
@@ -388,7 +400,7 @@ for instancegroup in cluster_config["InstanceGroups"]:
         # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
             # lD.confremotessh(instance_to_remote[instance])
-            lD.deployOurSoft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave")
+            lD.deployOurSoft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave", version=version)
 
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"

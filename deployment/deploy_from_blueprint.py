@@ -263,13 +263,27 @@ whole_cluster.run(
 # for entire cluster
 clustername = clusterfile.split(os.sep)[-1].split('.')[0]
 ambari.run('mkdir -p ~/.dsh/group')
-for host in hosts:
-    ambari.run("echo " + host + " >> " + "~/.dsh/group/" + clustername)
+
+
+def add_hosts_to_pdsh_group(group, hosts):
+    """
+    Only add missing hosts into groups in the dsh group files
+    """
+    path = "~/.dsh/group/" + group
+    try:
+        exists = ambari.run('cat ' + path)
+    except RuntimeError:
+        exists = []
+    for host in hosts:
+        if host in exists:
+            continue
+        ambari.run("echo " + host + " >> " + path)
+
+add_hosts_to_pdsh_group(clustername, hosts)
 # for each hostgroup
 for group in cluster["host_groups"]:
     hgname = group["name"]
-    for host in group["hosts"]:
-        ambari.run("echo " + host["fqdn"] + " >> " + "~/.dsh/group/" + clustername + "_" + hgname)
+    add_hosts_to_pdsh_group(clustername + '_' + hgname, [ahost["fqdn"] for ahost in group["hosts"]])
 
 ##################################################################
 # Register blueprint and cluster template

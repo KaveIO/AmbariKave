@@ -26,7 +26,7 @@ hostname = config["hostname"]
 
 top_dir = default("configurations/kavetoolbox/top_dir", "/opt/")
 releaseversion = default('configurations/kavetoolbox/releaseversion', "1.3-Beta")
-alternative_download = default('configurations/kavetoolbox/alternative_download', "")
+alternative_download = default('configurations/kavetoolbox/alternative_download', "none")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)
 custom_install_template_default = """

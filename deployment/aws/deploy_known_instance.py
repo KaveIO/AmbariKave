@@ -142,7 +142,9 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         lD.waitUntilUp(remote, 20)
         remote.register()
         if uname != 'root':
-            remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t'])
+            remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t', '-t'])
+            remote = lD.remoteHost('root', ip, keyloc)
+        lD.renameRemoteHost(remote, machinename, 'kave.io')
         remote.describe()
     except KeyboardInterrupt:
         pass

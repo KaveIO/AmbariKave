@@ -20,32 +20,31 @@ import sys
 import base
 
 
-class SingleMachineCluster(base.LDTest):
+class DepCentos7(base.LDTest):
 
     def runTest(self):
         """
-        Create a single centos instance with the up_aws_cluster script, the minimal test of this script
+        Create a single centos instance with a script, and check that it is contactable at the end, including the
+        ambari server running there
         """
         import os
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        import kaveaws as lA
-        region = lA.detectRegion()
-        clusterfile = "single.aws.json"
-        if region.startswith("ap"):
-            clusterfile = "singletokyo.aws.json"
-        stdout = self.deploycluster(deploy_dir + "/clusters/" + clusterfile, cname="TestDeploy")
-        self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
-                        "failed to generate cluster, \n" + stdout)
+        self.service = "Deploy"
+        self.ostype = "Centos7"
+        ambari, iid = self.deployOS(self.ostype)
+        if self.ostype.startswith("Ubuntu"):
+            ambari.run('apt-get update')
+        stdout = ambari.run("echo Hello world from $HOSTNAME")
+        self.assertTrue("ambari" in stdout or "Test-" in stdout,
+                        "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
 
 
-def suite(verbose=False, branch="__local__"):
+def suite(verbose=False):
     suite = unittest.TestSuite()
-    test = SingleMachineCluster()
+    test = DepCentos7()
     test.debug = verbose
-    test.branch = branch
-    test.branchtype = branch
     suite.addTest(test)
     return suite
 
@@ -54,11 +53,4 @@ if __name__ == "__main__":
     verbose = False
     if "--verbose" in sys.argv:
         verbose = True
-    branch = "__local__"
-    if "--branch" in sys.argv:
-        branch = "__service__"
-        sys.argv = [s for s in sys.argv if s != "--branch"]
-    if "--this-branch" in sys.argv:
-        branch = "__local__"
-        sys.argv = [s for s in sys.argv if s != "--this-branch"]
-    base.run(suite(verbose, branch))
+    base.run(suite(verbose))

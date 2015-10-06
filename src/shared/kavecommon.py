@@ -260,7 +260,6 @@ class ApacheScript(res.Script):
             raise IOError("Temporary httpd.conf file corrupted!")
         res.Execute("cp tmp.cnf /etc/httpd/conf/httpd.conf")
         chownR('/etc/httpd/conf/', "apache")
-        #res.Execute("apachectl graceful")
 
     def start(self, env):
         print "start apache"

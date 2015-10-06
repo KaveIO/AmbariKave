@@ -260,13 +260,17 @@ class ApacheScript(res.Script):
             raise IOError("Temporary httpd.conf file corrupted!")
         res.Execute("cp tmp.cnf /etc/httpd/conf/httpd.conf")
         chownR('/etc/httpd/conf/', "apache")
-        res.Execute("apachectl graceful")
+        #res.Execute("apachectl graceful")
 
     def start(self, env):
         print "start apache"
         self.configure(env)
         # Execute('service httpd start')
+        # wait 3 seconds before calling start
+        import time
+        time.sleep(3)
         res.Execute("apachectl graceful")
+        time.sleep(3)
 
     def stop(self, env):
         print "stop apache.."

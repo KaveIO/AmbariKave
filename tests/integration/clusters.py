@@ -83,7 +83,9 @@ class TestCluster(base.LDTest):
         self.assertEqual(jsons[1]["Blueprints"]["blueprint_name"], jsons[-1]["blueprint"],
                          "Blueprint name is not the same in your blueprint c.f. your clusterfile")
         # Deploy the cluster
-        stdout = self.deploycluster(pref + ".aws.json")
+        if self.clustername == 'prod':
+            self.clustername = self.service
+        stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
         connectcmd = ""
         for line in range(len(stdout.split('\n'))):
             if "ambari connect remotely with" in stdout.split("\n")[line]:
@@ -114,6 +116,7 @@ if __name__ == "__main__":
     import sys
 
     verbose = False
+    clustername = None
     if "--verbose" in sys.argv:
         verbose = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
@@ -124,12 +127,16 @@ if __name__ == "__main__":
     if "--this-branch" in sys.argv:
         branch = "__local__"
         sys.argv = [s for s in sys.argv if s != "--this-branch"]
+    if "--prod" in sys.argv:
+        clustername = 'prod'
+        sys.argv = [s for s in sys.argv if s != "--prod"]
     if len(sys.argv) < 2:
-        raise KeyError("You must specify which service to test")
+        raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
     test = TestCluster()
     test.service = service
     test.debug = verbose
+    test.clustername = clustername
     test.branch = branch
     test.branchtype = branch
     test.checklist = []

@@ -272,7 +272,11 @@ def addNewEBSVol(iid, conf, access_key):
     remote = lD.remoteHost("root", ip, access_key)
     remote.cp(os.path.dirname(__file__) + "/../remotescripts/fdiskwrap.sh", "~/fdiskwrap.sh")
     remote.run("chmod a+x fdiskwrap.sh")
-    remote.run("./fdiskwrap.sh " + conf["Fdisk"])
+    try:
+        remote.run("./fdiskwrap.sh " + conf["Fdisk"])
+    except RuntimeError:
+        time.sleep(30)
+        remote.run("./fdiskwrap.sh " + conf["Fdisk"])
     remote.run("mkfs.ext4 -b 4096 " + conf["Fdisk"] + "1 ")
     remote.run("bash -c 'echo \"" + conf["Fdisk"] + "1 " + conf["Mount"] + " ext4 defaults 1 1\" >> /etc/fstab'")
     mvto = " /" + conf["Mount"].replace("/", "_")

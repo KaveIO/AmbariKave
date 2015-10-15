@@ -10,8 +10,8 @@
         </description>
     </property>
     <property>
-        <name>install_directory</name>
-        <value>/opt/sonar</value>
+        <name>sonarqube_install_directory</name>
+        <value>/opt/sonarqube</value>
         <description>
             Install Location for Sonar
         </description>

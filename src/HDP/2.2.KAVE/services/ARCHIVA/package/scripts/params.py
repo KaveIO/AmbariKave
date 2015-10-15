@@ -20,4 +20,3 @@ from resource_management import *
 config = Script.get_config()
 install_directory = default('configurations/archiva/install_directory', '/opt/archiva')
 archiva_jetty_port = default('configurations/archiva/archiva_jetty_port', '5050')
-

@@ -32,16 +32,16 @@ admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
 
 ldap_group = default('configurations/twiki/ldap_group', 'twiki')
 
-known_authentication_methods=['HBAC','LDAP','NONE']
-authentication_method=default('configurations/twiki/authentication_method', 'HBAC')
-authentication_method=authentication_method.upper()
+known_authentication_methods = ['HBAC', 'LDAP', 'NONE']
+authentication_method = default('configurations/twiki/authentication_method', 'HBAC')
+authentication_method = authentication_method.upper()
 if authentication_method not in known_authentication_methods:
     raise ValueError("Authentication method not recognised, I only know "
-                     +str(known_authentication_methods)
-                     +" but you asked for "+authentication_method)
+                     + str(known_authentication_methods)
+                     + " but you asked for " + authentication_method)
 # enable_pam_auth configuration
-enable_pam_auth = (authentication_method=="HBAC")
-ldap_enabled = (authentication_method=="LDAP")
+enable_pam_auth = (authentication_method == "HBAC")
+ldap_enabled = (authentication_method == "LDAP")
 
 freeipa_host = default('/clusterHostInfo/freeipa_server_hosts', [False])[0]
 if freeipa_host and ldap_enabled:
@@ -52,11 +52,13 @@ if freeipa_host and ldap_enabled:
         ldap_uid = 'uid'
         ldap_bind_user = default('configurations/twiki/ldap_bind_user', 'kave_bind_user')
         ldap_bind_password = default('configurations/twiki/ldap_bind_password', False)
-        if not ldap_bind_password or len(ldap_bind_password)<7:
+        if not ldap_bind_password or len(ldap_bind_password) < 7:
             raise Exception('If you want to use ldap, you must have an ldap_bind_user with a known password')
-        ldap_base = 'dc='+',dc='.join(freeipa_host_components[1:])
+        else:
+            Logger.sensitive_strings[ldap_bind_password] = "[PROTECTED]"
+
+        ldap_base = 'dc=' + ',dc='.join(freeipa_host_components[1:])
     else:
         raise Exception('freeipa_host was provided for twiki installation but no FQDN could be determined from this.')
 elif ldap_enabled:
     raise NameError('ldap not integrated because FreeIPA is not installed in this cluster')
-

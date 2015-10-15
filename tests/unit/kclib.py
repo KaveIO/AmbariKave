@@ -20,6 +20,7 @@ import base
 
 
 class TestKaveCommonLib(unittest.TestCase):
+
     def runTest(self):
         import kavecommon as kc
 
@@ -28,9 +29,10 @@ class TestKaveCommonLib(unittest.TestCase):
             sources.append(kc.repoURL("", repo=mirror))
         sources.append(kc.repoURL(""))
         kc.failoverSource(sources)
-        self.assertRaises(IOError, kc.failoverSource, ["non-existing-file-88989381923813.file"])  #,"bug ABK-112"
-        #make some directory structure to check the permissions changing...
-        import tempfile, os
+        self.assertRaises(IOError, kc.failoverSource, ["non-existing-file-88989381923813.file"])  # ,"bug ABK-112"
+        # make some directory structure to check the permissions changing...
+        import tempfile
+        import os
 
         tempdir = tempfile.mkdtemp()
         os.system("mkdir -p " + tempdir + "/this/is/a/test1")
@@ -42,7 +44,7 @@ class TestKaveCommonLib(unittest.TestCase):
         kc.chmodUp(tempdir + "/this/is/a/test1", "744", seen=[tempdir])
         self.assertTrue(os.access(tempdir + "/this/is/a", os.W_OK), tempdir + " permissions settings failed")
         self.assertFalse(os.access(tempdir + "/this/is/a/test2", os.W_OK), tempdir + " permissions settings failed")
-        #create a file in this directory to test the copy/caching, at least for things without wget
+        # create a file in this directory to test the copy/caching, at least for things without wget
         os.system("touch " + tempdir + "/this/is/test.test")
         topd = os.path.realpath(os.curdir)
         os.chdir(tempdir)
@@ -50,19 +52,19 @@ class TestKaveCommonLib(unittest.TestCase):
         os.chdir(topd)
         self.assertTrue(os.path.exists(tempdir + "/test.test") and os.path.exists(
             tempdir + "/this/is/test.test") and os.path.exists(tempdir + "/this/test.test"),
-                        tempdir + " copy/caching failed")
-        #Test the trueorfalse method
-        cnv={'true':True,'y':True,'ye':True,'yes':True,
-             'false':False,'n':False,'no':False,'none':False,
-             ' false':False,'y ':True}
-        for k,v in cnv.iteritems():
-            self.assertTrue(kc.trueorfalse(k)==v)
-            self.assertTrue(kc.trueorfalse(k.upper())==v)
-        self.assertRaises(TypeError,kc.trueorfalse,{})
-        self.assertRaises(TypeError,kc.trueorfalse,'GAAAH')
+            tempdir + " copy/caching failed")
+        # Test the trueorfalse method
+        cnv = {'true': True, 'y': True, 'ye': True, 'yes': True,
+               'false': False, 'n': False, 'no': False, 'none': False,
+               ' false': False, 'y ': True}
+        for k, v in cnv.iteritems():
+            self.assertTrue(kc.trueorfalse(k) == v)
+            self.assertTrue(kc.trueorfalse(k.upper()) == v)
+        self.assertRaises(TypeError, kc.trueorfalse, {})
+        self.assertRaises(TypeError, kc.trueorfalse, 'GAAAH')
 
-        #remove this temporary file when done
-        if os.path.exists(tempdir) and len(tempdir)>4:
+        # remove this temporary file when done
+        if os.path.exists(tempdir) and len(tempdir) > 4:
             os.system("rm -rf " + tempdir)
 
 

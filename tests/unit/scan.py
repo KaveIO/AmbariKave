@@ -46,7 +46,8 @@ class TestScan(unittest.TestCase):
         """
         Test kavescan, the library which polls our ambari installer.
         """
-        import os, sys
+        import os
+        import sys
 
         dir = os.path.realpath(os.path.dirname(__file__) + "/../../")
         sys.path.append(os.path.realpath(dir + "/src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts"))
@@ -81,12 +82,13 @@ class TestScan(unittest.TestCase):
         self.assertTrue(ls.pickprop(aconfig, [80, "apache/APACHE_PORT"]) == 9999, "didn't pick correct config")
         ppp = ls.pretty_print(mockservices, mockhosts, mocklinks, "plain")
         pph = ls.pretty_print(mockservices, mockhosts, mocklinks, "html")
-        #ignore whitespace in this test!
+        # ignore whitespace in this test!
         self.assertTrue(''.join(self.resolves_to_html.split()) in ''.join(pph.split()),
                         "resolution of the pretty print is messed up, \n" + pph + "should be more like\n" +
                         self.resolves_to_html)
         self.assertTrue(''.join(self.resolves_to_plain.split()) in ''.join(ppp.split()),
-                        "resolution of the pretty print is messed up, \n" + ppp + "should be more like\n" + self.resolves_to_plain)
+                        "resolution of the pretty print is messed up, \n" + ppp
+                        + "should be more like\n" + self.resolves_to_plain)
 
 
 def suite():

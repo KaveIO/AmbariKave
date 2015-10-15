@@ -20,19 +20,21 @@ import base
 
 
 class TestServiceSH(unittest.TestCase):
+
     def runTest(self):
         """
         Tests which do not need any environment parameters or access to aws
         """
-        #this list is a list of things that you can't install with service.sh, probably because the service has
+        # this list is a list of things that you can't install with service.sh, probably because the service has
         # multiple components
         ignore_services = []
-        #find the name of all our services
-        #check they exist at least twice in service.sh
-        import os, sys
+        # find the name of all our services
+        # check they exist at least twice in service.sh
+        import os
+        import sys
 
         dir = os.path.realpath(os.path.dirname(__file__) + "/../../")
-        #check they exist at least twice in service.sh
+        # check they exist at least twice in service.sh
         import kavedeploy as lD
 
         lD.debug = False

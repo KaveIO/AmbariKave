@@ -24,33 +24,33 @@ import sys
 import shutil
 
 runfrom = os.path.realpath(os.path.dirname(__file__))
-#top source location
+# top source location
 topsource = runfrom + '/../src/HDP'
 
-#collect list of destinations
+# collect list of destinations
 topdestination = sys.argv[1]
-#print "topsource", topsource, "topdestination", topdestination
+# print "topsource", topsource, "topdestination", topdestination
 
 stacks = [os.path.join(topsource, o) + "/services" for o in os.listdir(topsource) if
           os.path.isdir(os.path.join(topsource, o))]
-#print "stacks",stacks
+# print "stacks",stacks
 
 services = []
 for s in stacks:
     services = services + [os.path.join(s, o) for o in os.listdir(s) if os.path.isdir(os.path.join(s, o))]
 
 service_subdirs = [s.replace(runfrom + '/../src', '') + "/package/scripts" for s in services]
-#print "service_subdirs",service_subdirs
+# print "service_subdirs",service_subdirs
 
 # collect list of files to copy ...
 topcopy = runfrom + '/../src/shared/kavecommon.py'
 
-#print topcopy
+# print topcopy
 
-#copy from all files to all destinations
+# copy from all files to all destinations
 for s in service_subdirs:
     thisdest = topdestination + os.sep + s
-    #print "running for",s,thisdest
+    # print "running for",s,thisdest
     if os.path.isdir(thisdest):
-        #print topcopy,"->",thisdest
+        # print topcopy,"->",thisdest
         shutil.copy(topcopy, thisdest)

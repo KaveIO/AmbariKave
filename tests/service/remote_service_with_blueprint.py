@@ -20,19 +20,21 @@ import unittest
 
 
 class TestServiceBlueprint(base.LDTest):
+
     def runTest(self):
         # create remote machine
         import os
-        import sys, json
+        import sys
+        import json
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        bp=os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
-        cf=os.path.dirname(__file__) + "/blueprints/default.cluster.json"
+        bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
+        cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
         if not os.path.exists(bp):
             raise ValueError("No blueprint with which to install " + self.service)
-        #print ason
-        for ason in [bp,cf]:
+        # print ason
+        for ason in [bp, cf]:
             f = open(ason)
             l = f.read()
             f.close()
@@ -45,13 +47,11 @@ class TestServiceBlueprint(base.LDTest):
             raise ValueError(
                 "This test can only work for blueprints where the name of the blueprint matches a known service. Else "
                 "try remote_blueprint.py")
-        ambari,iid = self.deployDev()
-        #clean the existing blueprint ready for re-install
+        ambari, iid = self.deployDev()
+        # clean the existing blueprint ready for re-install
         self.resetambari(ambari)
         self.deployBlueprint(ambari, bp, cf)
-        #import time
-        #time.sleep(15)
-        #wait for the install and then check if the directories etc. are there
+        # wait for the install and then check if the directories etc. are there
         self.waitForService(ambari)
         self.check(ambari)
 
@@ -94,6 +94,7 @@ def nowhite(astring):
 
 
 class TestServiceKaveLanding(TestServiceBlueprint):
+
     def check(self, ambari):
         super(TestServiceKaveLanding, self).check(ambari)
         ppp = ambari.run("./[a,A]mbari[k,K]ave/dev/scan.sh")

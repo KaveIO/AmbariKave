@@ -25,8 +25,14 @@ import kavedeploy as lD
 import commands
 import subprocess as sub
 import json
-import os, sys, time
+import os
+import sys
+import time
 import re
+
+import threading
+import thread
+import Queue
 
 
 def testaws():
@@ -55,26 +61,27 @@ def detectRegion():
     """
     return lD.runQuiet("aws configure get region")
 
-__region_ami_links__={ "Centos6" : {"default" : "ami-42718735",#only paravirtual, 6.5 release media
-                                    "eu-west" : "ami-30ff5c47", # good, centos 6 "with updates"
-                                    "ap-northeast":"ami-25436924",
-                                    "ap-southeast":"aami-0aaf8858"
+__region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtual, 6.5 release media
+                                    "eu-west": "ami-30ff5c47",  # good, centos 6 "with updates"
+                                    "ap-northeast": "ami-25436924",
+                                    "ap-southeast": "aami-0aaf8858"
                                     },
-                      "Centos7" : {"default":"ami-e4ff5c93",
-                                   "eu-west":"ami-e4ff5c93",
-                                   "ap-northeast":"mi-89634988",
-                                   "ap-southeast":"ami-aea582fc"
-                                   },
-                      "Ubuntu14" : {"default":"ami-5da23a2a",
-                                    "eu-west":"ami-47a23a30",
-                                    "ap-northeast":"ami-936d9d93",
-                                    "ap-southeast":"ami-96f1c1c4"
-                                    }
-                      }
+                        "Centos7": {"default": "ami-e4ff5c93",
+                                    "eu-west": "ami-e4ff5c93",
+                                    "ap-northeast": "mi-89634988",
+                                    "ap-southeast": "ami-aea582fc"
+                                    },
+                        "Ubuntu14": {"default": "ami-5da23a2a",
+                                     "eu-west": "ami-47a23a30",
+                                     "ap-northeast": "ami-936d9d93",
+                                     "ap-southeast": "ami-96f1c1c4"
+                                     }
+                        }
 
-def chooseamiid(os,region):
+
+def chooseamiid(os, region):
     if os not in __region_ami_links__:
-        raise ValueError("OS "+os+" not known for linking to amiid")
+        raise ValueError("OS " + os + " not known for linking to amiid")
     try:
         return __region_ami_links__[os][str(region)]
     except KeyError:
@@ -87,13 +94,13 @@ def chooseamiid(os,region):
         return __region_ami_links__[os]['default']
     except KeyError:
         pass
-    raise ValueError("os/region combination could not be made "+os+str(region))
+    raise ValueError("os/region combination could not be made " + os + str(region))
     return ""
 
 
 def upCentos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
-    region="default"
-    amiid=""
+    region = "default"
+    amiid = ""
     if subnet is not None:
         region = detectRegion()
     if ambaridev:
@@ -106,16 +113,17 @@ def upCentos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
                 "image with ambari pre-installed with your keys and in your region. See the script that generates "
                 "the dev image for that.")
     else:
-        amiid=chooseamiid("Centos6",region)
-    return upamiid(amiid,type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+        amiid = chooseamiid("Centos6", region)
+    return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+
 
 def upOS(os, type, secGroup, keys, count=1, subnet=None):
-    region="default"
-    amiid=""
+    region = "default"
+    amiid = ""
     if subnet is not None:
         region = detectRegion()
-    amiid=chooseamiid(os,region)
-    return upamiid(amiid,type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+    amiid = chooseamiid(os, region)
+    return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
 
 def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
@@ -158,7 +166,7 @@ def killinstance(iid, state="terminate"):
 
 def killvolume(volID):
     descvol = runawstojson("ec2 describe-volumes --volume " + volID)
-    #print descvol
+    # print descvol
     if descvol['Volumes'][0]["State"] != "available":
         raise ValueError("Volume not available to be killed " + volID)
     return runawstojson("ec2 delete-volume --volume " + volID)
@@ -221,15 +229,15 @@ def addNewEBSVol(iid, conf, access_key):
         raise ValueError(iid + " is not one of your instance IDs")
     if "Fdisk" not in conf:
         import string
-        alpha=string.ascii_lowercase
-        skip=0
+        alpha = string.ascii_lowercase
+        skip = 0
         if detectRegion().startswith('eu'):
-            #eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
-            skip=0
+            # eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
+            skip = 0
         elif detectRegion().startswith('ap'):
-            #ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
-            skip=4
-        conf["Fdisk"]='/dev/xvd'+alpha[alpha.index(conf["Attach"][-1])+skip]
+            # ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
+            skip = 4
+        conf["Fdisk"] = '/dev/xvd' + alpha[alpha.index(conf["Attach"][-1]) + skip]
     ip = pubIP(iid)
     av_zone = i["Reservations"][0]["Instances"][0]["Placement"]["AvailabilityZone"]
     voljson = runawstojson("ec2 create-volume --size " + str(conf["Size"]) + " --availability-zone " + av_zone)
@@ -237,26 +245,26 @@ def addNewEBSVol(iid, conf, access_key):
     for tag in i["Reservations"][0]["Instances"][0]["Tags"]:
         if tag["Key"] == "Name":
             instnam = tag["Value"]
-    #print voljson
+    # print voljson
     volID = voljson["VolumeId"]
     nameInstance(volID, instnam + conf["Mount"].replace("/", "_"))
     time.sleep(5)
     count = 0
     while count < 10:
         descvol = runawstojson("ec2 describe-volumes --volume " + volID)
-        #print descvol
+        # print descvol
         if descvol['Volumes'][0]["State"] == "available":
             break
         time.sleep(5)
         count = count + 1
     resjson = runawstojson(
         "ec2 attach-volume --volume-id " + volID + " --instance-id " + iid + " --device " + conf["Attach"])
-    #print resjson
+    # print resjson
     time.sleep(5)
     count = 0
     while count < 10:
         descvol = runawstojson("ec2 describe-volumes --volume " + volID)
-        #print descvol
+        # print descvol
         if descvol['Volumes'][0]['Attachments'][0]["State"] == "attached":
             break
         time.sleep(5)
@@ -276,9 +284,6 @@ def addNewEBSVol(iid, conf, access_key):
     if conf["Mount"] not in res:
         raise RuntimeError("Could not mount the requested disk, resulted in " + res)
     return True
-
-
-import threading, thread, Queue
 
 
 class _addEbsVolumesThread(threading.Thread):
@@ -305,17 +310,17 @@ class _addEbsVolumesThread(threading.Thread):
         """
         The main sequence, method, lock, print, unlock
         """
-        #prevent truly infinite loops
+        # prevent truly infinite loops
         looping = 0
         while not self.done and looping < limit:
             self.cur = None
             looping = looping + 1
             try:
                 item = self.pool.get_nowait()
-                #self.lock.acquire()
-                #print item
-                #sys.__stdout__.flush()
-                #self.lock.release()
+                # self.lock.acquire()
+                # print item
+                # sys.__stdout__.flush()
+                # self.lock.release()
                 self.cur = item
                 if item is not None:
                     for mount in item[1]:
@@ -338,14 +343,14 @@ def addEbsVolumes(iids, mounts, access_key, nthreads=20):
     mounts list of lists of mount point configurations to add, such as:
     [i-01dweww] [[{"Mount": "/opt2",   "Size" : 1, "Attach" : "/dev/sdb", "Fdisk" : "/dev/xvdb"}]]
     """
-    #print iids, mounts
+    # print iids, mounts
     if len(iids) != len(mounts):
         raise ValueError("length of iids must be the same as len mounts")
-    #print items
+    # print items
     itemPool = Queue.Queue()
     for iid, mounts in zip(iids, mounts):
-        #print iid, mounts
-        #sys.__stdout__.flush()
+        # print iid, mounts
+        # sys.__stdout__.flush()
         if type(mounts) is not list:
             raise TypeError("Mounts must be a _list_ of mounts...")
         if type(iid) is list:
@@ -356,9 +361,8 @@ def addEbsVolumes(iids, mounts, access_key, nthreads=20):
     for _i in range(nthreads):
         t = _addEbsVolumesThread(itemPool, lock, access_key)
         thethreads.append(t)
-        #t = checkExistanceAndDiffs( packagePool,lock,diff_package_versions)
         t.start()
-    #setup a timeout to prevent really infinite loops!
+    # setup a timeout to prevent really infinite loops!
     import datetime
     import time
 
@@ -381,7 +385,7 @@ def addEbsVolumes(iids, mounts, access_key, nthreads=20):
 
 def waitforstate(iid, state="running"):
     import time
-    #wait until ambari server is up
+    # wait until ambari server is up
     rounds = 1
     flag = False
     while rounds <= 10:
@@ -422,7 +426,7 @@ def checksecjson(json, requirefield=["SecurityGroup"], requirekeys=["AWS", "GIT"
 # VPC and cloudformation interactions
 #
 
-#def copySecurityGroupToVPC(group_from, vpc_to):
+# def copySecurityGroupToVPC(group_from, vpc_to):
 #    """
 #    Add inbound security rules from one security group to another
 #    """
@@ -461,13 +465,13 @@ def waitForStack(stack_name, okstats=["CREATE_IN_PROGRESS", "CREATE_COMPLETE"]):
         _stackinfo = runawstojson("cloudformation describe-stacks --stack-name " + stack_name)
         _cur_status = _stackinfo["Stacks"][0]["StackStatus"]
         if _cur_status not in okstats:
-            #print _stackinfo["Stacks"][0]
+            # print _stackinfo["Stacks"][0]
             raise ValueError("Stack " + stack_name + " failed to create, status is " + _cur_status)
         if _cur_status == "CREATE_COMPLETE":
             flag = True
             break
         time.sleep(10)
-    #print _stackinfo["Stacks"][0]
+    # print _stackinfo["Stacks"][0]
     return _stackinfo["Stacks"][0]
 
 
@@ -476,4 +480,5 @@ def addGroupToGroup(group_to_add, group_to_modify):
     Whitelist one security group within a differnet security group
     """
     return runawstojson(
-        "ec2 authorize-security-group-ingress --group-id " + group_to_modify + " --source-group " + group_to_add + " --protocol -1")
+        "ec2 authorize-security-group-ingress --group-id " + group_to_modify
+        + " --source-group " + group_to_add + " --protocol -1")

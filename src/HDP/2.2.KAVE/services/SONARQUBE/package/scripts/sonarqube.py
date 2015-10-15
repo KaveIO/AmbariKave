@@ -24,21 +24,21 @@ from resource_management import *
 class SonarQube(Script):
     installer_cache_path = '/tmp/'
     package = 'sonarqube-5.0.1.zip'
-    #sonar_mirror='http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip'
+    # sonar_mirror='http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip'
 
     def install(self, env):
         import params
 
         env.set_params(params)
         self.install_packages(env)
-        #protect against client downloading behind firewall
-        if not os.path.exists(params.sonarqube_install_directory+'/current'):
+        # protect against client downloading behind firewall
+        if not os.path.exists(params.sonarqube_install_directory + '/current'):
             kc.copyCacheOrRepo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
             Execute('mkdir -p %s ' % params.sonarqube_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
             Execute('ln -sfn %s/sonarqube-5.0.1 %s/current' % (
-                                                               params.sonarqube_install_directory,
-                                                               params.sonarqube_install_directory))
+                params.sonarqube_install_directory,
+                params.sonarqube_install_directory))
 
         if not os.path.exists(params.sonarqube_install_directory+'/current/extensions/plugins/sonar-pam-plugin-0.2.jar'):
             import tempfile

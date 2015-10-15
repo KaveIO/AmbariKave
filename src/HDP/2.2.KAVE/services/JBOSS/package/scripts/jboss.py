@@ -30,9 +30,7 @@ class Jboss(Script):
         self.install_packages(env)
 
         kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
-        #Nope!
-        #Execute('rm -rf %s' % params.installation_dir)
-        #Execute('rm -rf /etc/init.d/jboss')
+        # Nope!
         Execute('userdel jboss &')
         Execute('groupdel jboss &')
         Execute('unzip -o -q %s -d %s' % (self.package, params.installation_dir))

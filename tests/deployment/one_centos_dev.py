@@ -15,11 +15,13 @@
 #   limitations under the License.
 #
 ##############################################################################
-import unittest, sys
+import unittest
+import sys
 import base
 
 
 class DepCentos(base.LDTest):
+
     def runTest(self):
         """
         Create a single centos instance with a script, and check that it is contactable at the end, including the
@@ -30,7 +32,7 @@ class DepCentos(base.LDTest):
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.service = "CentosDev"
-        ambari,iid = self.deployDev()
+        ambari, iid = self.deployDev()
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
@@ -42,7 +44,8 @@ class DepCentos(base.LDTest):
         ma = lD.multiremotes(["ssh:root@" + ambari.host], access_key=ambari.access_key)
         stdout = ma.run("ls -l '/opt'")
         self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
-        stdout = lD.runQuiet(deploy_dir+"/aws/add_ebsvol_to_instance.py --not-strict "+iid+' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc"}\'')#, "Fdisk": "'+ fmount+'
+        stdout = lD.runQuiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
+                             ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc"}\'')
 
 
 def suite(verbose=False):

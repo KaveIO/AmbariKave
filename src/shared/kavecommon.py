@@ -26,24 +26,24 @@ import subprocess as sub
 from pwd import getpwnam
 from grp import getgrnam
 
-#defaults for the repository
+# defaults for the repository
 #
 # NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
 #  this password is intended to be widely known and is used here as an extension of the URL
 #
-__repo_url__="http://repos:kaverepos@repos.kave.io"
-__version__="1.3-Beta"
-__main_dir__="AmbariKave"
-__arch__="Centos6"
-__mirror_list_file__="/etc/kave/mirror"
+__repo_url__ = "http://repos:kaverepos@repos.kave.io"
+__version__ = "1.3-Beta"
+__main_dir__ = "AmbariKave"
+__arch__ = "Centos6"
+__mirror_list_file__ = "/etc/kave/mirror"
 
 
 def repoURL(filename, repo=__repo_url__, arch=__arch__, dir=__main_dir__, ver=__version__):
     """
     Construct the repository address for our code
     """
-    if repo[-1]!='/':
-        repo=repo+'/'
+    if repo[-1] != '/':
+        repo = repo + '/'
     return repo + arch.lower() + "/" + dir + "/" + ver + "/" + filename
 
 
@@ -57,23 +57,24 @@ def mirrors():
             mirror = mirror.strip()
             if not len(mirror):
                 continue
-            if mirror[-1]!='/':
-                mirror=mirror+'/'
+            if mirror[-1] != '/':
+                mirror = mirror + '/'
             __mirror_list__.append(mirror)
     return __mirror_list__
+
 
 def trueorfalse(astring):
     """
     Boolean cast from a string, understanding most ways of saying yes
     if I don't understand it, raise a TypeError
     """
-    cnv={'true':True,'y':True,'ye':True,'yes':True,'positive':True,'affirmative':True,
-         'false':False,'n':False,'no':False,'none':False, 'negative':False}
-    ts=type(astring)
+    cnv = {'true': True, 'y': True, 'ye': True, 'yes': True, 'positive': True, 'affirmative': True,
+           'false': False, 'n': False, 'no': False, 'none': False, 'negative': False}
+    ts = type(astring)
     if ts is bool:
         return astring
     elif ts is str or ts is unicode:
-        astring=astring.lower().strip()
+        astring = astring.lower().strip()
         try:
             return cnv[astring]
         except KeyError:
@@ -84,7 +85,8 @@ def trueorfalse(astring):
         return False
     elif ts is int:
         return bool(astring)
-    raise TypeError("Cannot guess boolean value equivalent for "+str(astring))
+    raise TypeError("Cannot guess boolean value equivalent for " + str(astring))
+
 
 def mycmd(cmd):
     proc = sub.Popen(cmd, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
@@ -94,7 +96,7 @@ def mycmd(cmd):
 
 
 try:
-    #when unit testing, res might not be importable, so replace execute with mycmd
+    # when unit testing, res might not be importable, so replace execute with mycmd
     import resource_management as res
 except ImportError:
     class Object(object):
@@ -167,7 +169,7 @@ def copyCacheOrRepo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__, v
     ver: the version to look at in the repo, set above
     alternates: other places to look for this file in case the repo is down, these need to be complete URLs to the file
     """
-    #default goes last
+    # default goes last
     sources = []
     for mirror in mirrors():
         sources.append(repoURL(filename, arch=arch.lower(), repo=mirror, dir=dir, ver=ver))
@@ -198,7 +200,7 @@ def chmodUp(lowest, mode, seen=[]):
     lowest = os.path.realpath(lowest)
     if lowest in seen:
         return
-    #prevent infinite recursion!
+    # prevent infinite recursion!
     seen.append(lowest)
     if lowest == '/':
         return
@@ -208,10 +210,10 @@ def chmodUp(lowest, mode, seen=[]):
         return
     res.Execute('chmod ' + mode + ' ' + lowest)
     if lowest.count("/") < 2:
-        #prevent infinite recursion!
+        # prevent infinite recursion!
         return
     if lowest == os.path.realpath(os.sep.join(lowest.split(os.sep)[:-1])):
-        #prevent infinite recursion!
+        # prevent infinite recursion!
         return
     return chmodUp(os.sep.join(lowest.split(os.sep)[:-1]), mode, seen=seen)
 
@@ -233,11 +235,12 @@ class ApacheScript(res.Script):
         env.set_params(params)
         res.Execute("mkdir -p " + params.www_folder)
         chownR(params.www_folder, "apache")
-        #self.configure(env)
-        #self.start(env)
+        # self.configure(env)
+        # self.start(env)
 
     def configure(self, env):
-        import params, os
+        import params
+        import os
 
         env.set_params(params)
         res.Execute('chkconfig --levels 235 httpd on')
@@ -262,15 +265,13 @@ class ApacheScript(res.Script):
     def start(self, env):
         print "start apache"
         self.configure(env)
-        #Execute('service httpd start')
+        # Execute('service httpd start')
         res.Execute("apachectl graceful")
 
     def stop(self, env):
         print "stop apache.."
         res.Execute('service httpd stop')
 
-
     def status(self, env):
         print "checking status..."
         res.Execute('service httpd status')
-

@@ -17,6 +17,8 @@
 ##############################################################################
 import kavecommon as kc
 from resource_management import *
+import pwd
+import grp
 
 
 class Jboss(Script):
@@ -30,14 +32,18 @@ class Jboss(Script):
         self.install_packages(env)
 
         kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
-        # Nope!
-        Execute('userdel jboss &')
-        Execute('groupdel jboss &')
         Execute('unzip -o -q %s -d %s' % (self.package, params.installation_dir))
         Execute('mv %s/jb*/* %s' % (params.installation_dir, params.installation_dir))
         Execute('rm -rf %s/jb*.Final' % params.installation_dir)
-        Execute('groupadd jboss')
-        Execute('useradd -s /bin/bash -g jboss jboss')
+        try:
+            grp.getgrnam('jboss')
+        except KeyError:
+            Execute('groupadd jboss')
+        try:
+            pwd.getpwnam('jboss')
+        except KeyError:
+            Execute('useradd -s /bin/bash -g jboss jboss')
+
         Execute('chown -Rf jboss:jboss %s' % params.installation_dir)
 
         File('/etc/init.d/jboss',

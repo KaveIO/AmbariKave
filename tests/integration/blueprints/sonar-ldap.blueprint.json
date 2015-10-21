@@ -1,0 +1,71 @@
+{
+  "configurations" : [
+    {
+      "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    },
+    { "freeipa": {
+        "ldap_bind_password": "testtestdirpass1234",
+        "directory_password": "testtestdirpass1234",
+        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
+        }
+    },
+    { "sonarqube" : {
+    	"sonar_database_url":"ci.kave.io",
+    	"sonar_database_user_passwd" : "admin"
+    	}
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"   },
+        { "name" : "GANGLIA_SERVER"  },
+        { "name" : "NAGIOS_SERVER"   },
+        { "name" : "FREEIPA_SERVER"  },
+        { "name" : "FREEIPA_CLIENT"  },
+        { "name" : "GANGLIA_MONITOR" }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "configurations" : [      ],
+      "components" : [
+        { "name" : "KAVELANDING"          },
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       }
+
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "ci",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "FREEIPA_CLIENT"        }
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "sonarldap",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

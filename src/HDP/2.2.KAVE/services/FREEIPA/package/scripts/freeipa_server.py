@@ -43,6 +43,7 @@ class FreeipaServer(Script):
             Package(package)
 
         admin_password = freeipa.generate_random_password()
+        Logger.sensitive_strings[admin_password] = "[PROTECTED]"
 
         # ipa-server install command. Currently --selfsign is mandatory because
         # of some anoying centos6.5 problems. The underling installer uses an

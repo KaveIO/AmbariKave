@@ -36,6 +36,7 @@ if not gitlab_url:
 gitlab_signin_enabled = default('configurations/gitlab/gitlab_signin_enabled', 'true')
 gitlab_signin_enabled = kc.trueorfalse(gitlab_signin_enabled)
 gitlab_admin_password = config['configurations']['gitlab']['gitlab_admin_password']
+Logger.sensitive_strings[gitlab_admin_password] = "[PROTECTED]"
 restrict_public_projects = default('configurations/gitlab/restrict_public_projects', 'true')
 restrict_public_projects = kc.trueorfalse(restrict_public_projects)
 

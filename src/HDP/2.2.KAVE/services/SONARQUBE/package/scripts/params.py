@@ -58,6 +58,8 @@ sonar_database_user_passwd = config['configurations']['sonarqube']['sonar_databa
 
 if not sonar_database_user_passwd:
     raise Exception('sonar_database_user_passwd needs to be set')
+else:
+    Logger.sensitive_strings[sonar_database_user_passwd] = "[PROTECTED]"
 
 mysql_adduser_path = format("{tmp_dir}/addMysqlUser.sh")
 mysql_deluser_path = format("{tmp_dir}/removeMysqlUser.sh")

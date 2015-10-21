@@ -26,6 +26,8 @@ management_user = 'admin'
 management_password = default('configurations/jboss/management_password', "NOTAPASSWORD")
 if management_password == "NOTAPASSWORD":
     management_password = False
+else:
+    Logger.sensitive_strings[management_password] = "[PROTECTED]"
 
 # ip adresses the service will be listening on
 ip_address = default('configurations/jboss/ip_address', '0.0.0.0')

@@ -20,18 +20,18 @@ import os
 from resource_management import *
 from mongo_base import MongoBase
 
-class MongoMaster(MongoBase):
+class MongoReplica(MongoBase):
     mongo_packages=['mongodb-org']
 
     def install(self, env):
-        import params
-        env.set_params(params)
+        import params_replica
+        env.set_params(params_replica)
         self.installMongo(env)
         self.configure(env)
 
     def configure(self,env):
-        import params
-        env.set_params(params)
+        import params_replica
+        env.set_params(params_replica)
         self.configureMongo(env)
 
     def start(self, env):
@@ -40,7 +40,7 @@ class MongoMaster(MongoBase):
         # TODO: Ambari 2.0 method should be replacing the below call
         # since Ambari 1.7.3 execute method never returns the control to script
         # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
-        Execute('service mongod --port 27018 --replSet rs0 start  2> /dev/null > /dev/null < /dev/null &')
+        Execute('service mongod start 2> /dev/null > /dev/null < /dev/null &')
 
     def stop(self, env):
         print "stop services.."
@@ -66,4 +66,4 @@ class MongoMaster(MongoBase):
 
 
 if __name__ == "__main__":
-    MongoMaster().execute()
+    MongoReplica().execute()

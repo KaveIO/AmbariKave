@@ -176,6 +176,7 @@ function runList {
   echo "	SONARQUBE_RUNNER"
   echo "	MONGODB"
   echo "	MONGODB_CLIENT"
+  echo "	MONGODB_REPLICA"
   echo "	APACHE"
   echo "	ARCHIVA"
   echo "	JENKINS"
@@ -263,6 +264,8 @@ elif [ $service = "MONGODB" ]; then
 elif [ $service = "MONGODB_CLIENT" ]; then
 	service="MONGODB"
 	component="MONGODB_CLIENT"
+elif [ $service = "MONGODB_REPLICA" ]; then
+	component="MONGODB_REPLICA"
 elif [ $service = "APACHE" ]; then
 	component="APACHE_WEB_MASTER"
 elif [ $service = "JENKINS" ]; then

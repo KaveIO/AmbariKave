@@ -1,0 +1,40 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  { "Name" : "nimbus",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "none"
+  },
+  { "Name" : "gate",
+    "Count" : 1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "gateway"
+  },
+  { "Name" : "supervisor",
+    "Count" : 1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "none"
+  }
+  { "Name" : "replica0",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  { "Name" : "replica1",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  { "Name" : "replica2",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  }
+  ]
+}

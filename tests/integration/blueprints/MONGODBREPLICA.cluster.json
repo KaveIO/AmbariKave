@@ -1,0 +1,44 @@
+{
+    "blueprint" : "mongodbreplica",
+    "default_password" : "admin",
+    "configurations" : [
+      { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "nothing@nobody.com"} }
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [ ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "nimbus",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "nimbus.kave.io" } ]
+	},
+	{
+	    "name" : "supervisor",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "supervisor-001.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "replica0",
+	    "configurations" : [ ],
+	    "hosts" : [ { "fqdn" : "replica0.kave.io" } ]
+	},
+	{
+	    "name" : "replica1",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "replica1.kave.io" } ]
+	},
+	{
+	    "name" : "replica2",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "replica2.kave.io" } ]
+	}
+	]
+}

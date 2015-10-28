@@ -1,0 +1,86 @@
+{
+  "configurations" : [
+    {
+      "nagios-env" : {
+        "nagios_web_password" : "admin",
+        "nagios_contact" : "test@test.com"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "GANGLIA_SERVER"      },
+        { "name" : "NAGIOS_SERVER"       },
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "KAVELANDING"         }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "KAVELANDING"         }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "nimbus",
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "ZOOKEEPER_SERVER" },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "NIMBUS_SD_MASTER"    }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "supervisor",
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "SUPERVISOR_SD_SLAVE" }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "replica0",
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "MONGODB_REPLICA"    }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "replica1",
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "MONGODB_REPLICA"    }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "replica2",
+      "components" : [
+        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "MONGODB_REPLICA"    }
+      ],
+      "cardinality" : "1+"
+    },
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "mongodbreplica",
+    "stack_name" : "HDP",
+    "stack_version" : "2.2.KAVE"
+  }
+}

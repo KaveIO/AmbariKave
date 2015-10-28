@@ -10,7 +10,7 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [  ],
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27018, "setname" : "rs0" } } ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },

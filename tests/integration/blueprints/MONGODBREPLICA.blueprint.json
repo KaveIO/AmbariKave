@@ -76,7 +76,7 @@
         { "name" : "MONGODB_REPLICA"    }
       ],
       "cardinality" : "1+"
-    },
+    }
   ],
   "Blueprints" : {
     "blueprint_name" : "mongodbreplica",

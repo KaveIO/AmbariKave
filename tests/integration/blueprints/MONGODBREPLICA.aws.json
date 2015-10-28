@@ -20,7 +20,7 @@
     "Count" : 1,
     "InstanceType" : "t2.small",
     "AccessType" : "none"
-  }
+  },
   { "Name" : "replica0",
     "Count" : -1,
     "InstanceType" : "t2.small",

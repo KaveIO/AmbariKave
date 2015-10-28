@@ -24,14 +24,14 @@ class MongoReplica(MongoBase):
     mongo_packages=['mongodb-org']
 
     def install(self, env):
-        import params_replica
-        env.set_params(params_replica)
+        import params
+        env.set_params(params)
         self.installMongo(env)
         self.configure(env)
 
     def configure(self,env):
-        import params_replica
-        env.set_params(params_replica)
+        import params
+        env.set_params(params)
         self.configureMongo(env)
 
     def start(self, env):

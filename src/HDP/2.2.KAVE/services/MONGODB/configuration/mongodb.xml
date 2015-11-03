@@ -28,4 +28,28 @@
             The Web Status page is always 1000 higher than this port number
         </description>
     </property>
+    <property>
+        <name>setname</name>
+        <value>None</value>
+        <description>
+            Name of the replica set this mongod will be part of. 
+	    If name is default, and this is the only member of the set, this mongod will run in standalone mode and not be added to the set.
+        </description>
+    </property>
+    <property>
+        <name>db_path</name>
+        <value>/var/lib/mongo</value>
+        <description>
+            Path do where data will be stored.
+	    The folder must exist beforehand.
+        </description>
+    </property>
+    <property>
+        <name>logpath</name>
+        <value>/var/log/mongodb/mongod.log</value>
+        <description>
+            The name and location of the log file.
+        </description>
+    </property>
+
 </configuration>

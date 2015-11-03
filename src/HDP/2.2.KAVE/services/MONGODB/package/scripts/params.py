@@ -26,11 +26,18 @@ db_path = default('configurations/mongodb/db_path', '/var/lib/mongo')
 logpath = default('configurations/mongodb/logpath', '/var/log/mongodb/mongod.log')
 bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
 tcp_port = default('configurations/mongodb/tcp_port', '27017')
-setname = default('configurations/mongodb/setname', '')
+setname = default('configurations/mongodb/setname', 'None')
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
-mongo_host = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])[0]
-if mongo_host=="unknown":
+#mongo_host = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])[0]
+mongo_hosts = default('/clusterHostInfo/mongodb_replica_hosts', ['unknown'])
+
+# This is carried over from previous single mongod config, probably needs reworking
+if mongo_hosts[0]=="unknown":
     if bind_ip not in ['0.0.0.0','127.0.0.1']:
-        mongo_host=bind_ip
-if mongo_host==hostname:
-    mongo_host='localhost'
+        mongo_hosts[0]=bind_ip
+if mongo_hosts[0]==hostname:
+    mongo_hosts[0]='localhost'
+    
+if setname in ["None", "False"]:
+  if len(mongo_hosts):
+    setname = ""

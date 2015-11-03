@@ -21,20 +21,12 @@
     "InstanceType" : "t2.small",
     "AccessType" : "none"
   },
-  { "Name" : "replica0",
-    "Count" : -1,
+  { "Name" : "replica",
+    "Count" : 3,
     "InstanceType" : "t2.small",
-    "AccessType" : "admin"
-  },
-  { "Name" : "replica1",
-    "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "admin"
-  },
-  { "Name" : "replica2",
-    "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc" }]
   }
   ]
 }

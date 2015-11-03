@@ -26,19 +26,9 @@
 	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
 	},
 	{
-	    "name" : "replica0",
+	    "name" : "replica",
 	    "configurations" : [ ],
-	    "hosts" : [ { "fqdn" : "replica0.kave.io" } ]
-	},
-	{
-	    "name" : "replica1",
-	    "configurations" : [  ],
-	    "hosts" : [ { "fqdn" : "replica1.kave.io" } ]
-	},
-	{
-	    "name" : "replica2",
-	    "configurations" : [  ],
-	    "hosts" : [ { "fqdn" : "replica2.kave.io" } ]
+	    "hosts" : [ { "fqdn" : "replica.kave.io" } ]
 	}
 	]
 }

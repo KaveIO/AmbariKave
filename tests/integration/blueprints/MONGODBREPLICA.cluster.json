@@ -11,16 +11,6 @@
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
 	},
 	{
-	    "name" : "nimbus",
-	    "configurations" : [  ],
-	    "hosts" : [ { "fqdn" : "nimbus.kave.io" } ]
-	},
-	{
-	    "name" : "supervisor",
-	    "configurations" : [  ],
-	    "hosts" : [ { "fqdn" : "supervisor-001.kave.io" } ]
-	},
-	{
 	    "name" : "gateway",
 	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
@@ -28,7 +18,9 @@
 	{
 	    "name" : "replica",
 	    "configurations" : [ ],
-	    "hosts" : [ { "fqdn" : "replica.kave.io" } ]
+	    "hosts" : [ { "fqdn" : "replica-001.kave.io" }, 
+	                { "fqdn" : "replica-002.kave.io" }, 
+	                { "fqdn" : "replica-003.kave.io" } ]
 	}
 	]
 }

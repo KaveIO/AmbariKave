@@ -6,20 +6,10 @@
     "InstanceType" : "t2.small",
     "AccessType" : "admin"
   },
-  { "Name" : "nimbus",
-    "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "none"
-  },
   { "Name" : "gate",
     "Count" : 1,
     "InstanceType" : "t2.small",
     "AccessType" : "gateway"
-  },
-  { "Name" : "supervisor",
-    "Count" : 1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "none"
   },
   { "Name" : "replica",
     "Count" : 3,

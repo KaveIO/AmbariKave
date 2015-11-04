@@ -39,5 +39,5 @@ if mongo_host==hostname:
     mongo_host='localhost'
     
 if setname in ["None", "False"]:
-  if len(mongo_hosts<2):
+  if len(mongo_hosts)<2:
     setname = ""

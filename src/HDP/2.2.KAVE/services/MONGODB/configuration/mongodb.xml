@@ -33,7 +33,7 @@
         <value>None</value>
         <description>
             Name of the replica set this mongod will be part of. 
-	    If name is default, and this is the only member of the set, this mongod will run in standalone mode and not be added to the set.
+	    If name is None, and this is the only member of the set, this mongod will run in standalone mode and not be added to the set.
         </description>
     </property>
     <property>

@@ -1,109 +1,113 @@
-Deployment
-===========
+AmbariKave
+==========
 
-Description:
-------------
+This repository has three parts:
+- Additional services added as patches into the Ambari installer. This is "the payload". The src and bin subdirectories.
+- Deployment tools for amazon and generic systems to automate the deployment and speed up testing. The deployment subdirectory.
+- Development tools and tests for developers of this project. The dev and tests subdirectories.
 
-Python libraries, scripts, executables and templates for automatic AmbariKave deployment.
+We also endeavor to provide an extensive [wiki documentation](https://github.com/KaveIO/AmbariKave/wiki)
 
-Preamble:
----------
+Installation (on the 'ambari node' of your cluster, or one large machine)
+=========================================================================
 
-Ambari is based upon a service-provision model, that services can be added, started and stopped, on machines within some local cluster.
+* AmbariKave is intended to be installed within a large cluster of machines. For installation on one machine, consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
-Automatic deployment has two thrusts:
-
-1. Creating a cluster with the given prerequisites
-
-2. Installing ambari services on a cluster based on a template
-
-It's as easy as A, B, C!
-
-* **A:** aquire. The step in which you gather the computer resources for your cluster and configure any internal/external firewalls. At the end of this step you will have a group of machines within which one node is designated the "admin" node and has passwordless key-based ssh into the other nodes of the cluster. For a setup with aws this is all automated, and uses the up\_aws\_cluster.py script. For aws you will need a security config file, and a cluster definition file, see below.
-* **B:** blueprint. Here the list of services you want to run grouped together into host groups running the same services. Ambari manages this via blueprints, where the entire configuration of your cluster can be stored.
-* **C:** cluster. Here the nodes in your cluster are assigned to the correct host groups.
-
-## 1. (**A**) Aquire/creating a cluster
-
-A cluster is needed with a given configuration. There are three concepts within AmbariKave:
-
-* The Admin: Ambari is installed here, this node's root user must have key-based ssh access to all other machines in the cluster
-* The Workstation: Usually an edge node, requires additional interactive toolset and configuration of access over ssh
-* The Node: Runs some specific set of services defined by a configuration and controlled by the admin
-
-In general the following steps are needed:
-
-1. Up virtual machines within a cluster
-2. Configure access/firewalls
-3. Name the machines within this cluster, or collect their local ips, ensure all machines share a common set of host names
-3. Designate one machine as the Admin node and share ssh keys between it and the other machines to enable secure passwordless access from the Admin node to root on the other machines
-
-* <b>aws/up\_aws\_cluster.py:</b>
-   * Completes these steps for a cluster on amazon EC2/VPC (see further below)
-* <b>clusters/</b>
-   * directory with example configurations
-
-
-## 2. (**B** & **C**) Installing services onto anywhere within the cluster
-
-This can be completed through the ambari web interface, using the command-line-tools/curl API, or through ambari blueprints. The quickest for a cluster of known compatible components is to use blueprints. For blueprints, the following steps are needed:
-
-1. Design your blueprint, taking into account which services will be on which nodes
-2. Design your cluster, allocating node to be within host groups
-3. Deploy this blueprint to the cluster
-
-* <b>deploy\_from\_blueprint.py:<b>
-   * Completely automated blueprint deployment, one-click-installer, see below
-* <b>blueprints/</b>
-   * directory with example configurations
-
-For more about blueprints see: https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
-
-## **A, B, C** revisited, how simple it is on aws:
-
-The **A, B, C** method on amazon is super simple. You need an aws security config.json file, which points to all the keys you will use later then for each cluster you need
-
-* **A** the something.aws.json file. Tells amazon which machines to create and what to call them. You can also use a cloudformation file here.
-* **B** the something.blueprint.json file. Tells ambari what services to create and how to group them together.
-* **C** the something.cluster.json file. Tells ambari which hosts go into which group, ambari will install everything on thsoe host that you asked for in the blueprint.
-
-With these three files, and your security config you have everything you need.
-* up\_aws\_cluster.py will take your security config and your something.aws.json file to create the machines
-* deploy\_from\_blueprint.py will take your something.blueprint.json file and your something.cluster.json file to up all of the required services on those machines.
-
-
-# Tools for generic deployment
-
-## Pre requisites
-
-1. Linux machine with ssh, git, and python &gt;= 2.6
-2. Git keypair, you must have a key pair for accessing Ambari on git without requiring a password, with a local copy of the private key, you must know where this key is located
-3. Remote host access by key pair, you must have a pre-existing keypair for accessing all remote hosts you want to configure, with a copy of the private key locally, you must know where this key is located
-
-## Tools
-
-* add\_toolbox.py: add the KaveToolbox to a given remote machine
-* deploy\_from\_blueprint.py: deploy service groups across an entire cluster
-
-# More on blueprints
-
-Please see the installation wiki and the ambari blueprints pages
-
-* https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
-
-
-* _A blueprint:_ Defines the services running on certain host_groups and the common configurations of all those services
-* _A cluster configuration:_ allocates hosts to those host groups, and the components will then be installed on them.
-
-Blueprints are quite complex to write yourself, but Ambari can output them from an already running/working cluster. Cluster configurations are easy to write. best to copy the examples provided in the bluprints directory.
-
-1. Obtain /write blueprint
-2. Obtain/write cluster template, make sure you overwrite any default passwords
-3. Ensure ambari is installed on one cluster node, and that this cluster node has access to all other nodes without password, using sshkeys
-4. You can then install the blueprints very simply, either if you're remote or on the ambari node itself.
-
-Submitting blueprints correctly and consistently is a bit tricky, so we have the following command-line tool for that which can run remotely or on the ambari node itself.
-
-```sh
-deploy_from_blueprint.py blueprint.json cluster.json [hostname=localhost] [access_key_if_remote]
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 1.2-Beta, with username repos and password kaverepos
 ```
+yum -y install wget curl tar zip unzip gzip
+wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.2-Beta/ambarikave-installer-centos6-1.2-Beta.sh
+sudo bash ambarikave-installer-centos6-1.2-Beta.sh
+```
+
+( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
+  this password is intended to be widely known and is used here as an extension of the URL )
+
+* OR to install the HEAD from git: example given with ssh copying from this github repo.
+```
+#test ssh keys with
+ssh -T git@github.com
+#if this works,
+git clone git@github.com:KaveIO/AmbariKave.git
+# Once you have a local checkout, install it with:
+sudo service iptables stop
+sudo chkconfig iptables off
+cd AmbariKave
+sudo dev/install.sh
+sudo dev/patch.sh
+sudo ambari-server start
+```
+
+Then to provision your cluster go to: http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
+
+
+Update our patches
+====================
+
+If you have the head checked out from git, you can update with:
+
+Connect to your ambari/admin node
+```
+sudo where/I/checked/out/ambari/dev/pull-update.sh
+```
+pull-update also respects git branches, as a command-line argument and is linked into the way we do automated deployment and testing
+
+To update between released versions, simply install the new version over the old version after stopping the ambari server:
+```
+sudo ambari-server stop
+wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/1.2-Beta/ambarikave-installer-centos6-1.2-Beta.sh
+sudo bash ambarikave-installer-centos6-1.2-Beta.sh
+```
+
+( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
+  this password is intended to be widely known and is used here as an extension of the URL )
+
+Installation of a full cluster
+==============================
+
+If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
+If you have git access, and are working from the git version, See the wiki.
+
+
+Installation of spark on a yarn cluster
+==============================
+
+Currently spark is not directly installable through the ambarikave installer. If
+you do want to experiment with spark follow this guide http://hortonworks.com/hadoop-tutorial/using-apache-spark-technical-preview-with-hdp-2-2/
+After installation modfify /etc/spark/conf/spark-defaults.conf so that it contains this:
+
+   spark.driver.extraJavaOptions -Dhdp.version=2.2.0.0-2041
+   spark.yarn.am.extraJavaOptions -Dhdp.version=2.2.0.0-2041
+
+
+Deployment tools
+==============================
+
+See the deployment subdirectory, or the deployment tarball kept separately
+
+Internet during installation, firewalls and nearside cache/mirror options
+-------------------------------------------------------------------------
+
+Ideally all of your nodes will have access to the internet during installation in order to download software.
+
+If this is not the case, you can, possibly, implement a near-side cache/mirror of all required software. This is not very easy, but once it is done one time, you can keep it for later.
+* Centos6: [Howto](https://ostechnix.wordpress.com/2013/01/05/setup-local-yum-server-in-centos-6-x-rhel-6-x-scientific-linux-6-x/)
+* EPEL: [Mirror FAQ](http://www.cyberciti.biz/faq/fedora-sl-centos-redhat6-enable-epel-repo/) , [Mirroring](https://fedoraproject.org/wiki/Infrastructure/Mirroring)
+* Ambari: [Local Repositories](https://ambari.apache.org/1.2.1/installing-hadoop-using-ambari/content/ambari-chap1-6.html)  [Deploying HDP behind a firewall](http://docs.hortonworks.com/HDPDocuments/HDP1/HDP-1.2.1/bk_reference/content/reference_chap4.html)
+
+To setup a local near-side cache for the KAVE tool stack is quite easy.
+First either copy the entire repository website to your own internal apache server, or copy the contents of the directories to your own shared directory visible from every node.
+
+```
+mkdir -p /my/shared/dir
+cd  /my/shared/dir
+wget -R http://repos.kave.io/
+```
+
+Then create a /etc/kave/mirror file on each node with the new top-level directory to try first before looking for our website:
+```
+echo "/my/shared/dir" >> /etc/kave/mirror
+echo "http://my/local/apache/mirror" >> /etc/kave/mirror
+```
+
+So long as the directory structure of the nearside cache is identical to our website, you can drop, remove or replace, any local packages you will never install from this directory structure, and update it as our repo server updates.

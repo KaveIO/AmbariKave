@@ -53,9 +53,8 @@ default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 
 # Only except IPv4 for now
 forwarders = default('configurations/freeipa/forwarders', '8.8.8.8').split(',')
-forwarders = [forwarder.strip() for forwarder in forwarders if re.match('\\d+\\.\\d+\\.\\d+\\.\\d+',
-                                                                        forwarder.strip())
-              ]
+forwarders = [forwarder.strip() for forwarder in forwarders]
+forwarders = [forwarder for forwarder in forwarders if re.match('\\d+\\.\\d+\\.\\d+\\.\\d+', forwarder)]
 
 client_init_wait = default('configurations/freeipa/client_init_wait', 600)
 

@@ -34,7 +34,6 @@ class Hue(Script):
 
     def configure(self, env):
         import params
-        import os
         import kavecommon as kc
 
         env.set_params(params)

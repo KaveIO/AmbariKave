@@ -20,7 +20,6 @@
         { "name" : "GANGLIA_SERVER"      },
         { "name" : "NAGIOS_SERVER"       },
         { "name" : "GANGLIA_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         }
       ],
       "cardinality" : "1"
@@ -29,7 +28,6 @@
       "name" : "gateway",
       "components" : [
         { "name" : "GANGLIA_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
         { "name" : "MONGODB_CLIENT"      }
       ],

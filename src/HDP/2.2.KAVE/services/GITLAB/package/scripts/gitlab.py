@@ -56,7 +56,7 @@ class Gitlab(Script):
         env.set_params(params)
 
         File(params.gitlab_conf_file,
-             content=Template("gitlab.rb.j2"),
+             content=InlineTemplate(params.gitlabrb),
              mode=0600
              )
 

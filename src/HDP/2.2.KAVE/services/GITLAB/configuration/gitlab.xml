@@ -52,6 +52,61 @@
         however this can be turned off once a human administrator is allocated.
     </description>
   </property>
+  <property>
+    <name>gitlabrb</name>
+    <value># Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+
+# Change the external_url to the address your users will type in their browser
+external_url 'http://{{gitlab_url}}:{{gitlab_port}}'
+
+{% if ldap_enabled %}
+gitlab_rails['ldap_enabled'] = true
+gitlab_rails['ldap_host'] = '{{ldap_host}}'
+gitlab_rails['ldap_port'] = {{ldap_port}}
+gitlab_rails['ldap_uid'] = '{{ldap_uid}}'
+gitlab_rails['ldap_method'] = '{{ldap_method}}'
+gitlab_rails['ldap_allow_username_or_email_login'] = {{ldap_allow_username_or_email_login}}
+gitlab_rails['ldap_base'] = '{{ldap_base}}'
+#gitlab_rails['ldap_user_filter'] = '(memberOf=CN={{ldap_group}},{{ldap_base}})'
+#gitlab_rails['admin_group'] = '{{ldap_admin_group}}'
+{% endif %}
+
+gitlab_rails['initial_root_password'] = '{{gitlab_admin_password}}'
+
+{% if not gitlab_signin_enabled %}
+gitlab_rails['gitlab_signin_enabled'] = false
+{% endif %}
+
+{% if restrict_public_projects %}
+gitlab_rails['gitlab_restricted_visibility_levels'] = [ "public" ]
+{% endif %}
+
+{% if postgre_disabled %}
+# Disable the built-in Postgres? This doesn't work for the moment, leave here as a placeholder for the full solution
+postgresql['enable'] = false
+
+gitlab_rails['db_adapter'] = 'postgresql'
+gitlab_rails['db_encoding'] = 'unicode'
+# Create database manually and place its name here.
+gitlab_rails['db_database'] = 'gitlabhq_production'
+gitlab_rails['db_host'] = '127.0.0.1'
+gitlab_rails['db_port'] = '5432'
+gitlab_rails['db_username'] = 'git' # Database owner.
+gitlab_rails['db_password'] = '{{gitlab_admin_password}}' # Database owner's password.
+{% endif %}
+
+unicorn['port']={{unicorn_port}}
+unicorn['listen']='{{unicorn_interface}}'
+    </value>
+    <description>
+        The configuration of Gitlab.
+        This is a j2 template, and is used/reread whenever gitlab is restarted.
+        In case you have a very custom configuration, this is where to put it.
+        Only for very advanced use.
+    </description>
+  </property>
   <!-- <property>
     <name>ldap_group</name>
     <value>gitlab</value>

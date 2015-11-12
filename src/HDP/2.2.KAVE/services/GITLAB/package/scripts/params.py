@@ -64,7 +64,7 @@ if freeipa_host:
     else:
         raise Exception('freeipa_host was provided for gitlabs installation but no FQDN could be determined from this.')
 
-gitlabrb = default('configurations/gitlab/restrict_public_projects', """# Created automatically with Ambari
+gitlabrb = default('configurations/gitlab/gitlabrb', """# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 

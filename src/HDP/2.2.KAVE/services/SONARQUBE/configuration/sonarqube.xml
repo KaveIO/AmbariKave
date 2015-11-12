@@ -10,8 +10,8 @@
         </description>
     </property>
     <property>
-        <name>install_directory</name>
-        <value>/opt/sonar</value>
+        <name>sonarqube_install_directory</name>
+        <value>/opt/sonarqube</value>
         <description>
             Install Location for Sonar
         </description>
@@ -37,6 +37,16 @@
         <value></value>
         <description>
             Password of the database user.
+        </description>
+    </property>
+    <property>
+        <name>authentication_method</name>
+        <value>HBAC</value>
+        <description>Which method to use in sonar authentication?. Options are HBAC or NONE.
+        HBAC: Use PAM  (Pluggable Authentication Modules) for sonar to find users and authenticate them.
+        	 This will automatically create accounts in sonar for users registered on the system, and so integrate with FreeIPA if you have it installed.
+        	 You can control access using HBAC rules to the machine. If a user has an account on the machine, they can reach the sonar.
+        NONE: Use default TWiki authentication based on user registration
         </description>
     </property>
 </configuration>

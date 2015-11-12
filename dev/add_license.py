@@ -18,13 +18,15 @@
 ##############################################################################
 # Will find py files and sh files without the license and ask you if you want to add it ...
 
-import os, sys, re
+import os
+import sys
+import re
 
 license_from = os.path.abspath(os.path.dirname(__file__) + "/../LICENSE")
-#this list is a list of things that we don't want to check
+# this list is a list of things that we don't want to check
 ignore_regex = ['.*/build/.*']
 accept_regex = ['.*\.sh$', '.*\.py$']
-#check they exist at least twice in service.sh
+# check they exist at least twice in service.sh
 
 #
 # Load the license from the license file
@@ -38,7 +40,6 @@ licf.close()
 # Find all files without a license
 #
 
-#import fnmatch
 dir = os.path.realpath(os.path.dirname(__file__) + "/../")
 all_files = []
 skip = False
@@ -62,7 +63,7 @@ for toignore in ignore_regex:
 for tofind in accept_regex:
     r = re.compile(tofind)
     matches = matches + filter(r.match, all_files)
-#print matches[:10], ignore[:10]
+# print matches[:10], ignore[:10]
 matches = [f for f in matches if f not in ignore]
 for f in matches:
     fop = open(f)
@@ -104,7 +105,7 @@ for afile in no_license:
     fop.write(license)
     fop.write(''.join(fos[pos:]))
     fop.close()
-    #double check !!
+    # double check !!
     fop = open(afile)
     fos = fop.read()
     fop.close()

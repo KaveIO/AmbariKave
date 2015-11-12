@@ -19,8 +19,8 @@
 """
 usage: kill_recent_tests.py [security_config.json] [--verbose]
 
-Specify a security conf file, from where I will read the subnet and the keypair id, if none I will get it from the
-AWSSECCONF environment variable
+Specify a security conf file, from where I will read the subnet and the keypair id,
+if none I will get it from the AWSSECCONF environment variable
 
 Remove all available volumes
 
@@ -35,11 +35,17 @@ Remove all available volumes
 
 import sys
 import os
+import json
+import re
+import datetime
 
 
 installfrom = os.path.realpath(os.path.dirname(__file__))
 liblocation = os.path.realpath(installfrom + '/../deployment/lib')
 sys.path.append(liblocation)
+
+import kavedeploy as lD
+import kaveaws as lA
 
 if "--help" in sys.argv or "-h" in sys.argv:
     print __doc__
@@ -50,11 +56,9 @@ if "--verbose" in sys.argv or "--debug" in sys.argv:
     sys.argv = [s for s in sys.argv if s not in ["--verbose", "--debug"]]
     verbose = True
 
-import kavedeploy as lD
 
 lD.debug = verbose
 lD.testproxy()
-import kaveaws as lA
 
 keyfile = ""
 
@@ -70,7 +74,6 @@ else:
         raise IOError("please specify keyfile or set AWSSECCONF environment variable!")
     keyfile = os.path.expanduser(os.environ["AWSSECCONF"])
 
-import json
 
 jsondat = open(keyfile)
 security_config = json.loads(jsondat.read())
@@ -79,7 +82,7 @@ lA.checksecjson(security_config)
 amazon_keypair_name = security_config["AccessKeys"]["AWS"]["KeyName"]
 subnet = security_config["Subnet"]
 
-existing_sn = lA.runawstojson("ec2 describe-subnets")  #"GroupId": "sg-c7c322b1"
+existing_sn = lA.runawstojson("ec2 describe-subnets")  # "GroupId": "sg-c7c322b1"
 
 found = False
 for existing in existing_sn["Subnets"]:
@@ -93,11 +96,11 @@ if not found:
 # Find and kill all instances
 #
 
-#find all instances in the subgroup/subnet
+# find all instances in the subgroup/subnet
 instances = lA.runawstojson(
     "ec2 describe-instances --filters Name=subnet-id,Values=" + subnet + " --filters Name=key-name,Values=" +
     amazon_keypair_name)
-#print instances
+# print instances
 
 i_younger_than_6_hours = []
 i_stopped = []
@@ -107,13 +110,11 @@ exclude_names = [".*_dev_.*"]
 require_names = ["Test.*"]
 
 # Exclude _dev_box names!
-import re
-import datetime
 
 for reservation in instances["Reservations"]:
     for instance in reservation["Instances"]:
         skip = False
-        #print instance.keys()
+        # print instance.keys()
         if "Tags" in instance.keys():
             for tag in instance["Tags"]:
                 if tag["Key"] == "Name":
@@ -125,19 +126,19 @@ for reservation in instances["Reservations"]:
                         if re.match(req, tag["Value"]) is None:
                             skip = True
                             break
-                            #print tag["Value"]
+                            # print tag["Value"]
                 if skip:
                     break
         if skip:
             continue
         i_all.append(instance["InstanceId"])
-        #print instance["LaunchTime"]
+        # print instance["LaunchTime"]
         lt = datetime.datetime.strptime(instance["LaunchTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        #print lt
+        # print lt
         days = (datetime.datetime.utcnow() - lt).days
         seconds = (datetime.datetime.utcnow() - lt).seconds
-        #print days, seconds, instance["State"]["Name"] # bigger than 0 days, or bigger than 20 hours.
-        #print instance["State"]["Name"]=="running", days==0, instance["State"]["Name"]=="stopped"
+        # print days, seconds, instance["State"]["Name"] # bigger than 0 days, or bigger than 20 hours.
+        # print instance["State"]["Name"]=="running", days==0, instance["State"]["Name"]=="stopped"
         if instance["State"]["Name"] == "running" and days == 0 and seconds < 21600:
             i_younger_than_6_hours.append(instance["InstanceId"])
         if instance["State"]["Name"] == "stopped" and days == 0 and seconds < 21600:
@@ -261,12 +262,10 @@ y6hfails = len([s for s in i_younger_than_6_hours if s in failed])
 sfails = len([s for s in i_stopped if s in failed])
 vtkfails = len([s for s in vol_to_kill if s in failed])
 stkfails = len([s for s in stacks_to_delete if s in failed])
-#at least one failure, at least one request, and they all failed, this should be a big problem!
+# at least one failure, at least one request, and they all failed, this should be a big problem!
 tmy6hfails = (y6hfails and len(i_younger_than_6_hours) and oodfails == len(i_younger_than_6_hours))
 tmsfails = (sfails and len(i_stopped) and oowfails == len(i_stopped))
 tmvtkfails = (vtkfails and len(vol_to_kill) and vtkfails == len(vol_to_kill))
 tmstkfails = (stkfails and len(stacks_to_delete) and stkfails == len(stacks_to_delete))
 if tmy6hfails or tmsfails or tmvtkfails or tmstkfails:
     raise RuntimeError("Entire categories failed to change state :( review status on ec2 webpage!")
-
-

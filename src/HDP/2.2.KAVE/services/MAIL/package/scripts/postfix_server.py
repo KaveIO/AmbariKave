@@ -21,6 +21,7 @@ from resource_management import *
 
 
 class PostfixSrv(Script):
+
     def install(self, env):
         import params
 
@@ -48,7 +49,7 @@ class PostfixSrv(Script):
         # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         Execute('nohup service postfix start 2> /dev/null > /dev/null < /dev/null &')
 
-    def restart(self,env):
+    def restart(self, env):
         """In cases where we run the starting and stopping in the background,
         a specific restart method is needed to ensure we wait between the two calls
         3s was seen to be enough in tests
@@ -65,7 +66,7 @@ class PostfixSrv(Script):
         Execute('nohup service postfix stop 2> /dev/null > /dev/null < /dev/null &')
 
     def status(self, env):
-        #print "checking status..."
+        # print "checking status..."
         Execute('service postfix status')
 
 

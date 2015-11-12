@@ -20,16 +20,19 @@ import base
 
 
 class TestPyFilenames(unittest.TestCase):
+
     def runTest(self):
         """
         TCheck that there are no upper-case letters or dashes in python filenames
         """
-        import os, string
-        for root, dirs, files in os.walk(os.path.realpath(__file__+'/../../../')):
-            upperfiles=[os.path.join(root,f) for f in files if f.lower()!=f and f.endswith('.py')]
-            self.assertTrue(len(upperfiles)==0,"Python files with upper-case letters detected"+str(upperfiles))
-            dashfiles=[os.path.join(root,f) for f in files if '-' in f and f.endswith('.py')]
-            self.assertTrue(len(dashfiles)==0,"Python files with dashes detected"+str(dashfiles))
+        import os
+        import string
+        for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
+            upperfiles = [os.path.join(root, f) for f in files if f.lower() != f and f.endswith('.py')]
+            self.assertTrue(len(upperfiles) == 0, "Python files with upper-case letters detected" + str(upperfiles))
+            dashfiles = [os.path.join(root, f) for f in files if '-' in f and f.endswith('.py')]
+            self.assertTrue(len(dashfiles) == 0, "Python files with dashes detected" + str(dashfiles))
+
 
 def suite():
     suite = unittest.TestSuite()

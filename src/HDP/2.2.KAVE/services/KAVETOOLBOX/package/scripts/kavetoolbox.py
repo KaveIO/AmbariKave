@@ -32,35 +32,37 @@ class KaveToolbox(Script):
 
         self.install_packages(env)
         env.set_params(params)
-        #no need to install if already installed ... does not work behind firewall after restart
-        if self.kind=="node" and os.path.exists('/etc/kave/toolbox_ok') and os.path.exists(params.top_dir+'/KaveToolbox'):
+        # no need to install if already installed ... does not work behind firewall after restart
+        if self.kind == "node" and (os.path.exists('/etc/kave/toolbox_ok')
+                                    and os.path.exists(params.top_dir + '/KaveToolbox')):
             return True
-        #configure first before installing, create custom install file and mirror file if necessary
+        # configure first before installing, create custom install file and mirror file if necessary
         self.configure(env)
-        if len(self.sttmpdir)<4:
+        if len(self.sttmpdir) < 4:
             raise IOError("where are you using for temp??")
-        #Set up temporary directory for download/install
+        # Set up temporary directory for download/install
         Execute("mkdir -p " + self.sttmpdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         topdir = os.path.realpath(os.path.curdir)
-        extraopts=""
+        extraopts = ""
         if params.ignore_missing_groups:
-            extraopts=" --ignore-missing-groups"
-        instscript=params.top_dir+'/KaveToolbox/scripts/KaveInstall'
+            extraopts = " --ignore-missing-groups"
+        instscript = params.top_dir + '/KaveToolbox/scripts/KaveInstall'
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copyCacheOrRepo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch", ver=params.releaseversion,
+            kc.copyCacheOrRepo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch",
+                               ver=params.releaseversion,
                                dir="KaveToolbox")
             Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
-            #try to cope with the annoying way the tarball contains something with .git at the end!
+            # try to cope with the annoying way the tarball contains something with .git at the end!
             import glob
 
             for gits in glob.glob(self.sttmpdir + "/*.git"):
                 if os.path.isdir(gits) and not gits.endswith("/.git"):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
-            instscript='./KaveToolbox/scripts/KaveInstall'
-        Execute(instscript+' --' + self.kind+extraopts)
+            instscript = './KaveToolbox/scripts/KaveInstall'
+        Execute(instscript + ' --' + self.kind + extraopts)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/kave")
@@ -80,11 +82,11 @@ class KaveToolbox(Script):
         elif len(params.alternative_download.strip()):
             alternatives = [params.alternative_download.strip()]
         if len(alternatives):
-            fexisting=open('/etc/kave/mirror')
-            existing=fexisting.read()
+            fexisting = open('/etc/kave/mirror')
+            existing = fexisting.read()
             fexisting.close()
             f = open('/etc/kave/mirror', 'w')
-            f.write((existing+'\n').replace('\n\n','\n'))
+            f.write((existing + '\n').replace('\n\n', '\n'))
             f.write('\n'.join(alternatives))
             f.write('\n')
             f.close()

@@ -49,7 +49,7 @@ import kaveaws as lA
 
 def help():
     print __doc__
-    #sys.exit(code)
+    # sys.exit(code)
 
 
 ambaridev = False
@@ -150,6 +150,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     except KeyboardInterrupt:
         pass
 else:
-    print "Warning: not contactable since keyfile supplied does not exist locally, also means I could not rename the host", keyloc
+    print "Warning: not contactable since keyfile supplied does not exist locally,",
+    print "also means I could not rename the host", keyloc
 
 print "OK, iid " + iid + " now lives at IP " + ip

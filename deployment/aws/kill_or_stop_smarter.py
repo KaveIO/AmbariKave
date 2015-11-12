@@ -86,7 +86,7 @@ lA.checksecjson(security_config)
 amazon_keypair_name = security_config["AccessKeys"]["AWS"]["KeyName"]
 subnet = security_config["Subnet"]
 
-existing_sn = lA.runawstojson("ec2 describe-subnets")  #"GroupId": "sg-c7c322b1"
+existing_sn = lA.runawstojson("ec2 describe-subnets")  # "GroupId": "sg-c7c322b1"
 
 found = False
 for existing in existing_sn["Subnets"]:
@@ -96,11 +96,11 @@ for existing in existing_sn["Subnets"]:
 if not found:
     raise ValueError("no such subnet " + sn)
 
-#find all instances in the subgroup/subnet
+# find all instances in the subgroup/subnet
 instances = lA.runawstojson(
     "ec2 describe-instances --filters Name=subnet-id,Values=" + subnet + " --filters Name=key-name,Values=" +
     amazon_keypair_name)
-#print instances
+# print instances
 
 i_older_than_one_day = []
 i_older_than_one_week = []
@@ -114,7 +114,7 @@ import datetime
 for reservation in instances["Reservations"]:
     for instance in reservation["Instances"]:
         skip = False
-        #print instance.keys()
+        # print instance.keys()
         if "Tags" in instance.keys():
             for tag in instance["Tags"]:
                 if tag["Key"] == "Name":
@@ -127,12 +127,12 @@ for reservation in instances["Reservations"]:
         if skip:
             continue
         i_all.append(instance["InstanceId"])
-        #print instance["LaunchTime"]
+        # print instance["LaunchTime"]
         lt = datetime.datetime.strptime(instance["LaunchTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        #print lt
+        # print lt
         days = (datetime.datetime.utcnow() - lt).days
         seconds = (datetime.datetime.utcnow() - lt).seconds
-        #print days # bigger than 0 days, or bigger than 20 hours.
+        # print days # bigger than 0 days, or bigger than 20 hours.
         if instance["State"]["Name"] is "running" and days > 0 or seconds > 72000:
             i_older_than_one_day.append(instance["InstanceId"])
         if instance["State"]["Name"] is not "terminated" and days > 6:
@@ -209,7 +209,7 @@ if not interactive:
     oodfails = len([s for s in i_older_than_one_day if s in failed])
     oowfails = len([s for s in i_older_than_one_week if s in failed])
     vtkfails = len([s for s in vol_to_kill if s in failed])
-    #at least one failure, at least one request, and they all failed, this should be a big problem!
+    # at least one failure, at least one request, and they all failed, this should be a big problem!
     tmoodfails = (oodfails and len(i_older_than_one_day) and oodfails == len(i_older_than_one_day))
     tmoowfails = (oowfails and len(i_older_than_one_week) and oowfails == len(i_older_than_one_week))
     tmvtkfails = (vtkfails and len(vol_to_kill) and vtkfails == len(vol_to_kill))

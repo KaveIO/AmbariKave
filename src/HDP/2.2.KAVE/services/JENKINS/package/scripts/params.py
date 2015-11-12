@@ -28,4 +28,5 @@ JENKINS_ADMIN = default("configurations/jenkins/JENKINS_ADMIN", "admin")
 download_version = default("configurations/jenkins/download_version", "1.624")
 plugins = default("configurations/jenkins/plugins",
                   "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, "
-                  "gitlab-plugin, git-parameter, git-tag-message, matrix-project, scm-api, ssh-agent, sonar, sonargraph-plugin")
+                  "gitlab-plugin, git-parameter, git-tag-message, matrix-project, "
+                  "scm-api, ssh-agent, sonar, sonargraph-plugin")

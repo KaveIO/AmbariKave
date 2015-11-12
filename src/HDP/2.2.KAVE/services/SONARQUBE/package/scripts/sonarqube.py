@@ -24,21 +24,42 @@ from resource_management import *
 class SonarQube(Script):
     installer_cache_path = '/tmp/'
     package = 'sonarqube-5.0.1.zip'
-    #sonar_mirror='http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip'
+    # sonar_mirror='http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip'
 
     def install(self, env):
         import params
 
         env.set_params(params)
         self.install_packages(env)
-        #protect against client downloading behind firewall
-        if not os.path.exists(params.sonarqube_install_directory+'/current'):
+        # protect against client downloading behind firewall
+        if not os.path.exists(params.sonarqube_install_directory + '/current'):
             kc.copyCacheOrRepo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
             Execute('mkdir -p %s ' % params.sonarqube_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
             Execute('ln -sfn %s/sonarqube-5.0.1 %s/current' % (
-                                                               params.sonarqube_install_directory,
-                                                               params.sonarqube_install_directory))
+                params.sonarqube_install_directory,
+                params.sonarqube_install_directory))
+
+        if not os.path.exists(params.sonarqube_install_directory
+                              + '/current/extensions/plugins/sonar-pam-plugin-0.2.jar'):
+            import tempfile
+            tdir = tempfile.mkdtemp()
+            topd = os.path.realpath('.')
+            os.chdir(tdir)
+            # http://downloads.sourceforge.net/project/jpam/jpam/jpam-1.1/JPam-Linux_amd64-1.1.tgz
+            # -O JPam-Linux_amd64-1.1.tgz')
+            kc.copyCacheOrRepo("JPam-Linux_amd64-1.1.tgz", arch="noarch")
+            Execute('tar -xvzf JPam-Linux_amd64-1.1.tgz')
+            Execute('cp JPam-1.1/JPam-1.1.jar ' + params.sonarqube_install_directory + '/current/lib/common/')
+            Execute('cp JPam-1.1/libjpam.so /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/lib/amd64/')
+            Execute('chmod a+x /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/lib/amd64/libjpam.so')
+            Execute('cp JPam-1.1/net-sf-jpam /etc/pam.d/')
+            # http://downloads.sonarsource.com/plugins/org/codehaus/sonar-plugins/sonar-pam-plugin
+            # /0.2/sonar-pam-plugin-0.2.jar
+            kc.copyCacheOrRepo("sonar-pam-plugin-0.2.jar", arch="noarch")
+            Execute('cp sonar-pam-plugin-0.2.jar ' + params.sonarqube_install_directory + '/')
+            os.chdir(topd)
+            Execute('rm -rf ' + tdir)
 
         # Getting the processor architecture type(64 bit or 32 bit)
         p = subprocess.Popen(["uname", "-p"], stdout=subprocess.PIPE)

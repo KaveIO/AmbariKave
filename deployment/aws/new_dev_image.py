@@ -31,7 +31,7 @@ optional:
 Will read $AWSSECCONF for the security config file
 """
 
-#up new instance
+# up new instance
 
 import os
 import sys
@@ -55,7 +55,7 @@ skip_blueprint = False
 
 def help():
     print __doc__
-    #sys.exit(code)
+    # sys.exit(code)
 
 
 def parseOpts():
@@ -84,7 +84,7 @@ def parseOpts():
 
 base = os.path.dirname(__file__)
 if (not os.path.exists(base + "/../blueprints/default.blueprint.json")) or (
-not os.path.exists(base + "/../blueprints/default.cluster.json")):
+        not os.path.exists(base + "/../blueprints/default.cluster.json")):
     raise IOError("What happened to default.blueprint.json and default.cluster.json? I can't find them :S")
 
 if "AWSSECCONF" not in os.environ:
@@ -145,8 +145,8 @@ if iid is None:
     remote.run("/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
     lD.addAsHost(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.privIP(iid))
     lD.configureKeyless(remote, remote, dest_internal_ip=lA.privIP(iid), preservehostname=True)
-    #nope! Don't want 443 as ssh by default any longer!
-    #lD.confremotessh(remote)
+    # nope! Don't want 443 as ssh by default any longer!
+    # lD.confremotessh(remote)
     remote.run("service iptables stop")
     lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     remote.describe()
@@ -185,13 +185,14 @@ if not skip_blueprint:
 #
 print "Creating image from this installation"
 instance = lA.descInstance(iid)["Reservations"][0]["Instances"][0]
-#print instance
+# print instance
 if instance["State"]["Name"] is "running":
     lA.killinstance(iid, "stop")
     lA.waitforstate(iid, "stopped")
-#wait until stopped
+# wait until stopped
 ami = lA.createimage(iid, "AmbDev-" + keypair + "-" + time.strftime("%Y%m%d-%H"),
                      "Ambari dev image with keys for " + keypair + " keypair")
 time.sleep(5)
 lA.nameInstance(ami, keypair)
-print ami, "created and registered, might take a few minutes to be available, don't forget to set your environment variable export AMIAMBDEV=" + ami
+print ami, "created and registered, might take a few minutes to be available,",
+print " don't forget to set your environment variable export AMIAMBDEV=" + ami

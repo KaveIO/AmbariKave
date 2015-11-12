@@ -29,24 +29,23 @@ class Jenkins(Script):
 
         env.set_params(params)
         self.install_packages(env)
-        dlname='jenkins-'+str(params.download_version)+'-1.1.noarch.rpm'
-        kc.copyCacheOrRepo(dlname,arch='noarch',alternates='http://pkg.jenkins-ci.org/redhat/'+dlname)
-        #Execute('wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo')
-        Execute('rpm -qa | grep -qw jenkins || yum -y install '+dlname)
-        #Execute('service iptables stop')
+        dlname = 'jenkins-' + str(params.download_version) + '-1.1.noarch.rpm'
+        kc.copyCacheOrRepo(dlname, arch='noarch', alternates='http://pkg.jenkins-ci.org/redhat/' + dlname)
+        Execute('rpm -qa | grep -qw jenkins || yum -y install ' + dlname)
 
         self.configure(env)
-        #wget all requested plugins
+        # wget all requested plugins
         for plugin in params.plugins.split(','):
             plugin = plugin.strip()
             if not len(plugin):
                 continue
             extsources = ["http://updates.jenkins-ci.org/latest/" + plugin + h for h in [".hpi", ".jpi"]]
-            mirrorsources=[]
+            mirrorsources = []
             for mirror in kc.mirrors():
-                mirrorsources=mirrorsources+[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch',repo=mirror) for h in [".hpi", ".jpi"]]
-            intsources=[kc.repoURL('jenkins_plugins/'+plugin + h, arch='noarch') for h in [".hpi", ".jpi"]]
-            source = kc.failoverSource(mirrorsources+intsources+extsources)
+                mirrorsources = mirrorsources + \
+                    [kc.repoURL('jenkins_plugins/' + plugin + h, arch='noarch', repo=mirror) for h in [".hpi", ".jpi"]]
+            intsources = [kc.repoURL('jenkins_plugins/' + plugin + h, arch='noarch') for h in [".hpi", ".jpi"]]
+            source = kc.failoverSource(mirrorsources + intsources + extsources)
             dest = params.JENKINS_HOME + "/plugins/" + source.split('/')[-1]
             Execute(kc.copymethods(source, dest))
 
@@ -56,7 +55,7 @@ class Jenkins(Script):
              )
         kc.chownR(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
         Execute('chkconfig jenkins on')
-        #self.start(env)
+        # self.start(env)
 
     def start(self, env):
         self.configure(env)
@@ -73,10 +72,10 @@ class Jenkins(Script):
         Execute('service jenkins status')
 
     def configure(self, env):
-        #stop service if running
-        #recreate from templates
-        #restart
-        #read previous jenkins home and jenkins user ...
+        # stop service if running
+        # recreate from templates
+        # restart
+        # read previous jenkins home and jenkins user ...
         orig_juser = "jenkins"
         orig_jhome = "/var/lib/jenkins"
         if os.path.exists(self.config_file_path):
@@ -95,13 +94,13 @@ class Jenkins(Script):
 
         import params
         env.set_params(params)
-        #If jenkins user has changed, create the new user
+        # If jenkins user has changed, create the new user
         if params.JENKINS_USER != orig_juser:
             Execute('useradd ' + params.JENKINS_USER)
-        #If jenkins home has changed, create the new directory
+        # If jenkins home has changed, create the new directory
         if params.JENKINS_HOME != orig_jhome and not os.path.exists(params.JENKINS_HOME):
             Execute('mkdir -p ' + params.JENKINS_HOME)
-        #If jenkins home has changed, mv contents of jenkins home directory
+        # If jenkins home has changed, mv contents of jenkins home directory
         if params.JENKINS_HOME != orig_jhome and os.path.exists(orig_jhome):
             import glob
 

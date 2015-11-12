@@ -48,7 +48,7 @@ import kaveaws as lA
 
 def help():
     print __doc__
-    #sys.exit(code)
+    # sys.exit(code)
 
 
 ambaridev = False
@@ -130,10 +130,10 @@ while (ip is None and acount < 20):
     ip = lA.pubIP(iid)
     acount = acount + 1
 
-if osval=="Centos6":
-    uname='root'
+if osval == "Centos6":
+    uname = 'root'
 else:
-    uname=''.join([i for i in osval if not i.isdigit()]).lower()
+    uname = ''.join([i for i in osval if not i.isdigit()]).lower()
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
@@ -141,12 +141,16 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         remote = lD.remoteHost(uname, ip, keyloc)
         lD.waitUntilUp(remote, 20)
         remote.register()
-        if uname!='root':
-            remote.run('sudo cp /home/'+uname+'/.ssh/authorized_keys /root/.ssh/',extrasshopts=['-t'])
+        if uname != 'root':
+            # Note the twice -t here such that I can run as a sudo command (fake tty)
+            remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t', '-t'])
+            remote = lD.remoteHost('root', ip, keyloc)
+        lD.renameRemoteHost(remote, machinename, 'kave.io')
         remote.describe()
     except KeyboardInterrupt:
         pass
 else:
-    print "Warning: not contactable since keyfile supplied does not exist locally, also means I could not rename the host", keyloc
+    print "Warning: not contactable since keyfile supplied does not exist locally,",
+    print "also means I could not rename the host", keyloc
 
 print "OK, iid " + iid + " now lives at IP " + ip

@@ -46,3 +46,12 @@ if len(customlinks.strip()) <= 2:
 import json
 # test that custom links is valid json
 json.loads(customlinks)
+
+template_000_default = default('configurations/kavelanding/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")

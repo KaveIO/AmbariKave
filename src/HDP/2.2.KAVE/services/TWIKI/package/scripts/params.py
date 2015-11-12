@@ -62,3 +62,12 @@ if freeipa_host and ldap_enabled:
         raise Exception('freeipa_host was provided for twiki installation but no FQDN could be determined from this.')
 elif ldap_enabled:
     raise NameError('ldap not integrated because FreeIPA is not installed in this cluster')
+
+template_000_default = default('configurations/twiki/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")

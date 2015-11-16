@@ -215,6 +215,11 @@ print "test PDSH"
 print allremotes.run("echo yes")
 
 print "===================================="
+print "configure SSH on all machines"
+print "===================================="
+lD.confallssh(allremotes)
+
+print "===================================="
 print "name the instances"
 print "===================================="
 sys.stdout.flush()

@@ -676,9 +676,22 @@ def confremotessh(remote, port=443):
     # restart services
     remote.run("/etc/init.d/sshd restart")
     import time
-
-    time.sleep(5)
+    time.sleep(2)
     remote.run("/etc/init.d/iptables restart")
+    time.sleep(1)
+    remote.run("/etc/init.d/sshd restart")
+
+def confallssh(remote, restart=True):
+    """
+    Common sshd_config for all machines upped with these scripts
+    Forbid weak ssh encryption
+    """
+    remote.run("echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" >> /etc/ssh/sshd_config")
+    remote.run("echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config")
+    if restart:
+        remote.run("/etc/init.d/sshd restart")
+        import time
+        time.sleep(2)
 
 
 def waitUntilUp(remote, max_wait):

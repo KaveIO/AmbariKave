@@ -35,6 +35,7 @@ template_000_default = default('configurations/apache/template_000_default', """
 TraceEnable Off
 ServerSignature Off
 ServerTokens Prod
+Options -Multiviews
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"

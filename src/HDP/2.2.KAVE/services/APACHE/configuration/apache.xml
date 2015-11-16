@@ -25,6 +25,7 @@
 TraceEnable Off
 ServerSignature Off
 ServerTokens Prod
+Options -Multiviews
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"

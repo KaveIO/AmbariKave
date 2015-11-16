@@ -33,6 +33,8 @@ template_000_default = default('configurations/apache/template_000_default', """
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
+ServerSignature Off
+ServerTokens Prod
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"

@@ -131,6 +131,12 @@ subnet = None
 if "Subnet" in security_config.keys():
     subnet = security_config["Subnet"]
 
+# Check that pdsh is locally installed
+try:
+    lD.runQuiet('which pdsh')
+except RuntimeError:
+    raise SystemError('pdsh is not installed, please install pdsh first. Pdsh is useful to speed up large deployments.')
+
 dnsiid = None
 
 if "CloudFormation" in cluster_config:

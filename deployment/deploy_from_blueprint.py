@@ -132,8 +132,34 @@ lD.testproxy()
 print "check that Ambari @" + thehost + " is reachable"
 if lD.which("curl") is None:
     raise NameError("Please install curl locally for this check! (e.g. yum -y install curl)")
-lD.runQuiet("curl --user admin:admin http://" + thehost + ":8080/api/v1/clusters")
 
+import copy
+def _r2j(res):
+        if res.status_code not in [200,302]:
+            res.raise_for_status()
+        try:
+            return copy.deepcopy(res.json())
+        except ValueError:
+            return {}
+
+import requests
+from requests.auth import HTTPBasicAuth
+
+def ambari_get(apath,thehost='localhost',port=8080,user='admin',passwd='admin', prot='http://', api='/api/v1/'):
+    url= prot + thehost + ':' + str(port) + api + apath
+    print url
+    req = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By':'ambari'})
+    return _r2j(req)
+
+def ambari_post(apath,thehost='localhost',data={},port=8080,user='admin',passwd='admin', prot='http://', api='/api/v1/'):
+    url= prot + thehost + ':' + str(port) + api + apath
+    print url
+    req = requests.post(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By':'ambari'}, json=data)
+    return _r2j(req)
+
+ret=ambari_get("clusters", thehost=thehost)
+print ret
+#sys.exit(1)
 ##################################################################
 # Start ambari agents
 ##################################################################
@@ -236,7 +262,8 @@ ok = False
 missing = []
 count = 0
 while count < 10:
-    reghosts = lD.runQuiet("curl --user admin:admin http://" + thehost + ":8080/api/v1/hosts")
+    reghosts = ambari_get("hosts",thehost)
+    reghosts = [str(i['Hosts']['host_name']) for i in reghosts['items']]
     missing = [host for host in hosts if host not in reghosts]
     if not len(missing):
         ok = True
@@ -294,9 +321,12 @@ print " and create cluster ", clustername
 sys.stdout.flush()
 
 # next, register blueprint by name to the ambari server
-regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/blueprints/" + \
-         blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false -d @" + os.path.expanduser(blueprintfile)
-regblueprint = lD.runQuiet(regcmd)
+ret=ambari_post('blueprints/' + blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false",data=blueprint)
+print ret
+sys.exit(1)
+#regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/blueprints/" + \
+#         blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false -d @" + os.path.expanduser(blueprintfile)
+#regblueprint = lD.runQuiet(regcmd)
 if verbose:
     print regblueprint
 if "Server Error" in regblueprint:

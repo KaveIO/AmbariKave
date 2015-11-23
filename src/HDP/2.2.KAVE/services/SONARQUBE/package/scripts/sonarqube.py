@@ -57,7 +57,8 @@ class SonarQube(Script):
             # http://downloads.sonarsource.com/plugins/org/codehaus/sonar-plugins/sonar-pam-plugin
             # /0.2/sonar-pam-plugin-0.2.jar
             kc.copyCacheOrRepo("sonar-pam-plugin-0.2.jar", arch="noarch")
-            Execute('cp sonar-pam-plugin-0.2.jar ' + params.sonarqube_install_directory + '/')
+            Execute('cp sonar-pam-plugin-0.2.jar ' + params.sonarqube_install_directory
+                    + '/current/extensions/plugins/')
             os.chdir(topd)
             Execute('rm -rf ' + tdir)
 

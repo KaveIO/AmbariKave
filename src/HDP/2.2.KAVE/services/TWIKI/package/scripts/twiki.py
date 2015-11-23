@@ -72,12 +72,12 @@ class Twiki(ApacheScript):
         Execute('chmod 644 %slib/LocalSite.cfg' % params.install_dir)
 
         File('/etc/httpd/conf.d/twiki_httpd.conf',
-             content=Template("twiki_httpd_conf.j2"),
+             content=InlineTemplate(params.twiki_httpd_conf),
              mode=0600
              )
         Execute('chown apache:apache /etc/httpd/conf.d/twiki_httpd.conf')
         File('/etc/httpd/conf.d/authtest_httpd.conf',
-             content=Template("authtest_httpd_conf.j2"),
+             content=InlineTemplate(params.authtest_httpd_conf),
              mode=0600
              )
         Execute('chown apache:apache /etc/httpd/conf.d/authtest_httpd.conf')

@@ -149,7 +149,7 @@ def ambari_get(apath,ambhost=None,port=8080,user='admin',passwd='admin', prot='h
     if ambhost is None:
         ambhost=thehost
     url= prot + ambhost + ':' + str(port) + api + apath
-    print url
+    #print url
     req = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By':'ambari'})
     return _r2j(req)
 
@@ -157,13 +157,11 @@ def ambari_post(apath,ambhost=None,data={},port=8080,user='admin',passwd='admin'
     if ambhost is None:
         ambhost=thehost
     url= prot + ambhost + ':' + str(port) + api + apath
-    print url
+    #print url
     req = requests.post(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By':'ambari'}, data=json.dumps(data))
     return _r2j(req)
 
 ret=ambari_get("clusters")
-print ret
-#sys.exit(1)
 ##################################################################
 # Start ambari agents
 ##################################################################
@@ -325,73 +323,62 @@ print " and create cluster ", clustername
 sys.stdout.flush()
 
 # next, register blueprint by name to the ambari server
+cmd='blueprints/' + blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false"
 try:
-    ret=ambari_post('blueprints/' + blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false",data=blueprint)
-    print ret
-except requests.exceptions.HTTPError:
-    pass # pass for now ... in case already uploaded, should be OK
-
-#regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/blueprints/" + \
-#         blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false -d @" + os.path.expanduser(blueprintfile)
-#regblueprint = lD.runQuiet(regcmd)
-#TODO: comment this back in again!
-#if verbose:
-#    print regblueprint
-#if "Server Error" in regblueprint:
-#    if not verbose:
-#        print regblueprint
-#    print "Warning: detected server error registering blueprint, trying server restart"
-#    ambari.run("ambari-server restart")
-#    regblueprint = lD.runQuiet(regcmd)
-#    if verbose:
-#        print regblueprint
-#elif "specified stack doesn't exist" in regblueprint:
-#    print regblueprint
-#    raise NameError(
-#        "Detected error, unable to find this stack, did you run patch.sh and restart the server as required?")
-
+    ret=ambari_post(cmd,data=blueprint)
+    if verbose:
+        print ret
+except requests.exceptions.HTTPError as e:
+    print e.response.json()
+    if "Server Error" in e.message or "Server Error" in e.response.json()['message']:
+        print "Warning: detected server error registering blueprint, trying server restart"
+        ambari.run("ambari-server restart")
+        ret=ambari_post(cmd,data=blueprint)
+    elif "Attempted to create a Blueprint which already exists" in e.response.json()['message']:
+        pass
+    elif "specified stack doesn't exist" in e.response.json()['message']:
+        raise NameError("Detected error, unable to find this stack," +
+                        "did you run patch.sh and restart the server as required?")
+    else:
+        print "Error registering blueprint"
+        raise
 
 # Check if blueprint exists before continuing
 registered = ambari_get("blueprints/")
-print registered
+if verbose:
+    print registered
 
 if blueprint["Blueprints"]["blueprint_name"] not in [i['Blueprints']['blueprint_name'] for i in registered['items']]:
-    print regblueprint
+    print registered
     raise RuntimeError(
         "Blueprint does not exist, take a look yourself with " + "curl --user admin:admin http://" + thehost +
         ":8080/api/v1/blueprints/")
 
 # then add the cluster definition, should start all the processes
 try:
-    ret=ambari_post('clusters/' + clustername ,data=cluster)
-    print ret
-except requests.exceptions.HTTPError:
-    pass # pass for now ... in case already uploaded, should be OK
+    regcluster=ambari_post('clusters/' + clustername ,data=cluster)
+    #if verbose:
+    #print regcluster
+except requests.exceptions.HTTPError as e:
+    print e.response.json()
+    if "Server Error" in e.message or "Server Error" in e.response.json()['message']:
+        print "Warning: detected server error registering cluster, trying server restart"
+        ambari.run("ambari-server restart")
+        ret=ambari_post(cmd,data=blueprint)
+    elif "Unable to update" in e.response.json()['message']:
+        raise NameError("Error detected in spooling up cluster from template, is the template complete? Are you "\
+                        "missing required services?"
+                        )
+    else:
+        print "Error registering cluster"
+        raise
 
-#regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/clusters/" + \
-#         clustername + " -d @" + os.path.expanduser(clusterfile)
-#regcluster = lD.runQuiet(regcmd)
-#if verbose:
-#    print regcluster
-#if "Server Error" in regcluster:
-#    if not verbose:
-#        print regcluster
-#    print "Warning: detected server error, trying server restart"
-#    ambari.run("ambari-server restart")
-#    regcluster = lD.runQuiet(regcmd)
-#    if verbose:
-#        print regcluster
-#if "Unable to update" in regcluster:
-#    if not verbose:
-#        print regcluster
-#    print >> sys.stderr, "Error detected in spooling up cluster from template, is the template complete? Are you " \
-#                         "missing required services?"
-#    sys.exit(1)
-#if "InProgress" not in regcluster:
-#    if not verbose:
-#        print regcluster
-#    print >> sys.stderr, "Detected error registering cluster"
-#    sys.exit(1)
+if ("InProgress" not in regcluster.json()['message']
+    and "Accepted" not in regcluster.json()['message']
+    and "IN_PROGRESS" not in regcluster.json()['message']):
+    print regcluster.json()
+    print >> sys.stderr, "Detected error registering cluster"
+    sys.exit(1)
 
 print("Registration successful, configuration in progress, monitor through the web interface at http://"
       + thehost + ":8080")

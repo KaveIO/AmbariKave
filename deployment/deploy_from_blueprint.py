@@ -373,10 +373,10 @@ except requests.exceptions.HTTPError as e:
         print "Error registering cluster"
         raise
 
-if ("InProgress" not in regcluster.json()['message']
-    and "Accepted" not in regcluster.json()['message']
-    and "IN_PROGRESS" not in regcluster.json()['message']):
-    print regcluster.json()
+if ("InProgress" not in regcluster['message']
+    and "Accepted" not in regcluster['message']
+    and "IN_PROGRESS" not in regcluster['message']):
+    print regcluster
     print >> sys.stderr, "Detected error registering cluster"
     sys.exit(1)
 

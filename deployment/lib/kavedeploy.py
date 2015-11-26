@@ -608,7 +608,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
             return
 
 
-def waitforambari(ambari):
+def waitforambari(ambari, maxrounds=10):
     """
     Wait until ambari server is up and running, error if it doesn't appear!
     """
@@ -616,13 +616,16 @@ def waitforambari(ambari):
     # wait until ambari server is up
     rounds = 1
     flag = False
-    while rounds <= 10:
+    ambari.cp(os.path.realpath(os.path.dirname(__file__))
+              + "/../remotescripts/default.netrc",
+              "~/defaultambari.netrc")
+    while rounds <= maxrounds:
         try:
             stdout = ambari.run("service iptables stop")
         except RuntimeError:
             pass
         try:
-            stdout = ambari.run("curl --user admin:admin http://localhost:8080/api/v1/clusters")
+            stdout = ambari.run("curl --netrc-file defaultambari.netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except RuntimeError:
@@ -642,10 +645,13 @@ def waitforrequest(ambari, clustername, request, timeout=10):
     # wait until ambari server is up
     rounds = 1
     flag = False
+    ambari.cp(os.path.realpath(os.path.dirname(__file__))
+              + "/../remotescripts/default.netrc",
+              "~/defaultambari.netrc")
     while rounds <= timeout:
         stdout = ambari.run(
-            "curl --user admin:admin http://localhost:8080/api/v1/clusters/" + clustername + "/requests/" + str(
-                request))
+            "curl --netrc-file defaultambari.netrc http://localhost:8080/api/v1/clusters/"
+            + clustername + "/requests/" + str(request))
         if '"request_status" : "FAILED"' in stdout:
             raise ValueError("request from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
         if '"request_status" : "COMPLETED"' in stdout:

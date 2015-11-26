@@ -399,6 +399,9 @@ class LDTest(unittest.TestCase):
         abranch = ""
         if self.branch:
             abranch = self.branch
+        ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
+                  + "/../remotescripts/default.netrc",
+                  "~/defaultambari.netrc")
         stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
         import time
 
@@ -494,7 +497,10 @@ class LDTest(unittest.TestCase):
         ip = ambari.host
         while rounds <= max_rounds:
             stdout = lD.runQuiet(
-                "curl --user admin:admin http://" + ip + ":8080/api/v1/clusters/"
+                "curl --netrc-file "
+                + os.path.realpath(os.path.dirname(lD.__file__))
+                + "/../remotescripts/default.netrc"
+                + " http://" + ip + ":8080/api/v1/clusters/"
                 + clustername + "/requests/" + str(requestid))
             if '"request_status" : "FAILED"' in stdout:
                 state = "FAILED"
@@ -525,6 +531,9 @@ class LDTest(unittest.TestCase):
         state = self.monitor_request(ambari, cname)
         if state == "ABORTED":
             print "Trying to recover from aborted blueprint with restarts"
+            ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
+                      + "/../remotescripts/default.netrc",
+                      "~/defaultambari.netrc")
             stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/restart_all_services.sh " + cname)
             reqid = stdout.strip().split("\n")[-1]
             state = self.monitor_request(ambari, cname, requestid=reqid)
@@ -558,7 +567,10 @@ class LDTest(unittest.TestCase):
             except RuntimeError:
                 pass
             try:
-                stdout = lD.runQuiet("curl --user admin:admin http://" + ip + ":8080/api/v1/clusters")
+                stdout = lD.runQuiet("curl --netrc-file "
+                                     + os.path.realpath(os.path.dirname(lD.__file__))
+                                     + "/../remotescripts/default.netrc"
+                                     + " http://" + ip + ":8080/api/v1/clusters")
                 flag = True
                 break
             except RuntimeError:

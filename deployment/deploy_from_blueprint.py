@@ -44,6 +44,9 @@ import sys
 import os
 import json
 import time
+import requests
+from requests.auth import HTTPBasicAuth
+import copy
 
 if "--help" in sys.argv or "-h" in sys.argv:
     print __doc__
@@ -133,35 +136,48 @@ print "check that Ambari @" + thehost + " is reachable"
 if lD.which("curl") is None:
     raise NameError("Please install curl locally for this check! (e.g. yum -y install curl)")
 
-import copy
+
 def _r2j(res):
-        if res.status_code not in [200,302]:
-            res.raise_for_status()
-        try:
-            return copy.deepcopy(res.json())
-        except ValueError:
-            return {}
+    """
+    A simple function for extracting the json automatically from a
+    request response, and raising an exception
+    in the case of HTTP error code
+    """
+    if res.status_code not in [200, 302]:
+        res.raise_for_status()
+    try:
+        return copy.deepcopy(res.json())
+    except ValueError:
+        return {}
 
-import requests
-from requests.auth import HTTPBasicAuth
 
-def ambari_get(apath,ambhost=None,port=8080,user='admin',passwd='admin', prot='http://', api='/api/v1/'):
+def ambari_get(apath, ambhost=None, port=8080,
+               user='admin', passwd='admin', prot='http://', api='/api/v1/'):
+    """
+    Wrapper round the requests framework to make calls to the local ambari server
+    """
     if ambhost is None:
-        ambhost=thehost
-    url= prot + ambhost + ':' + str(port) + api + apath
-    #print url
-    req = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By':'ambari'})
+        ambhost = thehost
+    url = prot + ambhost + ':' + str(port) + api + apath
+    # print url
+    req = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By': 'ambari'})
     return _r2j(req)
 
-def ambari_post(apath,ambhost=None,data={},port=8080,user='admin',passwd='admin', prot='http://', api='/api/v1/'):
+
+def ambari_post(apath, ambhost=None, data={}, port=8080,
+                user='admin', passwd='admin', prot='http://', api='/api/v1/'):
+    """
+    Wrapper round the requests framework to POST to the local ambari server
+    """
     if ambhost is None:
-        ambhost=thehost
-    url= prot + ambhost + ':' + str(port) + api + apath
-    #print url
-    req = requests.post(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By':'ambari'}, data=json.dumps(data))
+        ambhost = thehost
+    url = prot + ambhost + ':' + str(port) + api + apath
+    # print url
+    req = requests.post(url, auth=HTTPBasicAuth(user, passwd), headers={
+                        'X-Requested-By': 'ambari'}, data=json.dumps(data))
     return _r2j(req)
 
-ret=ambari_get("clusters")
+ret = ambari_get("clusters")
 ##################################################################
 # Start ambari agents
 ##################################################################
@@ -323,9 +339,9 @@ print " and create cluster ", clustername
 sys.stdout.flush()
 
 # next, register blueprint by name to the ambari server
-cmd='blueprints/' + blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false"
+cmd = 'blueprints/' + blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false"
 try:
-    ret=ambari_post(cmd,data=blueprint)
+    ret = ambari_post(cmd, data=blueprint)
     if verbose:
         print ret
 except requests.exceptions.HTTPError as e:
@@ -333,9 +349,9 @@ except requests.exceptions.HTTPError as e:
     if "Server Error" in e.message or "Server Error" in e.response.json()['message']:
         print "Warning: detected server error registering blueprint, trying server restart"
         ambari.run("ambari-server restart")
-        ret=ambari_post(cmd,data=blueprint)
+        ret = ambari_post(cmd, data=blueprint)
     elif "Attempted to create a Blueprint which already exists" in e.response.json()['message']:
-        pass
+        ret = e.response.json()
     elif "specified stack doesn't exist" in e.response.json()['message']:
         raise NameError("Detected error, unable to find this stack," +
                         "did you run patch.sh and restart the server as required?")
@@ -356,26 +372,29 @@ if blueprint["Blueprints"]["blueprint_name"] not in [i['Blueprints']['blueprint_
 
 # then add the cluster definition, should start all the processes
 try:
-    regcluster=ambari_post('clusters/' + clustername ,data=cluster)
-    #if verbose:
-    #print regcluster
+    regcluster = ambari_post('clusters/' + clustername, data=cluster)
+    #regcluster = regcluster.json()
+    # if verbose:
+    # print regcluster
 except requests.exceptions.HTTPError as e:
     print e.response.json()
     if "Server Error" in e.message or "Server Error" in e.response.json()['message']:
         print "Warning: detected server error registering cluster, trying server restart"
         ambari.run("ambari-server restart")
-        ret=ambari_post(cmd,data=blueprint)
+        ret = ambari_post(cmd, data=blueprint)
     elif "Unable to update" in e.response.json()['message']:
-        raise NameError("Error detected in spooling up cluster from template, is the template complete? Are you "\
+        raise NameError("Error detected in spooling up cluster from template, is the template complete? Are you "
                         "missing required services?"
                         )
+    elif "Attempted to create a Cluster which already exists" in e.response.json()['message']:
+        regcluster = e.response.json()
     else:
         print "Error registering cluster"
         raise
 
 if ("InProgress" not in regcluster['message']
-    and "Accepted" not in regcluster['message']
-    and "IN_PROGRESS" not in regcluster['message']):
+        and "Accepted" not in regcluster['message']
+        and "IN_PROGRESS" not in regcluster['message']):
     print regcluster
     print >> sys.stderr, "Detected error registering cluster"
     sys.exit(1)

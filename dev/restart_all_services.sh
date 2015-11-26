@@ -18,16 +18,28 @@
 ##############################################################################
 
 #
-# Restart everything script, will restart the ambari server, restart all agents, wait for 70 seconds for a heartbeat, and then restart all components.
+# Restart everything script, will restart the ambari server, restart all agents,
+# wait for 70 seconds for a heartbeat, and then restart all components.
+# First argument is the name fo the cluster to restart
+# second argument is the name of a local netrc file to authenticate
 #
 
 cluster=$1
 ambari='localhost'
-user='admin'
-password='admin'
+netrc='defaultambari.netrc'
 
 if [ -z "$1" ]; then
 	echo "please state the name of the cluster to restart"
+	exit 1
+fi
+
+if [ -n "$2" ]; then
+	netrc="$2"
+fi
+
+if [ ! -f "$netrc" ]; then
+	echo "You must supply a netrc file with the credentials to connect"
+	echo "the file $netrc does not exist or is unreadable"
 	exit 1
 fi
 
@@ -51,17 +63,17 @@ if [ ! -z "$op" ]; then
 fi
 
 #find all service names
-allnames=`curl -i -X GET --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/ -H "X-Requested-By:ambari" | grep "service_name" | awk -F '"' '{print $4}'`
+allnames=`curl -i -X GET --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/ -H "X-Requested-By:ambari" | grep "service_name" | awk -F '"' '{print $4}'`
 
 echo "Restarting FreeIPA first, if it exists"
 #stop them
 if [[ "$allnames" == *"FREEIPA"* ]]; then
 	service="FREEIPA"
 	echo $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds, (heartbeat duration)"
 	sleep 70
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds (heartbeat duration)"
 	sleep 70
 fi
@@ -73,7 +85,7 @@ for service in $allnames; do
 		continue
 	fi
 	echo "stopping" $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
 
 echo "sleeping for 70 seconds (heartbeat duration)"
@@ -84,11 +96,11 @@ for service in $allnames; do
 		continue
 	fi
     echo "starting" $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
 
 
 echo "All request hrefs"
-curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
+curl --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
 echo "Final request ID for semi-automatic monitoring:"
-curl --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'
+curl --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'

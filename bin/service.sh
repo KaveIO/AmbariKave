@@ -19,8 +19,7 @@
 function runHelp {
   echo "KAVE service install and management tool"
   echo "Usage: service.sh {install|reinstall|start|stop|list|configure|help|status} [SERVICE]"
-  echo "	[-u|--user USER] 		default: admin"
-  echo "	[-p|--password PASSWORD]	default: admin"
+  echo "	[-n|--netrc] 		default: defaultambari.netrc, a netrc file with credentials"
   echo "        [-a|--ambari AMBARI]		default: localhost"
   echo "        [-c|--cluster CLUSTER]		default: request from ambari"
   echo "        [-h|--host HOST]"
@@ -62,10 +61,10 @@ function runHelp {
 
 function runAddService {
   echo "Adding a service"
-  if [ "`curl -s -i --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari" -w "%{http_code}" -o /dev/null`" = "404" ]; then
+  if [ "`curl -s -i --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari" -w "%{http_code}" -o /dev/null`" = "404" ]; then
     echo "Adding the service to the cluster"
-    curl -i -X POST --user $user:$password -d '{"ServiceInfo":{"service_name":"'$service'"}}' http://$ambari:8080/api/v1/clusters/$cluster/services  -H "X-Requested-By:ambari"
-    curl -i -X POST --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service/components/$component  -H "X-Requested-By:ambari"
+    curl -i -X POST --netrc-file $netrc -d '{"ServiceInfo":{"service_name":"'$service'"}}' http://$ambari:8080/api/v1/clusters/$cluster/services  -H "X-Requested-By:ambari"
+    curl -i -X POST --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service/components/$component  -H "X-Requested-By:ambari"
     echo
     echo "Sleeping for a bit..."
     sleep 5s
@@ -74,7 +73,7 @@ function runAddService {
 
 function runInstallService {
   echo "Installing the service"
-  curl -i -X PUT --user $user:$password -d '{"RequestInfo":{"context":"Install '$service'"},"Body":{"HostRoles":{"state":"INSTALLED"}}}' http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
+  curl -i -X PUT --netrc-file $netrc -d '{"RequestInfo":{"context":"Install '$service'"},"Body":{"HostRoles":{"state":"INSTALLED"}}}' http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -82,7 +81,7 @@ function runInstallService {
 
 function runInstallComponent {
   echo "Installing a component"
-  curl -i -X POST --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
+  curl -i -X POST --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -90,7 +89,7 @@ function runInstallComponent {
 
 function runUninstallComponent {
   echo "Uninstalling a component"
-  curl -i -X DELETE --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
+  curl -i -X DELETE --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -98,7 +97,7 @@ function runUninstallComponent {
 
 function runStart {
   echo "Starting a service"
-  curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+  curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -106,14 +105,14 @@ function runStart {
 
 function runStop {
   echo "Stopping a service"
-  curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+  curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
 }
 
 function runStatus {
-curl -i -X GET --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari" | grep state
+curl -i -X GET --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari" | grep state
 }
 
 function runConfigureService {
@@ -160,7 +159,7 @@ function buildConfiguration {
     fi
   done
 
-  curl -i -X PUT -d '{"Clusters": {"desired_config": {"type": "'$type'", "tag": "version'`date +%Y%m%d%H%M%S`'", "properties": {'$configuration'}}}}' --user $user:$password http://$ambari:8080/api/v1/clusters/$cluster -H "X-Requested-By:ambari"
+  curl -i -X PUT -d '{"Clusters": {"desired_config": {"type": "'$type'", "tag": "version'`date +%Y%m%d%H%M%S`'", "properties": {'$configuration'}}}}' --netrc-file $netrc http://$ambari:8080/api/v1/clusters/$cluster -H "X-Requested-By:ambari"
 }
 
 
@@ -199,7 +198,7 @@ shift
 service="$1"
 shift
 
-args=$(getopt -l "ambari:,user:,password:,cluster:,host:" -o "a:u:p:c:h:" -- "$@")
+args=$(getopt -l "ambari:,netrc:,cluster:,host:" -o "a:n:c:h:" -- "$@")
 
 eval set -- "$args"
 
@@ -215,12 +214,8 @@ while [ $# -ge 1 ]; do
       ambari="$2"
       shift
       ;;
-    -u|--user)
-      user="$2"
-      shift
-      ;;
-    -p|--password)
-      password="$2"
+    -n|--netrc)
+      netrc="$2"
       shift
       ;;
     -c|--cluster)
@@ -238,14 +233,18 @@ done
 if [ "$ambari" = "" ]; then
   ambari="localhost"
 fi
-if [ "$user" = "" ]; then
-  user="admin"
+if [ "$netrc" = "" ]; then
+	netrc="defaultambari.netrc"
 fi
-if [ "$password" = "" ]; then
-  password="admin"
+
+if [ ! -f "$netrc" ]; then
+	echo "You must supply a local netrc file with the logon credentials"
+	echo "File $netrc does not exist or is unreadable"
+	exit 1
 fi
+
 if [ "$cluster" = "" ]; then
-  cluster="`curl -i -s --user $user:$password http://$ambari:8080/api/v1/clusters | grep "cluster_name" | sed -r 's/^.*?"cluster_name" : "(.*?)".*$/\1/g'`"
+  cluster="`curl -i -s --netrc-file $netrc http://$ambari:8080/api/v1/clusters | grep "cluster_name" | sed -r 's/^.*?"cluster_name" : "(.*?)".*$/\1/g'`"
 fi
 if [ $service = "GITLAB" ]; then
   component="GITLAB_SERVER"

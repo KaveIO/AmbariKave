@@ -26,6 +26,10 @@ yum install ambari-server -y
 yum install -y pdsh wget curl
 ambari-server setup -s
 
+# install requests library for python
+yum install -y python-pip
+pip install requests
+
 ##########################################################
 # By default enable two-way ssl between server and agents!
 echo "security.server.two_way_ssl = true" >> /etc/ambari-server/conf/ambari.properties

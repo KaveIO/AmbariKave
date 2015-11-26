@@ -216,9 +216,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
     shouldn't
     """
     # Check host is reachable
-    response = apiquery("clusters -i -I", exit=False, JSON=False, host=ambari, user=user, passwd=passwd)
-    if "200 OK" not in response:
-        raise NameError("Host could not be contacted, is Ambari running there? " + ambari)
+    response = apiquery("clusters", JSON=False, host=ambari, user=user, passwd=passwd)
 
     cluster_service_host = {}
     cluster_host_service = {}

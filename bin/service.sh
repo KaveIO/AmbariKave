@@ -198,7 +198,7 @@ shift
 service="$1"
 shift
 
-args=$(getopt -l "ambari:,netrc:,cluster:,host:" -o "a:n:c:h:" -- "$@")
+args=$(getopt -l "ambari:,cluster:,host:" -o "a:c:h:" -- "$@")
 
 eval set -- "$args"
 
@@ -212,10 +212,6 @@ while [ $# -ge 1 ]; do
       ;;
     -a|--ambari)
       ambari="$2"
-      shift
-      ;;
-    -n|--netrc)
-      netrc="$2"
       shift
       ;;
     -c|--cluster)

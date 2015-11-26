@@ -19,7 +19,7 @@
 function runHelp {
   echo "KAVE service install and management tool"
   echo "Usage: service.sh {install|reinstall|start|stop|list|configure|help|status} [SERVICE]"
-  echo "	A local \$HOME/.netrc file must exist with the ambari credentials
+  echo "	A local \$HOME/.netrc file must exist with the ambari credentials"
   echo "        [-a|--ambari AMBARI]		default: localhost"
   echo "        [-c|--cluster CLUSTER]		default: request from ambari"
   echo "        [-h|--host HOST]"

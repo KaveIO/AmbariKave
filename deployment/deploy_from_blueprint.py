@@ -373,9 +373,6 @@ if blueprint["Blueprints"]["blueprint_name"] not in [i['Blueprints']['blueprint_
 # then add the cluster definition, should start all the processes
 try:
     regcluster = ambari_post('clusters/' + clustername, data=cluster)
-    #regcluster = regcluster.json()
-    # if verbose:
-    # print regcluster
 except requests.exceptions.HTTPError as e:
     print e.response.json()
     if "Server Error" in e.message or "Server Error" in e.response.json()['message']:
@@ -392,9 +389,10 @@ except requests.exceptions.HTTPError as e:
         print "Error registering cluster"
         raise
 
-if ("InProgress" not in regcluster['message']
-        and "Accepted" not in regcluster['message']
-        and "IN_PROGRESS" not in regcluster['message']):
+
+if ("Requests" not in regcluster
+        or "status" not in regcluster['Requests']
+        or regcluster['Requests']['status'] not in ["IN_PROGRESS", "Accepted", "InProgress"]):
     print regcluster
     print >> sys.stderr, "Detected error registering cluster"
     sys.exit(1)

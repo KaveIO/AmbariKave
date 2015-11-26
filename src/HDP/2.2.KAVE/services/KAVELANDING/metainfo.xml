@@ -26,6 +26,7 @@
                     <packages>
                         <package><name>wget</name></package>
                         <package><name>httpd</name></package>
+                        <package><name>python-pip</name></package>
                     </packages>
                 </osSpecific>
             </osSpecifics>

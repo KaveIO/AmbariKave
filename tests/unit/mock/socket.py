@@ -17,3 +17,16 @@
 ##############################################################################
 def gethostbyname(astr):
     return '0.0.0.0'
+
+
+def error():
+    raise NameError()
+
+
+def timeout():
+    raise SysError()
+
+
+_GLOBAL_DEFAULT_TIMEOUT = 10
+IPPROTO_TCP = ""
+TCP_NODELAY = 1

@@ -670,15 +670,30 @@ def confremotessh(remote, port=443):
     remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
     remote.run("python add_incoming_port.py " + str(port))
     # modify sshconfig
+    remote.run("echo >> /etc/ssh/sshd_config")
     remote.run("echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
     # restart services
-    remote.run("/etc/init.d/sshd restart")
+    remote.run("service sshd restart")
     import time
+    time.sleep(2)
+    remote.run("service iptables restart")
+    time.sleep(1)
+    remote.run("service sshd restart")
 
-    time.sleep(5)
-    remote.run("/etc/init.d/iptables restart")
+def confallssh(remote, restart=True):
+    """
+    Common sshd_config for all machines upped with these scripts
+    Forbid weak ssh encryption
+    """
+    remote.run("bash -c 'echo >> /etc/ssh/sshd_config'")
+    remote.run("bash -c 'echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" >> /etc/ssh/sshd_config'")
+    remote.run("bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
+    if restart:
+        remote.run("service sshd restart")
+        import time
+        time.sleep(2)
 
 
 def waitUntilUp(remote, max_wait):

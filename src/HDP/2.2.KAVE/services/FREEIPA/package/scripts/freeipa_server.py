@@ -189,6 +189,8 @@ class FreeipaServer(Script):
         Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/expire_date.ldif' % params.directory_password)
 
     def distribute_robot_admin_credentials(self, env):
+        import params
+        env.set_params(params)
         rm = freeipa.RobotAdmin()
         rm.distribute_password(all_hosts=params.all_hosts)
 

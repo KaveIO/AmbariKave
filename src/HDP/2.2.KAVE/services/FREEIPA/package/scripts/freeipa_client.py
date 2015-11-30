@@ -50,10 +50,7 @@ class FreeipaClient(Script):
                  mode=0644
                  )
 
-        if not os.path.exists(self.ipa_client_install_lock_file):
-            with open(self.ipa_client_install_lock_file, 'w') as f:
-                f.write('')
-        else:
+        if os.path.exists(self.ipa_client_install_lock_file):
             print 'ipa client already installed, nothing to do here.'
             return
 
@@ -96,6 +93,10 @@ class FreeipaClient(Script):
                     definition['user'],
                     definition['group'],
                     definition['permissions'])
+
+        if not os.path.exists(self.ipa_client_install_lock_file):
+            with open(self.ipa_client_install_lock_file, 'w') as f:
+                f.write('')
 
 if __name__ == "__main__":
     FreeipaClient().execute()

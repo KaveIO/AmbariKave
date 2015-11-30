@@ -19,13 +19,17 @@ import freeipa
 import os
 
 from resource_management import *
-
+from resource_management.core.exceptions import ComponentIsNotRunning
 
 class FreeipaClient(Script):
 
     packages = ['ntp', 'curl', 'wget', 'pdsh', 'openssl', 'ipa-client',
                 'ipa-admintools', 'oddjob-mkhomedir']
     ipa_client_install_lock_file = '/root/ipa_client_install_lock_file'
+
+    def status(self,env):
+        if not os.path.exists(self.ipa_client_install_lock_file):
+            raise ComponentIsNotRunning()
 
     def install(self, env):
         import params

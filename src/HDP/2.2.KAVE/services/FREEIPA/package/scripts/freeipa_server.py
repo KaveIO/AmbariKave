@@ -119,6 +119,7 @@ class FreeipaServer(Script):
 
     def start(self, env):
         self.conf_on_start(env)
+        self.distribute_robot_admin_credentials(env)
         Execute('service ipa start')
 
     def stop(self, env):

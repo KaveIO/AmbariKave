@@ -32,7 +32,11 @@ class TestPyImport(unittest.TestCase):
         # print path
         mname = fname.split('.')[0]
         if os.path.isfile(fullpath):
-            imp.load_source(mname, fullpath)
+            try:
+                imp.load_source(mname, fullpath)
+            except ImportError:
+                sys.path.append(os.path.dirname(fullpath))
+                imp.load_source(mname, fullpath)
         else:
             sys.path.append(path)
             found = imp.find_module(mname)

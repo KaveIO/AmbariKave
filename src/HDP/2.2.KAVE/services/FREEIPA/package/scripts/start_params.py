@@ -23,7 +23,7 @@ from resource_management import *
 config = Script.get_config()
 
 hostname = config["hostname"]
-ipa_server = default("/clusterHostInfo/ambari_server_host", [False])[0]
+ipa_server = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
 
 hostname_components = config["hostname"].split('.')
 if len(hostname_components) < 3:
@@ -31,8 +31,6 @@ if len(hostname_components) < 3:
 
 realm = '.'.join(hostname_components[1:]).upper()
 domain = '.'.join(hostname_components[1:])
-
-ipa_server = default("/clusterHostInfo/ambari_server_host", [False])[0]
 
 kadm5acl_template = default('configurations/freeipa/kadm5acl_template', """*/admin@{{realm}} *
 admin@{{realm}} *

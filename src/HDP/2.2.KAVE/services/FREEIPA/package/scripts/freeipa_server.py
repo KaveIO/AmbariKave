@@ -197,7 +197,7 @@ class FreeipaServer(Script):
         try:
             import params
             env.set_params(params)
-            all_hosts=params.all_hosts
+            all_hosts = params.all_hosts
         except (TypeError, ImportError, ValueError, KeyError):
             pass
         rm = freeipa.RobotAdmin()

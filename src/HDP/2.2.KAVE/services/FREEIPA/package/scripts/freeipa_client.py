@@ -21,13 +21,14 @@ import os
 from resource_management import *
 from resource_management.core.exceptions import ComponentIsNotRunning
 
+
 class FreeipaClient(Script):
 
     packages = ['ntp', 'curl', 'wget', 'pdsh', 'openssl', 'ipa-client',
                 'ipa-admintools', 'oddjob-mkhomedir']
     ipa_client_install_lock_file = '/root/ipa_client_install_lock_file'
 
-    def status(self,env):
+    def status(self, env):
         if not os.path.exists(self.ipa_client_install_lock_file):
             raise ComponentIsNotRunning()
 
@@ -44,10 +45,10 @@ class FreeipaClient(Script):
         # be overriden. However these new settings wil probably not survive a
         # network restart. This could cause potential problems.
         if params.install_with_dns:
-                File("/etc/resolv.conf",
-                     content=InlineTemplate(params.resolvconf_template),
-                     mode=0644
-                     )
+            File("/etc/resolv.conf",
+                 content=InlineTemplate(params.resolvconf_template),
+                 mode=0644
+                 )
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:

@@ -109,7 +109,16 @@ class FreeipaServer(Script):
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)
 
+    def conf_on_start(self,env):
+        import start_params
+        env.set_params(start_params)
+        File("/var/kerberos/krb5kdc/kadm5.acl",
+             content=InlineTemplate(start_params.kadm5acl_template),
+             mode=0600
+             )
+
     def start(self, env):
+        self.conf_on_start(env)
         Execute('service ipa start')
 
     def stop(self, env):
@@ -181,7 +190,7 @@ class FreeipaServer(Script):
 
     def distribute_robot_admin_credentials(self, env):
         rm = freeipa.RobotAdmin()
-        rm.distribute_password()
+        rm.distribute_password(all_hosts=params.all_hosts)
 
 if __name__ == "__main__":
     FreeipaServer().execute()

@@ -110,10 +110,10 @@ class FreeipaServer(Script):
         self.distribute_robot_admin_credentials(env)
 
     def conf_on_start(self, env):
-        import start_params
-        env.set_params(start_params)
+        import params
+        env.set_params(params)
         File("/var/kerberos/krb5kdc/kadm5.acl",
-             content=InlineTemplate(start_params.kadm5acl_template),
+             content=InlineTemplate(params.kadm5acl_template),
              mode=0600
              )
 
@@ -130,10 +130,7 @@ class FreeipaServer(Script):
         # to be tricky to achieve in Ambari. This call distributes the
         # credentials to new hosts on each status heartbeat. Pretty weird but
         # for now it serves its purpose.
-        import start_params
-        env.set_params(start_params)
         self.distribute_robot_admin_credentials(env)
-
         Execute('service ipa status')
 
     def create_base_accounts(self, env):
@@ -191,7 +188,10 @@ class FreeipaServer(Script):
         Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/expire_date.ldif' % params.directory_password)
 
     def distribute_robot_admin_credentials(self, env):
+        import params
+        env.set_params(params)
         rm = freeipa.RobotAdmin()
+        print "distribution to all hosts with host being", params.all_hosts
         rm.distribute_password(all_hosts=params.all_hosts)
 
 if __name__ == "__main__":

@@ -258,8 +258,10 @@ class remoteHost(object):
             propts = ' '.join(propts[:-1]) + " '" + propts[-1] + "'"
         else:
             propts = ""
-        cmd = "scp " + propts + " " + ' '.join(
-            strictopts()) + " -r -i " + self.access_key + " " + self.user + "@" + self.host + ":" + remote + " " + local
+        cmd = ("scp " + propts + " " + ' '.join(strictopts())
+               + " -r -i " + self.access_key + " " + self.user + "@"
+               + self.host + ":" + remote + " " + local
+               )
         return runQuiet(cmd)
 
     def check(self, firsttime=False):
@@ -596,7 +598,8 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
         github_key_location = gitenv["KeyFile"]
         git_origin = gitenv["Origin"]
         if pack == "ambarikave":
-            _addambaritoremote(remote, github_key_location=github_key_location, git_origin=git_origin, branch=version,
+            _addambaritoremote(remote, github_key_location=github_key_location,
+                               git_origin=git_origin, branch=version,
                                background=background)
             return
         else:
@@ -688,13 +691,15 @@ def confremotessh(remote, port=443):
     time.sleep(1)
     remote.run("service sshd restart")
 
+
 def confallssh(remote, restart=True):
     """
     Common sshd_config for all machines upped with these scripts
     Forbid weak ssh encryption
     """
     remote.run("bash -c 'echo >> /etc/ssh/sshd_config'")
-    remote.run("bash -c 'echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" >> /etc/ssh/sshd_config'")
+    remote.run("bash -c 'echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" "
+               + " >> /etc/ssh/sshd_config'")
     remote.run("bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
     if restart:
         remote.run("service sshd restart")

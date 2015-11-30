@@ -243,7 +243,7 @@ initial_sudoers = default('configurations/freeipa/initial_sudoers',
                           + '"runasusercat": "all", "runasgroupcat": "all" }')
 initial_sudoers = json.loads(initial_sudoers)
 
-kadm5acl_template = default('configurations/freeipa/kadm5acl_template',"""*/admin@{{realm}} *
+kadm5acl_template = default('configurations/freeipa/kadm5acl_template', """*/admin@{{realm}} *
 admin@{{realm}} *
 admin@{{realm}} a *
 admin@{{realm}} i *
@@ -251,7 +251,7 @@ admin@{{realm}} x *
 admin@{{realm}} m *
 """)
 
-resolvconf_template = default('configurations/freeipa/resolvconf_template',"""search {{domain}}
+resolvconf_template = default('configurations/freeipa/resolvconf_template', """search {{domain}}
 nameserver {{ipa_server_ip_address}}
 """)
 

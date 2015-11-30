@@ -130,7 +130,12 @@ class FreeipaServer(Script):
         # to be tricky to achieve in Ambari. This call distributes the
         # credentials to new hosts on each status heartbeat. Pretty weird but
         # for now it serves its purpose.
-        self.distribute_robot_admin_credentials(env)
+        # In the latrest ambari, we can't use the database any further
+        # because the database is modified, need to fix this at a later point
+        try:
+            self.distribute_robot_admin_credentials(env)
+        except:
+            pass
         Execute('service ipa status')
 
     def create_base_accounts(self, env):
@@ -188,11 +193,15 @@ class FreeipaServer(Script):
         Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/expire_date.ldif' % params.directory_password)
 
     def distribute_robot_admin_credentials(self, env):
-        import params
-        env.set_params(params)
+        try:
+            import params
+            env.set_params(params)
+            all_hosts=params.all_hosts
+        except (TypeError, ImportError, ValueError, KeyError):
+            pass
         rm = freeipa.RobotAdmin()
-        print "distribution to all hosts with host being", params.all_hosts
-        rm.distribute_password(all_hosts=params.all_hosts)
+        print "distribution to all hosts with host being", all_hosts
+        rm.distribute_password(all_hosts=all_hosts)
 
 if __name__ == "__main__":
     FreeipaServer().execute()

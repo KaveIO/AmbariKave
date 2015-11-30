@@ -23,7 +23,10 @@ from resource_management import *
 config = Script.get_config()
 
 hostname = config["hostname"]
-ipa_server = default("/clusterHostInfo/freeipa_server_host", [False])[0]
+
+amb_server = default("/clusterHostInfo/ambari_server_host", [False])[0]
+
+ipa_server = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
 
 ipa_server_ip_address = socket.gethostbyname(ipa_server)
 if not ipa_server_ip_address:

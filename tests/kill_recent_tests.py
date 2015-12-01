@@ -186,7 +186,7 @@ for stack in formations:
         if re.match(req, stack["StackName"]) is None:
             skip = True
             break
-    if amazon_keypair_name not in stack["StackName"]:
+    if amazon_keypair_name not in stack["StackName"] and amazon_keypair_name.replace('_','') not in stack["StackName"]:
         skip = True
     if stack["StackStatus"] in ["DELETE_IN_PROGRESS"]:
         skip = True

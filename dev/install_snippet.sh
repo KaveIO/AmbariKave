@@ -27,6 +27,7 @@ yum install -y pdsh wget curl
 ambari-server setup -s
 
 # install requests library for python
+yum install -y epel-release
 yum install -y python-pip
 pip install requests
 
@@ -44,7 +45,7 @@ chmod 600 /tmp/tmp.mkeywrap.temp
 echo "spawn ambari-server setup-security" > /tmp/tmp.mkeywrap.temp
 echo "expect \"Enter choice, (1-5): \"" >> /tmp/tmp.mkeywrap.temp
 #4 is setup master encryption key
-echo "send 4\\n;" >> /tmp/tmp.mkeywrap.temp
+echo "send 2\\n;" >> /tmp/tmp.mkeywrap.temp
 echo "expect \"locking the credential store: \"" >> /tmp/tmp.mkeywrap.temp
 #Now input password
 echo -n "send \"" >> /tmp/tmp.mkeywrap.temp

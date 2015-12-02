@@ -40,7 +40,6 @@ class TestPyImport(unittest.TestCase):
             sys.path.append(path)
             found = imp.find_module(mname)
             imp.load_module(mname, found[0], found[1], found[2])
-            
 
     def runTest(self):
         """

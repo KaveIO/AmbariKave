@@ -31,6 +31,19 @@ yum install -y epel-release
 yum install -y python-pip
 pip install requests
 
+encypt_number="4"
+
+version=`ambari-server --version`
+
+if [ "$version" == "2.1."* ]; then
+	encypt_number="2"
+elif [ "$version" == "1.7."* ]; then
+	encypt_number="4"
+else
+	echo "This script is not tested/ready for this version of Ambari"
+	exit 1
+fi
+
 ##########################################################
 # By default enable two-way ssl between server and agents!
 echo "security.server.two_way_ssl = true" >> /etc/ambari-server/conf/ambari.properties

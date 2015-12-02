@@ -29,19 +29,15 @@ class TestPyImport(unittest.TestCase):
     def tryimporting(self, fullpath):
         fname = os.path.basename(fullpath)
         path = os.path.realpath(os.path.dirname(fullpath))
-        print path
         mname = fname.split('.')[0]
         if os.path.isfile(fullpath):
-            # imp.load_source(mname, fullpath)
-            try : 
+            try:
                 imp.load_source(mname, fullpath)
             except ImportError:
                 sys.path.append(os.path.dirname(fullpath))
                 imp.load_source(mname, fullpath)
-
         else:
             sys.path.append(path)
-            print sys.path
             found = imp.find_module(mname)
             imp.load_module(mname, found[0], found[1], found[2])
             

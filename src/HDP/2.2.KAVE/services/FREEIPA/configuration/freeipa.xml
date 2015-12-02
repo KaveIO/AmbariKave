@@ -65,7 +65,6 @@
     <property>
         <name>initial_user_passwords</name>
         <value>{ }</value>
-        <property-type>PASSWORD</property-type>
         <description>
             Json description of intial passwords to set in freeIPA.
             This is only used if a new user is added.
@@ -114,6 +113,30 @@
             want to bind. This only used to generate this specific user. Be sure
             to set ipa_integration_enabled to True on the service you want to
             integrate and the ipa_bind_user to the same value as provided here.
+        </description>
+    </property>
+    <property>
+        <name>kadm5acl_template</name>
+        <value>*/admin@{{realm}} *
+admin@{{realm}} *
+admin@{{realm}} a *
+admin@{{realm}} i *
+admin@{{realm}} x *
+admin@{{realm}} m *
+</value>
+        <description>
+            The kadm5.acl file controls who can modify the kerberos database directly.
+            This is usually just the explicit kerberos admin.
+        </description>
+    </property>
+    <property>
+        <name>resolvconf_template</name>
+        <value>search {{domain}}
+nameserver {{ipa_server_ip_address}}
+</value>
+        <description>
+            Rasolve.conf is needed within the cluster to locate machines.
+            An advanced user will want to modify this in case they have multiple internal domains.
         </description>
     </property>
 </configuration>

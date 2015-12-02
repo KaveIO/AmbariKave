@@ -147,7 +147,8 @@ if "CloudFormation" in cluster_config:
     # replace default keys with those from the security config file?
     import datetime
 
-    _vpc_name = cluster_name + "-" + amazon_keypair_name + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
+    _vpc_name = cluster_name + "-" + \
+        amazon_keypair_name.replace('_', '') + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
     lA.createCloudFormation(_vpc_name, cluster_config["CloudFormation"]["Script"],
                             parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
     _info = lA.waitForStack(_vpc_name)

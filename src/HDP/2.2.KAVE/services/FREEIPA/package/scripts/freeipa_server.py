@@ -32,10 +32,10 @@ class FreeipaServer(Script):
         self.install_packages(env)
         env.set_params(params)
 
-        if params.ipa_server != params.hostname:
+        if params.amb_server != params.hostname:
             raise Exception('The FreeIPA server installation has a hard requirement to be installed'
                             ' on the ambari server. ambari_server: %s freeipa_server %s'
-                            % (params.ipa_server, params.hostname))
+                            % (params.amb_server, params.hostname))
 
         freeipa.create_required_users(params.required_users)
 
@@ -109,7 +109,17 @@ class FreeipaServer(Script):
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)
 
+    def conf_on_start(self, env):
+        import params
+        env.set_params(params)
+        File("/var/kerberos/krb5kdc/kadm5.acl",
+             content=InlineTemplate(params.kadm5acl_template),
+             mode=0600
+             )
+
     def start(self, env):
+        self.conf_on_start(env)
+        self.distribute_robot_admin_credentials(env)
         Execute('service ipa start')
 
     def stop(self, env):
@@ -121,8 +131,12 @@ class FreeipaServer(Script):
         # to be tricky to achieve in Ambari. This call distributes the
         # credentials to new hosts on each status heartbeat. Pretty weird but
         # for now it serves its purpose.
-        self.distribute_robot_admin_credentials(env)
-
+        # In the latrest ambari, we can't use the database any further
+        # because the database is modified, need to fix this at a later point
+        try:
+            self.distribute_robot_admin_credentials(env)
+        except:
+            pass
         Execute('service ipa status')
 
     def create_base_accounts(self, env):
@@ -180,8 +194,16 @@ class FreeipaServer(Script):
         Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/expire_date.ldif' % params.directory_password)
 
     def distribute_robot_admin_credentials(self, env):
+        all_hosts = None
+        try:
+            import params
+            env.set_params(params)
+            all_hosts = params.all_hosts
+        except (TypeError, ImportError, ValueError, KeyError):
+            pass
         rm = freeipa.RobotAdmin()
-        rm.distribute_password()
+        print "distribution to all hosts with host being", all_hosts
+        rm.distribute_password(all_hosts=all_hosts)
 
 if __name__ == "__main__":
     FreeipaServer().execute()

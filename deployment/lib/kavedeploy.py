@@ -688,6 +688,7 @@ def confremotessh(remote, port=443):
     time.sleep(1)
     remote.run("service sshd restart")
 
+
 def confallssh(remote, restart=True):
     """
     Common sshd_config for all machines upped with these scripts

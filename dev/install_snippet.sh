@@ -35,9 +35,9 @@ encrypt_number="4"
 
 version=`ambari-server --version`
 
-if [ "$version" == "2.1."* ]; then
+if [[ "$version" == "2.1."* ]]; then
 	encrypt_number="2"
-elif [ "$version" == "1.7."* ]; then
+elif [[ "$version" == "1.7."* ]]; then
 	encrypt_number="4"
 else
 	echo "This script is not tested/ready for this version of Ambari"

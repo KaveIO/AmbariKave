@@ -32,6 +32,7 @@ operators = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
              ast.Div: op.truediv, ast.Pow: op.pow, ast.BitXor: op.xor,
              ast.USub: op.neg}
 
+
 def eval_expr(expr):
     """
     >>> eval_expr('2^6')
@@ -43,12 +44,13 @@ def eval_expr(expr):
     """
     return eval_(ast.parse(expr, mode='eval').body)
 
+
 def eval_(node):
-    if isinstance(node, ast.Num): # <number>
+    if isinstance(node, ast.Num):  # <number>
         return node.n
-    elif isinstance(node, ast.BinOp): # <left> <operator> <right>
+    elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
         return operators[type(node.op)](eval_(node.left), eval_(node.right))
-    elif isinstance(node, ast.UnaryOp): # <operator> <operand> e.g., -1
+    elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
         return operators[type(node.op)](eval_(node.operand))
     else:
         raise TypeError(node)
@@ -56,9 +58,11 @@ def eval_(node):
 #######################################################################
 import subprocess
 import kavecommon as kc
-import json, os, sys
+import json
+import os
+import sys
 
-#ambari, by default, has admin:admin as the username/password combination, but this is changable with the correct
+# ambari, by default, has admin:admin as the username/password combination, but this is changable with the correct
 # options
 default_ambari_user = "admin"
 default_ambari_password = "admin"
@@ -78,7 +82,9 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "SONARQUBE_SERVER": {"sonar": [5051, "sonarqube/sonar_web_port"]},
                              "APACHE_WEB_MASTER": {"webpage": [80, "apache/PORT"]},
                              "TWIKI_SERVER": {"twiki": ["80/twiki"]},
-                             "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"], "mongo_web" : [28017, "mongodb/tcp_port +1000"]},#need to add 1000 to the port number if it exists!
+                             # need to add 1000 to the port number if it exists!
+                             "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"],
+                                                "mongo_web": [28017, "mongodb/tcp_port +1000"]},
                              "GITLAB_SERVER": {"gitlab": [80, "gitlab/gitlab_port"]},
                              "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/stormsd.ui.port"]},
                              "HUE_SERVER": {"hue": [8744, "hue/web_ui_port"]},
@@ -107,7 +113,7 @@ def apiquery(request, host="localhost", exit=True, user=None, passwd=None, JSON=
     response = kc.mycmd(
         "curl -H 'X-Requested-By:" + user + "' --user " + user + ":" + passwd + " http://" + host + ":8080/api/v1/" +
         request)
-    response = response[1]  #stdout
+    response = response[1]  # stdout
     if not JSON:
         return response
     if part is None:
@@ -121,7 +127,7 @@ def host_to_hostgroup(host_components, blueprint):
     returns the host_group name, or none
     """
     for group in blueprint["host_groups"]:
-        #print group
+        # print group
         blueprint_components = [c["name"] for c in group["components"]]
         missing = [c for c in host_components if c not in blueprint_components and c != "AMBARI_SERVER"]
         extra = [c for c in blueprint_components if c not in host_components and c != "AMBARI_SERVER"]
@@ -158,7 +164,7 @@ def resolve_config(blueprint, hostgroup):
             continue
         for bpc in bph["configurations"]:
             cloneconfdict(bpc, configurations)
-    #print configurations
+    # print configurations
     return configurations
 
 
@@ -170,30 +176,30 @@ def pickprop(myconfigs, tofind):
     Simple addition, subtraction and multiplication is supported (when separated by a space):
     ["apache/APACHE_PORT +1000"] would return the result of adding 1000 to the apache port if set
     """
-    #print "looking for", tofind
-    #print "in", myconfigs
+    # print "looking for", tofind
+    # print "in", myconfigs
     default_port = tofind[0]
     if len(tofind) == 1:
-        #print "no alternate suggested"
+        # print "no alternate suggested"
         return default_port
     prop = tofind[-1]
     comppath = prop.split(" ")[0].split("/")[0]
     compprop = prop.split(" ")[0].split("/")[-1]
     arithmetic = ''
     if " " in prop:
-        arithmetic=''.join(prop.split(" ")[1:])
-    #print comppath, compprop
-    #print myconfigs.keys()
+        arithmetic = ''.join(prop.split(" ")[1:])
+    # print comppath, compprop
+    # print myconfigs.keys()
     if comppath not in myconfigs:
-        #print "no comppath"
+        # print "no comppath"
         return default_port
-    #print myconfigs[comppath]
+    # print myconfigs[comppath]
     if not len([c == compprop for c in myconfigs[comppath]]):
-        #print "no comprop", myconfigs[comppath]
+        # print "no comprop", myconfigs[comppath]
         return default_port
     if not len(arithmetic):
         return myconfigs[comppath][compprop]
-    return eval_expr(myconfigs[comppath][compprop]+arithmetic)
+    return eval_expr(myconfigs[comppath][compprop] + arithmetic)
 
 
 def collect_config_data(ambari="localhost", user=None, passwd=None, ):
@@ -206,7 +212,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
     uses the globally set dictionary of ports and configurable parameters to determine what should be a link and what
     shouldn't
     """
-    #####  Check host is reachable
+    # Check host is reachable
     response = apiquery("clusters -i -I", exit=False, JSON=False, host=ambari, user=user, passwd=passwd)
     if "200 OK" not in response:
         raise NameError("Host could not be contacted, is Ambari running there? " + ambari)
@@ -217,7 +223,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
 
     clusters = apiquery("clusters", host=ambari)
     clusterlist = [str(c["Clusters"]["cluster_name"]) for c in clusters]
-    #print clusterlist
+    # print clusterlist
 
     for cluster in clusterlist:
         cluster_service_host[cluster] = {}
@@ -226,30 +232,29 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
         hosts = apiquery("clusters/" + cluster + "/hosts", host=ambari, user=user, passwd=passwd)
         blueprint = apiquery("clusters/" + cluster + "?format=blueprint", host=ambari, part=None, user=user,
                              passwd=passwd)
-        #print blueprint
+        # print blueprint
         hostlist = [str(h["Hosts"]["host_name"]) for h in hosts]
-        #print hostlist
+        # print hostlist
         for host in hostlist:
             host_components = apiquery("clusters/" + cluster + "/hosts/" + host, part="host_components", host=ambari,
                                        user=user, passwd=passwd)
-            #print host_components
+            # print host_components
             components = [str(h["HostRoles"]["component_name"]) for h in host_components]
             hostgroup = host_to_hostgroup(components, blueprint)
             myconfigs = resolve_config(blueprint, hostgroup)
 
-
-            #try adding AMBARI_SERVER if it's there in the hostgroup...
-            bp_components=[]
+            # try adding AMBARI_SERVER if it's there in the hostgroup...
+            bp_components = []
             for group in blueprint["host_groups"]:
-                #print group
-                if group["name"]==hostgroup:
-                    bp_components=[c["name"] for c in group["components"]]
+                # print group
+                if group["name"] == hostgroup:
+                    bp_components = [c["name"] for c in group["components"]]
             if "AMBARI_SERVER" in bp_components:
                 components.append("AMBARI_SERVER")
 
             cluster_host_service[cluster][host] = components
 
-            #print components
+            # print components
             for component in components:
                 if component not in cluster_service_host[cluster]:
                     cluster_service_host[cluster][component] = [host]
@@ -263,20 +268,22 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
                             "<a href='http://" + host.split('.')[0] + ":" + str(
                                 pickprop(myconfigs, port)) + "'>" + linkname + "</a> ")
 
-    #Fallback: add ambari where the nagios server is...
+    # Fallback: add ambari where the nagios server is...
     for cluster in clusterlist:
         if "NAGIOS_SERVER" in cluster_service_host[cluster] and "AMBARI_SERVER" not in cluster_service_host[cluster]:
             cluster_service_host[cluster]["AMBARI_SERVER"] = cluster_service_host[cluster]["NAGIOS_SERVER"]
             if "AMBARI_SERVER" in service_portproperty_dict and "AMBARI_SERVER" in cluster_service_host[cluster]:
                 cluster_service_link[cluster]["AMBARI_SERVER"] = []
                 for linkname, port in service_portproperty_dict["AMBARI_SERVER"].iteritems():
-                    cluster_service_link[cluster]["AMBARI_SERVER"].append("<a href='http://"
-                                                                          + cluster_service_host[cluster]["AMBARI_SERVER"][0].split('.')[0]
-                                                                          + ":" + str(pickprop(myconfigs, port)) + "'>" + linkname + "</a>")
+                    lci = ("<a href='http://"
+                           + cluster_service_host[cluster]["AMBARI_SERVER"][0].split('.')[0]
+                           + ":" + str(pickprop(myconfigs, port)) + "'>" + linkname + "</a>")
 
-    #print cluster_service_host
-    #print cluster_host_service
-    #print cluster_service_link
+                    cluster_service_link[cluster]["AMBARI_SERVER"].append(lci)
+
+    # print cluster_service_host
+    # print cluster_host_service
+    # print cluster_service_link
     return cluster_service_host, cluster_host_service, cluster_service_link
 
 
@@ -298,26 +305,29 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
         else:
             retstr = retstr + "<h3><font size=5px>'" + cluster + "' cluster</font></h3>\n"
         masters_with_links = [service for service in cluster_service_host[cluster] if
-                              ("SERVER" in service or "MASTER" in service or "NAMENODE" in service or "MANAGER" in service) and (
-                              service in cluster_service_link[cluster])]
+                              ("SERVER" in service or "MASTER" in service
+                               or "NAMENODE" in service or "MANAGER" in service)
+                              and (service in cluster_service_link[cluster])]
         masters_with_links.sort()
         masters_without_links = [service for service in cluster_service_host[cluster] if
-                                 ("SERVER" in service or "MASTER" in service or "NAMENODE" in service or "MANAGER" in service) and (
-                                 service not in cluster_service_link[cluster]) and (service not in masters_with_links)]
+                                 ("SERVER" in service or "MASTER" in service
+                                  or "NAMENODE" in service or "MANAGER" in service)
+                                 and (service not in cluster_service_link[cluster])
+                                 and (service not in masters_with_links)]
         masters_without_links.sort()
         others = [service for service in cluster_service_host[cluster] if
                   service not in (masters_without_links + masters_with_links)]
         others.sort()
-        #first print services with links!
+        # first print services with links!
         if format == "plain":
             retstr = retstr + "|--* Servers \n"
         else:
             retstr = retstr + "<b>Servers</b><p><ul>\n"
         for service in masters_with_links:
-            sprint=service
+            sprint = service
             if "_" in service:
-                sprint=' '.join(service.split("_")[:-1])
-            sprint=sprint.upper()[0]+sprint.lower()[1:]
+                sprint = ' '.join(service.split("_")[:-1])
+            sprint = sprint.upper()[0] + sprint.lower()[1:]
             if format == "plain":
                 retstr = retstr + "|  |--* "
             else:
@@ -329,12 +339,12 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
                 retstr = retstr + "\n"
             else:
                 retstr = retstr + "</li>\n"
-        #then print masters without links
+        # then print masters without links
         for service in masters_without_links:
-            sprint=service
+            sprint = service
             if "_" in service:
-                sprint=' '.join(service.split("_")[:-1])
-            sprint=sprint.upper()[0]+sprint.lower()[1:]
+                sprint = ' '.join(service.split("_")[:-1])
+            sprint = sprint.upper()[0] + sprint.lower()[1:]
             if format == "plain":
                 retstr = retstr + "|  |--* "
             else:
@@ -345,21 +355,22 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
                 retstr = retstr + "\n"
             else:
                 retstr = retstr + "</li>\n"
-        #then print clients
+        # then print clients
 
         if format == "plain":
             retstr = retstr + "|\n"
             retstr = retstr + "|--* Clients \n"
         else:
             retstr = retstr + "</ul><p><b>Clients</b><p><ul>\n"
-        hosts=cluster_host_service[cluster].keys()
+        hosts = cluster_host_service[cluster].keys()
         hosts.sort()
         for host in hosts:
             if format == "plain":
                 retstr = retstr + "|  |--* "
             else:
                 retstr = retstr + "  <li>"
-            retstr = retstr + host + " " + [c.lower() for c in cluster_host_service[cluster][host] if c in others].__str__()
+            retstr = retstr + host + " " + [c.lower()
+                                            for c in cluster_host_service[cluster][host] if c in others].__str__()
             if format == "plain":
                 retstr = retstr + "\n"
             else:
@@ -393,5 +404,4 @@ if __name__ == "__main__":
     print "Welcome to your KAVE"
     print pretty_print(cluster_service_host, cluster_host_service, cluster_service_link, format=format)
 
-#####  Get Services from the blueprint
-
+# Get Services from the blueprint

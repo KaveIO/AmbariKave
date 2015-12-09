@@ -25,6 +25,7 @@ from mysql_utils import mysql_configure
 
 
 class Mysql(Script):
+
     def install(self, env):
         import params
 

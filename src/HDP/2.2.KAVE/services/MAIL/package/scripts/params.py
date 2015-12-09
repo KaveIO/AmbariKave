@@ -20,11 +20,11 @@ from resource_management import *
 config = Script.get_config()
 
 hostname = default('configurations/mail/hostname', config['hostname'])
-if hostname=='hostname':
-    hostname=config['hostname']
+if hostname == 'hostname':
+    hostname = config['hostname']
 domain = default('configurations/mail/domain', '.'.join(hostname.split('.')[1:]))
-if domain=='hostdomain':
-    domain='.'.join(hostname.split('.')[1:])
+if domain == 'hostdomain':
+    domain = '.'.join(hostname.split('.')[1:])
 
 inet_interfaces = default('configurations/mail/inet_interfaces', 'all')
 inet_protocols = default('configurations/mail/inet_protocols', 'ipv4')

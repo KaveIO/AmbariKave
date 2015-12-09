@@ -22,7 +22,7 @@ from resource_management import *
 class Archiva(Script):
     installer_cache_path = '/tmp/'
     package = 'apache-archiva-2.2.0-bin.zip'
-    #archiva_mirror='http://www.us.apache.org/dist/archiva/2.2.0/binaries/apache-archiva-2.2.0-bin.zip'
+    # archiva_mirror='http://www.us.apache.org/dist/archiva/2.2.0/binaries/apache-archiva-2.2.0-bin.zip'
 
     def install(self, env):
         import params
@@ -33,8 +33,8 @@ class Archiva(Script):
         Execute('mkdir %s ' % params.install_directory)
         kc.copyCacheOrRepo(self.package, arch="noarch")
         Execute('mv %s %s ' % (self.package, params.install_directory))
-        Execute('unzip -q %s/%s -d %s' % (params.install_directory, self.package, params.install_directory ))
-        Execute('mv %s/apache-archiva*/* %s' % (params.install_directory, params.install_directory ))
+        Execute('unzip -q %s/%s -d %s' % (params.install_directory, self.package, params.install_directory))
+        Execute('mv %s/apache-archiva*/* %s' % (params.install_directory, params.install_directory))
         Execute('rm -rf  %s/apache-archiva*' % (params.install_directory))
         Execute('rm -rf  /opt/%s' % self.package)
         Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % params.install_directory)

@@ -23,7 +23,7 @@ class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
     checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root', '/opt/eclipse', '/opt/anaconda',
                  '/opt/kettle']
-    ostype="Centos6"
+    ostype = "Centos6"
 
     def runTest(self):
         # create remote machine
@@ -32,18 +32,18 @@ class TestKaveToolbox(base.LDTest):
 
         lD = self.preCheck()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari,iid=(None,None)
-        if self.ostype=="Centos6":
-            ambari,iid = self.deployDev()
+        ambari, iid = (None, None)
+        if self.ostype == "Centos6":
+            ambari, iid = self.deployDev()
         else:
-            ambari,iid = self.deployOS(self.ostype)
+            ambari, iid = self.deployOS(self.ostype)
             if self.ostype.startswith("Ubuntu"):
                 ambari.run('apt-get update')
         stdout = lD.runQuiet(
             deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict")
         self.assertTrue("installing toolbox in background process (check before bringing down the machine)" in stdout,
                         "Failed to install KaveToolbox from git, check: " + ' '.join(ambari.sshcmd()))
-        #clean the existing blueprint ready for re-install
+        # clean the existing blueprint ready for re-install
         import time
 
         time.sleep(15)
@@ -63,11 +63,11 @@ class TestKaveToolbox(base.LDTest):
             time.sleep(60)
         self.assertTrue(flag, "Installation of KaveToolbox not completed after 60 minutes")
         self.check(ambari)
-        #check the installed directories
+        # check the installed directories
         stdout = ambari.run("bash -c \"source /opt/KaveToolbox/scripts/KaveEnv.sh ; which python; which root;\"")
         self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/bin" in stdout,
                         "Environment sourcing fails to find installed packages")
-        #check other features
+        # check other features
         try:
             ambari.run("which vncserver")
             ambari.run("which emacs")
@@ -87,8 +87,9 @@ class TestKaveToolbox(base.LDTest):
                         "\n-----------------\n" + ' '.join(
                             ambari.sshcmd()))
         self.assertTrue("/opt/eclipse" in env,
-                        "Environment file not created correctly, no eclipse part\n" + env + "\n-----------------\n" + ' '.join(
-                            ambari.sshcmd()))
+                        "Environment file not created correctly, no eclipse part\n"
+                        + env + "\n-----------------\n"
+                        + ' '.join(ambari.sshcmd()))
         return
 
 
@@ -101,8 +102,8 @@ if __name__ == "__main__":
         sys.argv = [s for s in sys.argv if s != "--verbose"]
     test1 = TestKaveToolbox()
     test1.debug = verbose
-    if len(sys.argv)>1:
-        test1.ostype=sys.argv[1]
+    if len(sys.argv) > 1:
+        test1.ostype = sys.argv[1]
     suite = unittest.TestSuite()
     suite.addTest(test1)
     base.run(suite)

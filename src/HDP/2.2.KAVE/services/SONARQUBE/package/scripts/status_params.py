@@ -16,6 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
+from resource_management.core.system import System
 
 config = Script.get_config()
 

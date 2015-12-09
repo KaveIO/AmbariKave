@@ -38,7 +38,7 @@ import json
 
 def help():
     print __doc__
-    #sys.exit(code)
+    # sys.exit(code)
 
 
 installfrom = os.path.realpath(os.path.dirname(__file__))
@@ -94,7 +94,7 @@ def parseOpts():
 
 if __name__ == "__main__":
     ip, iid, security_conf, dest_type = parseOpts()
-    #only needed in main function
+    # only needed in main function
     installfrom = os.path.realpath(os.sep.join(__file__.split(os.sep)[:-1]))
     liblocation = os.path.realpath(installfrom)
     jsondat = open(os.path.expanduser(security_conf))
@@ -119,5 +119,5 @@ if __name__ == "__main__":
         git = True
         gitenv = security_config["AccessKeys"]["GIT"]
     lD.deployOurSoft(remote, pack="kavetoolbox", git=git, gitenv=gitenv)
-    #if dest_type == "workstation":
+    # if dest_type == "workstation":
     #    lD.confremotessh(remote)

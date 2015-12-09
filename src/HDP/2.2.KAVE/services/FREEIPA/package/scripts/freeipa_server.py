@@ -21,6 +21,7 @@ import datetime
 
 from resource_management import *
 
+
 class FreeipaServer(Script):
     admin_login = 'admin'
     admin_password_file = '/root/admin-password'
@@ -32,7 +33,9 @@ class FreeipaServer(Script):
         env.set_params(params)
 
         if params.ipa_server != params.hostname:
-            raise Exception('The FreeIPA server installation has a hard requirement to be installed on the ambari server. ambari_server: %s freeipa_server %s' % (params.ipa_server, params.hostname))
+            raise Exception('The FreeIPA server installation has a hard requirement to be installed'
+                            ' on the ambari server. ambari_server: %s freeipa_server %s'
+                            % (params.ipa_server, params.hostname))
 
         freeipa.create_required_users(params.required_users)
 
@@ -66,41 +69,42 @@ class FreeipaServer(Script):
             File("/root/admin-password",
                  content=Template("admin-password.j2", admin_password=admin_password),
                  mode=0600
-            )
-        #set the default shell
+                 )
+        # set the default shell
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
             fi.set_default_shell(params.default_shell)
         self.create_base_accounts(env)
-        #create initial users and groups
+        # create initial users and groups
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
 
             if "Users" in params.initial_users_and_groups:
                 for user in params.initial_users_and_groups["Users"]:
                     if type(user) is str or type(user) is not dict:
-                        user={"username":user}
-                    username=user["username"]
-                    password=None
+                        user = {"username": user}
+                    username = user["username"]
+                    password = None
                     if username in params.initial_user_passwords:
-                        password=params.initial_user_passwords[username]
-                    firstname=username
-                    lastname='auto_generated'
+                        password = params.initial_user_passwords[username]
+                    firstname = username
+                    lastname = 'auto_generated'
                     if 'firstname' in user:
-                        firstname=user['firstname']
+                        firstname = user['firstname']
                     if 'lastname' in user:
-                        lastname=user['lastname']
-                    fi.create_user_principal(identity=username, firstname=firstname, lastname=lastname, password=password)
+                        lastname = user['lastname']
+                    fi.create_user_principal(identity=username, firstname=firstname,
+                                             lastname=lastname, password=password)
                     if "email" in user:
-                        fi.set_user_email(username,user["email"])
+                        fi.set_user_email(username, user["email"])
             if "Groups" in params.initial_users_and_groups:
-                groups=params.initial_users_and_groups["Groups"]
+                groups = params.initial_users_and_groups["Groups"]
                 if type(groups) is dict:
-                    groups=[{"name":gname,"members":groups[gname]} for gname in groups]
+                    groups = [{"name": gname, "members": groups[gname]} for gname in groups]
                 for group in groups:
                     freeipa.create_group(group["name"])
                     for user in group["members"]:
-                        fi.group_add_member(group["name"],user)
-            fi.create_sudorule('allsudo',**(params.initial_sudoers))
-        #create robot admin
+                        fi.group_add_member(group["name"], user)
+            fi.create_sudorule('allsudo', **(params.initial_sudoers))
+        # create robot admin
         self.reset_robot_admin_expire_date(env)
         self.distribute_robot_admin_credentials(env)
 
@@ -144,16 +148,19 @@ class FreeipaServer(Script):
                     definition['permissions'])
 
             # Create ldap bind user
-            expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52*10)).strftime('%Y%m%d%H%M%SZ')
+            expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52 * 10)).strftime('%Y%m%d%H%M%SZ')
             File("/tmp/bind_user.ldif",
-                content=Template("bind_user.ldif.j2", expiry_date=expiry_date),
-                mode=0600
-            )
+                 content=Template("bind_user.ldif.j2", expiry_date=expiry_date),
+                 mode=0600
+                 )
             import kavecommon as kc
-            _stat,_stdout,_stderr=kc.mycmd('ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'% (params.directory_password, params.ldap_bind_user))
-            #is this user already added?
-            if "dn: uid="+params.ldap_bind_user not in _stdout:
-                Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/bind_user.ldif' % params.directory_password)
+            _stat, _stdout, _stderr = kc.mycmd(
+                'ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'
+                % (params.directory_password, params.ldap_bind_user))
+            # is this user already added?
+            if "dn: uid=" + params.ldap_bind_user not in _stdout:
+                Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/bind_user.ldif'
+                        % params.directory_password)
             for group in params.ldap_bind_services:
                 fi.create_group(group, group + ' user group', ['--nonposix'])
 
@@ -165,10 +172,10 @@ class FreeipaServer(Script):
         expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52)).strftime('%Y%m%d%H%M%SZ')
         File("/tmp/expire_date.ldif",
              content=Template("expire_date.ldif.j2",
-                login=rm.get_login(),
-                expiry_date=expiry_date),
+                              login=rm.get_login(),
+                              expiry_date=expiry_date),
              mode=0600
-        )
+             )
         Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/expire_date.ldif' % params.directory_password)
 
     def distribute_robot_admin_credentials(self, env):

@@ -25,6 +25,7 @@ import string
 import pwd
 import grp
 
+
 class RobotAdmin():
     """ A helper class for delegating credentials and tasks to client nodes.
 
@@ -75,8 +76,8 @@ class RobotAdmin():
         new_hosts = [host for host in all_hosts if host not in previously_distributed_hosts]
 
         for new_host in new_hosts:
-            subprocess.call(['scp','-o', 'StrictHostKeyChecking=no',
-                self.password_file, '%s:%s' % (new_host, self.password_file)])
+            subprocess.call(['scp', '-o', 'StrictHostKeyChecking=no',
+                             self.password_file, '%s:%s' % (new_host, self.password_file)])
 
         self._update_distributed_hosts(new_hosts)
 
@@ -94,8 +95,8 @@ class RobotAdmin():
             # Install the ipa-client software, This requires the robot-admin password.
             p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
             p2 = subprocess.Popen(['ipa-client-install', '--mkhomedir',
-                '--principal', self.login, '-W', '--server', server, '-U'] + options,
-                stdin=p1.stdout)
+                                   '--principal', self.login, '-W', '--server', server, '-U'] + options,
+                                  stdin=p1.stdout)
             p1.stdout.close()
             p2.communicate()
         else:
@@ -125,13 +126,14 @@ class RobotAdmin():
             # this call is a big part of the reason why freeipa is bound hard to
             # the ambari server.
             p = subprocess.Popen(['psql', 'ambari', 'ambari', '-q', '-A', '-t',
-                '-c', 'select hosts.host_name from hosts join hostcomponentstate \
+                                  '-c', 'select hosts.host_name from hosts join hostcomponentstate \
                 on hostcomponentstate.host_name = hosts.host_name where \
                 component_name = \'FREEIPA_CLIENT\';'], stdout=subprocess.PIPE,
-                env=env)
+                                 env=env)
             output, err = p.communicate()
             hosts = filter(bool, output.split("\n"))
             return hosts
+
 
 class FreeIPA(object):
 
@@ -155,7 +157,9 @@ class FreeIPA(object):
     def __exit__(self, type, value, trace):
         subprocess.call(['kdestroy'])
 
-    def create_user_principal(self, identity, firstname=None, lastname='auto_generated', groups=[], password=None, password_file=None):
+    def create_user_principal(self, identity, firstname=None,
+                              lastname='auto_generated', groups=[],
+                              password=None, password_file=None):
         if not self.user_exists(identity):
             if firstname is None:
                 firstname = identity
@@ -176,12 +180,13 @@ class FreeIPA(object):
         All other kwargs are passed as command line parameters --key=val
         """
         if not self.sudorule_exists(rulename):
-            cmd=['ipa', 'sudorule-add', rulename]+['--'+k+'='+v for k,v in kwargs.iteritems() if k!="Users" and k!="Groups"]
+            cmd = ['ipa', 'sudorule-add', rulename] + ['--' + k + '=' + v for k,
+                                                       v in kwargs.iteritems() if k != "Users" and k != "Groups"]
             subprocess.call(cmd)
             if "Users" in kwargs and len(kwargs["Users"]):
-                subprocess.call(['ipa', 'sudorule-add-user', '--users='+','.join(kwargs["Users"]),rulename])
+                subprocess.call(['ipa', 'sudorule-add-user', '--users=' + ','.join(kwargs["Users"]), rulename])
             if "Groups" in kwargs and len(kwargs["Groups"]):
-                subprocess.call(['ipa', 'sudorule-add-user', '--groups='+','.join(kwargs["Groups"]),rulename])
+                subprocess.call(['ipa', 'sudorule-add-user', '--groups=' + ','.join(kwargs["Groups"]), rulename])
         else:
             print 'Skipping user creation for %s. Rule already exists' % rulename
 
@@ -256,10 +261,10 @@ class FreeIPA(object):
         p2.communicate()
 
     def set_default_shell(self, shell):
-        subprocess.call(['ipa', 'config-mod', '--defaultshell='+shell])
+        subprocess.call(['ipa', 'config-mod', '--defaultshell=' + shell])
 
     def set_user_email(self, user, email):
-        subprocess.call(['ipa', 'user-mod', '--email="'+email+'"',user])
+        subprocess.call(['ipa', 'user-mod', '--email="' + email + '"', user])
 
 
 def generate_random_password(length=16):
@@ -270,6 +275,7 @@ def generate_random_password(length=16):
         length (int): How many characters the password contains
     """
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(length))
+
 
 def create_required_users(required_users):
     """
@@ -283,11 +289,12 @@ def create_required_users(required_users):
         required_users (object): object containing the users to add.
     """
     for user, details in required_users.iteritems():
-        groups = details['groups'] if details.has_key('groups') else []
-        comment = details['comment'] if details.has_key('comment') else ''
-        options = details['options'] if details.has_key('options') else []
+        groups = details['groups'] if ('groups' in details) else []
+        comment = details['comment'] if ('comment' in details) else ''
+        options = details['options'] if ('options' in details) else []
 
         create_user(user, groups, comment, options)
+
 
 def create_group(group):
     """
@@ -303,6 +310,7 @@ def create_group(group):
         grp.getgrnam(group)
     except KeyError:
         subprocess.call(['groupadd', group])
+
 
 def create_user(user, groups=[], comment='', options=[]):
     """
@@ -324,7 +332,7 @@ def create_user(user, groups=[], comment='', options=[]):
         pwd.getpwnam(user)
     except KeyError:
         if len(comment):
-           options.extend(['-c', comment])
+            options.extend(['-c', comment])
 
         if len(groups) == 0:
             subprocess.call(['useradd'] + options + [user])

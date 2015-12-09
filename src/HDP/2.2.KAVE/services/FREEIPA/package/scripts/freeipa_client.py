@@ -20,19 +20,20 @@ import os
 
 from resource_management import *
 
+
 class FreeipaClient(Script):
 
     packages = ['ntp', 'curl', 'wget', 'pdsh', 'openssl', 'ipa-client',
-        'ipa-admintools', 'oddjob-mkhomedir']
+                'ipa-admintools', 'oddjob-mkhomedir']
     ipa_client_install_lock_file = '/root/ipa_client_install_lock_file'
-
 
     def install(self, env):
         import params
         env.set_params(params)
-        installed_on_server=(params.ipa_server == params.hostname)
+        installed_on_server = (params.ipa_server == params.hostname)
         if installed_on_server:
-            print 'The FreeIPA client installation is modified when installed on the freeipa server: %s freeipa_server %s' % (params.ipa_server, params.hostname)
+            print 'The FreeIPA client installation is modified when installed on the freeipa server:',
+            print ' %s freeipa_server %s' % (params.ipa_server, params.hostname)
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:
@@ -53,10 +54,10 @@ class FreeipaClient(Script):
 
             Execute('chkconfig ntpd on')
 
-            # If we are installing freeipa with DNS the settings in resolv.conf must 
-            # be overriden. However these new settings wil probably not survive a 
+            # If we are installing freeipa with DNS the settings in resolv.conf must
+            # be overriden. However these new settings wil probably not survive a
             # network restart. This could cause potential problems.
-            if params.install_with_dns: 
+            if params.install_with_dns:
                 File("/etc/resolv.conf",
                      content=Template("resolv.conf.j2"),
                      mode=0644

@@ -24,7 +24,7 @@ usage add_ebsvol_to_instance.py iid [mount_conf='{"Mount": "/opt",   "Size" : 10
 
 iid: iid of machine to add to
 mount_conf : the standard JSON format we use to mount disks on Centos6 correctly, see the description of the
-*.aws.json files in the readme
+            *.aws.json files in the readme
 security_config, will be read from $AWSSECCONF if not passed here
 --help: print this help and exit
 
@@ -38,6 +38,7 @@ Fdisk is optional, if not given it will be guessed from "Attach" and the region.
 import sys
 import os
 import json
+
 
 def help():
     print __doc__
@@ -56,7 +57,7 @@ if "--verbose" in sys.argv or "--debug" in sys.argv:
     sys.argv = [s for s in sys.argv if s not in ["--verbose", "--debug"]]
     verbose = True
 
-strict=True
+strict = True
 if "--not-strict" in sys.argv:
     sys.argv = [s for s in sys.argv if s not in ["--not-strict"]]
     strict = False

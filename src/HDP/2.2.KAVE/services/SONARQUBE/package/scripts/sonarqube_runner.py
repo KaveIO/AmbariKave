@@ -20,6 +20,7 @@ from resource_management import *
 import kavecommon as kc
 import os
 
+
 class SonarQubeRunner(Script):
     installer_cache_path = '/tmp/'
     package = 'sonar-runner-dist-2.4.zip'
@@ -29,14 +30,14 @@ class SonarQubeRunner(Script):
 
         self.install_packages(env)
 
-        #protect against client downloading behind firewall
-        if not os.path.exists(params.sonarqube_runner_install_directory+'/current'):
+        # protect against client downloading behind firewall
+        if not os.path.exists(params.sonarqube_runner_install_directory + '/current'):
             kc.copyCacheOrRepo(self.package, arch="noarch")
             Execute('mkdir -p %s ' % params.sonarqube_runner_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_runner_install_directory))
             Execute('ln -sfn %s/sonar-runner-2.4 %s/current' % (
-                                                                params.sonarqube_runner_install_directory,
-                                                                params.sonarqube_runner_install_directory))
+                params.sonarqube_runner_install_directory,
+                params.sonarqube_runner_install_directory))
 
         self.configure(env)
 

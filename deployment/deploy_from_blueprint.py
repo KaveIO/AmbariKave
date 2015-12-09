@@ -85,7 +85,7 @@ try:
     akey = acconf["AccessKeys"]["SSH"]["KeyFile"]
     access_key = akey
 except:
-    #either invalid json or no key in this file
+    # either invalid json or no key in this file
     pass
 if not os.path.exists(os.path.expanduser(access_key)):
     raise IOError("Access key does not exist or invalid json file provided! " + access_key)
@@ -109,7 +109,7 @@ for group in cluster["host_groups"]:
         if host["fqdn"] not in hosts:
             hosts.append(host["fqdn"])
 
-#Check that the blueprint is what is asked for in the cluster config...
+# Check that the blueprint is what is asked for in the cluster config...
 if blueprint["Blueprints"]["blueprint_name"] != cluster["blueprint"]:
     raise ValueError("You've not asked for a cluster which uses this blueprint... try again!")
 
@@ -143,7 +143,7 @@ sys.stdout.flush()
 
 ambari = lD.remoteHost("root", thehost, access_key)
 
-#Step one, install myself, dsh and deploy ambari agents to all nodes
+# Step one, install myself, dsh and deploy ambari agents to all nodes
 try:
     ambari.run("which pdsh")
     ambari.run("which curl")
@@ -156,7 +156,7 @@ admin = ambari.run("hostname")
 
 whole_cluster = lD.multiremotes(hosts, jump=ambari)
 
-#Check if all nodes in the cluster are contactable
+# Check if all nodes in the cluster are contactable
 try:
     whole_cluster.check(firsttime=True)
 except RuntimeError:
@@ -164,15 +164,17 @@ except RuntimeError:
           "rest, fix and try again"
     raise
 
-#Verify that all nodes have similar system times
-ambtime=int(ambari.run("date -u '+%s'"))
-cltime=whole_cluster.run("date -u '+%s'")
-cltime=[(int(p.split(':')[-1])) for p in cltime.split('\n')]
+# Verify that all nodes have similar system times
+ambtime = int(ambari.run("date -u '+%s'"))
+cltime = whole_cluster.run("date -u '+%s'")
+cltime = [(int(p.split(':')[-1])) for p in cltime.split('\n')]
 
-if (max(cltime)-min(cltime))>(10*60):
-   raise RuntimeError('The system clocks are not synchronized, a difference of '+str(max(cltime)-min(cltime))+' seconds was found')
-if min(cltime)<(ambtime-5):
-   raise RuntimeError('At least one machine has a too early system clock, a difference of '+str(ambtime-min(cltime))+' seconds was found')
+if (max(cltime) - min(cltime)) > (10 * 60):
+    raise RuntimeError('The system clocks are not synchronized, a difference of ' +
+                       str(max(cltime) - min(cltime)) + ' seconds was found')
+if min(cltime) < (ambtime - 5):
+    raise RuntimeError('At least one machine has a too early system clock, a difference of ' +
+                       str(ambtime - min(cltime)) + ' seconds was found')
 
 try:
     if "no ambari-agent" in whole_cluster.run("which ambari-agent"):
@@ -180,7 +182,7 @@ try:
 except RuntimeError:
     whole_cluster.register()
     whole_cluster.run("yum -y install epel-release")
-    #TODO: instead copy this file _from_ the ambari node *to* the others!
+    # TODO: instead copy this file _from_ the ambari node *to* the others!
     # For the time being, copy to tmp, distribute if necessary
     copy_from = None
     for _repoption in ["/etc/yum.repos.d/ambari.repo", installfrom + "/repo/ambari.repo",
@@ -195,7 +197,7 @@ except RuntimeError:
         "\"bash -c 'if [ ! -e /etc/yum.repos.d/ambari.repo ] ; then cp /tmp/ambari.repo /etc/yum.repos.d/ambari.repo "
         "; fi; rm -f /tmp/ambari.repo ;'\"")
     try:
-        #try and retry
+        # try and retry
         whole_cluster.run("yum -y install ambari-agent curl wget")
     except RuntimeError:
         time.sleep(5)
@@ -207,7 +209,7 @@ except RuntimeError:
     whole_cluster.register()
     whole_cluster.cp(liblocation + "/../remotescripts/set_ambari_node.py", "set_ambari_node.py")
 
-#turn off se linux across the cluster ...
+# turn off se linux across the cluster ...
 whole_cluster.run("'echo 0 >/selinux/enforce'")
 whole_cluster.run("python set_ambari_node.py " + admin)
 try:
@@ -219,10 +221,13 @@ except RuntimeError:
     whole_cluster.run("ambari-agent start")
 time.sleep(5)
 
-#Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
+# Modify permissions of installed ambari agent components
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp;'
+                  ' chmod -R 0600 /var/lib/ambari-agent/data;'
                   'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
-whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
+whole_cluster.run(
+    '"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1;'
+    ' then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
 ##################################################################
 # Check that all hosts exist now
@@ -244,33 +249,51 @@ if not ok:
         "Registration Error, the hosts" + missing.__str__() + " do not exist, try curl --user admin:admin http://" +
         thehost + ":8080/api/v1/hosts")
 
-#Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp; chmod -R 0600 /var/lib/ambari-agent/data;'
+# Modify permissions of installed ambari agent components
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp;'
+                  ' chmod -R 0600 /var/lib/ambari-agent/data;'
                   'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
-whole_cluster.run('"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1; then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
+whole_cluster.run(
+    '"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1;'
+    ' then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
 
 ##################################################################
 # Add pdsh groups, for all hostgroups
 ##################################################################
 # for entire cluster
-clustername=clusterfile.split(os.sep)[-1].split('.')[0]
+clustername = clusterfile.split(os.sep)[-1].split('.')[0]
 ambari.run('mkdir -p ~/.dsh/group')
-for host in hosts:
-    ambari.run("echo "+host+" >> "+"~/.dsh/group/"+clustername)
-#for each hostgroup
+
+
+def add_hosts_to_pdsh_group(group, hosts):
+    """
+    Only add missing hosts into groups in the dsh group files
+    """
+    path = "~/.dsh/group/" + group
+    try:
+        exists = ambari.run('cat ' + path)
+    except RuntimeError:
+        exists = []
+    for host in hosts:
+        if host in exists:
+            continue
+        ambari.run("echo " + host + " >> " + path)
+
+add_hosts_to_pdsh_group(clustername, hosts)
+# for each hostgroup
 for group in cluster["host_groups"]:
-    hgname=group["name"]
-    for host in group["hosts"]:
-        ambari.run("echo "+host["fqdn"]+" >> "+"~/.dsh/group/"+clustername+"_"+hgname)
+    hgname = group["name"]
+    add_hosts_to_pdsh_group(clustername + '_' + hgname, [ahost["fqdn"] for ahost in group["hosts"]])
 
 ##################################################################
 # Register blueprint and cluster template
 ##################################################################
-print "Attempting to register blueprint ", blueprint["Blueprints"]["blueprint_name"], " and create cluster ", clustername
+print "Attempting to register blueprint ", blueprint["Blueprints"]["blueprint_name"],
+print " and create cluster ", clustername
 
 sys.stdout.flush()
 
-#next, register blueprint by name to the ambari server
+# next, register blueprint by name to the ambari server
 regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/blueprints/" + \
          blueprint["Blueprints"]["blueprint_name"] + "?validate_topology=false -d @" + os.path.expanduser(blueprintfile)
 regblueprint = lD.runQuiet(regcmd)
@@ -299,7 +322,7 @@ if blueprint["Blueprints"]["blueprint_name"] not in registered:
         "Blueprint does not exist, take a look yourself with " + "curl --user admin:admin http://" + thehost +
         ":8080/api/v1/blueprints/")
 
-#then add the cluster definition, should start all the processes
+# then add the cluster definition, should start all the processes
 regcmd = "curl --user admin:admin -H 'X-Requested-By:ambari' -X POST http://" + thehost + ":8080/api/v1/clusters/" + \
          clustername + " -d @" + os.path.expanduser(clusterfile)
 regcluster = lD.runQuiet(regcmd)
@@ -325,6 +348,7 @@ if "InProgress" not in regcluster:
     print >> sys.stderr, "Detected error registering cluster"
     sys.exit(1)
 
-print "Registration successful, configuration in progress, monitor through the web interface at http://" + thehost + ":8080"
+print("Registration successful, configuration in progress, monitor through the web interface at http://"
+      + thehost + ":8080")
 print "check clusters with curl --user admin:admin http://" + thehost + ":8080/api/v1/clusters"
 print "check hosts with curl --user admin:admin http://" + thehost + ":8080/api/v1/hosts"

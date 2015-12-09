@@ -27,7 +27,7 @@ short_host = config["hostname"].split('.')[0]
 AMBARI_ADMIN = config['configurations']['kavelanding']['AMBARI_ADMIN']
 AMBARI_ADMIN_PASS = config['configurations']['kavelanding']['AMBARI_ADMIN_PASS']
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
-#default('configurations/kavelanding/AMBARI_SERVER','ambari')
+# default('configurations/kavelanding/AMBARI_SERVER','ambari')
 www_folder = default('configurations/kavelanding/www_folder', '/var/www/html/')
 customlinks = default('configurations/kavelanding/customlinks', '{}')
 PORT = default('configurations/kavelanding/PORT', '80')
@@ -38,9 +38,9 @@ if servername == "default":
 
 # It's nice to accept " " and '' as values for customlinks without throwing json errors
 # smallest valid json will be {}
-if len(customlinks.strip())<=2:
-    customlinks='{}'
+if len(customlinks.strip()) <= 2:
+    customlinks = '{}'
 
 import json
-#test that custom links is valid json
+# test that custom links is valid json
 json.loads(customlinks)

@@ -35,10 +35,10 @@
     },
     {
       "name" : "replica",
-      "configurations" : [ { "mongodb" : {"tcp_port" : 27018, "setname" : "rs0" } } ],
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0" } } ],
       "components" : [
         { "name" : "GANGLIA_MONITOR"     },
-        { "name" : "MONGODB_REPLICA"     },
+        { "name" : "MONGODB_MASTER"     },
         { "name" : "MONGODB_CLIENT"      }
       ],
       "cardinality" : "1+"

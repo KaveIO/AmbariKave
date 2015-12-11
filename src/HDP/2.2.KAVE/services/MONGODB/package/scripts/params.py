@@ -29,11 +29,8 @@ tcp_port = default('configurations/mongodb/tcp_port', '27017')
 setname  = default('configurations/mongodb/setname',  'None')
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
 
-mongo_hosts = default('/clusterHostInfo/mongodb_replica_hosts', ['unknown'])
-if len(mongo_hosts)<2:
-    mongo_host = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])[0]
-else:
-    mongo_host = mongo_hosts[0]
+mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
+mongo_host = mongo_hosts[0]
 
 # This is carried over from previous single mongod config, probably needs reworking
 if mongo_host=="unknown":

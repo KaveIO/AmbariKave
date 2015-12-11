@@ -10,14 +10,14 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "mongodb" : {"tcp_port" : 27018, "setname" : "None" } } ],
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "None" } } ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },
         { "name" : "NAGIOS_SERVER"       },
         { "name" : "GANGLIA_MONITOR"     },
 	{ "name" : "MONGODB_CLIENT"      },
-	{ "name" : "MONGODB_REPLICA"      }
+	{ "name" : "MONGODB_MASTER"      }
       ],
       "cardinality" : "1"
     }

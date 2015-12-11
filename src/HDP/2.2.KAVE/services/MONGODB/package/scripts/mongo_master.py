@@ -49,6 +49,33 @@ class MongoMaster(MongoBase):
             mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
             print mongo_hosts
             if len(mongo_hosts)>1:
+                # write the configuration document to a file
+                f = open('replicaset_conf.js','w')
+                f.writelines([
+                  'config =\n',
+                  '{\n',
+                  '"_id" :',setname,',\n',
+                  '"members" : [\n'
+                  ]
+                )
+                for i in range(len(mongo_hosts)):
+                  f.writelines([
+                     '{\n',
+                     '"_id" :', str(i),', "host" : "', mongo_hosts[i], '"\n'
+                     '}'
+                     ]
+                  )
+                  if i<len(mongo_hosts)-1 :
+                    f.write(',\n')
+                  else :
+                    f.write('\n')
+                f.writelines([
+                  ']\n',
+                  '}\n',
+                  'rs.initiate(config)'
+                  ]
+                )
+                # insert the document into the primary worker node to start replication
                 Execute('mongo --host replica-001 < replicaset_conf.js')
 
     def stop(self, env):

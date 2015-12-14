@@ -22,6 +22,12 @@ import unittest
 class TestAService(base.LDTest):
 
     def runTest(self):
+        """
+        The remote_blueprint test ups a dev machine and installs a service simply through service.sh.
+        It monitors the status of the service specified with service.sh
+        This can only be applied to services which have no forced parameters, i.e. where the defauls
+        parameters work fine and are all that is needed.
+        """
         # create remote machine
         import os
         import sys

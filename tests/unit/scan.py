@@ -45,6 +45,10 @@ class TestScan(unittest.TestCase):
     def runTest(self):
         """
         Test kavescan, the library which polls our ambari installer.
+        Kavescan reads information from ambari as a blueprint and configuration
+        and then it formats the result.
+
+        In this unit test we can only check the parsing and formatting.
         """
         import os
         import sys

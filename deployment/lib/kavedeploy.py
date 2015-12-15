@@ -684,12 +684,18 @@ def confremotessh(remote, port=443):
     remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
     # restart services
-    remote.run("service sshd restart")
+    try:
+        remote.run("service sshd restart")
+    except RuntimeError:
+        remote.run("service ssh restart")
     import time
     time.sleep(2)
     remote.run("service iptables restart")
     time.sleep(1)
-    remote.run("service sshd restart")
+    try:
+        remote.run("service sshd restart")
+    except RuntimeError:
+        remote.run("service ssh restart")
 
 
 def confallssh(remote, restart=True):
@@ -702,7 +708,10 @@ def confallssh(remote, restart=True):
                + " >> /etc/ssh/sshd_config'")
     remote.run("bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
     if restart:
-        remote.run("service sshd restart")
+        try:
+            remote.run("service sshd restart")
+        except RuntimeError:
+            remote.run("service ssh restart")
         import time
         time.sleep(2)
 

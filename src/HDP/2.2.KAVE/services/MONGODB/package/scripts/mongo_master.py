@@ -70,16 +70,20 @@ class MongoMaster(MongoBase):
                         f.writelines([
                             ']\n',
                             '}\n',
-                            'rs.initiate(config)'
+                            'rs.initiate(config)\n'
                         ])
                 # insert the document into the primary worker node to start replication
                 import time
                 try:
                     time.sleep(10)
-                    Execute('mongo --host replica-001 < /tmp/replicaset_conf.js')
+                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug0.txt')
                 except:
+                    print "First replication initialization failed, I will try again in 60 seconds"
                     time.sleep(60)
-                    Execute('mongo --host replica-001 < /tmp/replicaset_conf.js')
+                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug1.txt')
+                import sys
+                print >> sys.stderr, "Deliberate failure"
+                sys.exit(1)
 
     def stop(self, env):
         print "stop services.."

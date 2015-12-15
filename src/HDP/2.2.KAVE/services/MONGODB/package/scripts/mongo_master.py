@@ -73,6 +73,7 @@ class MongoMaster(MongoBase):
                             'rs.initiate(config)'
                         ])
                 # insert the document into the primary worker node to start replication
+                import time
                 try:
                     time.sleep(10)
                     Execute('mongo --host ', mongo_hosts[0], ' < /tmp/replicaset_conf.js')

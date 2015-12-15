@@ -44,37 +44,34 @@ class MongoMaster(MongoBase):
         Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
-        setname  = default('configurations/mongodb/setname',  'None')
+        setname = default('configurations/mongodb/setname', 'None')
         if setname not in ["None", "False"]:
             mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
             print mongo_hosts
-            if len(mongo_hosts)>1:
+            if len(mongo_hosts) > 1:
                 # write the configuration document to a file
-                f = open('replicaset_conf.js','w')
+                f = open('replicaset_conf.js', 'w')
                 f.writelines([
-                  'config =\n',
-                  '{\n',
-                  '"_id" :',setname,',\n',
-                  '"members" : [\n'
-                  ]
-                )
+                    'config =\n',
+                    '{\n',
+                    '"_id" : "', setname, '",\n',
+                    '"members" : [\n'
+                ])
                 for i in range(len(mongo_hosts)):
-                  f.writelines([
-                     '{\n',
-                     '"_id" :', str(i),', "host" : "', mongo_hosts[i], '"\n'
-                     '}'
-                     ]
-                  )
-                  if i<len(mongo_hosts)-1 :
-                    f.write(',\n')
-                  else :
-                    f.write('\n')
-                f.writelines([
-                  ']\n',
-                  '}\n',
-                  'rs.initiate(config)'
-                  ]
-                )
+                    f.writelines([
+                        '{\n',
+                        '"_id" :', str(i), ', "host" : "', mongo_hosts[i], '"\n'
+                        '}'
+                    ])
+                    if i < len(mongo_hosts) - 1:
+                        f.write(',\n')
+                    else:
+                        f.write('\n')
+                    f.writelines([
+                        ']\n',
+                        '}\n',
+                        'rs.initiate(config)'
+                    ])
                 # insert the document into the primary worker node to start replication
                 Execute('mongo --host replica-001 < replicaset_conf.js')
 

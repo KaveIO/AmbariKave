@@ -33,13 +33,12 @@ mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
 mongo_host = mongo_hosts[0]
 
 # This is carried over from previous single mongod config, probably needs reworking
-if mongo_host=="unknown":
-    if bind_ip not in ['0.0.0.0','127.0.0.1']:
-        mongo_host=bind_ip
-if mongo_host==hostname:
-    mongo_host='localhost'
+if mongo_host == "unknown":
+    if bind_ip not in ['0.0.0.0', '127.0.0.1']:
+        mongo_host = bind_ip
+if mongo_host == hostname:
+    mongo_host = 'localhost'
 
 if setname in ["None", "False"]:
-  if len(mongo_hosts)<2:
-    setname = ""
-
+    if len(mongo_hosts) < 2:
+        setname = ""

@@ -50,4 +50,3 @@ worker_childopts = default('configurations/stormsd/stormsd.worker.childopts',
                            '-Xmx768m -Djava.net.preferIPv4Stack=true')
 drpc_childopts = default('configurations/stormsd/stormsd.drpc.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 log_level = default('configurations/stormsd/stormsd.loglevel', 'WARN')
-stormpackage=default('http://ftp.yz.yamagata-u.ac.jp/pub/network/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip',None)

@@ -44,8 +44,6 @@ class StormGeneric(Script):
         if not storm_dir_present:
             # download storm
             # kc.copyCacheOrRepo('storm-9.3.zip')
-            # import params
-            # Execute('wget '+ params.stormpackage)
             Execute('wget http://ftp.riken.jp/net/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip')
             Execute('unzip -o -q apache-storm-0.10.0.zip -d /usr/local')
             Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')

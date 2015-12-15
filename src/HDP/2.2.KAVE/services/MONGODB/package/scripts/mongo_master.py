@@ -50,7 +50,7 @@ class MongoMaster(MongoBase):
             print mongo_hosts
             if len(mongo_hosts) > 1:
                 # write the configuration document to a file
-                f = open('replicaset_conf.js', 'w')
+                f = open('/tmp/replicaset_conf.js', 'w')
                 f.writelines([
                     'config =\n',
                     '{\n',
@@ -73,7 +73,7 @@ class MongoMaster(MongoBase):
                         'rs.initiate(config)'
                     ])
                 # insert the document into the primary worker node to start replication
-                Execute('mongo --host replica-001 < replicaset_conf.js')
+                Execute('mongo --host replica-001 < /tmp/replicaset_conf.js')
 
     def stop(self, env):
         print "stop services.."

@@ -43,11 +43,12 @@ class StormGeneric(Script):
         storm_dir_present = os.path.isdir('/usr/local/storm')
         if not storm_dir_present:
             # download storm
-            kc.copyCacheOrRepo('storm-9.3.zip')
-            Execute('unzip -o -q storm-9.3.zip -d /usr/local')
-            Execute('mv /usr/local/apache-storm-0.9.3* /usr/local/storm-0.9.3')
-            Execute('chown -R storm:storm /usr/local/storm-0.9.3')
-            Execute('ln -s /usr/local/storm-0.9.3 /usr/local/storm')
+            # kc.copyCacheOrRepo('storm-9.3.zip')
+            Execute('http://www.eu.apache.org/dist/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip')
+            Execute('unzip -o -q storm-0.10.0.zip -d /usr/local')
+            Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')
+            Execute('chown -R storm:storm /usr/local/storm-0.10.0')
+            Execute('ln -s /usr/local/storm-0.10.0 /usr/local/storm')
             Execute('ln -s /usr/local/storm/bin/storm /usr/local/bin/storm')
 
         storm_home_dir = os.path.isdir('/app/storm')

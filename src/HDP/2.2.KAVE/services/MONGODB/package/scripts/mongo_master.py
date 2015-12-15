@@ -76,10 +76,10 @@ class MongoMaster(MongoBase):
                 import time
                 try:
                     time.sleep(10)
-                    Execute('mongo --host ', mongo_hosts[0], ' < /tmp/replicaset_conf.js')
+                    Execute('mongo --host replica-001 < /tmp/replicaset_conf.js')
                 except:
                     time.sleep(60)
-                    Execute('mongo --host ', mongo_hosts[1], ' < /tmp/replicaset_conf.js')
+                    Execute('mongo --host replica-001 < /tmp/replicaset_conf.js')
 
     def stop(self, env):
         print "stop services.."

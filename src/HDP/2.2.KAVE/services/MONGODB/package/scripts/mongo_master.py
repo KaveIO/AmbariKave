@@ -76,11 +76,11 @@ class MongoMaster(MongoBase):
                 import time
                 try:
                     time.sleep(10)
-                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug0.txt')
+                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug0.txt 2>&1&')
                 except:
                     print "First replication initialization failed, I will try again in 60 seconds"
                     time.sleep(60)
-                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug1.txt')
+                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug1.txt 2>&1&')
                 import sys
                 print >> sys.stderr, "Deliberate failure"
                 sys.exit(1)

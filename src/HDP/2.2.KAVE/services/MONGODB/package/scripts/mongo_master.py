@@ -67,11 +67,11 @@ class MongoMaster(MongoBase):
                         f.write(',\n')
                     else:
                         f.write('\n')
-                    f.writelines([
-                        ']\n',
-                        '}\n',
-                        'rs.initiate(config)'
-                    ])
+                        f.writelines([
+                            ']\n',
+                            '}\n',
+                            'rs.initiate(config)'
+                        ])
                 # insert the document into the primary worker node to start replication
                 Execute('mongo --host replica-001 < /tmp/replicaset_conf.js')
 

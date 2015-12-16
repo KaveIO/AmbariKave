@@ -44,6 +44,7 @@ class MongoMaster(MongoBase):
         Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
+        import params
         if params.setname not in ["None", "False"]:
             if len(params.mongo_hosts) > 1:
                 # write the configuration document to a file

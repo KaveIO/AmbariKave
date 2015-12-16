@@ -1,0 +1,9 @@
+config =
+{"_id" : "{{setname}}", "members" : [
+
+{% for i in range(len({{mongo_hosts}})) %}
+	{"_id" : {{i}}, "host" : "{{mongo_hosts[i]}}"}
+	{% if i < len({{mongo_hosts}}) - 1 %}, {% endif %}
+	{% else %}]} {% endif %}
+rs.initiate(config)
+exit

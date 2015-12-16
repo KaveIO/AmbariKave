@@ -48,14 +48,18 @@ class MongoMaster(MongoBase):
         if params.setname not in ["None", "False"]:
             if len(params.mongo_hosts) > 1:
                 # write the configuration document to a file
-                f = open('/tmp/replicaset_conf.js', 'w')
-                f.write('config = {"_id" : "' + params.setname + '", "members" : [')
-                for i in range(len(params.mongo_hosts)):
-                    f.write('{"_id" :' + str(i) + ', "host" : "' + params.mongo_hosts[i] + '"}')
-                    if i < len(params.mongo_hosts) - 1:
-                        f.write(',')
-                    else:
-                        f.write(']}\nrs.initiate(config)\nexit\n')
+                File('/tmp/replicaset_conf.js',
+                     content=Template("mongo_replication.conf.j2"),
+                     mode=0644
+                     )
+#                f = open('/tmp/replicaset_conf.js', 'w')
+#                f.write('config = {"_id" : "' + params.setname + '", "members" : [')
+#                for i in range(len(params.mongo_hosts)):
+#                    f.write('{"_id" :' + str(i) + ', "host" : "' + params.mongo_hosts[i] + '"}')
+#                    if i < len(params.mongo_hosts) - 1:
+#                        f.write(',')
+#                    else:
+#                        f.write(']}\nrs.initiate(config)\nexit\n')
                 # insert the document into the primary worker node to start replication
                 import time
                 time.sleep(300)

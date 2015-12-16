@@ -74,7 +74,7 @@ class StormGeneric(Script):
              content=Template("storm.yaml"),
              mode=0644
              )
-        File("/usr/local/storm/logback/cluster.xml",
+        File("/usr/local/storm/log4j2/cluster.xml",
              content=Template("cluster.xml.j2"),
              mode=0664)
 

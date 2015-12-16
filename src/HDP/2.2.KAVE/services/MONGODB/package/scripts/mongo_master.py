@@ -44,43 +44,26 @@ class MongoMaster(MongoBase):
         Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
-        setname = default('configurations/mongodb/setname', 'None')
-        if setname not in ["None", "False"]:
-            mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
-            print mongo_hosts
-            if len(mongo_hosts) > 1:
+        if params.setname not in ["None", "False"]:
+            if len(params.mongo_hosts) > 1:
                 # write the configuration document to a file
                 f = open('/tmp/replicaset_conf.js', 'w')
-                f.writelines([
-                    'config =\n',
-                    '{\n',
-                    '"_id" : "', setname, '",\n',
-                    '"members" : [\n'
-                ])
-                for i in range(len(mongo_hosts)):
-                    f.writelines([
-                        '{\n',
-                        '"_id" :', str(i), ', "host" : "', mongo_hosts[i], '"\n'
-                        '}'
-                    ])
-                    if i < len(mongo_hosts) - 1:
-                        f.write(',\n')
+                f.write('config = {"_id" : "' + params.setname + '", "members" : [')
+                for i in range(len(params.mongo_hosts)):
+                    f.write('{"_id" :' + str(i) + ', "host" : "' + params.mongo_hosts[i] + '"}')
+                    if i < len(params.mongo_hosts) - 1:
+                        f.write(',')
                     else:
-                        f.write('\n')
-                        f.writelines([
-                            ']\n',
-                            '}\n',
-                            'rs.initiate(config)\n'
-                        ])
+                        f.write(']}\n rs.initiate(config)\n exit\n')
                 # insert the document into the primary worker node to start replication
                 import time
                 try:
                     time.sleep(10)
-                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug0.txt 2>&1&')
+                    Execute('mongo < /tmp/replicaset_conf.js 2>&1&')
                 except:
                     print "First replication initialization failed, I will try again in 60 seconds"
                     time.sleep(60)
-                    Execute('mongo < /tmp/replicaset_conf.js > /tmp/replication_debug1.txt 2>&1&')
+                    Execute('mongo < /tmp/replicaset_conf.js  2>&1&')
                 import sys
                 print >> sys.stderr, "Deliberate failure"
                 sys.exit(1)

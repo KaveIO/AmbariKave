@@ -58,7 +58,7 @@ class MongoMaster(MongoBase):
                         f.write(']}\nrs.initiate(config)\nexit\n')
                 # insert the document into the primary worker node to start replication
                 import time
-                time.sleep(60)
+                time.sleep(300)
                 Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')
                 import sys
                 print >> sys.stderr, "Deliberate failure"

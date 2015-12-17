@@ -3,7 +3,7 @@ config =
 
 {% for i in range(length(mongo_hosts)) %}
 	{"_id" : {{i}}, "host" : "{{mongo_hosts[i]}}"}
-	{% if i < len(mongo_hosts) - 1 %}, {% else %}]} {% endif %}
+	{% if i < length(mongo_hosts) - 1 %}, {% else %}]} {% endif %}
 {% endfor %}
 rs.initiate(config)
 exit

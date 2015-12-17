@@ -1,9 +1,9 @@
 config =
 {"_id" : "{{setname}}", "members" : [
 
-{% for i in range(length(mongo_hosts)) %}
-	{"_id" : {{i}}, "host" : "{{mongo_hosts[i]}}"}
-	{% if i < length(mongo_hosts) - 1 %}, {% else %}]} {% endif %}
+{% for host in mongo_hosts %}
+	{"_id" : {{loop.index0}}, "host" : "{{host}}"}
+	{% if not loop.last %}, {% else %}]} {% endif %}
 {% endfor %}
 rs.initiate(config)
 exit

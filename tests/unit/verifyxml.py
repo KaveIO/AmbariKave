@@ -134,8 +134,8 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
         return ("".join(astr.replace("'", "").replace('+', '').replace('"', '').replace('\\', '').split()))
 
     def runTest(self):
-        """Check that properties are either defined or have a default set,
-        in case a default is set, check the same thing exists in the params file"""
+        """Check that properties are either forced to be entered or have a default set,
+        in case a default is set, check the same default exists in the params file"""
         import os
         import string
         failingxmlfiles = {}

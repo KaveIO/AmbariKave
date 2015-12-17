@@ -22,6 +22,9 @@ import base
 class TestKaveCommonLib(unittest.TestCase):
 
     def runTest(self):
+        """
+        Tests that verify the kavecommon library and simple functions in that library
+        """
         import kavecommon as kc
 
         sources = []

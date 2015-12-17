@@ -23,7 +23,7 @@ class TestLicense(unittest.TestCase):
 
     def runTest(self):
         """
-        Tests which do not need any environment parameters or access to aws
+        Tests that check that every file contains the apache 2.0 license
         """
         # this list is a list of things that we don't want to check
         ignore_regex = ['.*/build/.*']

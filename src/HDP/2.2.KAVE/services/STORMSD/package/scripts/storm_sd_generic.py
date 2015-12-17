@@ -45,7 +45,7 @@ class StormGeneric(Script):
             # download storm
             kc.copyCacheOrRepo('storm-10.0.zip')
             # http://ftp.riken.jp/net/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip
-            Execute('unzip -o -q apache-storm-0.10.0.zip -d /usr/local')
+            Execute('unzip -o -q storm-10.0.zip -d /usr/local')
             Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')
             Execute('chown -R storm:storm /usr/local/storm-0.10.0')
             Execute('ln -s /usr/local/storm-0.10.0 /usr/local/storm')

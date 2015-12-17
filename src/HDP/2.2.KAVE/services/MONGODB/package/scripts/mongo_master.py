@@ -52,21 +52,10 @@ class MongoMaster(MongoBase):
                      content=Template("mongo_replication.conf.j2"),
                      mode=0644
                      )
-#                f = open('/tmp/replicaset_conf.js', 'w')
-#                f.write('config = {"_id" : "' + params.setname + '", "members" : [')
-#                for i in range(len(params.mongo_hosts)):
-#                    f.write('{"_id" :' + str(i) + ', "host" : "' + params.mongo_hosts[i] + '"}')
-#                    if i < len(params.mongo_hosts) - 1:
-#                        f.write(',')
-#                    else:
-#                        f.write(']}\nrs.initiate(config)\nexit\n')
                 # insert the document into the primary worker node to start replication
                 import time
                 time.sleep(300)
                 Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')
-                import sys
-                print >> sys.stderr, "Deliberate failure"
-                sys.exit(1)
 
     def stop(self, env):
         print "stop services.."

@@ -43,7 +43,7 @@ class Gitlab(Script):
 
         kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
         #reset the password with setPassword method
-        self.setPassword(self,env)
+        self.setPassword(env)
         Execute('rpm --replacepkgs -i %s' % self.package)
         self.configure(env)
 

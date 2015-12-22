@@ -73,7 +73,7 @@ class Gitlab(Script):
         slave.stdin.write('u.password = \'%s\'\n' % admin_password)
         slave.stdin.write('u.password_confirmation = \'%s\'\n' % admin_password)
         slave.stdin.write('u.save!\n')
-        out,err=p.communicate()
+        out,err=slave.communicate()
         print out
 
 

@@ -59,18 +59,22 @@ class Gitlab(Script):
 
     #method to set admin password
     def setPassword(self, env):
+        print ("inside the setpassword method")
         import params
 
 
         env.set_params(params)
         admin_password=params.gitlab_admin_password
+        print ("the value of  the admin password")
+        print admin_password
         slave = Popen(['gitlab-rails', 'console'], stdin=PIPE, stdout=PIPE, stderr=STDOUT)
         #setting the admin password and printing the details on console
         slave.stdin.write('u = User.where(id:1).first\n')
         slave.stdin.write('u.password = \'%s\'\n' % admin_password)
         slave.stdin.write('u.password_confirmation = \'%s\'\n' % admin_password)
         slave.stdin.write('u.save!\n')
-
+        out,err=p.communicate()
+        print out
 
 
     def configure(self, env):

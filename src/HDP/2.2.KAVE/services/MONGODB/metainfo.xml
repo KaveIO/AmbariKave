@@ -29,16 +29,6 @@
                         <timeout>6000</timeout>
                     </commandScript>
                 </component>
-                <component>
-                    <name>MONGODB_REPLICA</name>
-                    <displayName>MongoDB Replica</displayName>
-                    <category>MASTER</category>
-                    <commandScript>
-                        <script>scripts/mongo_replica.py</script>
-                        <scriptType>PYTHON</scriptType>
-                        <timeout>6000</timeout>
-                    </commandScript>
-                </component>
             </components>
            <osSpecifics>
                 <osSpecific>

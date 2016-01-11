@@ -22,6 +22,15 @@ import unittest
 class TestCluster(base.LDTest):
 
     def runTest(self):
+        """
+        A complete integration test.
+        Providing that the files X.aws.json, X.cluster.json and X.blueprint.json exist
+        this test will check that the files make sense, and then create a cluster.
+        After the cluster is ready, the blueprint and clusterfile will be submitted
+        and the installation will be monitored to completion.
+
+        Common problems are fixed with service restarts
+        """
         # create remote machine
         import os
         import sys

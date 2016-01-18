@@ -19,6 +19,7 @@ import os
 import shutil
 
 from resource_management import *
+from subprocess import Popen, PIPE, STDOUT
 
 
 class Gitlab(Script):
@@ -40,8 +41,10 @@ class Gitlab(Script):
         env.set_params(params)
 
         kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
+        # reset the password with setPassword method
         Execute('rpm --replacepkgs -i %s' % self.package)
         self.configure(env)
+        self.setPassword(env)
 
     def start(self, env):
         self.configure(env)
@@ -49,6 +52,20 @@ class Gitlab(Script):
 
     def stop(self, env):
         Execute('gitlab-ctl stop')
+
+    # method to set admin password
+    def setPassword(self, env):
+        import params
+        env.set_params(params)
+        admin_password = params.gitlab_admin_password
+        slave = Popen(['gitlab-rails', 'console'], stdin=PIPE, stdout=PIPE, stderr=STDOUT)
+        # setting the admin password and printing the details on console
+        slave.stdin.write('u = User.where(id:1).first\n')
+        slave.stdin.write('u.password = \'%s\'\n' % admin_password)
+        slave.stdin.write('u.password_confirmation = \'%s\'\n' % admin_password)
+        slave.stdin.write('u.save!\n')
+        out, err = slave.communicate()
+        print out
 
     def configure(self, env):
         import params

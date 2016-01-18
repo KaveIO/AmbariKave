@@ -28,3 +28,15 @@ PORT = default('configurations/apache/PORT', '80')
 servername = default('configurations/apache/servername', hostname)
 if servername == "hostname":
     servername = hostname
+
+template_000_default = default('configurations/apache/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+ServerSignature Off
+ServerTokens Prod
+Options -Multiviews
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")

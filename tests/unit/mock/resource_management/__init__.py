@@ -81,3 +81,7 @@ def default(a, b):
     elif 'pass' in a and not a.endswith('initial_user_passwords'):
         return genrand()
     return b
+
+
+class Logger(object):
+    sensitive_strings = {}

@@ -30,6 +30,7 @@ class KaveLanding(ApacheScript):
         import kavecommon as kc
         super(KaveLanding, self).install(env)
         import os
+        Execute('pip install requests')
         Execute('cp ' + os.path.dirname(__file__) + '/KAVE-logo-thin.png ' + params.www_folder + '/')
         Execute('chmod 0644 ' + params.www_folder + '/KAVE-logo-thin.png')
         self.configure(env)

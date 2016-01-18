@@ -141,6 +141,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         remote.register()
         if not ambaridev:
             lD.renameRemoteHost(remote, machinename, 'kave.io')
+            lD.confallssh(remote)
         lD.addAsHost(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.privIP(iid))
         if ambaridev:
             if "GIT" in security_config["AccessKeys"]:

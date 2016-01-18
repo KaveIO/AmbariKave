@@ -26,6 +26,8 @@ short_host = config["hostname"].split('.')[0]
 
 AMBARI_ADMIN = config['configurations']['kavelanding']['AMBARI_ADMIN']
 AMBARI_ADMIN_PASS = config['configurations']['kavelanding']['AMBARI_ADMIN_PASS']
+Logger.sensitive_strings[AMBARI_ADMIN_PASS] = "[PROTECTED]"
+
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')
 www_folder = default('configurations/kavelanding/www_folder', '/var/www/html/')
@@ -44,3 +46,12 @@ if len(customlinks.strip()) <= 2:
 import json
 # test that custom links is valid json
 json.loads(customlinks)
+
+template_000_default = default('configurations/kavelanding/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")

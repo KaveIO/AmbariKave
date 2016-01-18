@@ -148,6 +148,7 @@ if iid is None:
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     remote.run("service iptables stop")
+    lD.confallssh(remote)
     lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip

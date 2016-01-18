@@ -32,7 +32,7 @@ from grp import getgrnam
 #  this password is intended to be widely known and is used here as an extension of the URL
 #
 __repo_url__ = "http://repos:kaverepos@repos.kave.io"
-__version__ = "1.3-Beta"
+__version__ = "1.4-Beta-Pre"
 __main_dir__ = "AmbariKave"
 __arch__ = "Centos6"
 __mirror_list_file__ = "/etc/kave/mirror"
@@ -245,7 +245,7 @@ class ApacheScript(res.Script):
         env.set_params(params)
         res.Execute('chkconfig --levels 235 httpd on')
         res.File('/etc/httpd/conf.d/000_default.conf',
-                 content=res.Template("000_default.conf.j2"),
+                 content=res.InlineTemplate(params.template_000_default),
                  mode=0644
                  )
         chownR('/etc/httpd/conf.d/', "apache")
@@ -260,13 +260,16 @@ class ApacheScript(res.Script):
             raise IOError("Temporary httpd.conf file corrupted!")
         res.Execute("cp tmp.cnf /etc/httpd/conf/httpd.conf")
         chownR('/etc/httpd/conf/', "apache")
-        res.Execute("apachectl graceful")
 
     def start(self, env):
         print "start apache"
         self.configure(env)
         # Execute('service httpd start')
+        # wait 3 seconds before calling start
+        import time
+        time.sleep(3)
         res.Execute("apachectl graceful")
+        time.sleep(3)
 
     def stop(self, env):
         print "stop apache.."

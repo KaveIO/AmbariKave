@@ -131,6 +131,12 @@ subnet = None
 if "Subnet" in security_config.keys():
     subnet = security_config["Subnet"]
 
+# Check that pdsh is locally installed
+try:
+    lD.runQuiet('which pdsh')
+except RuntimeError:
+    raise SystemError('pdsh is not installed, please install pdsh first. Pdsh is useful to speed up large deployments.')
+
 dnsiid = None
 
 if "CloudFormation" in cluster_config:
@@ -141,7 +147,8 @@ if "CloudFormation" in cluster_config:
     # replace default keys with those from the security config file?
     import datetime
 
-    _vpc_name = cluster_name + "-" + amazon_keypair_name + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
+    _vpc_name = cluster_name + "-" + \
+        amazon_keypair_name.replace('_', '') + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
     lA.createCloudFormation(_vpc_name, cluster_config["CloudFormation"]["Script"],
                             parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
     _info = lA.waitForStack(_vpc_name)
@@ -213,6 +220,11 @@ allremotes = ["ssh:root@" + remote.host for remote in instance_to_remote.values(
 allremotes = lD.multiremotes(list_of_hosts=allremotes, access_key=amazon_keyfile)
 print "test PDSH"
 print allremotes.run("echo yes")
+
+print "===================================="
+print "configure SSH on all machines"
+print "===================================="
+lD.confallssh(allremotes)
 
 print "===================================="
 print "name the instances"

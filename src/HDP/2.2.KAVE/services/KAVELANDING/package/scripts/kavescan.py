@@ -61,6 +61,9 @@ import kavecommon as kc
 import json
 import os
 import sys
+import requests
+from requests.auth import HTTPBasicAuth
+import copy
 
 # ambari, by default, has admin:admin as the username/password combination, but this is changable with the correct
 # options
@@ -110,15 +113,15 @@ def apiquery(request, host="localhost", exit=True, user=None, passwd=None, JSON=
         user = default_ambari_user
     if passwd is None:
         passwd = default_ambari_password
-    response = kc.mycmd(
-        "curl -H 'X-Requested-By:" + user + "' --user " + user + ":" + passwd + " http://" + host + ":8080/api/v1/" +
-        request)
-    response = response[1]  # stdout
+    url = "http://" + host + ":8080/api/v1/" + request
+    response = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By': 'ambari'})
+    if exit and response.status_code not in [200, 302]:
+        response.raise_for_status()
     if not JSON:
         return response
     if part is None:
-        return json.loads(response)
-    return json.loads(response)[part]
+        return copy.deepcopy(response.json())
+    return copy.deepcopy(response.json()[part])
 
 
 def host_to_hostgroup(host_components, blueprint):
@@ -213,9 +216,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
     shouldn't
     """
     # Check host is reachable
-    response = apiquery("clusters -i -I", exit=False, JSON=False, host=ambari, user=user, passwd=passwd)
-    if "200 OK" not in response:
-        raise NameError("Host could not be contacted, is Ambari running there? " + ambari)
+    response = apiquery("clusters", JSON=False, host=ambari, user=user, passwd=passwd)
 
     cluster_service_host = {}
     cluster_host_service = {}

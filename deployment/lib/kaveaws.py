@@ -68,7 +68,7 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                     },
                         "Centos7": {"default": "ami-e4ff5c93",
                                     "eu-west": "ami-e4ff5c93",
-                                    "ap-northeast": "mi-89634988",
+                                    "ap-northeast": "ami-89634988",
                                     "ap-southeast": "ami-aea582fc"
                                     },
                         "Ubuntu14": {"default": "ami-5da23a2a",
@@ -272,7 +272,11 @@ def addNewEBSVol(iid, conf, access_key):
     remote = lD.remoteHost("root", ip, access_key)
     remote.cp(os.path.dirname(__file__) + "/../remotescripts/fdiskwrap.sh", "~/fdiskwrap.sh")
     remote.run("chmod a+x fdiskwrap.sh")
-    remote.run("./fdiskwrap.sh " + conf["Fdisk"])
+    try:
+        remote.run("./fdiskwrap.sh " + conf["Fdisk"])
+    except RuntimeError:
+        time.sleep(30)
+        remote.run("./fdiskwrap.sh " + conf["Fdisk"])
     remote.run("mkfs.ext4 -b 4096 " + conf["Fdisk"] + "1 ")
     remote.run("bash -c 'echo \"" + conf["Fdisk"] + "1 " + conf["Mount"] + " ext4 defaults 1 1\" >> /etc/fstab'")
     mvto = " /" + conf["Mount"].replace("/", "_")

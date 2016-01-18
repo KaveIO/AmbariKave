@@ -24,6 +24,7 @@ import random
 import string
 import pwd
 import grp
+from resource_management import *
 
 
 class RobotAdmin():
@@ -69,9 +70,10 @@ class RobotAdmin():
     def get_freeipa(self, destroy_password_file=True):
         return FreeIPA(self.login, self.password_file, destroy_password_file)
 
-    def distribute_password(self):
+    def distribute_password(self, all_hosts=None):
         previously_distributed_hosts = self._previously_distributed_hosts()
-        all_hosts = self._all_hosts()
+        if all_hosts is None:
+            all_hosts = self._all_hosts()
 
         new_hosts = [host for host in all_hosts if host not in previously_distributed_hosts]
 
@@ -118,7 +120,7 @@ class RobotAdmin():
     def _all_hosts(self):
         with open(self.ambari_db_password_file) as f:
             password = f.read()
-
+            Logger.sensitive_strings[password] = "[PROTECTED]"
             env = os.environ.copy()
             env['PGPASSWORD'] = password
 
@@ -169,6 +171,7 @@ class FreeIPA(object):
                 self.group_add_member(group, identity)
 
             if password is not None:
+                Logger.sensitive_strings[password] = "[PROTECTED]"
                 self.update_password(identity, password, password_file)
         else:
             print 'Skipping user creation for %s. User already exists' % identity
@@ -253,6 +256,7 @@ class FreeIPA(object):
             password_file = '/root/%s-password' % user
 
         with os.fdopen(os.open(password_file, os.O_WRONLY | os.O_CREAT, 0600), 'w') as handle:
+            Logger.sensitive_strings[password] = "[PROTECTED]"
             handle.write(password)
 
         p1 = subprocess.Popen(['cat', password_file], stdout=subprocess.PIPE)

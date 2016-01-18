@@ -26,6 +26,10 @@ class TestKaveToolbox(base.LDTest):
     ostype = "Centos6"
 
     def runTest(self):
+        """
+        Check that we can install the head of KaveToolbox on aws machines
+        Three OSes are possible, Centos6, Centos7 and Ubuntu14
+        """
         # create remote machine
         import os
         import sys

@@ -26,6 +26,22 @@ yum install ambari-server -y
 yum install -y pdsh wget curl
 ambari-server setup -s
 
+# install requests library for python
+yum install -y python-pip
+pip install requests
+encrypt_number="4"
+
+version=`ambari-server --version`
+
+if [[ "$version" == "2.1."* ]]; then
+	encrypt_number="2"
+elif [[ "$version" == "1.7."* ]]; then
+	encrypt_number="4"
+else
+	echo "This script is not tested/ready for this version of Ambari"
+	exit 1
+fi
+
 ##########################################################
 # By default enable two-way ssl between server and agents!
 echo "security.server.two_way_ssl = true" >> /etc/ambari-server/conf/ambari.properties
@@ -40,7 +56,7 @@ chmod 600 /tmp/tmp.mkeywrap.temp
 echo "spawn ambari-server setup-security" > /tmp/tmp.mkeywrap.temp
 echo "expect \"Enter choice, (1-5): \"" >> /tmp/tmp.mkeywrap.temp
 #4 is setup master encryption key
-echo "send 4\\n;" >> /tmp/tmp.mkeywrap.temp
+echo "send $encrypt_number\\n;" >> /tmp/tmp.mkeywrap.temp
 echo "expect \"locking the credential store: \"" >> /tmp/tmp.mkeywrap.temp
 #Now input password
 echo -n "send \"" >> /tmp/tmp.mkeywrap.temp

@@ -17,4 +17,20 @@
         <value>hostname</value>
         <description>The name of the server. if blank or set to 'hostname', use the evaluated hostname (probably fqdn)</description>
     </property>
+    <property>
+        <name>template_000_default</name>
+        <value># Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+ServerSignature Off
+ServerTokens Prod
+Options -Multiviews
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+        </value>
+        <description>In order to ensure the settings we make are picked up, such as the port number, we create 0000_default.conf in the apache directory
+        Advanced users will want to edit this manually.</description>
+    </property>
 </configuration>

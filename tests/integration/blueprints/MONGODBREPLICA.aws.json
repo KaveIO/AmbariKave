@@ -1,0 +1,22 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin"
+  },
+  { "Name" : "gate",
+    "Count" : 1,
+    "InstanceType" : "t2.small",
+    "AccessType" : "gateway"
+  },
+  { "Name" : "replica",
+    "Count" : 3,
+    "InstanceType" : "t2.small",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc" }]
+  }
+  ]
+}

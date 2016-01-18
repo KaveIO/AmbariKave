@@ -133,10 +133,20 @@ class FreeipaServer(Script):
         # for now it serves its purpose.
         # In the latrest ambari, we can't use the database any further
         # because the database is modified, need to fix this at a later point
+        # unfortunately this will mostly fail during the status method
+        # if all_hosts is taken from params
+        # we need to log the failure and move on
         try:
             self.distribute_robot_admin_credentials(env)
-        except:
-            pass
+        except (subprocess.CalledProcessError, OSError, TypeError, ImportError, ValueError, KeyError) as e:
+            print "Failed to distribute robot credentials during status call: known exception type"
+            print e, type(e)
+            print sys.exc_info()
+        except Exception as e:
+            print "Failed to distribute robot credentials during status call: unknown exception type"
+            print e, type(e)
+            print sys.exc_info()
+
         Execute('service ipa status')
 
     def create_base_accounts(self, env):
@@ -194,13 +204,18 @@ class FreeipaServer(Script):
         Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/expire_date.ldif' % params.directory_password)
 
     def distribute_robot_admin_credentials(self, env):
-        all_hosts = None
+        # If this method is called during status, params will not
+        # be available, and therefore I will need to read all_hosts
+        # from the database instead
+        # trying to import params could result in many possible issues here,
+        # most commonly ImportError or KeyError
         try:
             import params
             env.set_params(params)
             all_hosts = params.all_hosts
         except (TypeError, ImportError, ValueError, KeyError):
-            pass
+            all_hosts = None
+
         rm = freeipa.RobotAdmin()
         print "distribution to all hosts with host being", all_hosts
         rm.distribute_password(all_hosts=all_hosts)

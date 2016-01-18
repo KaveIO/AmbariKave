@@ -29,10 +29,13 @@ class TestPyImport(unittest.TestCase):
     def tryimporting(self, fullpath):
         fname = os.path.basename(fullpath)
         path = os.path.realpath(os.path.dirname(fullpath))
-        # print path
         mname = fname.split('.')[0]
         if os.path.isfile(fullpath):
-            imp.load_source(mname, fullpath)
+            try:
+                imp.load_source(mname, fullpath)
+            except ImportError:
+                sys.path.append(os.path.dirname(fullpath))
+                imp.load_source(mname, fullpath)
         else:
             sys.path.append(path)
             found = imp.find_module(mname)
@@ -40,7 +43,8 @@ class TestPyImport(unittest.TestCase):
 
     def runTest(self):
         """
-        TCheck that there are no upper-case letters or dashes in python filenames
+        The most basic python test possible, checks that the files we have written
+        are importable in python, this is a basic sanity check
         """
         self.tryimporting(os.path.dirname(__file__) + '/mock/resource_management')
         self.tryimporting(os.path.dirname(__file__) + '/mock/socket.py')

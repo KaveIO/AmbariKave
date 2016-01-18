@@ -258,8 +258,10 @@ class remoteHost(object):
             propts = ' '.join(propts[:-1]) + " '" + propts[-1] + "'"
         else:
             propts = ""
-        cmd = "scp " + propts + " " + ' '.join(
-            strictopts()) + " -r -i " + self.access_key + " " + self.user + "@" + self.host + ":" + remote + " " + local
+        cmd = ("scp " + propts + " " + ' '.join(strictopts())
+               + " -r -i " + self.access_key + " " + self.user + "@"
+               + self.host + ":" + remote + " " + local
+               )
         return runQuiet(cmd)
 
     def check(self, firsttime=False):
@@ -561,7 +563,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "1.3-Beta"
+        version = "1.4-Beta-Pre"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -596,7 +598,8 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
         github_key_location = gitenv["KeyFile"]
         git_origin = gitenv["Origin"]
         if pack == "ambarikave":
-            _addambaritoremote(remote, github_key_location=github_key_location, git_origin=git_origin, branch=version,
+            _addambaritoremote(remote, github_key_location=github_key_location,
+                               git_origin=git_origin, branch=version,
                                background=background)
             return
         else:
@@ -681,12 +684,18 @@ def confremotessh(remote, port=443):
     remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
     # restart services
-    remote.run("service sshd restart")
+    try:
+        remote.run("service sshd restart")
+    except RuntimeError:
+        remote.run("service ssh restart")
     import time
     time.sleep(2)
     remote.run("service iptables restart")
     time.sleep(1)
-    remote.run("service sshd restart")
+    try:
+        remote.run("service sshd restart")
+    except RuntimeError:
+        remote.run("service ssh restart")
 
 
 def confallssh(remote, restart=True):
@@ -695,10 +704,14 @@ def confallssh(remote, restart=True):
     Forbid weak ssh encryption
     """
     remote.run("bash -c 'echo >> /etc/ssh/sshd_config'")
-    remote.run("bash -c 'echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" >> /etc/ssh/sshd_config'")
+    remote.run("bash -c 'echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" "
+               + " >> /etc/ssh/sshd_config'")
     remote.run("bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
     if restart:
-        remote.run("service sshd restart")
+        try:
+            remote.run("service sshd restart")
+        except RuntimeError:
+            remote.run("service ssh restart")
         import time
         time.sleep(2)
 

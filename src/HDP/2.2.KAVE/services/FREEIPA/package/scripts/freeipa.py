@@ -70,9 +70,10 @@ class RobotAdmin():
     def get_freeipa(self, destroy_password_file=True):
         return FreeIPA(self.login, self.password_file, destroy_password_file)
 
-    def distribute_password(self):
+    def distribute_password(self, all_hosts=None):
         previously_distributed_hosts = self._previously_distributed_hosts()
-        all_hosts = self._all_hosts()
+        if all_hosts is None:
+            all_hosts = self._all_hosts()
 
         new_hosts = [host for host in all_hosts if host not in previously_distributed_hosts]
 

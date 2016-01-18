@@ -19,6 +19,7 @@ import freeipa
 import os
 
 from resource_management import *
+from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class FreeipaClient(Script):
@@ -27,18 +28,29 @@ class FreeipaClient(Script):
                 'ipa-admintools', 'oddjob-mkhomedir']
     ipa_client_install_lock_file = '/root/ipa_client_install_lock_file'
 
+    def status(self, env):
+        if not os.path.exists(self.ipa_client_install_lock_file):
+            raise ComponentIsNotRunning()
+
     def install(self, env):
         import params
         env.set_params(params)
         installed_on_server = (params.ipa_server == params.hostname)
+
         if installed_on_server:
             print 'The FreeIPA client installation is modified when installed on the freeipa server:',
             print ' %s freeipa_server %s' % (params.ipa_server, params.hostname)
 
-        if not os.path.exists(self.ipa_client_install_lock_file):
-            with open(self.ipa_client_install_lock_file, 'w') as f:
-                f.write('')
-        else:
+        # If we are installing freeipa with DNS the settings in resolv.conf must
+        # be overriden. However these new settings wil probably not survive a
+        # network restart. This could cause potential problems.
+        if params.install_with_dns:
+            File("/etc/resolv.conf",
+                 content=InlineTemplate(params.resolvconf_template),
+                 mode=0644
+                 )
+
+        if os.path.exists(self.ipa_client_install_lock_file):
             print 'ipa client already installed, nothing to do here.'
             return
 
@@ -53,15 +65,6 @@ class FreeipaClient(Script):
                 Package(package)
 
             Execute('chkconfig ntpd on')
-
-            # If we are installing freeipa with DNS the settings in resolv.conf must
-            # be overriden. However these new settings wil probably not survive a
-            # network restart. This could cause potential problems.
-            if params.install_with_dns:
-                File("/etc/resolv.conf",
-                     content=Template("resolv.conf.j2"),
-                     mode=0644
-                     )
 
             # installs ipa-client software
             rm.client_install(params.ipa_server, params.domain, params.client_init_wait, params.install_with_dns)
@@ -90,6 +93,10 @@ class FreeipaClient(Script):
                     definition['user'],
                     definition['group'],
                     definition['permissions'])
+
+        if not os.path.exists(self.ipa_client_install_lock_file):
+            with open(self.ipa_client_install_lock_file, 'w') as f:
+                f.write('')
 
 if __name__ == "__main__":
     FreeipaClient().execute()

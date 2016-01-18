@@ -22,11 +22,11 @@ import os
 config = Script.get_config()
 hostname = config["hostname"]
 
-db_path = default('configurations/mongodb/db_path',  '/var/lib/mongo')
-logpath = default('configurations/mongodb/logpath',  '/var/log/mongodb/mongod.log')
-bind_ip = default('configurations/mongodb/bind_ip',  '0.0.0.0')
+db_path = default('configurations/mongodb/db_path', '/var/lib/mongo')
+logpath = default('configurations/mongodb/logpath', '/var/log/mongodb/mongod.log')
+bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
 tcp_port = default('configurations/mongodb/tcp_port', '27017')
-setname = default('configurations/mongodb/setname',  'None')
+setname = default('configurations/mongodb/setname', 'None')
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
 
 mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])

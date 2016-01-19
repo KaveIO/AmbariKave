@@ -55,7 +55,9 @@ class Jenkins(Script):
              )
         kc.chownR(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
         Execute('chkconfig jenkins on')
-        # self.start(env)
+        self.start(env)
+        #using curl to create username password for jenkinsl
+        Execute('curl -d "username='+params.JENKINS_USER+'password1='+params.JENKINS_USER_PASSWORD+'&email=user@kpmg.com&password2='+params.JENKINS_USER_PASSWORD+'&fullname=user&Submit=Sign%20up" "http://'+params.hostname+':'+params.JENKINS_PORT+'/securityRealm/createAccount"')
 
     def start(self, env):
         self.configure(env)

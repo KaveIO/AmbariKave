@@ -14,8 +14,13 @@
   </property>
   <property>
     <name>JENKINS_USER</name>
-    <value>jenkins</value>
+    <value></value>
     <description>Which username to use?</description>
+  </property>
+    <property>
+    <name>JENKINS_USER_PASSWORD</name>
+    <value></value>
+    <description>Which password to use?</description>
   </property>
   <property>
     <name>JENKINS_PORT</name>

@@ -19,6 +19,12 @@
     <property-type>PASSWORD</property-type>
   </property>
   <property>
+    <name>JENKINS_EMAIL</name>
+    <value>default@kave.io</value>
+    <description>Email Id of the user</description>
+  </property>
+
+  <property>
     <name>JENKINS_USER</name>
     <value>jenkins</value>
     <description>Which username should the jenkins service be run under?</description>

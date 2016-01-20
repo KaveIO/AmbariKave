@@ -59,8 +59,8 @@ class Jenkins(Script):
         # using curl to create username password for jenkinsl
         Execute('curl -d "username=' + params.JENKINS_ADMIN
                 + '&password1=' + params.JENKINS_ADMIN_PASSWORD
-                + '&email=user@kpmg.com&password2=' +
-                params.JENKINS_ADMIN_PASSWORD + '&fullname=user&Submit=Sign%20up" "http://'
+                + '&email='+params.JENKINS_EMAIL+'&password2=' +
+                params.JENKINS_ADMIN_PASSWORD + '&fullname=' + params.JENKINS_ADMIN+'&Submit=Sign%20up" "http://'
                 + params.hostname + ':' + str(params.JENKINS_PORT) + '/securityRealm/createAccount"')
 
     def start(self, env):

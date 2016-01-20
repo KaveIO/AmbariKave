@@ -61,7 +61,7 @@ class Jenkins(Script):
                 + 'password1=' + params.JENKINS_ADMIN_PASSWORD
                 + '&email=user@kpmg.com&password2=' +
                 params.JENKINS_ADMIN_PASSWORD + '&fullname=user&Submit=Sign%20up" "http://'
-                + params.hostname + ':' + params.JENKINS_PORT + '/securityRealm/createAccount"')
+                + params.hostname + ':' + str(params.JENKINS_PORT) + '/securityRealm/createAccount"')
 
     def start(self, env):
         self.configure(env)

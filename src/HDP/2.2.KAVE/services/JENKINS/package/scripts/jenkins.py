@@ -20,7 +20,6 @@ import os
 from resource_management import *
 import kavecommon as kc
 from resource_management.core.base import Fail
-from gevent.hub import sleep
 
 
 class Jenkins(Script):

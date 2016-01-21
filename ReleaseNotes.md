@@ -5,6 +5,10 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+
+# v1.4-Beta
+
+
 # v1.3-Beta
 
 * Bugfix release in preparation for migration to Ambari 2.X

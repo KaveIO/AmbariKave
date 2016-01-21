@@ -23,7 +23,8 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class KaveLanding(ApacheScript):
-
+    # status file is needed to know if this service was started, stores the name of the index file
+    status_file = '/etc/kave/kavelanding_started'
     def install(self, env):
         print "installing KaveLanding"
         import params
@@ -108,12 +109,13 @@ class KaveLanding(ApacheScript):
         kc.chownR(params.www_folder, "apache")
 
     def start(self, env):
-        if not os.path.exists('/etc/kave'):
-            os.makedirs('/etc/kave')
+        if not os.path.exists(os.path.dirname(self.status_file)):
+            os.makedirs(os.path.dirname(self.status_file))
         self.configure(env)
         super(KaveLanding, self).start(env)
         if os.path.exists(params.www_folder + '/index.html'):
-            os.system('touch /etc/kave/kavelanding_started')
+            with open(self.status_file,'w') as fp:
+                fp.write(params.www_folder + '/index.html')
 
     def stop(self, env):
         import params
@@ -121,11 +123,16 @@ class KaveLanding(ApacheScript):
         super(KaveLanding, self).stop(env)
         if os.path.exists(params.www_folder + '/index.html'):
             os.remove(params.www_folder + '/index.html')
-        if os.path.exists('/etc/kave/kavelanding_started'):
-            os.remove('/etc/kave/kavelanding_started')
+        if os.path.exists(self.status_file):
+            os.remove(self.status_file)
 
     def status(self, env):
-        if not os.path.exists('/etc/kave/kavelanding_started'):
+        if not os.path.exists(self.status_file):
+            raise ComponentIsNotRunning()
+        klfile=None
+        with open(self.status_file) as fp:
+            klfile = fp.read().split()[0].strip()
+        if len(klfile)<5 or (not os.path.exists(klfile)):
             raise ComponentIsNotRunning()
         super(KaveLanding, self).status(env)
 

@@ -25,6 +25,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 class KaveLanding(ApacheScript):
     # status file is needed to know if this service was started, stores the name of the index file
     status_file = '/etc/kave/kavelanding_started'
+
     def install(self, env):
         print "installing KaveLanding"
         import params
@@ -116,7 +117,7 @@ class KaveLanding(ApacheScript):
         super(KaveLanding, self).start(env)
         # Write the location of the index file into the status file
         if os.path.exists(params.www_folder + '/index.html'):
-            with open(self.status_file,'w') as fp:
+            with open(self.status_file, 'w') as fp:
                 fp.write(params.www_folder + '/index.html')
 
     def stop(self, env):
@@ -132,10 +133,10 @@ class KaveLanding(ApacheScript):
         # Read from the status file, and check the index exists
         if not os.path.exists(self.status_file):
             raise ComponentIsNotRunning()
-        klfile=None
+        klfile = None
         with open(self.status_file) as fp:
             klfile = fp.read().split()[0].strip()
-        if len(klfile)<5 or (not os.path.exists(klfile)):
+        if len(klfile) < 5 or (not os.path.exists(klfile)):
             raise ComponentIsNotRunning()
         super(KaveLanding, self).status(env)
 

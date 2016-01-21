@@ -1,0 +1,9 @@
+config =
+{"_id" : "{{setname}}", "members" : [
+{% for host in mongo_hosts %}
+	{"_id" : {{loop.index0}}, "host" : "{{host}}"}{% if not loop.last %},
+	{% else %}]}{% endif %}
+{% endfor %}
+
+rs.initiate(config)
+exit

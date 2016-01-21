@@ -153,9 +153,9 @@ for reservation in instances["Reservations"]:
         seconds = (datetime.datetime.utcnow() - lt).seconds
         # print days, seconds, instance["State"]["Name"] # bigger than 0 days, or bigger than 20 hours.
         # print instance["State"]["Name"]=="running", days==0, instance["State"]["Name"]=="stopped"
-        if instance["State"]["Name"] == "running" and days == 0 and seconds < hours * 3600:
+        if instance["State"]["Name"] == "running" and days == 0 and seconds < (hours * 3600):
             i_younger_than_x_hours.append(instance["InstanceId"])
-        if instance["State"]["Name"] == "stopped" and days == 0 and seconds < hours * 3600:
+        if instance["State"]["Name"] == "stopped" and days == 0 and seconds < (hours * 3600):
             i_younger_than_x_hours.append(instance["InstanceId"])
         if instance["State"]["Name"] == "stopped" and (days > 1 or seconds > 79200):
             i_stopped.append(instance["InstanceId"])

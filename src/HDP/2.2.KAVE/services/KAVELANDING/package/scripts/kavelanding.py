@@ -111,8 +111,10 @@ class KaveLanding(ApacheScript):
     def start(self, env):
         if not os.path.exists(os.path.dirname(self.status_file)):
             os.makedirs(os.path.dirname(self.status_file))
+        import params
         self.configure(env)
         super(KaveLanding, self).start(env)
+        # Write the location of the index file into the status file
         if os.path.exists(params.www_folder + '/index.html'):
             with open(self.status_file,'w') as fp:
                 fp.write(params.www_folder + '/index.html')
@@ -127,6 +129,7 @@ class KaveLanding(ApacheScript):
             os.remove(self.status_file)
 
     def status(self, env):
+        # Read from the status file, and check the index exists
         if not os.path.exists(self.status_file):
             raise ComponentIsNotRunning()
         klfile=None

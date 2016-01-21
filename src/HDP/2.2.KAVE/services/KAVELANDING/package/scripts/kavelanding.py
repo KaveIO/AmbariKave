@@ -108,8 +108,12 @@ class KaveLanding(ApacheScript):
         kc.chownR(params.www_folder, "apache")
 
     def start(self, env):
+        if not os.path.exists('/etc/kave'):
+            os.makedirs('/etc/kave')
         self.configure(env)
         super(KaveLanding, self).start(env)
+        if os.path.exists(params.www_folder + '/index.html'):
+            os.system('touch /etc/kave/kavelanding_started')
 
     def stop(self, env):
         import params
@@ -117,11 +121,11 @@ class KaveLanding(ApacheScript):
         super(KaveLanding, self).stop(env)
         if os.path.exists(params.www_folder + '/index.html'):
             os.remove(params.www_folder + '/index.html')
+        if os.path.exists('/etc/kave/kavelanding_started'):
+            os.remove('/etc/kave/kavelanding_started')
 
     def status(self, env):
-        # print "checking status..."
-        import params
-        if not os.path.exists(params.www_folder + '/index.html'):
+        if not os.path.exists('/etc/kave/kavelanding_started'):
             raise ComponentIsNotRunning()
         super(KaveLanding, self).status(env)
 

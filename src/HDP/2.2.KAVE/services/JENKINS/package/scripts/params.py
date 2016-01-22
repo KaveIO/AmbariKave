@@ -25,6 +25,15 @@ JENKINS_HOME = default("configurations/jenkins/JENKINS_HOME", "/var/lib/jenkins"
 JENKINS_PORT = default("configurations/jenkins/JENKINS_PORT", "8080")
 JENKINS_USER = default("configurations/jenkins/JENKINS_USER", "jenkins")
 JENKINS_ADMIN = default("configurations/jenkins/JENKINS_ADMIN", "admin")
+JENKINS_ADMIN_EMAIL = default("configurations/jenkins/JENKINS_ADMIN_EMAIL", "default")
+
+if JENKINS_ADMIN_EMAIL == 'default':
+    JENKINS_ADMIN_EMAIL = JENKINS_ADMIN + '@' + '.'.join(hostname.split('.')[1:])
+
+
+JENKINS_ADMIN_PASSWORD = config['configurations']['jenkins']['JENKINS_ADMIN_PASSWORD']
+Logger.sensitive_strings[JENKINS_ADMIN_PASSWORD] = "[PROTECTED]"
+
 download_version = default("configurations/jenkins/download_version", "1.624")
 plugins = default("configurations/jenkins/plugins",
                   "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, "

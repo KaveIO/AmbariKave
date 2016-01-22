@@ -19,6 +19,7 @@ import os
 
 from resource_management import *
 import kavecommon as kc
+from resource_management.core.base import Fail
 
 
 class Jenkins(Script):
@@ -55,7 +56,22 @@ class Jenkins(Script):
              )
         kc.chownR(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
         Execute('chkconfig jenkins on')
-        # self.start(env)
+        self.start(env)
+        # using curl to create username password for jenkinsl
+        curlCommand = ('curl -d "username=' + params.JENKINS_ADMIN
+                       + '&password1=' + params.JENKINS_ADMIN_PASSWORD
+                       + '&email=' + params.JENKINS_ADMIN_EMAIL + '&password2='
+                       + params.JENKINS_ADMIN_PASSWORD + '&fullname='
+                       + params.JENKINS_ADMIN + '&Submit=Sign%20up" "http://'
+                       + params.hostname + ':' + str(params.JENKINS_PORT) + '/securityRealm/createAccount"')
+        try:
+            Execute(curlCommand)
+        except Fail as ex:
+            print "the curl command met with failure the first time,,,trying in another 60 secs"
+            print ex
+            import time
+            time.sleep(60)
+            Execute(curlCommand)
 
     def start(self, env):
         self.configure(env)

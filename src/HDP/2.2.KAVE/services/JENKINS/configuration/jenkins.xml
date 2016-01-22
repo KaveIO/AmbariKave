@@ -12,10 +12,23 @@
     <value>/var/lib/jenkins</value>
     <description>Where to run jenkins from?</description>
   </property>
+  <property require-input = "true">
+    <name>JENKINS_ADMIN_PASSWORD</name>
+    <value></value>
+    <description>Which password to use?</description>
+    <property-type>PASSWORD</property-type>
+  </property>
+  <property>
+    <name>JENKINS_ADMIN_EMAIL</name>
+    <value>default</value>
+    <description>Email Id of the admin user
+    If this value is set to default we automatically set it to jenkins user name @ host domain  </description>
+  </property>
+
   <property>
     <name>JENKINS_USER</name>
     <value>jenkins</value>
-    <description>Which username to use?</description>
+    <description>Which username should the jenkins service be run under?</description>
   </property>
   <property>
     <name>JENKINS_PORT</name>

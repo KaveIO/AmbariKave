@@ -50,7 +50,8 @@
     },
     { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711" }  },
     { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
-    { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} }
+    { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
+    { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} }
   ],
   "host_groups" : [
     {

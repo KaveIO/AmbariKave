@@ -19,9 +19,10 @@
     <property-type>PASSWORD</property-type>
   </property>
   <property>
-    <name>JENKINS_EMAIL</name>
-    <value>default@kave.io</value>
-    <description>Email Id of the user</description>
+    <name>JENKINS_ADMIN_EMAIL</name>
+    <value>default</value>
+    <description>Email Id of the admin user
+    If this value is set to default we automatically set it to jenkins user name @ host domain  </description>
   </property>
 
   <property>

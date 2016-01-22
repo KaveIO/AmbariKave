@@ -49,7 +49,8 @@
     	}
     },
     { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
-    { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} }
+    { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
+    { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} }
   ],
   "host_groups" : [
     {

@@ -99,32 +99,11 @@ echo "Writing the centos6 installer: $RELEASE_INSTALLER"
 echo '#!/bin/bash' > $BUILD_DIR/$RELEASE_INSTALLER
 cat $PROJECT_DIR/LICENSE >> $BUILD_DIR/$RELEASE_INSTALLER
 echo '' >> $BUILD_DIR/$RELEASE_INSTALLER
-echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
-echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
 #echo 'set -o pipefail' >> $BUILD_DIR/$RELEASE_INSTALLER #not a good idea, causes failures even in actual successful situations
 echo 'CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"' >> $BUILD_DIR/$RELEASE_INSTALLER
 
 #Jump into cat until eof in order to write arbitrary things into the installer script
-cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
-
-# Should use wget for the repo, but the repo file online is broken and will mess the installation up (misses some repos)
-# wget http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.7.0/ambari.repo
-# sudo cp ambari.repo /etc/yum.repos.d
-
-# So, for the mean time, the above two lines are temporarily replaced by this:
-cat << EOT > /etc/yum.repos.d/ambari.repo
-EOF
-#Jump out of cat in order to insert the contents of the repo file
-cat $DEV_DIR/repo/ambari.repo >> $BUILD_DIR/$RELEASE_INSTALLER
-
-#Jump into cat until eof in order to end the above catting
-cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
-EOT
-EOF
-#Jump out of cat in order to insert the contents of the install snippet file
-cat $DEV_DIR/install_snippet.sh >> $BUILD_DIR/$RELEASE_INSTALLER
-
-#Jump into cat until eof in order to write arbitrary things into the installer script
+#First of all, find the name of the actual KAVE repo and copy method to use
 cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
 
 #
@@ -164,6 +143,34 @@ if [ -f /etc/kave/mirror ]; then
 	done < /etc/kave/mirror
 fi
 
+EOF
+
+# From now on, allow failures to stop the script
+echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
+echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
+
+#Jump into cat until eof in order to write arbitrary things into the installer script
+cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
+
+# Should use wget for the repo, but the repo file online is broken and will mess the installation up (misses some repos)
+# wget http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.7.0/ambari.repo
+# sudo cp ambari.repo /etc/yum.repos.d
+
+# So, for the mean time, the above two lines are temporarily replaced by this:
+cat << EOT > /etc/yum.repos.d/ambari.repo
+EOF
+#Jump out of cat in order to insert the contents of the repo file
+cat $DEV_DIR/repo/ambari.repo >> $BUILD_DIR/$RELEASE_INSTALLER
+
+#Jump into cat until eof in order to end the above catting
+cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
+EOT
+EOF
+#Jump out of cat in order to insert the contents of the install snippet file
+cat $DEV_DIR/install_snippet.sh >> $BUILD_DIR/$RELEASE_INSTALLER
+
+#Jump into cat until eof in order to write arbitrary things into the installer script
+cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
 
 if [ ! -f $RELEASE_PACKAGE ]; then
 	#echo \${checkout} \${repos_server}

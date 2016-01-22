@@ -47,6 +47,8 @@ Bugfixes:
     no longer show false-negative or false-positive running status
 * Twiki:
     Fix installation error where PhP is missing
+* Packaging script:
+    Fix packaging/installation script so that it copes with missing repositories in the mirrors file
 
 Modifications to tests and deployment:
 

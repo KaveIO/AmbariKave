@@ -16,6 +16,7 @@ General improvements:
 * Modify test/deployment framework to avoid ever using the ambari password as plain text on the command line
 * Review initial passwords across services
 * Finalize integration of remaining services with FreeIPA
+* Copy a lot of templates into the configuration files, so that the templates are also configurable
 
 New features/improvements in services:
 

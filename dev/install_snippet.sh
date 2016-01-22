@@ -27,6 +27,7 @@ yum install -y pdsh wget curl
 ambari-server setup -s
 
 # install requests library for python
+yum -y install epel-release
 yum install -y python-pip
 pip install requests
 encrypt_number="4"

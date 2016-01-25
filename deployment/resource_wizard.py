@@ -89,21 +89,21 @@ def round_to_upper_even(num):
 
 # Hadoop space required
 hadoop_nodes = max(int(float(data / 4)), 3)
-disk_per_node = ceil(max(float(data*3)/hadoop_nodes,0.5)*2)/2
-cores_per_node = round_to_upper_even(max(disk_per_node, 4))
+disk_per_node = ceil(max(float(data*9)/hadoop_nodes,0.5)*2)/2
+cores_per_node = round_to_upper_even(max(disk_per_node*6, 4))
 ram_per_node = cores_per_node * 5
 
 resultdf.loc[len(resultdf)]=['datanodes',hadoop_nodes,cores_per_node,ram_per_node,disk_per_node,30]
-resultdf.loc[len(resultdf)]=['namenodes',2,max(cores_per_node/2,min(cores_per_node,32)),max(ram_per_node/2,min(ram_per_node,64)),0,70]
+resultdf.loc[len(resultdf)]=['namenodes',2,max(cores_per_node/2,min(cores_per_node,8)),max(ram_per_node/2,min(ram_per_node,32)),0,70]
 
 #print resultdf
 
 # Gateways and home required
 gateways = ceil(float(ds) / 8)
 ds_per_gateway = ceil(float(ds)/gateways)
-gw_cores = round_to_upper_even(2+ds_per_gateway)
+gw_cores = max(round_to_upper_even(2+ds_per_gateway),8)
 gw_ram = gw_cores*4
-home_space = 100*(1+ds/gateways)
+home_space = 100*max(ds/gateways,1)
 other_space = 100
 
 

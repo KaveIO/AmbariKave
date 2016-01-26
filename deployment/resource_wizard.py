@@ -124,7 +124,7 @@ if ds>0:
 
 # Hadoop space required
 if data>=0.3:
-    print "NB: Recommended total hadoop storage is 3*(input data)*replication ~ 9*input size"
+    print "Recommended total hadoop storage is 3*(input data)*replication ~ 9*input size"
 
 if data>5:
     tdisk = data*9

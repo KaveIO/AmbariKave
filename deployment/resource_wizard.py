@@ -117,11 +117,13 @@ if ds>0:
     ds_per_gateway = ceil(float(ds)/gateways)
     gw_cores = max(round_to_upper_even(2+ds_per_gateway),8)
     gw_ram = gw_cores*4
-    home_space = 100*max(ds/gateways,1)
+    home_space = min(100*max(ds/gateways,1),500)
+    os_space=20*multinode+10
     other_space = 100
 
-    resultdf.loc[len(resultdf)]=['gateways',gateways,gw_cores,gw_ram,0.1,home_space+20*multinode+10]
+    resultdf.loc[len(resultdf)]=['gateways',gateways,gw_cores,gw_ram,0.1,min(home_space+os_space,500)]
 
+hadoop_nodes=0
 # Hadoop space required
 if data>=0.3:
     print "Recommended total hadoop storage is 3*(input data)*replication ~ 9*input size"
@@ -131,8 +133,8 @@ if data>5:
     hadoop_nodes = max(int(float(tdisk / 16)), 3)
     disk_per_node = 16
     cores_per_node = 64
-    ram_per_node = cores_per_node * 5
-    nnfac = 1 + int(hadoop_nodes>=12)
+    ram_per_node = round_to_upper_even(cores_per_node * 4)
+    nnfac = 2 - int(hadoop_nodes>=12)
     resultdf.loc[len(resultdf)]=['datanodes',hadoop_nodes,cores_per_node,ram_per_node,disk_per_node,30]
     resultdf.loc[len(resultdf)]=['namenodes',2,cores_per_node/nnfac,cores_per_node*4/nnfac,0,70]
 elif data>1.2:
@@ -145,7 +147,7 @@ elif data>1.2:
         cores_per_node=32
     elif disk_per_node <= 12:
         cores_per_node=48
-    ram_per_node = cores_per_node * 5
+    ram_per_node = round_to_upper_even(cores_per_node * 4)
 
     resultdf.loc[len(resultdf)]=['datanodes',hadoop_nodes,cores_per_node,ram_per_node,disk_per_node,30]
     # 16, 24, 32 cores for nn
@@ -212,21 +214,21 @@ sssum=resultdf_total.sum()
 sssum['name']='TOTAL'
 
 resultdf.loc[len(resultdf)] = sssum
-print "---------------Recommended Specs-------------------------------------------"
+print "-------------------- Recommended Specs ------------------------------------"
 print resultdf
 if multinode:
-    print "------------------Most relevant example blueprints-------------------------"
+    print "-----------------  Most relevant example blueprints  ----------------------"
     print "---- (don't forget to modify and test, especially modifying passwords) ----"
     if storm and hadoop_nodes>0:
-        print "test/integration/blueprint/examplelambda.*.json"
+        print "- test/integration/blueprint/examplelambda.*.json"
     elif hadoop_nodes>0:
-        print "test/integration/blueprint/examplehadoop.*.json"
+        print "- test/integration/blueprint/examplehadoop.*.json"
     else:
         if storm:
-            print "test/integration/blueprint/STORM.*.json"
+            print "- test/integration/blueprint/STORM.*.json"
         if dev:
-            print "test/integration/blueprint/exampledev.*.json"
+            print "- test/integration/blueprint/exampledev.*.json"
         if mongo:
-            print "test/service/blueprint/mongodb.*.json"
+            print "- test/service/blueprint/mongodb.*.json"
         if not (storm or dev or mongo):
-            print "test/integration/blueprint/KAVELANDING.*.json"
+            print "- test/integration/blueprint/KAVELANDING.*.json"

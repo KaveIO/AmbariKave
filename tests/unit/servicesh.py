@@ -23,7 +23,7 @@ class TestServiceSH(unittest.TestCase):
 
     def runTest(self):
         """
-        Tests which do not need any environment parameters or access to aws
+        Each service must appear twice in service.sh
         """
         # this list is a list of things that you can't install with service.sh, probably because the service has
         # multiple components

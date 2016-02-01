@@ -51,6 +51,7 @@ if [[ $res -ne 0 ]] ; then
 	exit 1
 fi
 
+
 if [ -z "$AWSSECCONF" ]; then
 	echo "NO AWSSECCONF VARIABLE DEFINED, NOT RUNNING AWS CHECKS"
 	echo "(export AWSSECCONF='/path/to/security/config/file')"

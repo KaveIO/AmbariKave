@@ -563,7 +563,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "1.3-Beta"
+        version = "1.4-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -684,12 +684,18 @@ def confremotessh(remote, port=443):
     remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
     remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
     # restart services
-    remote.run("service sshd restart")
+    try:
+        remote.run("service sshd restart")
+    except RuntimeError:
+        remote.run("service ssh restart")
     import time
     time.sleep(2)
     remote.run("service iptables restart")
     time.sleep(1)
-    remote.run("service sshd restart")
+    try:
+        remote.run("service sshd restart")
+    except RuntimeError:
+        remote.run("service ssh restart")
 
 
 def confallssh(remote, restart=True):
@@ -702,7 +708,10 @@ def confallssh(remote, restart=True):
                + " >> /etc/ssh/sshd_config'")
     remote.run("bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
     if restart:
-        remote.run("service sshd restart")
+        try:
+            remote.run("service sshd restart")
+        except RuntimeError:
+            remote.run("service ssh restart")
         import time
         time.sleep(2)
 

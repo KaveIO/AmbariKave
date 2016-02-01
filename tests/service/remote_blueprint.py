@@ -22,6 +22,10 @@ import unittest
 class TestBlueprint(base.LDTest):
 
     def runTest(self):
+        """
+        The remote_blueprint test ups a dev machine and submits a blueprint to it.
+        It monitors the status of the request corresponding to the blueprint
+        """
         # create remote machine
         import os
         import sys

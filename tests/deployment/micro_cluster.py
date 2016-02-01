@@ -24,7 +24,9 @@ class MicroCluster(base.LDTest):
 
     def runTest(self):
         """
-        Create a single centos instance with the up_aws_cluster script, the minimal test of this script
+        Create a small cloudformation cluster.
+        This checks slightly more than the single_machine_cluster.py since it also
+        verifies the local DNS is working afterwards.
         """
         import os
 

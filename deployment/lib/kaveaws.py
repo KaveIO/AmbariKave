@@ -68,7 +68,7 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                     },
                         "Centos7": {"default": "ami-e4ff5c93",
                                     "eu-west": "ami-e4ff5c93",
-                                    "ap-northeast": "mi-89634988",
+                                    "ap-northeast": "ami-89634988",
                                     "ap-southeast": "ami-aea582fc"
                                     },
                         "Ubuntu14": {"default": "ami-5da23a2a",

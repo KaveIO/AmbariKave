@@ -27,7 +27,6 @@ yum install -y pdsh wget curl
 ambari-server setup -s
 
 # install requests library for python
-yum install -y epel-release
 yum install -y python-pip
 pip install requests
 

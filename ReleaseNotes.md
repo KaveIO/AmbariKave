@@ -5,6 +5,61 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v1.4-Beta
+
+* Bugfix release in preparation to migration to Ambari 2.X
+* Over 50 independent fixes
+
+General improvements:
+
+* Use Ambari's protected strings feature to hide sensitive strings such as passwords from logs
+* Modify test/deployment framework to avoid ever using the ambari password as plain text on the command line
+* Review initial passwords across services
+* Finalize integration of remaining services with FreeIPA
+* Copy a lot of templates into the configuration files, so that the templates are also configurable
+
+New features/improvements in services:
+
+* StormSD:
+    Moved to Storm 10.0
+* FreeIPA:
+    kadm.acl is now configurable through ambari to control the kerberos admin users
+    resolv.conf now configurable
+ * Gitlab:
+    set initial gitlab root admin password based on configurable
+ * Sonar:
+    Integrate with Host-based access control to centralize user management with FreeIPA
+ * MongoDB:
+    Replication of datasets is now supported
+ * Twiki:
+    Integrate with Host-based access control and also LDAP to centralize user management with FreeIPA
+* Jenkins:
+    set initial jenkins root admin password based on configurable
+
+Bugfixes:
+
+* FreeIPA:
+    initial_passwords does not need to be of password type.
+    prepare for moving to version 2.X by coping with reading all hosts from all_hosts
+* Apache:
+    start/stop of Apache services now more reliable
+* KaveLanding:
+    no longer show false-negative or false-positive running status
+* Twiki:
+    Fix installation error where PhP is missing
+* Packaging script:
+    Fix packaging/installation script so that it copes with missing repositories in the mirrors file
+
+Modifications to tests and deployment:
+
+* Improved documentation
+* Check for PDSH at start of scripts
+* Respect git branches
+* Modify example blueprints for latest changes
+* New unit tests verify python completeness of files
+* More prior checking of blueprints within tests
+* Fix creating Centos7 clusters to avoid needing a tty terminal
+
 # v1.3-Beta
 
 * Bugfix release in preparation for migration to Ambari 2.X

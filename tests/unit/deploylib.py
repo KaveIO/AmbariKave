@@ -23,7 +23,8 @@ class TestDeployLib(unittest.TestCase):
 
     def runTest(self):
         """
-        Tests which do not need any environment parameters or access to aws
+        Tests which cehck the function of the deployment library,
+        but do not need any environment parameters or access to aws
         """
         import kavedeploy as lD
 

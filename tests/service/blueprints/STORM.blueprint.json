@@ -21,7 +21,8 @@
         { "name" : "NIMBUS_SD_MASTER"    },
         { "name" : "SUPERVISOR_SD_SLAVE" },
         { "name" : "STORMSD_UI_SERVER"   },
-        { "name" : "STORMSD_DRPC_SERVER"   }
+        { "name" : "STORMSD_DRPC_SERVER" },
+        { "name" : "STORMSD_CLIENT"      }
       ],
       "cardinality" : "1"
     }

@@ -24,7 +24,7 @@ class DepCentos7(base.LDTest):
 
     def runTest(self):
         """
-        Create a single centos instance with a script, and check that it is contactable at the end, including the
+        Create a single centos7 instance with a script, and check that it is contactable at the end, including the
         ambari server running there
         """
         import os

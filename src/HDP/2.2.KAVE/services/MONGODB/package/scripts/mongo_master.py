@@ -43,6 +43,20 @@ class MongoMaster(MongoBase):
         # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
         Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
 
+        # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
+        import params
+        if params.setname not in ["None", "False"]:
+            if len(params.mongo_hosts) > 1:
+                # write the configuration document to a file
+                File('/tmp/replicaset_conf.js',
+                     content=Template("mongo_replication.conf.j2"),
+                     mode=0644
+                     )
+                # insert the document into the primary worker node to start replication
+                import time
+                time.sleep(300)
+                Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')
+
     def stop(self, env):
         print "stop services.."
         Execute('service mongod stop')

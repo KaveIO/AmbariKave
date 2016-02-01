@@ -22,6 +22,11 @@ import unittest
 class TestServiceBlueprint(base.LDTest):
 
     def runTest(self):
+        """
+        The remote_blueprint test ups a dev machine and submits a blueprint to it.
+        It monitors the status of the service specified with service.sh
+        This can only work if the service to be monitored shares the same name as the blueprint
+        """
         # create remote machine
         import os
         import sys

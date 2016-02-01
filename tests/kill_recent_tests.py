@@ -17,14 +17,14 @@
 #
 ##############################################################################
 """
-usage: kill_recent_tests.py [security_config.json] [--verbose]
+usage: kill_recent_tests.py [hours=6] [security_config.json] [--verbose]
 
 Specify a security conf file, from where I will read the subnet and the keypair id,
 if none I will get it from the AWSSECCONF environment variable
 
 Remove all available volumes
 
-If younger than six hours and "Test" in the name:
+If younger than X hours and "Test" in the name:
     terminate instance
 
 If stopped and "Test" in the name and older than 22 hours:
@@ -56,19 +56,33 @@ if "--verbose" in sys.argv or "--debug" in sys.argv:
     sys.argv = [s for s in sys.argv if s not in ["--verbose", "--debug"]]
     verbose = True
 
-
 lD.debug = verbose
 lD.testproxy()
 
 keyfile = ""
 
-if len(sys.argv) > 2:
-    print __doc__
-    raise ValueError("Only one arguement allowed! The keyfile/security config")
+hours = 6
 
 if len(sys.argv) == 2:
-    keyfile = sys.argv[1]
-else:
+    try:
+        hours = int(sys.argv[1])
+    except ValueError:
+        keyfile = sys.argv[1]
+elif len(sys.argv) == 3:
+    try:
+        hours = int(sys.argv[2])
+    except ValueError:
+        keyfile = sys.argv[2]
+
+
+if hours > 23:
+    raise ValueError("I can only kill less than 24 hour old stuff, otherwise, do it yourself manually")
+
+if len(sys.argv) > 3:
+    print __doc__
+    raise ValueError("Only two arguements allowed! The keyfile/security config and the hours")
+
+if not len(keyfile):
     if "AWSSECCONF" not in os.environ:
         print __doc__
         raise IOError("please specify keyfile or set AWSSECCONF environment variable!")
@@ -102,7 +116,7 @@ instances = lA.runawstojson(
     amazon_keypair_name)
 # print instances
 
-i_younger_than_6_hours = []
+i_younger_than_x_hours = []
 i_stopped = []
 i_all = []
 
@@ -139,16 +153,16 @@ for reservation in instances["Reservations"]:
         seconds = (datetime.datetime.utcnow() - lt).seconds
         # print days, seconds, instance["State"]["Name"] # bigger than 0 days, or bigger than 20 hours.
         # print instance["State"]["Name"]=="running", days==0, instance["State"]["Name"]=="stopped"
-        if instance["State"]["Name"] == "running" and days == 0 and seconds < 21600:
-            i_younger_than_6_hours.append(instance["InstanceId"])
-        if instance["State"]["Name"] == "stopped" and days == 0 and seconds < 21600:
-            i_younger_than_6_hours.append(instance["InstanceId"])
+        if instance["State"]["Name"] == "running" and days == 0 and seconds < (hours * 3600):
+            i_younger_than_x_hours.append(instance["InstanceId"])
+        if instance["State"]["Name"] == "stopped" and days == 0 and seconds < (hours * 3600):
+            i_younger_than_x_hours.append(instance["InstanceId"])
         if instance["State"]["Name"] == "stopped" and (days > 1 or seconds > 79200):
             i_stopped.append(instance["InstanceId"])
 
 yn_ids = None
-if len(i_younger_than_6_hours) + len(i_stopped):
-    print "Terminating:", i_younger_than_6_hours + i_stopped
+if len(i_younger_than_x_hours) + len(i_stopped):
+    print "Terminating:", i_younger_than_x_hours + i_stopped
     yn_ids = raw_input("Continue? y/[n]").lower().strip()
 
 yes = set(['yes', 'y', 'ye'])
@@ -164,7 +178,7 @@ if yn_ids in yes:
         print ".",
         sys.__stdout__.flush()
     print " expired"
-    for iid in i_younger_than_6_hours + i_stopped:
+    for iid in i_younger_than_x_hours + i_stopped:
         try:
             lA.killinstance(iid)
         except RuntimeError:
@@ -247,7 +261,7 @@ if yn_vls in yes:
             failed.append(volID)
 
 if yn_ids in yes:
-    print "Terminated:", [s for s in i_younger_than_6_hours + i_stopped if s not in failed]
+    print "Terminated:", [s for s in i_younger_than_x_hours + i_stopped if s not in failed]
 
 if yn_stk in yes:
     print "Deleted:", [s for s in stacks_to_delete if s not in failed]
@@ -258,14 +272,14 @@ if yn_vls in yes:
 if len(failed):
     print "Warning: Failed to modify states of:", failed
 
-y6hfails = len([s for s in i_younger_than_6_hours if s in failed])
+yxhfails = len([s for s in i_younger_than_x_hours if s in failed])
 sfails = len([s for s in i_stopped if s in failed])
 vtkfails = len([s for s in vol_to_kill if s in failed])
 stkfails = len([s for s in stacks_to_delete if s in failed])
 # at least one failure, at least one request, and they all failed, this should be a big problem!
-tmy6hfails = (y6hfails and len(i_younger_than_6_hours) and oodfails == len(i_younger_than_6_hours))
+tmyxhfails = (yxhfails and len(i_younger_than_x_hours) and oodfails == len(i_younger_than_x_hours))
 tmsfails = (sfails and len(i_stopped) and oowfails == len(i_stopped))
 tmvtkfails = (vtkfails and len(vol_to_kill) and vtkfails == len(vol_to_kill))
 tmstkfails = (stkfails and len(stacks_to_delete) and stkfails == len(stacks_to_delete))
-if tmy6hfails or tmsfails or tmvtkfails or tmstkfails:
+if tmyxhfails or tmsfails or tmvtkfails or tmstkfails:
     raise RuntimeError("Entire categories failed to change state :( review status on ec2 webpage!")

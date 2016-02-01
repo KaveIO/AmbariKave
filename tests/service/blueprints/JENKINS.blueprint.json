@@ -10,7 +10,7 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "jenkins" : { "JENKINS_PORT" : 8888 } } ],
+      "configurations" : [ { "jenkins" : { "JENKINS_PORT" : 8888, "JENKINS_ADMIN_PASSWORD" : "ThisIsALongAndAnnoyingPasswordDontUseIt" } } ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "GANGLIA_SERVER"      },

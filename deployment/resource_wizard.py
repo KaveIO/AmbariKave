@@ -73,13 +73,13 @@ def yninput(message):
 
 data = floatip("How much INPUT static data in TB? ")
 ds = floatip("How many data scientists? ")
-mongo = yninput("Include MongoDB? ")
-jboss = yninput("Include frontend server, i.e. JBOSS? ")
 dev = yninput("Include development suite? ")
 storm = yninput("Include Storm (i.e. realtime data)? ")
 rtdata=0
 if storm:
     rtdata = floatip("How much realtime data in MB per day? ")
+mongo = yninput("Include MongoDB? ")
+jboss = yninput("Include frontend server, i.e. JBOSS? ")
 
 
 def round_to_upper_even(num):
@@ -214,4 +214,19 @@ sssum['name']='TOTAL'
 resultdf.loc[len(resultdf)] = sssum
 print "---------------Recommended Specs-------------------------------------------"
 print resultdf
-
+if multinode:
+    print "------------------Most relevant example blueprints-------------------------"
+    print "---- (don't forget to modify and test, especially modifying passwords) ----"
+    if storm and hadoop_nodes>0:
+        print "test/integration/blueprint/examplelambda.*.json"
+    elif hadoop_nodes>0:
+        print "test/integration/blueprint/examplehadoop.*.json"
+    else:
+        if storm:
+            print "test/integration/blueprint/STORM.*.json"
+        if dev:
+            print "test/integration/blueprint/exampledev.*.json"
+        if mongo:
+            print "test/service/blueprint/mongodb.*.json"
+        if not (storm or dev or mongo):
+            print "test/integration/blueprint/KAVELANDING.*.json"

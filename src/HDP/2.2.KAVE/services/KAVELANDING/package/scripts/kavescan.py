@@ -191,18 +191,22 @@ def pickprop(myconfigs, tofind):
     arithmetic = ''
     if " " in prop:
         arithmetic = ''.join(prop.split(" ")[1:])
-    # print comppath, compprop
-    # print myconfigs.keys()
     if comppath not in myconfigs:
         # print "no comppath"
         return default_port
+    this_conf = myconfigs[comppath]
+    # Adapt to ambari' new thing where it says 'properties' and 'properties_attributes'
+    if compprop not in this_conf and 'properties' in this_conf:
+        this_conf = this_conf['properties']
+    # print comppath, compprop
+    # print myconfigs.keys()
     # print myconfigs[comppath]
-    if not len([c == compprop for c in myconfigs[comppath]]):
+    if not len([c == compprop for c in this_conf]):
         # print "no comprop", myconfigs[comppath]
         return default_port
     if not len(arithmetic):
-        return myconfigs[comppath][compprop]
-    return eval_expr(myconfigs[comppath][compprop] + arithmetic)
+        return this_conf[compprop]
+    return eval_expr(this_conf[compprop] + arithmetic)
 
 
 def collect_config_data(ambari="localhost", user=None, passwd=None, ):

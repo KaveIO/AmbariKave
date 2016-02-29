@@ -36,6 +36,8 @@ version=`ambari-server --version`
 
 if [[ "$version" == "2.1."* ]]; then
 	encrypt_number="2"
+elif [[ "$version" == "2.2."* ]]; then
+	encrypt_number="2"
 elif [[ "$version" == "1.7."* ]]; then
 	encrypt_number="4"
 else

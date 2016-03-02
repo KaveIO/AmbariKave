@@ -51,6 +51,7 @@ import kaveaws as lA
 
 skip_ambari = False
 skip_blueprint = False
+version = "latest"
 
 
 def help():
@@ -61,6 +62,7 @@ def help():
 def parseOpts():
     global skip_ambari
     global skip_blueprint
+    global version
     if "-h" in sys.argv or "--help" in sys.argv:
         help()
         sys.exit(0)
@@ -73,6 +75,14 @@ def parseOpts():
     if "--verbose" in sys.argv:
         lD.debug = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
+    if "--this-branch" in sys.argv:
+        version = lD.runQuiet(
+            "bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
+        stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
+        if ("origin/" + version not in [s.strip() for s in stdout.split() if len(s.strip())]):
+            raise AttributeError( "There is no remote branch called " + version
+                                  + " push your branch back to the origin to deploy")
+        sys.argv = [s for s in sys.argv if s != "--this-branch"]
     if len(sys.argv) > 2:
         help()
         raise AttributeError("You supplied too many arguments")
@@ -148,8 +158,10 @@ if iid is None:
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     remote.run("service iptables stop")
+    remote.run("chkconfig iptables off")
     lD.confallssh(remote)
     lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
+    lA.addNewEBSVol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip
 
@@ -165,8 +177,8 @@ if (not skip_ambari) or (not skip_blueprint):
 #
 #
 if not skip_ambari:
-    print "Installing ambari head from git"
-    lD.deployOurSoft(remote, git=git, gitenv=gitenv)
+    print "Installing ambari " + version + " from git"
+    lD.deployOurSoft(remote, version=version, git=git, gitenv=gitenv)
     print "Awaiting ambari installation ..."
     lD.waitforambari(remote)
 

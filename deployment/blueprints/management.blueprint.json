@@ -1,11 +1,5 @@
 {
   "configurations" : [
-    {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
-      }
-    },
     { "gitlab": { "gitlab_admin_password": "temptest999999" } }
   ],
   "host_groups" : [

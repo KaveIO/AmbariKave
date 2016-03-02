@@ -402,7 +402,12 @@ class LDTest(unittest.TestCase):
         ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
                   + "/../remotescripts/default.netrc",
                   "~/.netrc")
-        self.resetambari(ambari)
+        return ambari, iid
+
+    def pull(self,ambari):
+        abranch = ""
+        if self.branch:
+            abranch = self.branch
         stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
         import time
 

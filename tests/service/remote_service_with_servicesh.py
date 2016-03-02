@@ -25,7 +25,7 @@ class TestAService(base.LDTest):
         """
         The remote_blueprint test ups a dev machine and installs a service simply through service.sh.
         It monitors the status of the service specified with service.sh
-        This can only be applied to services which have no forced parameters, i.e. where the defauls
+        This can only be applied to services which have no forced parameters, i.e. where the default
         parameters work fine and are all that is needed.
         """
         # create remote machine
@@ -37,12 +37,13 @@ class TestAService(base.LDTest):
         self.assertTrue(self.service in known, "The service " + self.service + " is unknown, check the case")
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         ambari, iid = self.deployDev()
+        self.pull(ambari)
         # restart ganglia and nagios
         if self.branch:
             abranch = self.service
-        for restart in ["GANGLIA", "NAGIOS"]:
+        for restart in ["METRICS_MONITOR", "AMBARI_METRICS"]:
             stdout = self.servicesh(ambari, "stop", restart)
-        for restart in ["GANGLIA", "NAGIOS"]:
+        for restart in ["AMBARI_METRICS", "METRICS_MONITOR"]:
             self.waitForService(ambari, restart)
         import time
 

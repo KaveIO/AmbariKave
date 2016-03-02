@@ -50,6 +50,7 @@ class TestBlueprint(base.LDTest):
                 self.assertTrue(False, "json file " + ason + " is not complete or not readable")
         ambari, iid = self.deployDev("c3.2xlarge")  # 2xlarge needed for single node hadoop!
         # clean the existing blueprint ready for re-install
+        self.pull(ambari)
         self.resetambari(ambari)
         self.deployBlueprint(ambari, bp, cf)
         return self.check(ambari)

@@ -114,9 +114,8 @@ class TestCluster(base.LDTest):
                         "wrong keyfile seen in (" + connectcmd + ")")
         ambari = lD.remoteHost("root", ip, keyfile)
         ambari.register()
+        self.pull(ambari)
         self.waitForAmbari(ambari)
-        if self.branch:
-            ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + self.branch)
         self.deployBlueprint(ambari, pref + ".blueprint.json", pref + ".cluster.json")
         return self.check(ambari)
 

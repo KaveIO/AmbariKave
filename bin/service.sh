@@ -290,6 +290,13 @@ elif [ $service = "TWIKI" ]; then
   component="TWIKI_SERVER"
 elif [ $service = "NAGIOS" ]; then
   component="NAGIOS_SERVER"
+elif [ $service = "AMBARI_METRICS" ]; then
+  component="METRICS_COLLECTOR"
+elif [ $service = "METRICS" ]; then
+  component="METRICS_COLLECTOR"
+elif [ $service = "METRICS_MONITOR" ]; then
+  service="AMBARI_METRICS"
+  component="METRICS_MONITOR"
 else
   echo "ERROR: unknown service caught: $service"
   runHelp

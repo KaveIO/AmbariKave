@@ -54,6 +54,7 @@ class TestServiceBlueprint(base.LDTest):
                 "try remote_blueprint.py")
         ambari, iid = self.deployDev()
         # clean the existing blueprint ready for re-install
+        self.pull(ambari)
         self.resetambari(ambari)
         self.deployBlueprint(ambari, bp, cf)
         # wait for the install and then check if the directories etc. are there

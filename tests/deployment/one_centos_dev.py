@@ -36,6 +36,7 @@ class DepCentos(base.LDTest):
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
+        self.pull(ambari)
         self.waitForAmbari(ambari)
         # test other features of ambari.run
         stdout = ambari.run("ls -l '/opt'")
@@ -45,7 +46,7 @@ class DepCentos(base.LDTest):
         stdout = ma.run("ls -l '/opt'")
         self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
         stdout = lD.runQuiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
-                             ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc"}\'')
+                             ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdd"}\'')
 
 
 def suite(verbose=False):

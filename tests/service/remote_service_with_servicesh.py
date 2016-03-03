@@ -50,7 +50,7 @@ class TestAService(base.LDTest):
         time.sleep(15)
         # install the component on top of the blueprint
         stdout = self.servicesh(ambari, "install", self.service)
-        self.assertTrue("InProgress" in stdout,
+        self.assertTrue("IN_PROGRESS" in stdout or "InProgress" in stdout or "status\" : \"Accepted" in stdout,
                         "Was unable to install " + self.service + " through service.sh, (" + ' '.join(
                             ambari.sshcmd()) + ")")
         self.waitForService(ambari)

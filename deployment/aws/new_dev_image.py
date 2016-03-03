@@ -20,12 +20,12 @@
 New dev image will first create a new centos6 machine and install the head of ambari onto it.
 It will then stop that instance and create an image from that instance, returning the ami registered id
 
-usage: new_dev_image.py [iid] [--verbose] [--already-has-ambari] [--already-has-blueprint]
+usage: new_dev_image.py [iid] [--verbose] [--skip-ambari] [--skip-blueprint]
 
 optional:
     iid: an instance that already exists with these keys
     --verbose : print all remotely running commands
-    --skip-ambari : skip installing of ambari itself, move stright to blueprint deploy
+    --skip-ambari : skip installing of ambari itself, move straight to blueprint deploy
     --skip-blueprint : skip blueprint deploy, move straight to image creation
 
 Will read $AWSSECCONF for the security config file

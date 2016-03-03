@@ -19,8 +19,8 @@
   <latest>http://public-repo-1.hortonworks.com/HDP/hdp_urlinfo.json</latest>
   <os family="redhat6">
     <repo>
-      <baseurl>http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.2.6.0</baseurl>
-      <repoid>HDP-2.2.KAVE</repoid>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.3.0.0</baseurl>
+      <repoid>HDP-2.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -29,10 +29,22 @@
       <reponame>HDP-UTILS</reponame>
     </repo>
   </os>
+  <os family="redhat7">
+    <repo>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.3.0.0</baseurl>
+      <repoid>HDP-2.3.KAVE</repoid>
+      <reponame>HDP</reponame>
+    </repo>
+    <repo>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/centos7</baseurl>
+      <repoid>HDP-UTILS-1.1.0.20</repoid>
+      <reponame>HDP-UTILS</reponame>
+    </repo>
+  </os>
   <os family="suse11">
     <repo>
-      <baseurl>http://public-repo-1.hortonworks.com/HDP/suse11sp3/2.x/updates/2.2.6.0</baseurl>
-      <repoid>HDP-2.2.KAVE</repoid>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP/suse11sp3/2.x/updates/2.3.0.0</baseurl>
+      <repoid>HDP-2.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -43,8 +55,32 @@
   </os>
   <os family="ubuntu12">
     <repo>
-      <baseurl>http://public-repo-1.hortonworks.com/HDP/ubuntu12/2.x/updates/2.2.6.0</baseurl>
-      <repoid>HDP-2.2.KAVE</repoid>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP/ubuntu12/2.x/updates/2.3.0.0</baseurl>
+      <repoid>HDP-2.3.KAVE</repoid>
+      <reponame>HDP</reponame>
+    </repo>
+    <repo>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/ubuntu12</baseurl>
+      <repoid>HDP-UTILS-1.1.0.20</repoid>
+      <reponame>HDP-UTILS</reponame>
+    </repo>
+  </os>
+  <os family="debian7">
+    <repo>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP/debian7/2.x/updates/2.3.0.0</baseurl>
+      <repoid>HDP-2.3.KAVE</repoid>
+      <reponame>HDP</reponame>
+    </repo>
+    <repo>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/debian6</baseurl>
+      <repoid>HDP-UTILS-1.1.0.20</repoid>
+      <reponame>HDP-UTILS</reponame>
+    </repo>
+  </os>
+  <os family="ubuntu14">
+    <repo>
+      <baseurl>http://public-repo-1.hortonworks.com/HDP/ubuntu14/2.x/updates/2.3.0.0</baseurl>
+      <repoid>HDP-2.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>

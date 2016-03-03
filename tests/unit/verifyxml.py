@@ -58,8 +58,13 @@ class TestXMLCompleteness(unittest.TestCase):
 
 
 class TestXMLContent(unittest.TestCase):
-    config_files = {"configuration": {"property": ["name", "value",
-                                                   "description", "comment", "property-type", "deleted"]}}
+    prop_dict_struct = {"name": [], "value": [],
+                        "display-name": [], "value-attributes": ["type", "overridable"],
+                        "description": [], "comment": [],
+                        "property-type": [], "deleted": [],
+                        "depends-on": {"property": ["type", "name"]}
+                        }
+    config_files = {"configuration": {"property": prop_dict_struct}}
     command_script_struct = ["script", "scriptType", "timeout"]
     components_struct = {"component": {"name": [], "displayName": [],
                                        "comment": [], "version": [],
@@ -126,7 +131,7 @@ class TestXMLContent(unittest.TestCase):
 
 
 class TestMatchRequiredOrDefault(unittest.TestCase):
-    skip = ['hive-site.xml']
+    skip = ['hive-site.xml', 'hdfs-site.xml', '_kave_hive-site.xml', 'oozie-site.xml']
     skip_prop = ['kavetoolbox/custom_install_template', 'twiki/ldap_bind_password',
                  'mail/hostname', 'mail/domain']
 

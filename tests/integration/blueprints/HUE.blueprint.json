@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -30,11 +29,10 @@
       "name":"admin",
       "components" : [
         { "name" : "AMBARI_SERVER"        },
-        { "name" : "NAGIOS_SERVER"        },
-        { "name" : "GANGLIA_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"    },
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
         { "name" : "NAMENODE"             },
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "ZOOKEEPER_SERVER"     },

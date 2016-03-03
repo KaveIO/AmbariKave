@@ -652,9 +652,14 @@ def waitforrequest(ambari, clustername, request, timeout=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= timeout:
-        stdout = ambari.run(
-            "curl --netrc http://localhost:8080/api/v1/clusters/"
-            + clustername + "/requests/" + str(request))
+        cmd = ("curl --netrc http://localhost:8080/api/v1/clusters/"
+               + clustername + "/requests/" + str(request))
+        #If this fails, wait a second and try again, then really fail
+        try:
+            stdout = ambari.run(cmd)
+        except RuntimeError:
+            time.sleep(3)
+            stdout = ambari.run(cmd)
         if '"request_status" : "FAILED"' in stdout:
             raise ValueError("request from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
         if '"request_status" : "COMPLETED"' in stdout:

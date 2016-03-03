@@ -412,7 +412,7 @@ class LDTest(unittest.TestCase):
         import time
 
         time.sleep(5)
-        return ambari, iid
+        return ambari
 
     def deployOS(self, osval, itype=None):
         """

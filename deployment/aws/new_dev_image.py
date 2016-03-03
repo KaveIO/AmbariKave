@@ -80,8 +80,8 @@ def parseOpts():
             "bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
         stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
         if ("origin/" + version not in [s.strip() for s in stdout.split() if len(s.strip())]):
-            raise AttributeError( "There is no remote branch called " + version
-                                  + " push your branch back to the origin to deploy")
+            raise AttributeError("There is no remote branch called " + version
+                                 + " push your branch back to the origin to deploy")
         sys.argv = [s for s in sys.argv if s != "--this-branch"]
     if len(sys.argv) > 2:
         help()

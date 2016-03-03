@@ -404,7 +404,7 @@ class LDTest(unittest.TestCase):
                   "~/.netrc")
         return ambari, iid
 
-    def pull(self,ambari):
+    def pull(self, ambari):
         abranch = ""
         if self.branch:
             abranch = self.branch

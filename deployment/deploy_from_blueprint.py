@@ -266,7 +266,7 @@ except RuntimeError:
 time.sleep(5)
 
 # Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then if [[ `ambari-agent --version` > \'2.2\' ]]; '
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then if [[ `ambari-agent --version` < \'2.2\' ]]; '
                   ' then mkdir -p /var/lib/ambari-agent/data/tmp;'
                   ' chmod -R 0600 /var/lib/ambari-agent/data;'
                   ' chmod -R a+X /var/lib/ambari-agent/data;'
@@ -298,7 +298,7 @@ if not ok:
         thehost + ":8080/api/v1/hosts")
 
 # Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then if [[ `ambari-agent --version` > \'2.2\' ]]; '
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then if [[ `ambari-agent --version` < \'2.2\' ]]; '
                   ' then mkdir -p /var/lib/ambari-agent/data/tmp;'
                   ' chmod -R 0600 /var/lib/ambari-agent/data;'
                   ' chmod -R a+X /var/lib/ambari-agent/data;'

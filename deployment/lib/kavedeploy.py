@@ -658,7 +658,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
         try:
             stdout = ambari.run(cmd)
         except RuntimeError:
-            time.sleep(1)
+            time.sleep(3)
             stdout = ambari.run(cmd)
         if '"request_status" : "FAILED"' in stdout:
             raise ValueError("request from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")

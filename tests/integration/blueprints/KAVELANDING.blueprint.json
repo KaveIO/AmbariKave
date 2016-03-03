@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -18,11 +17,12 @@
       "configurations" : [ { "mongodb" : {"tcp_port" : 29999 } }  ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
-        { "name" : "GANGLIA_SERVER"      },
-        { "name" : "NAGIOS_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "MONGODB_MASTER"      },
         { "name" : "MONGODB_CLIENT"      },
-        { "name" : "GANGLIA_MONITOR"     }
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    }
       ],
       "cardinality" : "1"
     },
@@ -30,7 +30,8 @@
       "name" : "gateway",
       "configurations" : [ ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "METRICS_MONITOR"  },
+        { "name" : "ZOOKEEPER_CLIENT" },
         { "name" : "KAVELANDING"      }
       ],
       "cardinality" : "1+"

@@ -2,7 +2,6 @@
     "blueprint" : "kavelanding",
     "default_password" : "admin",
     "configurations" : [
-      { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "nothing@nobody.com"} }
     ],
     "host_groups" : [
 	{

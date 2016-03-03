@@ -24,11 +24,10 @@
       "name":"single_node_group",
       "components" : [
         { "name" : "AMBARI_SERVER"        },
-        { "name" : "NAGIOS_SERVER"        },
-        { "name" : "GANGLIA_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"    },
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
         { "name" : "NAMENODE"             },
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "ZOOKEEPER_SERVER"     },

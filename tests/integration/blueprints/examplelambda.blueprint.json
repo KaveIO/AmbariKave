@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -58,12 +57,12 @@
       "name" : "admin",
       "configurations" : [ ],
       "components" : [
-        { "name" : "AMBARI_SERVER"   },
-        { "name" : "GANGLIA_SERVER"  },
-        { "name" : "NAGIOS_SERVER"   },
-        { "name" : "FREEIPA_SERVER"  },
-        { "name" : "GANGLIA_MONITOR" },
-        { "name" : "FREEIPA_CLIENT"  }
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "FREEIPA_SERVER"     },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
     },
@@ -83,7 +82,8 @@
         { "name" : "ZOOKEEPER_CLIENT"     },
 		{ "name" : "STORMSD_CLIENT"       },
 		{ "name" : "MONGODB_CLIENT"       },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
 
       ],
@@ -108,7 +108,8 @@
         { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVETOOLBOXNODE"      },
-		{ "name" : "GANGLIA_MONITOR"      },
+		{ "name" : "METRICS_MONITOR"      },
+		{ "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1"
@@ -120,7 +121,8 @@
         { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVETOOLBOXNODE"      },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1"
@@ -131,7 +133,8 @@
         { "name" : "DATANODE"             },
         { "name" : "NODEMANAGER"          },
         { "name" : "KAVETOOLBOXNODE"      },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1+"
@@ -141,7 +144,8 @@
       "components" : [
         { "name" : "MONGODB_MASTER"       },
         { "name" : "MONGODB_CLIENT"       },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1+"
@@ -152,7 +156,8 @@
       "components" : [
         { "name" : "APACHE_WEB_MASTER"     },
         { "name" : "JBOSS_APP_SERVER"      },
-        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      },
 		{ "name" : "MONGODB_CLIENT"        },
         { "name" : "FREEIPA_CLIENT"        }
       ],
@@ -182,7 +187,8 @@
 		{ "name" : "STORMSD_CLIENT"        },
 		{ "name" : "MONGODB_CLIENT"        },
         { "name" : "KAVETOOLBOXNODE"       },
-        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
@@ -196,7 +202,7 @@
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "KAVETOOLBOXNODE"    },
-        { "name" : "GANGLIA_MONITOR"    },
+        { "name" : "METRICS_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
@@ -205,11 +211,11 @@
       "name" : "supervisor",
       "configurations" : [  ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR"  },
-        { "name" : "KAVETOOLBOXNODE"  },
-        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "KAVETOOLBOXNODE"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "FREEIPA_CLIENT"   }
+        { "name" : "FREEIPA_CLIENT"      }
       ],
       "cardinality" : "1+"
     },
@@ -217,7 +223,7 @@
       "name" : "kafka",
       "configurations" : [ { "kafka-broker" : { "zookeeper.connect" : "nimbus.kave.io:2181,nno-001.kave.io:2181,nno-002.kave.io:2181" }  } ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR"  },
+        { "name" : "METRICS_MONITOR"  },
         { "name" : "KAVETOOLBOXNODE"  },
         { "name" : "ZOOKEEPER_CLIENT" },
         { "name" : "KAFKA_BROKER"     },

@@ -6,7 +6,7 @@
       "components" : [
         { "name" : "NAMENODE"             },
         { "name" : "SECONDARY_NAMENODE"   },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "DATANODE"             },

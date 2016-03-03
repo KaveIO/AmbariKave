@@ -7,11 +7,12 @@
       "name" : "admin",
       "configurations" : [ { "freeipa": { "directory_password": "bla12345", "ldap_bind_password": "bla456789" } } ],
       "components" : [
-        { "name" : "AMBARI_SERVER"   },
-        { "name" : "GANGLIA_SERVER"  },
-        { "name" : "NAGIOS_SERVER"   },
-        { "name" : "GANGLIA_MONITOR" },
-        { "name" : "FREEIPA_SERVER"  }
+        { "name" : "AMBARI_SERVER"     },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "ZOOKEEPER_SERVER"  },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  },
+        { "name" : "FREEIPA_SERVER"    }
       ],
       "cardinality" : "1"
     },
@@ -19,8 +20,9 @@
       "name" : "gitlabs",
       "configurations" : [  ],
       "components" : [
-        { "name" : "GITLAB_SERVER" },
-        { "name" : "GANGLIA_MONITOR" }
+        { "name" : "GITLAB_SERVER"   },
+        { "name" : "METRICS_MONITOR" },
+        { "name" : "ZOOKEEPER_CLIENT"}
       ],
       "cardinality" : "0-10"
     }

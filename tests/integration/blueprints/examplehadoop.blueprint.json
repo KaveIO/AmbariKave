@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -57,12 +56,12 @@
       "name" : "admin",
       "configurations" : [ ],
       "components" : [
-        { "name" : "AMBARI_SERVER"   },
-        { "name" : "GANGLIA_SERVER"  },
-        { "name" : "NAGIOS_SERVER"   },
-        { "name" : "GANGLIA_MONITOR" },
-        { "name" : "FREEIPA_SERVER"  },
-        { "name" : "FREEIPA_CLIENT"  }
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "FREEIPA_SERVER"     },
+        { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
     },
@@ -76,7 +75,7 @@
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "KAVELANDING"          },
 		{ "name" : "SQOOP"                },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
 		{ "name" : "HIVE_CLIENT"          },
 		{ "name" : "TEZ_CLIENT"           },
         { "name" : "FREEIPA_CLIENT"       },
@@ -104,9 +103,9 @@
         { "name" : "WEBHCAT_SERVER"       },
         { "name" : "MYSQL_SERVER"         },
 		{ "name" : "HUE_SERVER"           },
-        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVETOOLBOXNODE"      },
-		{ "name" : "GANGLIA_MONITOR"      },
+		{ "name" : "METRICS_MONITOR"      },
+		{ "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1"
@@ -116,7 +115,7 @@
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "KAVETOOLBOXNODE"      },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
@@ -128,7 +127,8 @@
         { "name" : "DATANODE"             },
         { "name" : "NODEMANAGER"          },
         { "name" : "KAVETOOLBOXNODE"      },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1+"
@@ -147,7 +147,8 @@
         { "name" : "SONARQUBE_MYSQL_SERVER"},
         { "name" : "SONARQUBE_RUNNER"      },
         { "name" : "KAVETOOLBOXNODE"       },
-        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"

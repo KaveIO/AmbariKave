@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "twiki" : { "ldap_bind_password": "testtestdirpass1234"} }
@@ -13,11 +12,12 @@
       "name" : "admin",
       "configurations" : [  ],
       "components" : [
-        { "name" : "AMBARI_SERVER"       },
-        { "name" : "GANGLIA_SERVER"      },
-        { "name" : "NAGIOS_SERVER"       },
-        { "name" : "TWIKI_SERVER"        },
-        { "name" : "GANGLIA_MONITOR"     }
+        { "name" : "AMBARI_SERVER"     },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "ZOOKEEPER_SERVER"  },
+        { "name" : "TWIKI_SERVER"      },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  }
       ],
       "cardinality" : "1"
     },
@@ -25,7 +25,8 @@
       "name" : "default",
       "configurations" : [ ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR" }
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  }
       ],
       "cardinality" : "0-10"
     }

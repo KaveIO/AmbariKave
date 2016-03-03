@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "sonarqube" : {
@@ -16,11 +15,12 @@
     {
       "name":"admin",
       "components" : [
-        { "name" : "AMBARI_SERVER"        },
-        { "name" : "NAGIOS_SERVER"        },
-        { "name" : "GANGLIA_SERVER"       },
-        { "name" : "GANGLIA_MONITOR"      },
-        { "name" : "SONARQUBE_SERVER"     },
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "SONARQUBE_SERVER"   },
         { "name" : "SONARQUBE_MYSQL_SERVER" },
         { "name" : "SONARQUBE_RUNNER"     }
       ],

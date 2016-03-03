@@ -30,7 +30,8 @@
       "name" : "default",
       "configurations" : [ ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR" }
+        { "name" : "METRICS_MONITOR" },
+        { "name" : "ZOOKEEPER_CLIENT"}
       ],
       "cardinality" : "0-10"
     }

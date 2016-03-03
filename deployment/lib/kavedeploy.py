@@ -654,7 +654,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
     while rounds <= timeout:
         cmd = ("curl --netrc http://localhost:8080/api/v1/clusters/"
                + clustername + "/requests/" + str(request))
-        #If this fails, wait a second and try again, then really fail
+        # If this fails, wait a second and try again, then really fail
         try:
             stdout = ambari.run(cmd)
         except RuntimeError:

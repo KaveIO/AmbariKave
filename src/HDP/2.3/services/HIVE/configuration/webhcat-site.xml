@@ -22,91 +22,23 @@ limitations under the License.
 <configuration supports_final="true">
 
   <property>
-    <name>templeton.jar</name>
-    <value>/usr/hdp/current/hive-webhcat/share/webhcat/svr/lib/hive-webhcat-*.jar</value>
-    <description>The path to the Templeton jar file.</description>
-  </property>
-
-  <property>
     <name>templeton.libjars</name>
-    <value>/usr/hdp/current/zookeeper-client/zookeeper.jar</value>
+    <value>/usr/hdp/${hdp.version}/zookeeper/zookeeper.jar,/usr/hdp/${hdp.version}/hive/lib/hive-common.jar</value>
     <description>Jars to add the the classpath.</description>
   </property>
 
   <property>
-    <name>templeton.hadoop</name>
-    <value>/usr/hdp/current/hadoop-client/bin/hadoop</value>
-    <description>The path to the Hadoop executable.</description>
-  </property>
-
-  <property>
-    <name>templeton.pig.archive</name>
-    <value>hdfs:///hdp/apps/${hdp.version}/pig/pig.tar.gz</value>
-    <description>The path to the Pig archive in HDFS.</description>
-  </property>
-
-  <property>
-    <name>templeton.pig.path</name>
-    <value>pig.tar.gz/pig/bin/pig</value>
-    <description>The path to the Pig executable.</description>
-  </property>
-
-  <property>
-    <name>templeton.hcat</name>
-    <value>/usr/hdp/current/hive-client/bin/hcat</value>
-    <description>The path to the hcatalog executable.</description>
-  </property>
-
-  <property>
-    <name>templeton.hive.archive</name>
-    <value>hdfs:///hdp/apps/${hdp.version}/hive/hive.tar.gz</value>
-    <description>The path to the Hive archive.</description>
-  </property>
-
-  <property>
-    <name>templeton.hive.home</name>
-    <value>hive.tar.gz/hive</value>
-    <description>The path to the Hive home within the tar. Has no effect if templeton.hive.archive is not set.</description>
-  </property>
-
-  <property>
-    <name>templeton.hcat.home</name>
-    <value>hive.tar.gz/hive/hcatalog</value>
-    <description>The path to the HCat home within the tar. Has no effect if templeton.hive.archive is not set.</description>
-  </property>
-
-  <property>
-    <name>templeton.hive.path</name>
-    <value>hive.tar.gz/hive/bin/hive</value>
-    <description>The path to the Hive executable.</description>
-  </property>
-
-  <property>
-    <name>templeton.sqoop.archive</name>
-    <value>hdfs:///hdp/apps/${hdp.version}/sqoop/sqoop.tar.gz</value>
-    <description>The path to the Sqoop archive in HDFS.</description>
-  </property>
-
-  <property>
-    <name>templeton.sqoop.path</name>
-    <value>sqoop.tar.gz/sqoop/bin/sqoop</value>
-    <description>The path to the Sqoop executable.</description>
-  </property>
-
-  <property>
-    <name>templeton.sqoop.home</name>
-    <value>sqoop.tar.gz/sqoop</value>
-    <description>The path to the Sqoop home within the tar. Has no effect if
-      templeton.sqoop.archive is not set.
+    <name>templeton.hive.extra.files</name>
+    <value>/usr/hdp/${hdp.version}/tez/conf/tez-site.xml,/usr/hdp/${hdp.version}/tez,/usr/hdp/${hdp.version}/tez/lib</value>
+    <description>The resources in this list will be localized to the node running LaunchMapper and added to HADOOP_CLASSPTH
+      before launching 'hive' command.  If the path /foo/bar is a directory, the contents of the the entire dir will be localized
+      and ./foo/* will be added to HADOOP_CLASSPATH.  Note that since classpath path processing does not recurse into subdirectories,
+      the paths in this property may be overlapping.  In the example above, "./tez-site.xml:./tez-client/*:./lib/*" will be added to
+      HADOOP_CLASSPATH.
+      This can be used to specify config files, Tez artifacts, etc.  This will be sent -files option of hadoop jar command thus
+      each path is interpreted by Generic Option Parser.  It can be local or hdfs path.
     </description>
   </property>
-
-  <property>
-    <name>templeton.streaming.jar</name>
-    <value>hdfs:///hdp/apps/${hdp.version}/mapreduce/hadoop-streaming.jar</value>
-    <description>The hdfs path to the Hadoop streaming jar file.</description>
-  </property>
-
 
 <!-- HUE specific configurations we added. -->
 

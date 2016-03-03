@@ -54,7 +54,7 @@ class TestScan(unittest.TestCase):
         import sys
 
         dir = os.path.realpath(os.path.dirname(__file__) + "/../../")
-        sys.path.append(os.path.realpath(dir + "/src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts"))
+        sys.path.append(os.path.realpath(dir + "/src/HDP/2.3.KAVE/services/KAVELANDING/package/scripts"))
         import kavescan as ls
 
         mockd1 = {"gah": {"fish": "food"}, "nah": {"foo": "bar"}}

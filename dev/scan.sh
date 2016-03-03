@@ -20,6 +20,6 @@
 # usage scan.sh [hostname=localhost] [username=admin] [password=admin]
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export PYTHONPATH=$CURRENT_DIR/../deployment:$CURRENT_DIR/../tests/base:$CURRENT_DIR/../src/shared:$CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts:$PYTHONPATH
+export PYTHONPATH=$CURRENT_DIR/../deployment:$CURRENT_DIR/../tests/base:$CURRENT_DIR/../src/shared:$CURRENT_DIR/../src/HDP/2.3.KAVE/services/KAVELANDING/package/scripts:$PYTHONPATH
 
-python $CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts/kavescan.py $@
+python $CURRENT_DIR/../src/HDP/2.3.KAVE/services/KAVELANDING/package/scripts/kavescan.py $@

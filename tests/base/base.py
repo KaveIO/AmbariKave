@@ -36,7 +36,7 @@ import Queue
 import subprocess as sub
 
 
-def findServices(stack="HDP/2.2.KAVE/services"):
+def findServices(stack="HDP/2.3.KAVE/services"):
     """
     Nice little helper function which lists all our services.
     returns a list of [(service-name, directory)]

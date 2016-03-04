@@ -162,6 +162,8 @@ if iid is None:
     lD.confallssh(remote)
     lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     lA.addNewEBSVol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
+    lA.addNewEBSVol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
+    lA.addNewEBSVol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip
 

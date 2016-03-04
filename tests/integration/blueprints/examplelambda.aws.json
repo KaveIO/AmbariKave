@@ -4,63 +4,82 @@
   { "Name" : "ambari",
     "Count" : -1,
     "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdd" } ]
   },
   { "Name" : "gate",
     "Count" : 1,
     "InstanceType" : "c3.large",
     "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
+                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "kafka",
     "Count" : 1,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "jboss",
     "Count" : -1,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "ci",
     "Count" : -1,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "mongo",
     "Count" : -1,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc" }]
+    				 {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" }]
   },
   { "Name" : "nno",
     "Count" : 2,
     "InstanceType" : "c3.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   { "Name" : "data",
     "Count" : 3,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdc" }  ]
+    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" }  ]
   },
   { "Name" : "nimbus",
     "Count" : -1,
     "InstanceType" : "c3.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "wrk",
     "Count" : 3,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   }
   ]
 }

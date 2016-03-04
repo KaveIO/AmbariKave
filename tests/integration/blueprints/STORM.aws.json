@@ -4,22 +4,28 @@
   { "Name" : "ambari",
     "Count" : -1,
     "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdd" } ]
   },
   { "Name" : "nimbus",
     "Count" : -1,
     "InstanceType" : "t2.small",
-    "AccessType" : "none"
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "gate",
     "Count" : 1,
     "InstanceType" : "t2.small",
-    "AccessType" : "gateway"
+    "AccessType" : "gateway",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "supervisor",
     "Count" : 1,
     "InstanceType" : "t2.small",
-    "AccessType" : "none"
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   }
   ]
 }

@@ -17,7 +17,8 @@
     				   "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
     				   } },
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
-    { "hive-site" : { "hive.heapsize" : "1024", "javax.jdo.option.ConnectionPassword" : "admin" } }
+    { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
+    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } }
   ],
   "host_groups":[
     {

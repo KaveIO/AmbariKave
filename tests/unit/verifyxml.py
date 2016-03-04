@@ -58,8 +58,10 @@ class TestXMLCompleteness(unittest.TestCase):
 
 
 class TestXMLContent(unittest.TestCase):
-    prop_dict_struct = {"name": [], "value": [],
-                        "display-name": [], "value-attributes": ["type", "overridable"],
+    prop_dict_struct = {"name": [], "value": [], 'final': [],
+                        "display-name": [],
+                        "value-attributes": ["type", "overridable", "minimum",
+                                             "maximum", "increment-step", "unit", 'empty-value-valid'],
                         "description": [], "comment": [],
                         "property-type": [], "deleted": [],
                         "depends-on": {"property": ["type", "name"]}
@@ -131,7 +133,7 @@ class TestXMLContent(unittest.TestCase):
 
 
 class TestMatchRequiredOrDefault(unittest.TestCase):
-    skip = ['hive-site.xml', 'hdfs-site.xml', '_kave_hive-site.xml', 'oozie-site.xml']
+    skip = ['hive-site.xml', 'hdfs-site.xml', '_kave_hive-site.xml', 'oozie-site.xml', 'yarn-site.xml']
     skip_prop = ['kavetoolbox/custom_install_template', 'twiki/ldap_bind_password',
                  'mail/hostname', 'mail/domain']
 

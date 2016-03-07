@@ -209,32 +209,34 @@ service_users = {
 ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
 ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
 
-required_users = {
-    'nagios': {'groups': ['hadoop', 'nagios']},
-    'hive': {'groups': ['hadoop']},
-    'oozie': {'groups': ['hadoop', 'users']},
-    'ambari-qa': {'groups': ['hadoop', 'users']},
-    'flume': {'groups': ['hadoop']},
-    'hdfs': {'groups': ['hadoop', 'hdfs']},
-    'knox': {'groups': ['hadoop']},
-    'storm': {'groups': ['hadoop']},
-    'mapred': {'groups': ['hadoop']},
-    'hbase': {'groups': ['hadoop']},
-    'tez': {'groups': ['hadoop', 'users']},
-    'zookeeper': {'groups': ['hadoop']},
-    'kafka': {'groups': ['hadoop']},
-    'falcon': {'groups': ['hadoop']},
-    'sqoop': {'groups': ['hadoop']},
-    'yarn': {'groups': ['hadoop']},
-    'hcat': {'groups': ['hadoop']},
-    'dbus': {'comment': 'System message bus', 'options': ['-d', '/', '-M']},
-    'httpfs': {'comment': 'Hadoop HTTPFS', 'options': ['-d', '/var/run/hadoop/httpfs', '-M']},
-    'apache': {'comment': 'Apache', 'options': ['-d', '/var/www', '-M']},
-    'rrdcached': {'comment': 'rrdcached', 'options': ['-d', '/var/rrdtool/rrdcached', '-M']},
-    'mysql': {'comment': 'MySQL Server', 'options': ['-d', '/var/lib/mysql', '-M']},
-}
-
 import json
+
+required_users = default('configurations/freeipa/required_users',"""{
+    "nagios": {"groups": ["hadoop", "nagios"]},
+    "hive": {"groups": ["hadoop"]},
+    "oozie": {"groups": ["hadoop", "users"]},
+    "ambari-qa": {"groups": ["hadoop", "users"]},
+    "flume": {"groups": ["hadoop"]},
+    "hdfs": {"groups": ["hadoop", "hdfs"]},
+    "knox": {"groups": ["hadoop"]},
+    "storm": {"groups": ["hadoop"]},
+    "mapred": {"groups": ["hadoop"]},
+    "hbase": {"groups": ["hadoop"]},
+    "tez": {"groups": ["hadoop", "users"]},
+    "zookeeper": {"groups": ["hadoop"]},
+    "kafka": {"groups": ["hadoop"]},
+    "falcon": {"groups": ["hadoop"]},
+    "sqoop": {"groups": ["hadoop"]},
+    "yarn": {"groups": ["hadoop"]},
+    "hcat": {"groups": ["hadoop"]},
+    "dbus": {"comment": "System message bus", "options": ["-d", "/", "-M"]},
+    "httpfs": {"comment": "Hadoop HTTPFS", "options": ["-d", "/var/run/hadoop/httpfs", "-M"]},
+    "apache": {"comment": "Apache", "options": ["-d", "/var/www", "-M"]},
+    "rrdcached": {"comment": "rrdcached", "options": ["-d", "/var/rrdtool/rrdcached", "-M"]},
+    "mysql": {"comment": "MySQL Server", "options": ["-d", "/var/lib/mysql", "-M"]}
+}""")
+required_users = json.loads(required_users)
+
 initial_users_and_groups = default('configurations/freeipa/initial_users_and_groups', '{"Users": [], "Groups" : {}}')
 initial_users_and_groups = json.loads(initial_users_and_groups)
 

@@ -139,4 +139,38 @@ nameserver {{ipa_server_ip_address}}
             An advanced user will want to modify this in case they have multiple internal domains.
         </description>
     </property>
+    <property>
+        <name>required_users</name>
+        <value>{
+    "nagios": {"groups": ["hadoop", "nagios"]},
+    "hive": {"groups": ["hadoop"]},
+    "oozie": {"groups": ["hadoop", "users"]},
+    "ambari-qa": {"groups": ["hadoop", "users"]},
+    "flume": {"groups": ["hadoop"]},
+    "hdfs": {"groups": ["hadoop", "hdfs"]},
+    "knox": {"groups": ["hadoop"]},
+    "storm": {"groups": ["hadoop"]},
+    "mapred": {"groups": ["hadoop"]},
+    "hbase": {"groups": ["hadoop"]},
+    "tez": {"groups": ["hadoop", "users"]},
+    "zookeeper": {"groups": ["hadoop"]},
+    "kafka": {"groups": ["hadoop"]},
+    "falcon": {"groups": ["hadoop"]},
+    "sqoop": {"groups": ["hadoop"]},
+    "yarn": {"groups": ["hadoop"]},
+    "hcat": {"groups": ["hadoop"]},
+    "dbus": {"comment": "System message bus", "options": ["-d", "/", "-M"]},
+    "httpfs": {"comment": "Hadoop HTTPFS", "options": ["-d", "/var/run/hadoop/httpfs", "-M"]},
+    "apache": {"comment": "Apache", "options": ["-d", "/var/www", "-M"]},
+    "rrdcached": {"comment": "rrdcached", "options": ["-d", "/var/rrdtool/rrdcached", "-M"]},
+    "mysql": {"comment": "MySQL Server", "options": ["-d", "/var/lib/mysql", "-M"]}
+}</value>
+        <description>
+            ADVANCED: A list of (service) users that need to be present on each machine.
+            Each FreeIPA client calls useradd with these users
+            Format is JSON: "username": {"comment": "", "groups":["",...], "options": ["",...]}
+            comment: comment to add to user creation: e.g.: new dir
+            options: additional options for useradd, e.g. ["-d", "/new/home/dir"]
+        </description>
+    </property>
 </configuration>

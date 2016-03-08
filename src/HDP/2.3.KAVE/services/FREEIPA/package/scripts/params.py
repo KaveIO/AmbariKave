@@ -207,7 +207,6 @@ service_users = default('configurations/freeipa/service_users', """{
                     "user": "storm", "group": "hadoop", "permissions": "400"}
 }""")
 # First resolve all templated variables with the cluster_host_info
-print service_users
 # Make everything from cluster_host_info into valid json ...
 chi_replace = cluster_host_info
 
@@ -223,7 +222,6 @@ for k, v in chi_replace.iteritems():
         chi_replace[k] = v
 
 service_users = InlineTemplate(service_users, **chi_replace).get_content()
-print service_users
 service_users = json.loads(service_users)
 
 ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')

@@ -96,11 +96,9 @@
     </property>
  	<property>
         <name>jbossconfig</name>
-        <value>
-	&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-
-&lt;server xmlns="urn:jboss:domain:1.2"&gt;
-    &lt;extensions&gt;
+        <value>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+        &lt;server xmlns="urn:jboss:domain:1.2"&gt;
+        &lt;extensions&gt;
         &lt;extension module="org.jboss.as.clustering.infinispan"/&gt;
         &lt;extension module="org.jboss.as.configadmin"/&gt;
         &lt;extension module="org.jboss.as.connector"/&gt;
@@ -403,8 +401,7 @@
         &lt;/outbound-socket-binding&gt;
     &lt;/socket-binding-group&gt;
 &lt;/server&gt;
-
-        </value>
+	</value>
         <description>Port of the default mail server</description>
     </property>
 

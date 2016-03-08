@@ -50,7 +50,6 @@ mail_port = default('configurations/jboss/mail_port', '25')
 
 jbossconfig =default('configurations/jboss/jbossconfig',"""
 <?xml version='1.0' encoding='UTF-8'?>
-
 <server xmlns="urn:jboss:domain:1.2">
     <extensions>
         <extension module="org.jboss.as.clustering.infinispan"/>

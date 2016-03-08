@@ -103,7 +103,7 @@ cluster_host_info = {
 }
 
 # real users that must be created as principals in FreeIPA, with a keytab
-headless_users = default( 'configurations/freeipa/headless_users', """{
+headless_users = default('configurations/freeipa/headless_users', """{
     "Ambari Smoke Test User": {"identity": "ambari-qa", "file": "/root/keytabs/smokeuser.headless.keytab",
                                "user": "hdfs", "group": "hadoop", "permissions": "440"},
     "HDFS User": {"identity": "hdfs", "file": "/root/keytabs/hdfs.headless.keytab",
@@ -117,7 +117,7 @@ headless_users = default( 'configurations/freeipa/headless_users', """{
 }""")
 headless_users = json.loads(headless_users)
 
-service_users = default( 'configurations/freeipa/service_users',"""{
+service_users = default('configurations/freeipa/service_users', """{
     "HDFS SPNEGO User": {"hosts": {{namenode_host}},
                          "identity": "HTTP", "file": "/etc/security/keytabs/spnego.service.keytab",
                          "user": "root", "group": "hadoop", "permissions": "440"},
@@ -207,15 +207,30 @@ service_users = default( 'configurations/freeipa/service_users',"""{
                     "user": "storm", "group": "hadoop", "permissions": "400"}
 }""")
 # First resolve all templated variables with the cluster_host_info
-service_users = InlineTemplate(service_users, **cluster_host_info).get_content()
+print service_users
+# Make everything from cluster_host_info into valid json ...
+chi_replace = cluster_host_info
+
+for k, v in chi_replace.iteritems():
+    if type(v) is set:
+        v = list(v)
+        chi_replace[k] = v
+    if type(v) is str:
+        v = [v]
+        chi_replace[k] = v
+    if type(v) is list:
+        v = str(v).replace("'", '"')
+        chi_replace[k] = v
+
+service_users = InlineTemplate(service_users, **chi_replace).get_content()
+print service_users
 service_users = json.loads(service_users)
 
 ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
 ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
 
 
-
-required_users = default('configurations/freeipa/required_users',"""{
+required_users = default('configurations/freeipa/required_users', """{
     "nagios": {"groups": ["hadoop", "nagios"]},
     "hive": {"groups": ["hadoop"]},
     "oozie": {"groups": ["hadoop", "users"]},

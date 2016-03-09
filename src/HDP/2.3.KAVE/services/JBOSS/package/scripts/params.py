@@ -56,7 +56,7 @@ txn_status_manager_port = default('configurations/jboss/txn_status_manager_port'
 mail_server = default('configurations/jboss/mail_server', 'localhost')
 mail_port = default('configurations/jboss/mail_port', '25')
 
-jbossxmlconfig =default('configurations/jboss/jbossconfig',"""
+jbossxmlconfig =default('configurations/jboss/jbossxmlconfig',"""
 <?xml version='1.0' encoding='UTF-8'?>
 <server xmlns="urn:jboss:domain:1.2">
     <extensions>

@@ -10,6 +10,27 @@
         </description>
     </property>
     <property>
+        <name>config_dir</name>
+        <value>/standalone/configuration/</value>
+        <description>
+            Location of configuration files
+        </description>
+    </property>
+    <property>
+        <name>jboss_xmlconf_filename</name>
+        <value>standalone.xml</value>
+        <description>
+            default XML file for Jboss configuration
+        </description>
+    </property>
+    <property>
+        <name>jboss_management_filename</name>
+        <value>mgmt-users.properties</value>
+        <description>
+			default properties file for Management User
+        </description>
+    </property>
+    <property>
         <name>management_password</name>
         <value>NOTAPASSWORD</value>
         <description>
@@ -95,7 +116,7 @@
         <description>Port of the default mail server</description>
     </property>
  	<property>
-        <name>jbossconfig</name>
+        <name>jbossxmlconfig</name>
         <value>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
         &lt;server xmlns="urn:jboss:domain:1.2"&gt;
         &lt;extensions&gt;
@@ -402,7 +423,7 @@
     &lt;/socket-binding-group&gt;
 &lt;/server&gt;
 	</value>
-        <description>Port of the default mail server</description>
+        <description>standalone xml as a value for parameter jbossxmlconfig</description>
     </property>
 
 

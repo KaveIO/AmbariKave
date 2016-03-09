@@ -79,7 +79,7 @@ class Jboss(Script):
         env.set_params(params)
 
         File(params.jboss_conf_file,
-             content=InlineTemplate(params.jbossconfig),
+             content=InlineTemplate(params.jbossxmlconfig),
              mode=0644
              )
 

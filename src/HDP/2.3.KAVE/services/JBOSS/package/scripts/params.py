@@ -19,8 +19,16 @@ from resource_management import *
 
 config = Script.get_config()
 installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as/')
-jboss_conf_file = installation_dir + "/standalone/configuration/standalone.xml"
-mgmt_users_file = installation_dir + "/standalone/configuration/mgmt-users.properties"
+config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/')
+
+jboss_xmlconf_filename = default('configurations/jboss/jboss_xmlconf_filename', 'standalone.xml')
+jboss_management_filename = default('configurations/jboss/jboss_management_filename', 'mgmt-users.properties')
+jboss_conf_file = installation_dir + config_dir + jboss_xmlconf_filename
+mgmt_users_file = installation_dir + config_dir + jboss_management_filename
+
+
+
+
 
 management_user = 'admin'
 management_password = default('configurations/jboss/management_password', "NOTAPASSWORD")
@@ -48,7 +56,7 @@ txn_status_manager_port = default('configurations/jboss/txn_status_manager_port'
 mail_server = default('configurations/jboss/mail_server', 'localhost')
 mail_port = default('configurations/jboss/mail_port', '25')
 
-jbossconfig =default('configurations/jboss/jbossconfig',"""
+jbossxmlconfig =default('configurations/jboss/jbossconfig',"""
 <?xml version='1.0' encoding='UTF-8'?>
 <server xmlns="urn:jboss:domain:1.2">
     <extensions>

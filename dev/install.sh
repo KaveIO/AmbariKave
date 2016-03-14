@@ -18,6 +18,8 @@
 ##############################################################################
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+#abort at first failure
+set -e
 # This should be the way, but regrettably this file is broken and will mess the installation up (misses some repos)
 # wget http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.6.1/ambari.repo
 # sudo cp ambari.repo /etc/yum.repos.d
@@ -26,3 +28,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cp $CURRENT_DIR/repo/ambari.repo /etc/yum.repos.d/
 
 bash $CURRENT_DIR/install_snippet.sh
+if [[ $? -ne 0 ]]; then
+	echo 'error running installation snippet!'
+	exit 1
+fi

@@ -23,11 +23,12 @@ set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
 yum install ambari-server -y
-yum install -y pdsh wget curl
+yum install -y wget curl
 ambari-server setup -s
 
 # install requests library for python
-yum install -y python-pip
+yum install -y epel-release
+yum install -y pdsh python-pip
 pip install requests
 
 encrypt_number="4"

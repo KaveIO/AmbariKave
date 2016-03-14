@@ -68,8 +68,8 @@ class TestKaveToolbox(base.LDTest):
         self.assertTrue(flag, "Installation of KaveToolbox not completed after 60 minutes")
         self.check(ambari)
         # check the installed directories
-        stdout = ambari.run("bash -c \"source /opt/KaveToolbox/scripts/KaveEnv.sh ; which python; which root;\"")
-        self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/bin" in stdout,
+        stdout = ambari.run("bash -c \"source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; which python; which root;\"")
+        self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/pro/bin" in stdout,
                         "Environment sourcing fails to find installed packages")
         # check other features
         try:
@@ -78,19 +78,19 @@ class TestKaveToolbox(base.LDTest):
             ambari.run("which firefox")
         except RuntimeError:
             self.assertTrue(False, "Could not find vncserver/emacs/firefox installed as workstation components")
-        env = ambari.run("cat /opt/KaveToolbox/scripts/KaveEnv.sh")
+        env = ambari.run("cat /opt/KaveToolbox/pro/scripts/KaveEnv.sh")
         self.assertTrue("#!/bin/bash" in env,
                         "Environment file not created correctly\n" + env + "\n-----------------\n" + ' '.join(
                             ambari.sshcmd()))
-        self.assertTrue("/opt/anaconda" in env,
+        self.assertTrue("/opt/anaconda/pro" in env,
                         "Environment file not created correctly, no anaconda part\n" + env + "\n-----------------\n"
                         + ' '.join(
                             ambari.sshcmd()))
-        self.assertTrue("/opt/KaveToolbox/bin" in env,
+        self.assertTrue("/opt/KaveToolbox/pro" in env,
                         "Environment file not created correctly, no KaveToolbox part\n" + env +
                         "\n-----------------\n" + ' '.join(
                             ambari.sshcmd()))
-        self.assertTrue("/opt/eclipse" in env,
+        self.assertTrue("/opt/eclipse/pro" in env,
                         "Environment file not created correctly, no eclipse part\n"
                         + env + "\n-----------------\n"
                         + ' '.join(ambari.sshcmd()))

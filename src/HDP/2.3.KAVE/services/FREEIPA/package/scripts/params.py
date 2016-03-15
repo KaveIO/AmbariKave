@@ -99,21 +99,33 @@ cluster_host_info = {
                            + default('/clusterHostInfo/storm_ui_server_hosts', [])),
     'app_timeline_server': set(default('/clusterHostInfo/app_timeline_server_hosts', [])),
     'falcon_server': set(default('/clusterHostInfo/falcon_server_hosts', [])),
-    'knox_server': set(default('/clusterHostInfo/knox_gateway_hosts', []))
+    'knox_server': set(default('/clusterHostInfo/knox_gateway_hosts', [])),
+    'accumulo_gc_hosts': set(default('/clusterHostInfo/accumulo_gc_hosts', [])),
+    'kafka_hosts': set(default('/clusterHostInfo/kafka_broker_hosts', [])),
+    'atlas_hosts': set(default('/clusterHostInfo/atlas_server_hosts', [])),
+    'ams_hosts': set(default('/clusterHostInfo/ams_hosts', []))
+
 }
 
 # real users that must be created as principals in FreeIPA, with a keytab
 headless_users = default('configurations/freeipa/headless_users', """{
-    "Ambari Smoke Test User": {"identity": "ambari-qa", "file": "/root/keytabs/smokeuser.headless.keytab",
+    "Ambari Smoke Test User": {"identity": "ambari-qa", "file": "/etc/security/keytabs/smokeuser.headless.keytab",
                                "user": "hdfs", "group": "hadoop", "permissions": "440"},
-    "HDFS User": {"identity": "hdfs", "file": "/root/keytabs/hdfs.headless.keytab",
+    "HDFS User": {"identity": "hdfs", "file": "/etc/security/keytabs/hdfs.headless.keytab",
                   "user": "hdfs", "group": "hadoop", "permissions": "440"},
     "HDFS User for nodemanager": {"identity": "hdfs", "file": "/etc/security/keytabs/hdfs.headless.keytab",
                                   "user": "hdfs", "group": "hadoop", "permissions": "440"},
-    "HBase User": {"identity": "hbase", "file": "/root/keytabs/hbase.headless.keytab",
+    "HBase User": {"identity": "hbase", "file": "/etc/security/keytabs/hbase.headless.keytab",
                    "user": "hbase", "group": "hadoop", "permissions": "440"},
-    "Storm User": {"identity": "storm", "file": "/root/keytabs/storm.service.keytab",
-                   "user": "storm", "group": "hadoop", "permissions": "440"}
+    "Storm User": {"identity": "storm", "file": "/etc/security/keytabs/storm.headless.keytab",
+                   "user": "storm", "group": "hadoop", "permissions": "440"},
+    "Accumulo User": {"identity": "accumulo", "file": "/etc/security/keytabs/accumulo.headless.keytab",
+                   "user": "accumulo", "group": "hadoop", "permissions": "440"},
+    "Accumulo Tracer User": {"identity": "accumulo", "file": "/etc/security/keytabs/accumulo-tracer.headless.keytab",
+                   "user": "accumulo", "group": "hadoop", "permissions": "440"},
+    "Spark User": {"identity": "spark", "file": "/etc/security/keytabs/spark.headless.keytab",
+                   "user": "spark", "group": "hadoop", "permissions": "440"}
+
 }""")
 headless_users = json.loads(headless_users)
 
@@ -204,7 +216,29 @@ service_users = default('configurations/freeipa/service_users', """{
                         "user": "storm", "group": "hadoop", "permissions": "400"},
     "DRPC Server": {"hosts": {{storm_drpc_server}},
                     "identity": "nimbus", "file": "/etc/security/keytabs/nimbus.service.keytab",
-                    "user": "storm", "group": "hadoop", "permissions": "400"}
+                    "user": "storm", "group": "hadoop", "permissions": "400"},
+    "accumulo Server": {"hosts": {{accumulo_gc_hosts}},
+                    "identity": "accumulo", "file": "/etc/security/keytabs/accumulo.service.keytab",
+                    "user": "accumulo", "group": "hadoop", "permissions": "400"},
+    "ams Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams.service.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "ams hbase Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams-hbase.master.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "ams region Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams-hbase.regionserver.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "ams zookeper Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams-zk.service.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "atlas Server": {"hosts": {{atlas_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/atlas.service.keytab",
+                    "user": "atlas", "group": "hadoop", "permissions": "400"},
+    "kafka Server": {"hosts": {{kafka_hosts}},
+                    "identity": "kafka", "file": "/etc/security/keytabs/kafka.service.keytab",
+                    "user": "kafka", "group": "hadoop", "permissions": "400"}
+
 }""")
 # First resolve all templated variables with the cluster_host_info
 # Make everything from cluster_host_info into valid json ...

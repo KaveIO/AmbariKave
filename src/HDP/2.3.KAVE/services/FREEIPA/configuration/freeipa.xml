@@ -176,16 +176,22 @@ nameserver {{ipa_server_ip_address}}
     <property>
         <name>headless_users</name>
         <value>{
-    "Ambari Smoke Test User": {"identity": "ambari-qa", "file": "/root/keytabs/smokeuser.headless.keytab",
+    "Ambari Smoke Test User": {"identity": "ambari-qa", "file": "/etc/security/keytabs/smokeuser.headless.keytab",
                                "user": "hdfs", "group": "hadoop", "permissions": "440"},
-    "HDFS User": {"identity": "hdfs", "file": "/root/keytabs/hdfs.headless.keytab",
+    "HDFS User": {"identity": "hdfs", "file": "/etc/security/keytabs/hdfs.headless.keytab",
                   "user": "hdfs", "group": "hadoop", "permissions": "440"},
     "HDFS User for nodemanager": {"identity": "hdfs", "file": "/etc/security/keytabs/hdfs.headless.keytab",
                                   "user": "hdfs", "group": "hadoop", "permissions": "440"},
-    "HBase User": {"identity": "hbase", "file": "/root/keytabs/hbase.headless.keytab",
+    "HBase User": {"identity": "hbase", "file": "/etc/security/keytabs/hbase.headless.keytab",
                    "user": "hbase", "group": "hadoop", "permissions": "440"},
-    "Storm User": {"identity": "storm", "file": "/root/keytabs/storm.service.keytab",
-                   "user": "storm", "group": "hadoop", "permissions": "440"}
+    "Storm User": {"identity": "storm", "file": "/etc/security/keytabs/storm.headless.keytab",
+                   "user": "storm", "group": "hadoop", "permissions": "440"},
+    "Accumulo User": {"identity": "accumulo", "file": "/etc/security/keytabs/accumulo.headless.keytab",
+                   "user": "accumulo", "group": "hadoop", "permissions": "440"},
+    "Accumulo Tracer User": {"identity": "accumulo", "file": "/etc/security/keytabs/accumulo-tracer.headless.keytab",
+                   "user": "accumulo", "group": "hadoop", "permissions": "440"},
+    "Spark User": {"identity": "spark", "file": "/etc/security/keytabs/spark.headless.keytab",
+                   "user": "spark", "group": "hadoop", "permissions": "440"}
 }</value>
         <description>
             ADVANCED: A list of user (principals) that need to be added through freeIPA and keytabs created.
@@ -282,7 +288,28 @@ nameserver {{ipa_server_ip_address}}
                         "user": "storm", "group": "hadoop", "permissions": "400"},
     "DRPC Server": {"hosts": {{storm_drpc_server}},
                     "identity": "nimbus", "file": "/etc/security/keytabs/nimbus.service.keytab",
-                    "user": "storm", "group": "hadoop", "permissions": "400"}
+                    "user": "storm", "group": "hadoop", "permissions": "400"},
+    "accumulo Server": {"hosts": {{accumulo_gc_hosts}},
+                    "identity": "accumulo", "file": "/etc/security/keytabs/accumulo.service.keytab",
+                    "user": "accumulo", "group": "hadoop", "permissions": "400"},
+    "ams Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams.service.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "ams hbase Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams-hbase.master.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "ams region Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams-hbase.regionserver.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "ams zookeper Server": {"hosts": {{ams_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/ams-zk.service.keytab",
+                    "user": "ams", "group": "hadoop", "permissions": "400"},
+    "atlas Server": {"hosts": {{atlas_hosts}},
+                    "identity": "", "file": "/etc/security/keytabs/atlas.service.keytab",
+                    "user": "atlas", "group": "hadoop", "permissions": "400"},
+    "kafka Server": {"hosts": {{kafka_hosts}},
+                    "identity": "kafka", "file": "/etc/security/keytabs/kafka.service.keytab",
+                    "user": "kafka", "group": "hadoop", "permissions": "400"}
 }</value>
         <description>
             ADVANCED: A list of service keytabs that need to be created through freeIPA on specific servers

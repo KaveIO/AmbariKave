@@ -21,8 +21,9 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #abort at first failure
 set -e
 # This should be the way, we think this file works now
-wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.2.1.0/ambari.repo
-cp ambari.repo /etc/yum.repos.d
+# yum -y install wget
+# wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.2.1.0/ambari.repo
+# cp ambari.repo /etc/yum.repos.d
 
 # Don't use our repo file any longer ...
 # cp $CURRENT_DIR/repo/ambari.repo /etc/yum.repos.d/

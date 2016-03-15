@@ -22,8 +22,11 @@
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
-yum install ambari-server -y
+# This should be the way, we think this file works now
 yum install -y wget curl
+wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.2.1.0/ambari.repo
+cp ambari.repo /etc/yum.repos.d
+yum install ambari-server -y
 ambari-server setup -s
 
 # install requests library for python

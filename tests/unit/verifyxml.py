@@ -133,7 +133,7 @@ class TestXMLContent(unittest.TestCase):
 
 
 class TestMatchRequiredOrDefault(unittest.TestCase):
-    skip = ['hive-site.xml', 'hdfs-site.xml', '_kave_hive-site.xml', 'oozie-site.xml', 'yarn-site.xml']
+    skip = ['hive-site.xml', 'hdfs-site.xml', 'oozie-site.xml', 'yarn-site.xml']
     skip_prop = ['kavetoolbox/custom_install_template', 'twiki/ldap_bind_password',
                  'mail/hostname', 'mail/domain']
 

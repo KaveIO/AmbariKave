@@ -5,7 +5,7 @@
         <service>
             <name>SONARQUBE</name>
             <displayName>SonarQube</displayName>
-            <comment>SonarQube,An open source quality management platform</comment>
+            <comment>SonarQube, An open source (code) quality management platform (static code analysis)</comment>
             <version>5.0.1</version>
             <components>
                 <component>

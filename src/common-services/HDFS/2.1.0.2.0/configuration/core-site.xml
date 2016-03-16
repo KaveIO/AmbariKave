@@ -127,8 +127,7 @@
    Set the authentication for the cluster. Valid values are: simple or
    kerberos.
    </description>
-</property>
-
+ </property>
 <property>
   <name>hadoop.security.authorization</name>
   <value>false</value>

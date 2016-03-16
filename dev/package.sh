@@ -55,6 +55,7 @@ RELEASE_PACKAGE="ambarikave-package-$TAG.tar.gz"
 echo "Building $RELEASE_PACKAGE"
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/
 cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
+cp -r $SRC_DIR/common-services $BUILD_DIR/package/ambari-server/resources/common-services
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/README.md $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/package/ambari-server/
 
 # apply dist_kavecommon.py
@@ -149,24 +150,6 @@ EOF
 echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
 echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
 
-#Jump into cat until eof in order to write arbitrary things into the installer script
-cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
-
-# Should use wget for the repo, but the repo file online is broken and will mess the installation up (misses some repos)
-# wget http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.7.0/ambari.repo
-# sudo cp ambari.repo /etc/yum.repos.d
-
-# So, for the mean time, the above two lines are temporarily replaced by this:
-cat << EOT > /etc/yum.repos.d/ambari.repo
-EOF
-#Jump out of cat in order to insert the contents of the repo file
-cat $DEV_DIR/repo/ambari.repo >> $BUILD_DIR/$RELEASE_INSTALLER
-
-#Jump into cat until eof in order to end the above catting
-cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
-EOT
-EOF
-#Jump out of cat in order to insert the contents of the install snippet file
 cat $DEV_DIR/install_snippet.sh >> $BUILD_DIR/$RELEASE_INSTALLER
 
 #Jump into cat until eof in order to write arbitrary things into the installer script

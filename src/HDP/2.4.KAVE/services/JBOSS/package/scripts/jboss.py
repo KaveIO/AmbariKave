@@ -19,6 +19,7 @@ import kavecommon as kc
 from resource_management import *
 import pwd
 import grp
+import os
 
 
 class Jboss(Script):
@@ -32,6 +33,7 @@ class Jboss(Script):
         self.install_packages(env)
 
         kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
+        self.cleanUpFailedInstall()
         Execute('unzip -o -q %s -d %s' % (self.package, params.installation_dir))
         Execute('mv %s/jb*/* %s' % (params.installation_dir, params.installation_dir))
         Execute('rm -rf %s/jb*.Final' % params.installation_dir)
@@ -55,6 +57,11 @@ class Jboss(Script):
         Execute('chkconfig --level 234 jboss on')
 
         self.configure(env)
+
+    def cleanUpFailedInstall(self):
+        import params
+        if os.path.exists(params.installation_dir):
+            Execute('rm -rf %s' % params.installation_dir)
 
     def start(self, env):
         # @fixme The jboss start doesn't return nicely if the output is not catched.

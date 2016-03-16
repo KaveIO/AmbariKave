@@ -173,10 +173,11 @@ print "up the instance groups"
 print "===================================="
 sys.stdout.flush()
 
+
 def regionreplacements(instancetype):
-    region="-".join(lA.detectRegion().split("-")[0:2])
-    regioninstdict = {"ap-northeast": {"t2.small" : "m1.medium"},
-                      "eu-west": {"m1.medium" : "t2.small"}}
+    region = "-".join(lA.detectRegion().split("-")[0:2])
+    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium"},
+                      "eu-west": {"m1.medium": "t2.small"}}
     try:
         return regioninstdict[region][instancetype]
     except KeyError:

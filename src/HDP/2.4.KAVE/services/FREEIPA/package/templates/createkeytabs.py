@@ -55,10 +55,15 @@ import os
 try:
     import freeipa
 except ImportError:
-    sys.path.append("{{scriptpath}}")
+    if os.path.exists("{{scriptpath}}/freeipa.py"):
+        sys.path.append("{{scriptpath}}")
+    else:
+        relp = os.path.realpath(os.path.dirname(__file__) + "/../scripts/")
+        if os.path.exists(relp + "/freeipa.py"):
+            sys.path.append(relp)
     import freeipa
 
-if __name__=="__main__":
+if __name__ == "__main__":
     ipa = freeipa.FreeIPACommon()
     print sys.argv[-1]
     if "--help" in sys.argv:
@@ -66,4 +71,3 @@ if __name__=="__main__":
         sys.exit(0)
     # simple test that this works
     ipa.group_exists('admins')
-

@@ -24,7 +24,7 @@ import random
 import string
 import pwd
 import grp
-#from resource_management import *
+
 
 def protect(apass):
     try:
@@ -32,6 +32,7 @@ def protect(apass):
         Logger.sensitive_strings[apass] = "[PROTECTED]"
     except ImportError:
         return
+
 
 class RobotAdmin():
     """ A helper class for delegating credentials and tasks to client nodes.
@@ -142,11 +143,13 @@ class RobotAdmin():
             hosts = filter(bool, output.split("\n"))
             return hosts
 
+
 class FreeIPACommon(object):
     """
     Many of the methods we want to call within FreeIPA are common
     We can make a baseclass/Mix-ins class here in order to simplify/consolidate other scripts
     """
+
     def create_user_principal(self, identity, firstname=None,
                               lastname='auto_generated', groups=[],
                               password=None, password_file=None):
@@ -258,6 +261,7 @@ class FreeIPACommon(object):
     def set_user_email(self, user, email):
         subprocess.call(['ipa', 'user-mod', '--email="' + email + '"', user])
 
+
 class FreeIPA(FreeIPACommon):
     """
     The FreeIPA Object is supposed to be used with the python "with" statement
@@ -284,7 +288,6 @@ class FreeIPA(FreeIPACommon):
 
     def __exit__(self, type, value, trace):
         subprocess.call(['kdestroy'])
-
 
 
 def generate_random_password(length=16):

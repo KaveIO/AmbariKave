@@ -190,10 +190,11 @@ nameserver {{ipa_server_ip_address}}
                    "user": "storm", "group": "hadoop", "permissions": "440"},
     "Accumulo User": {"identity": "accumulo", "file": "/etc/security/keytabs/accumulo.headless.keytab",
                    "user": "accumulo", "group": "hadoop", "permissions": "440"},
-    "Accumulo Tracer User": {"identity": "accumulo", "file": "/etc/security/keytabs/accumulo-tracer.headless.keytab",
+    "Accumulo Tracer User": {"identity": "tracer", "file": "/etc/security/keytabs/accumulo-tracer.headless.keytab",
                    "user": "accumulo", "group": "hadoop", "permissions": "440"},
     "Spark User": {"identity": "spark", "file": "/etc/security/keytabs/spark.headless.keytab",
                    "user": "spark", "group": "hadoop", "permissions": "440"}
+
 }</value>
         <description>
             ADVANCED: A list of user (principals) that need to be added through freeIPA and keytabs created.

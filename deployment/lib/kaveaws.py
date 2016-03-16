@@ -44,7 +44,7 @@ def testaws():
 
 
 def runawstojson(cmd):
-    prox = lD.detect_proxy() and no_ssl_over_proxy
+    prox = lD.detect_proxy() and lD.no_ssl_over_proxy
     if prox:
         cmd = "--no-verify-ssl " + cmd
     output = lD.runQuiet("aws " + cmd)

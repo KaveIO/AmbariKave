@@ -117,7 +117,7 @@ class FreeipaServer(Script):
              mode=0600
              )
         File("/root/createkeytabs.py",
-             content=Template(createkeytabs.py, scriptpath=os.path.dirname(__file__)),
+             content=Template("createkeytabs.py", scriptpath=os.path.dirname(__file__)),
              mode=0600
              )
 

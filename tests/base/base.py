@@ -509,6 +509,7 @@ class LDTest(unittest.TestCase):
                 "curl --netrc "
                 + " http://localhost:8080/api/v1/clusters/"
                 + clustername + "/requests/" + str(requestid))
+            print stdout.split('\n')[:20]
             if '"request_status" : "FAILED"' in stdout:
                 state = "FAILED"
                 break

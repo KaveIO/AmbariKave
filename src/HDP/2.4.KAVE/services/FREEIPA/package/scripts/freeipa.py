@@ -24,7 +24,7 @@ import random
 import string
 import pwd
 import grp
-from resource_management import *
+#from resource_management import *
 
 
 class RobotAdmin():
@@ -120,7 +120,11 @@ class RobotAdmin():
     def _all_hosts(self):
         with open(self.ambari_db_password_file) as f:
             password = f.read()
-            Logger.sensitive_strings[password] = "[PROTECTED]"
+            try:
+                from resource_management import Logger
+                Logger.sensitive_strings[password] = "[PROTECTED]"
+            except ImportError:
+                pass
             env = os.environ.copy()
             env['PGPASSWORD'] = password
 
@@ -136,29 +140,11 @@ class RobotAdmin():
             hosts = filter(bool, output.split("\n"))
             return hosts
 
-
-class FreeIPA(object):
-
-    def __init__(self, principal, password_file, destroy_password_file=True):
-        self.principal = principal
-        self.password_file = password_file
-        self.destroy_password_file = destroy_password_file
-
-    def __enter__(self):
-        with open(os.devnull, "w") as devnull:
-            p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['kinit', self.principal], stdin=p1.stdout, stdout=devnull)
-            p1.stdout.close()
-            p2.communicate()
-
-        if self.destroy_password_file:
-            os.remove(self.password_file)
-
-        return self
-
-    def __exit__(self, type, value, trace):
-        subprocess.call(['kdestroy'])
-
+class FreeIPACommon(object):
+    """
+    Many of the methods we want to call within FreeIPA are common
+    We can make a baseclass/Mix-ins class here in order to simplify/consolidate other scripts
+    """
     def create_user_principal(self, identity, firstname=None,
                               lastname='auto_generated', groups=[],
                               password=None, password_file=None):
@@ -269,6 +255,34 @@ class FreeIPA(object):
 
     def set_user_email(self, user, email):
         subprocess.call(['ipa', 'user-mod', '--email="' + email + '"', user])
+
+class FreeIPA(FreeIPACommon):
+    """
+    The FreeIPA Object is supposed to be used with the python "with" statement
+    This object calls kinit from a local password file, and then can destroy that file when done with it.
+    Otherwise inherits all the methods from the FreeIPACommon class
+    """
+
+    def __init__(self, principal, password_file, destroy_password_file=True):
+        self.principal = principal
+        self.password_file = password_file
+        self.destroy_password_file = destroy_password_file
+
+    def __enter__(self):
+        with open(os.devnull, "w") as devnull:
+            p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(['kinit', self.principal], stdin=p1.stdout, stdout=devnull)
+            p1.stdout.close()
+            p2.communicate()
+
+        if self.destroy_password_file:
+            os.remove(self.password_file)
+
+        return self
+
+    def __exit__(self, type, value, trace):
+        subprocess.call(['kdestroy'])
+
 
 
 def generate_random_password(length=16):

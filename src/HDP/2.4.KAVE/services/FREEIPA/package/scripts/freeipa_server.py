@@ -116,6 +116,10 @@ class FreeipaServer(Script):
              content=InlineTemplate(params.kadm5acl_template),
              mode=0600
              )
+        File("/root/createkeytabs.py",
+             content=Template(createkeytabs.py, scriptpath=os.path.dirname(__file__)),
+             mode=0600
+             )
 
     def start(self, env):
         self.conf_on_start(env)

@@ -18,7 +18,7 @@ limitations under the License.
 """
 
 
-class HDP23KAVEStackAdvisor(HDP23StackAdvisor):
+class HDP23KAVEStackAdvisor(HDP24StackAdvisor):
 
     # List of validators which should also be evaluated if there is not recommended default present.
     validateWithoutRecommendedDefault = ['freeipa']
@@ -31,7 +31,7 @@ class HDP23KAVEStackAdvisor(HDP23StackAdvisor):
         return None
 
     def getServiceConfigurationValidators(self):
-        parentValidators = super(HDP23KAVEStackAdvisor, self).getServiceConfigurationValidators()
+        parentValidators = super(HDP24KAVEStackAdvisor, self).getServiceConfigurationValidators()
         childValidators = {
             "FREEIPA": ["freeipa", self.validateFreeIPAConfigurations]
         }

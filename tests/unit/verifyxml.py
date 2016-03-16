@@ -60,8 +60,11 @@ class TestXMLCompleteness(unittest.TestCase):
 class TestXMLContent(unittest.TestCase):
     prop_dict_struct = {"name": [], "value": [], 'final': [],
                         "display-name": [],
-                        "value-attributes": ["type", "overridable", "minimum",
-                                             "maximum", "increment-step", "unit", 'empty-value-valid'],
+                        "value-attributes": {"type": [], "overridable": [], "minimum": [],
+                                             "maximum": [], "increment-step": [],
+                                             "unit": [], 'empty-value-valid': [],
+                                             'entries': {"entry": ["value", "description"]},
+                                             },
                         "description": [], "comment": [],
                         "property-type": [], "deleted": [],
                         "depends-on": {"property": ["type", "name"]}

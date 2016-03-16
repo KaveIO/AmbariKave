@@ -57,6 +57,7 @@ class Jboss(Script):
         Execute('chkconfig --level 234 jboss on')
 
         self.configure(env)
+
     def cleanUpFailedInstall(self):
         import params
         if os.path.exists(params.installation_dir):

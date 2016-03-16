@@ -22,23 +22,129 @@ limitations under the License.
 <configuration supports_final="true">
 
   <property>
+    <name>templeton.port</name>
+    <value>50111</value>
+    <description>The HTTP port for the main server.</description>
+  </property>
+
+  <property>
+    <name>templeton.hadoop.conf.dir</name>
+    <value>/etc/hadoop/conf</value>
+    <description>The path to the Hadoop configuration.</description>
+  </property>
+
+  <property>
+    <name>templeton.jar</name>
+    <value>/usr/lib/hcatalog/share/webhcat/svr/webhcat.jar</value>
+    <description>The path to the Templeton jar file.</description>
+  </property>
+
+  <property>
     <name>templeton.libjars</name>
-    <value>/usr/hdp/${hdp.version}/zookeeper/zookeeper.jar,/usr/hdp/${hdp.version}/hive/lib/hive-common.jar</value>
+    <value>/usr/lib/zookeeper/zookeeper.jar</value>
     <description>Jars to add the the classpath.</description>
   </property>
 
   <property>
-    <name>templeton.hive.extra.files</name>
-    <value>/usr/hdp/${hdp.version}/tez/conf/tez-site.xml,/usr/hdp/${hdp.version}/tez,/usr/hdp/${hdp.version}/tez/lib</value>
-    <description>The resources in this list will be localized to the node running LaunchMapper and added to HADOOP_CLASSPTH
-      before launching 'hive' command.  If the path /foo/bar is a directory, the contents of the the entire dir will be localized
-      and ./foo/* will be added to HADOOP_CLASSPATH.  Note that since classpath path processing does not recurse into subdirectories,
-      the paths in this property may be overlapping.  In the example above, "./tez-site.xml:./tez-client/*:./lib/*" will be added to
-      HADOOP_CLASSPATH.
-      This can be used to specify config files, Tez artifacts, etc.  This will be sent -files option of hadoop jar command thus
-      each path is interpreted by Generic Option Parser.  It can be local or hdfs path.
-    </description>
+    <name>templeton.hadoop</name>
+    <value>/usr/bin/hadoop</value>
+    <description>The path to the Hadoop executable.</description>
   </property>
+
+  <property>
+    <name>templeton.python</name>
+    <value>${env.PYTHON_CMD}</value>
+    <description>The path to the Python executable.</description>
+  </property>
+
+  <property>
+    <name>templeton.pig.archive</name>
+    <value>hdfs:///apps/webhcat/pig.tar.gz</value>
+    <description>The path to the Pig archive.</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+  </property>
+
+  <property>
+    <name>templeton.pig.path</name>
+    <value>pig.tar.gz/pig/bin/pig</value>
+    <description>The path to the Pig executable.</description>
+  </property>
+
+  <property>
+    <name>templeton.hcat</name>
+    <value>/usr/bin/hcat</value>
+    <description>The path to the hcatalog executable.</description>
+  </property>
+
+  <property>
+    <name>templeton.hive.archive</name>
+    <value>hdfs:///apps/webhcat/hive.tar.gz</value>
+    <description>The path to the Hive archive.</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+  </property>
+
+  <property>
+    <name>templeton.hive.home</name>
+    <value>hive.tar.gz/hive</value>
+    <description>The path to the Hive home within the tar. Has no effect if templeton.hive.archive is not set.</description>
+  </property>
+
+  <property>
+    <name>templeton.hcat.home</name>
+    <value>hive.tar.gz/hive/hcatalog</value>
+    <description>The path to the HCat home within the tar. Has no effect if templeton.hive.archive is not set.</description>
+  </property>
+
+  <property>
+    <name>templeton.hive.path</name>
+    <value>hive.tar.gz/hive/bin/hive</value>
+    <description>The path to the Hive executable.</description>
+  </property>
+
+  <property>
+    <name>templeton.hive.properties</name>
+    <value>hive.metastore.local=false,hive.metastore.uris=thrift://localhost:9083,hive.metastore.sasl.enabled=false</value>
+    <description>Properties to set when running hive.</description>
+  </property>
+
+
+  <property>
+    <name>templeton.zookeeper.hosts</name>
+    <value>localhost:2181</value>
+    <description>ZooKeeper servers, as comma separated host:port pairs</description>
+    <value-attributes>
+      <type>multiLine</type>
+    </value-attributes>
+  </property>
+
+  <property>
+    <name>templeton.storage.class</name>
+    <value>org.apache.hive.hcatalog.templeton.tool.ZooKeeperStorage</value>
+    <description>The class to use as storage</description>
+  </property>
+
+  <property>
+    <name>templeton.override.enabled</name>
+    <value>false</value>
+    <description>Enable the override path in templeton.override.jars</description>
+  </property>
+
+  <property>
+    <name>templeton.streaming.jar</name>
+    <value>hdfs:///apps/webhcat/hadoop-streaming.jar</value>
+    <description>The hdfs path to the Hadoop streaming jar file.</description>
+  </property>
+
+  <property>
+    <name>templeton.exec.timeout</name>
+    <value>60000</value>
+    <description>Time out for templeton api</description>
+  </property>
+
 
 <!-- HUE specific configurations we added. -->
 

@@ -26,6 +26,12 @@ import pwd
 import grp
 #from resource_management import *
 
+def protect(apass):
+    try:
+        from resource_management import Logger
+        Logger.sensitive_strings[apass] = "[PROTECTED]"
+    except ImportError:
+        return
 
 class RobotAdmin():
     """ A helper class for delegating credentials and tasks to client nodes.
@@ -120,11 +126,7 @@ class RobotAdmin():
     def _all_hosts(self):
         with open(self.ambari_db_password_file) as f:
             password = f.read()
-            try:
-                from resource_management import Logger
-                Logger.sensitive_strings[password] = "[PROTECTED]"
-            except ImportError:
-                pass
+            protect(password)
             env = os.environ.copy()
             env['PGPASSWORD'] = password
 
@@ -157,7 +159,7 @@ class FreeIPACommon(object):
                 self.group_add_member(group, identity)
 
             if password is not None:
-                Logger.sensitive_strings[password] = "[PROTECTED]"
+                protect(password)
                 self.update_password(identity, password, password_file)
         else:
             print 'Skipping user creation for %s. User already exists' % identity
@@ -242,7 +244,7 @@ class FreeIPACommon(object):
             password_file = '/root/%s-password' % user
 
         with os.fdopen(os.open(password_file, os.O_WRONLY | os.O_CREAT, 0600), 'w') as handle:
-            Logger.sensitive_strings[password] = "[PROTECTED]"
+            protect(password)
             handle.write(password)
 
         p1 = subprocess.Popen(['cat', password_file], stdout=subprocess.PIPE)

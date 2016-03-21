@@ -17,7 +17,7 @@
 #
 ##############################################################################
 """
-This is the createkeytabs script of teh KAVE FreeIPA implementation
+This is the createkeytabs script of the KAVE FreeIPA implementation
 
 usage:
     kinit admin
@@ -52,6 +52,8 @@ operation:
 """
 import sys
 import os
+import subprocess as sub
+
 try:
     import freeipa
 except ImportError:
@@ -62,6 +64,66 @@ except ImportError:
         if os.path.exists(relp + "/freeipa.py"):
             sys.path.append(relp)
     import freeipa
+
+
+class remote(object):
+    """
+    Wrapper around ssh and scp for this script
+    """
+
+    def init(self, host, user='root'):
+        self.user = user
+        self.host = host
+
+    def check(self, firsttime=True):
+        """
+        verify if I can access this host. If firsttime=True i will temporarily ignore the known_hosts file
+        """
+        extrasshopts = []
+        if firsttime:
+            sshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
+                       "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
+        out = self.run("echo Hello World from $HOSTNAME", sshopts=sshopts, exit=False)
+        print out
+        if "Hello World" not in out or "HOSTNAME" in out:
+            raise ValueError(
+                "Unable to contact machine " + self.user + "@" + self.host + "! or machine did not respond correctly")
+        return True
+
+    def __popen(self, cmd, exit=True):
+        """ Wrapper around popen """
+        proc = sub.Popen(cmd, shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+        output, err = proc.communicate()
+        status = proc.returncode
+        if status and exit:
+            raise RuntimeError("Problem running: \n" + str(cmd) + "\n got:\n\t"
+                               + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
+        elif status:
+            print >> sys.__stderr__, ("ERROR: " + "Problem running: \n" + str(cmd) + "\n got:\n\t"
+                                      + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
+
+        return output.strip()
+
+    def run(self, cmd, sshopts=[], exit=True):
+        """
+        run a command through ssh
+        """
+        if type(cmd) is str:
+            cmd = cmd.strip()
+            cmd = [cmd]
+
+        return self.__popoen(["ssh"] + sshopts + [self.user + "@" + self.host] + cmd)
+
+    def cp(self, local, remote, sshopts=[]):
+        """
+        Copy file or directory to the remote machine through scp
+        """
+        if not os.path.exists(os.path.realpath(os.path.expanduser(local))):
+            raise IOError("file to copy must exist " + local)
+        directory = os.path.isdir(os.path.realpath(os.path.expanduser(local)))
+        if directory and "-r" not in sshopts:
+            sshopts.append("-r")
+        return self.__popoen(["scp"] + sshopts + [local, self.user + "@" + self.host + ":" + remote])
 
 if __name__ == "__main__":
     ipa = freeipa.FreeIPACommon()

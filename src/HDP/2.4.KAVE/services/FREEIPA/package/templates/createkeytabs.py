@@ -35,20 +35,19 @@ explanation:
    containing a list of needed keytabs. This keytabs file lists all the bits
    and pieces HDFS/yarn components need to operate a fully kerberized cluster.
    Late creation of these keytabs is better, the list is likely to change.
+   Save this file locally and run this script over that file
 
 operation:
    For each line in the kerberos.csv file
    a) Check that the machine named exists within the cluster
    b) Check/fix that the user named exists with the named group
 
-   Then split the kerberos.csv entries into two types, headless and service
-   c) Create any user principles / headless keytabs and control permissions
-   d) Copy headless keytabs to all machines and control permissions
+   Then loop again in order to:
+   c) Create any principles / keytabs and control permissions
+   d) Copy keytabs to all machines and control permissions
 
-   e) Create service principles and keytabs and control permissions
-   f) Copy keytabs to required machines and control permissions
-
-   g) Check: su <user> /usr/bin/kinit -kt <keytab>
+   Then finally
+   e) Check: su <user> /usr/bin/kinit -kt <keytab> <identity>
 """
 import sys
 import os
@@ -66,12 +65,32 @@ except ImportError:
     import freeipa
 
 
-class remote(object):
+def popen(cmd, exit=True, shell=None):
+    """ Wrapper around popen """
+    if shell is None:
+        if type(cmd) is str and (' ' in cmd):
+            shell = True
+        else:
+            shell = False
+    proc = sub.Popen(cmd, shell=shell, stdout=sub.PIPE, stderr=sub.PIPE)
+    output, err = proc.communicate()
+    status = proc.returncode
+    if status and exit:
+        raise RuntimeError("Problem running: \n" + str(cmd) + "\n got:\n\t"
+                           + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
+    elif status:
+        print >> sys.__stderr__, ("ERROR: " + "Problem running: \n" + str(cmd) + "\n got:\n\t"
+                                  + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
+
+    return output.strip()
+
+class Remote(object):
     """
     Wrapper around ssh and scp for this script
+    If localhost, don't use ssh
     """
 
-    def init(self, host, user='root'):
+    def __init__(self, host, user='root'):
         self.user = user
         self.host = host
 
@@ -79,57 +98,131 @@ class remote(object):
         """
         verify if I can access this host. If firsttime=True i will temporarily ignore the known_hosts file
         """
+        if self.host == 'localhost':
+            return True
+
         extrasshopts = []
         if firsttime:
             sshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
                        "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
         out = self.run("echo Hello World from $HOSTNAME", sshopts=sshopts, exit=False)
-        print out
         if "Hello World" not in out or "HOSTNAME" in out:
             raise ValueError(
                 "Unable to contact machine " + self.user + "@" + self.host + "! or machine did not respond correctly")
         return True
 
-    def __popen(self, cmd, exit=True):
-        """ Wrapper around popen """
-        proc = sub.Popen(cmd, shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
-        output, err = proc.communicate()
-        status = proc.returncode
-        if status and exit:
-            raise RuntimeError("Problem running: \n" + str(cmd) + "\n got:\n\t"
-                               + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
-        elif status:
-            print >> sys.__stderr__, ("ERROR: " + "Problem running: \n" + str(cmd) + "\n got:\n\t"
-                                      + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
-
-        return output.strip()
-
     def run(self, cmd, sshopts=[], exit=True):
         """
         run a command through ssh
         """
+        if self.host == 'localhost':
+            return popen(cmd)
+
         if type(cmd) is str:
             cmd = cmd.strip()
             cmd = [cmd]
-
-        return self.__popoen(["ssh"] + sshopts + [self.user + "@" + self.host] + cmd)
+        cmd = [' '.join(cmd)]
+        return popen(["ssh"] + sshopts + [self.user + "@" + self.host] + cmd)
 
     def cp(self, local, remote, sshopts=[]):
         """
         Copy file or directory to the remote machine through scp
         """
+        if self.host == 'localhost':
+            return popen(['cp',local,remote])
+
         if not os.path.exists(os.path.realpath(os.path.expanduser(local))):
             raise IOError("file to copy must exist " + local)
         directory = os.path.isdir(os.path.realpath(os.path.expanduser(local)))
         if directory and "-r" not in sshopts:
             sshopts.append("-r")
-        return self.__popoen(["scp"] + sshopts + [local, self.user + "@" + self.host + ":" + remote])
+        return popen(["scp"] + sshopts + [local, self.user + "@" + self.host + ":" + remote])
+
+def yieldConfig(filename):
+    """
+    CSV iterator
+    """
+    with open(filename) as fp:
+        topline = fp.readline().strip().split(',')
+        for line in fp:
+            if len(line.strip()):
+                yield dict((n,v) for n,v in zip(topline,line.strip().split(',')))
 
 if __name__ == "__main__":
-    ipa = freeipa.FreeIPACommon()
-    print sys.argv[-1]
     if "--help" in sys.argv:
         print __doc__
         sys.exit(0)
+    if len(sys.argv)<2:
+        raise AttributeError("Supply the name of the kerberos keytabs csv file")
+    # Todo, check if the user has done kinit!
     # simple test that this works
-    ipa.group_exists('admins')
+    ipa = freeipa.FreeIPACommon()
+    if not ipa.group_exists('admins'):
+        raise SystemError("No ipa group admins found ... did you forget to kinit or are you"
+                          "Running in some strange configuration??")
+    # grab csv from iterator. The whole thing since I need to do multiple iterations
+    keytabs = [k for k in yieldConfig(sys.argv[-1])]
+    # test that all machines are contactable
+    for keytab in keytabs:
+        remote = Remote(keytab["host"])
+        remote.check()
+    # add local users if required, fix groups if required
+    for keytab in keytabs:
+        remotes = [Remote(keytab["host"]), Remote("localhost")]
+        # add groups if they do not exist
+        for remote in remotes:
+            if keytab["keytab file group"] not in remote.run("cut -d: -f1 /etc/group"):
+                remote.run("groupadd "+keytab["keytab file group"])
+        if keytab["principal type"] == "USER":
+            continue
+        if keytab["keytab file owner"] is "root":
+            continue
+        # add users if they do not exist
+        for remote in remotes:
+            for user in [keytab["local username"],keytab["keytab file owner"]]:
+                if user == 'root':
+                    continue
+                if not len(user):
+                    continue
+                try:
+                    remote.run("grep " + user + " /etc/passwd > /dev/null")
+                except RuntimeError:
+                    remote.run("useradd " + user)
+                if keytab["keytab file group"] not in remote.run("groups " + user):
+                    remote.run("usermod -a -G " + keytab["keytab file group"] + " " + user)
+    #  c) Create any principles / keytabs and control permissions
+    #  d) Copy keytabs to required machines and control permissions
+    already_created = []
+    for keytab in keytabs:
+        identity = keytab["principal name"].split('@')[0]
+        realm = keytab["principal name"].split('@')[-1]
+        if keytab["principal type"] == "USER":
+            ipa.create_user_principal(identity)
+        if keytab["principal type"] == "SERVICE":
+            ipa.create_service_principal(identity)
+        if keytab["keytab file path"] not in already_created:
+            ipa.create_keytab(popen("hostname -f"),identity,realm,
+                              file=keytab["keytab file path"],
+                              user=keytab["keytab file owner"],
+                              group=keytab["keytab file group"],
+                              permissions=keytab["keytab file mode"]
+                              )
+            already_created.append(keytab["keytab file path"])
+        remote = Remote(keytab["host"])
+        remote.cp(keytab["keytab file path"], keytab["keytab file path"])
+        remote.run("chown " + keytab["keytab file owner"] + ":" + keytab["keytab file group"]
+                   + " " + keytab["keytab file path"])
+        remote.run("chmod " + keytab["keytab file mode"] + " " + keytab["keytab file path"])
+    # e) Check if everything works with the correct kinit command
+    failed = []
+    for keytab in keytabs:
+        try:
+            identity = keytab["principal name"].split('@')[0]
+            remote = Remote(keytab["host"])
+            remote.run("su "+keytab["keytab file owner"] + " bash -c '/usr/bin/kinit -kt "
+                       + keytab["keytab file path"] + " " + identity + "'")
+        except RuntimeError as e:
+            failed.append((keytab, e))
+    if len(failed):
+        print failed
+        raise RuntimeError("Failed to create some keytabs!")

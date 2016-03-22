@@ -36,8 +36,12 @@ class MongoBase(Script):
             print "File exists"
         else:
             print "file not exists"
+  #         File(self.repos_file_path,
+  #               content=Template("mongodb.repo"),
+  #               mode=0644
+  #               )
             File(self.repos_file_path,
-                 content=Template("mongodb.repo"),
+                 content=InlineTemplate(params.mongo_db_repo),
                  mode=0644
                  )
         print "installing mongodb..."

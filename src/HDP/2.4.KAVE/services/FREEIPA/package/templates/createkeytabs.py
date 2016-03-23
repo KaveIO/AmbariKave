@@ -84,6 +84,7 @@ def popen(cmd, exit=True, shell=None):
 
     return output.strip()
 
+
 class Remote(object):
     """
     Wrapper around ssh and scp for this script
@@ -129,7 +130,7 @@ class Remote(object):
         Copy file or directory to the remote machine through scp
         """
         if self.host == 'localhost':
-            return popen(['cp',local,remote])
+            return popen(['cp', local, remote])
 
         if not os.path.exists(os.path.realpath(os.path.expanduser(local))):
             raise IOError("file to copy must exist " + local)
@@ -137,6 +138,7 @@ class Remote(object):
         if directory and "-r" not in sshopts:
             sshopts.append("-r")
         return popen(["scp"] + sshopts + [local, self.user + "@" + self.host + ":" + remote])
+
 
 def yieldConfig(filename):
     """
@@ -146,13 +148,13 @@ def yieldConfig(filename):
         topline = fp.readline().strip().split(',')
         for line in fp:
             if len(line.strip()):
-                yield dict((n,v) for n,v in zip(topline,line.strip().split(',')))
+                yield dict((n, v) for n, v in zip(topline, line.strip().split(',')))
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
         print __doc__
         sys.exit(0)
-    if len(sys.argv)<2:
+    if len(sys.argv) < 2:
         raise AttributeError("Supply the name of the kerberos keytabs csv file")
     # Todo, check if the user has done kinit!
     # simple test that this works
@@ -172,14 +174,14 @@ if __name__ == "__main__":
         # add groups if they do not exist
         for remote in remotes:
             if keytab["keytab file group"] not in remote.run("cut -d: -f1 /etc/group"):
-                remote.run("groupadd "+keytab["keytab file group"])
+                remote.run("groupadd " + keytab["keytab file group"])
         if keytab["principal type"] == "USER":
             continue
         if keytab["keytab file owner"] is "root":
             continue
         # add users if they do not exist
         for remote in remotes:
-            for user in [keytab["local username"],keytab["keytab file owner"]]:
+            for user in [keytab["local username"], keytab["keytab file owner"]]:
                 if user == 'root':
                     continue
                 if not len(user):
@@ -201,7 +203,7 @@ if __name__ == "__main__":
         if keytab["principal type"] == "SERVICE":
             ipa.create_service_principal(identity)
         if keytab["keytab file path"] not in already_created:
-            ipa.create_keytab(popen("hostname -f"),identity,realm,
+            ipa.create_keytab(popen("hostname -f"), identity, realm,
                               file=keytab["keytab file path"],
                               user=keytab["keytab file owner"],
                               group=keytab["keytab file group"],
@@ -219,7 +221,7 @@ if __name__ == "__main__":
         try:
             identity = keytab["principal name"].split('@')[0]
             remote = Remote(keytab["host"])
-            remote.run("su "+keytab["keytab file owner"] + " bash -c '/usr/bin/kinit -kt "
+            remote.run("su " + keytab["keytab file owner"] + " bash -c '/usr/bin/kinit -kt "
                        + keytab["keytab file path"] + " " + identity + "'")
         except RuntimeError as e:
             failed.append((keytab, e))

@@ -156,7 +156,7 @@ class FreeipaServer(Script):
     def create_base_accounts(self, env):
         import params
 
-        #rm = freeipa.RobotAdmin()
+        rm = freeipa.RobotAdmin()
 
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
             fi.create_user_principal(

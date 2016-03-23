@@ -105,7 +105,7 @@ class Remote(object):
         extrasshopts = []
         if firsttime:
             sshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
-                       "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
+                       "PasswordAuthentication=no", "-o", "ConnectTimeout=3"]
         out = self.run("echo Hello World from $HOSTNAME", sshopts=sshopts, exit=False)
         if "Hello World" not in out or "HOSTNAME" in out:
             raise ValueError(
@@ -198,33 +198,67 @@ if __name__ == "__main__":
     for keytab in keytabs:
         identity = keytab["principal name"].split('@')[0]
         realm = keytab["principal name"].split('@')[-1]
+        if not len(identity):
+            raise NameError("I could not interpret the identity of " + str(keytab))
+        if not len(realm):
+            raise NameError("I could not interpret the realm of " + str(keytab))
         if keytab["principal type"] == "USER":
             ipa.create_user_principal(identity)
         if keytab["principal type"] == "SERVICE":
             ipa.create_service_principal(identity)
-        if keytab["keytab file path"] not in already_created:
-            ipa.create_keytab(popen("hostname -f"), identity, realm,
-                              file=keytab["keytab file path"],
-                              user=keytab["keytab file owner"],
-                              group=keytab["keytab file group"],
-                              permissions=keytab["keytab file mode"]
-                              )
-            already_created.append(keytab["keytab file path"])
+        intermediate_file = keytab["keytab file path"] + identity.replace('/', '_')
+        if not len(keytab["keytab file path"]):
+            continue
+        if intermediate_file not in already_created:
+            if os.path.exists(intermediate_file):
+                popen('rm -f ' + intermediate_file)
+            if (identity in ["HTTP/" + popen("hostname -f")]
+                    and os.path.exists('/etc/httpd/conf/ipa.keytab')):
+                # Special case for HTTP, needed by the FreeIPA server!
+                popen("cp /etc/httpd/conf/ipa.keytab " + intermediate_file)
+                popen("chown " + keytab["keytab file owner"] + ":" + keytab["keytab file group"]
+                      + " " + keytab["keytab file path"])
+                popen("chmod " + keytab["keytab file mode"] + " " + intermediate_file)
+            else:
+                ipa.create_keytab(popen("hostname -f"), identity, realm,
+                                  file=intermediate_file,
+                                  user=keytab["keytab file owner"],
+                                  group=keytab["keytab file group"],
+                                  permissions=keytab["keytab file mode"]
+                                  )
+            already_created.append(intermediate_file)
         remote = Remote(keytab["host"])
-        remote.cp(keytab["keytab file path"], keytab["keytab file path"])
-        remote.run("chown " + keytab["keytab file owner"] + ":" + keytab["keytab file group"]
+        exists = remote.run("bash -c 'if [-d " + os.path.dirname(keytab["keytab file path"])
+                            + " ]; then echo \"yes\"; fi; '")
+        exists = 'yes' in exists
+        if not exists:
+            remote.run("mkdir -p " + os.path.dirname(keytab["keytab file path"]))
+
+        remote.cp(intermediate_file, keytab["keytab file path"])
+        remote.run("chown "
+                   + keytab["keytab file owner"] + ":" + keytab["keytab file group"]
                    + " " + keytab["keytab file path"])
-        remote.run("chmod " + keytab["keytab file mode"] + " " + keytab["keytab file path"])
+        remote.run("chmod "
+                   + keytab["keytab file mode"]
+                   + " " + keytab["keytab file path"])
+    # Remove the intermediate files
+    for intermediate_file in already_created:
+        popen('rm -f ' + intermediate_file)
     # e) Check if everything works with the correct kinit command
     failed = []
+    popen('kdestroy')
     for keytab in keytabs:
+        if not len(keytab["keytab file path"]):
+            continue
+        remote = Remote(keytab["host"])
         try:
             identity = keytab["principal name"].split('@')[0]
-            remote = Remote(keytab["host"])
             remote.run("su " + keytab["keytab file owner"] + " bash -c '/usr/bin/kinit -kt "
-                       + keytab["keytab file path"] + " " + identity + "'")
+                       + keytab["keytab file path"] + " " + identity + "; kdestroy;'")
         except RuntimeError as e:
             failed.append((keytab, e))
+    popen('kdestroy')
     if len(failed):
-        print failed
-        raise RuntimeError("Failed to create some keytabs!")
+        for k, v in failed:
+            print keytab["host"], k["principal name"], k["keytab file path"], e
+        raise RuntimeError("Failed to create some keytabs! " + str(len(failed)) + "/" + str(len(keytabs)))

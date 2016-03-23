@@ -71,29 +71,6 @@ class FreeipaClient(Script):
 
         with rm.get_freeipa(not installed_on_server) as fi:
             pass
-        #
-        #            for definition in params.service_users.itervalues():
-        #                if params.hostname in definition['hosts']:
-        #                    principal = '%s/%s' % (definition['identity'], params.hostname)
-        #                    fi.create_service_principal(principal)
-        #                    fi.create_keytab(
-        #                        params.ipa_server,
-        #                        principal,
-        #                        params.realm,
-        #                        definition['file'],
-        #                        definition['user'],
-        #                        definition['group'],
-        #                        definition['permissions'])
-        #
-        #            for definition in params.headless_users.itervalues():
-        #                fi.create_keytab(
-        #                    params.ipa_server,
-        #                    definition['identity'],
-        #                    params.realm,
-        #                    definition['file'],
-        #                    definition['user'],
-        #                    definition['group'],
-        #                    definition['permissions'])
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:

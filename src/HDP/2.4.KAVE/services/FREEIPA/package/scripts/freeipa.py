@@ -136,7 +136,7 @@ class RobotAdmin():
             # the ambari server.
             p = subprocess.Popen(['psql', 'ambari', 'ambari', '-q', '-A', '-t',
                                   '-c', 'select hosts.host_name from hosts join hostcomponentstate \
-                on hostcomponentstate.host_name = hosts.host_name where \
+                on hostcomponentstate.host_id = hosts.host_id where \
                 component_name = \'FREEIPA_CLIENT\';'], stdout=subprocess.PIPE,
                                  env=env)
             output, err = p.communicate()

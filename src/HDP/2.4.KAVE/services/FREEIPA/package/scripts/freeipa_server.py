@@ -37,7 +37,7 @@ class FreeipaServer(Script):
                             ' on the ambari server. ambari_server: %s freeipa_server %s'
                             % (params.amb_server, params.hostname))
 
-        freeipa.create_required_users(params.required_users)
+        # freeipa.create_required_users(params.required_users)
 
         for package in self.packages:
             Package(package)
@@ -156,7 +156,7 @@ class FreeipaServer(Script):
     def create_base_accounts(self, env):
         import params
 
-        rm = freeipa.RobotAdmin()
+        #rm = freeipa.RobotAdmin()
 
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
             fi.create_user_principal(
@@ -165,16 +165,16 @@ class FreeipaServer(Script):
                 password=freeipa.generate_random_password(),
                 password_file=rm.get_password_file())
 
-            for definition in params.headless_users.itervalues():
-                fi.create_user_principal(definition['identity'])
-                fi.create_keytab(
-                    params.ipa_server,
-                    definition['identity'],
-                    params.realm,
-                    definition['file'],
-                    definition['user'],
-                    definition['group'],
-                    definition['permissions'])
+            #for definition in params.headless_users.itervalues():
+            #    fi.create_user_principal(definition['identity'])
+            #    fi.create_keytab(
+            #        params.ipa_server,
+            #        definition['identity'],
+            #        params.realm,
+            #        definition['file'],
+            #        definition['user'],
+            #        definition['group'],
+            #        definition['permissions'])
 
             # Create ldap bind user
             expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52 * 10)).strftime('%Y%m%d%H%M%SZ')
@@ -217,6 +217,7 @@ class FreeipaServer(Script):
             import params
             env.set_params(params)
             all_hosts = params.all_hosts
+            print "using params for all_hosts"
         except (TypeError, ImportError, ValueError, KeyError):
             all_hosts = None
 

@@ -120,7 +120,7 @@ class TestServiceFreeIPA(TestServiceBlueprint):
 
     def check(self, ambari):
         super(TestServiceFreeIPA, self).check(ambari)
-        import subprocess as subp
+        import subprocess as sub
         pwd = ambari.run("cat admin-password")
         proc = sub.popen(ambari.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)

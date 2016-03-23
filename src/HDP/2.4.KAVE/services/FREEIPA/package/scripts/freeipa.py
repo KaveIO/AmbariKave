@@ -141,6 +141,8 @@ class RobotAdmin():
                                  env=env)
             output, err = p.communicate()
             hosts = filter(bool, output.split("\n"))
+            if len(hosts):
+                print "hosts found from ambari database scraping"
             return hosts
 
 

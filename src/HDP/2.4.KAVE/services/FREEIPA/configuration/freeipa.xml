@@ -139,7 +139,7 @@ nameserver {{ipa_server_ip_address}}
             An advanced user will want to modify this in case they have multiple internal domains.
         </description>
     </property>
-    <property>
+    <!--  <property>
         <name>required_users</name>
         <value>{
     "nagios": {"groups": ["hadoop", "nagios"]},
@@ -320,5 +320,5 @@ nameserver {{ipa_server_ip_address}}
             This is a Jinja template, that creates a JSON file, interpreted as a dictionary
             The parameters in {{xxx}} are the list of hosts which are read from the clusterHostInfo
         </description>
-    </property>
+    </property>  -->
 </configuration>

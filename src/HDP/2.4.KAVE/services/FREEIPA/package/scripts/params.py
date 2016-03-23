@@ -18,6 +18,7 @@
 import re
 import socket
 import json
+import kavecommon as kc
 
 from resource_management import *
 
@@ -53,6 +54,7 @@ realm = '.'.join(hostname_components[1:]).upper()
 realm_ldap = 'dc=' + ',dc='.join(hostname_components[1:])
 
 install_with_dns = default('configurations/freeipa/install_with_dns', True)
+install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 
 # Only except IPv4 for now

@@ -52,14 +52,13 @@ class FreeipaServer(Script):
             --ds-password="%s" --admin-password="%s"' \
             % (params.realm, params.directory_password, admin_password)
 
-        if params.forwarders:
-            for forwarder in params.forwarders:
-                install_command += ' --forwarder="%s"' % forwarder
-        else:
-            install_command += ' --no-forwarders'
-
         if params.install_with_dns:
             install_command += ' --setup-dns --domain="%s"' % params.domain
+            if params.forwarders:
+                for forwarder in params.forwarders:
+                    install_command += ' --forwarder="%s"' % forwarder
+            else:
+                install_command += ' --no-forwarders'
 
         # Crude check to avoid reinstalling during debuging
         if not os.path.exists(self.admin_password_file):

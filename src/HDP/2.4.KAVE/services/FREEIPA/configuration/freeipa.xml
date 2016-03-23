@@ -94,7 +94,10 @@
             overwrite some dns related network settings.
             PLEASE NOTE! The network settings are NOT permanently overwriten.
             this is the machine owners responsibility.
-            PLEASE NOTE! The install without dns is not tested.
+            The install without dns is not the recommended way to go, but
+            this is up to you and your network admin. It is a great feature
+            of FreeIPA that it can also control an internal DNS, but sometimes
+            this can conflict with setting of your network.
         </description>
     </property>
     <property>

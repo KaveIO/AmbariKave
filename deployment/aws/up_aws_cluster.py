@@ -173,6 +173,16 @@ print "up the instance groups"
 print "===================================="
 sys.stdout.flush()
 
+
+def regionreplacements(instancetype):
+    region = "-".join(lA.detectRegion().split("-")[0:2])
+    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium"},
+                      "eu-west": {"m1.medium": "t2.small"}}
+    try:
+        return regioninstdict[region][instancetype]
+    except KeyError:
+        return instancetype
+
 for instancegroup in cluster_config["InstanceGroups"]:
     count = instancegroup["Count"]
     autoname = True
@@ -181,7 +191,8 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if count == 0:
         continue
-    up = lA.upCentos6(type=instancegroup["InstanceType"], secGroup=security_group, keys=amazon_keypair_name,
+    up = lA.upCentos6(type=regionreplacements(instancegroup["InstanceType"]),
+                      secGroup=security_group, keys=amazon_keypair_name,
                       count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iidFromUpJSON(up)
 

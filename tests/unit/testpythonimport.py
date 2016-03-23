@@ -46,8 +46,8 @@ class TestPyImport(unittest.TestCase):
         The most basic python test possible, checks that the files we have written
         are importable in python, this is a basic sanity check
         """
-        self.tryimporting(os.path.dirname(__file__) + '/mock/resource_management')
-        self.tryimporting(os.path.dirname(__file__) + '/mock/socket.py')
+        self.tryimporting(os.path.dirname(__file__) + '/mock_ambari/resource_management')
+        self.tryimporting(os.path.dirname(__file__) + '/mock_ambari/socket.py')
         import resource_management
         import socket
         pfiles = []

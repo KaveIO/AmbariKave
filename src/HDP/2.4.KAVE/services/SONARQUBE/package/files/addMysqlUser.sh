@@ -31,16 +31,17 @@ if  [ -e /var/lib/ambari-agent/ambari-sudo.sh ]; then
 	/var/lib/ambari-agent/ambari-sudo.sh service $mysqldservice restart
 	#Is this really expected to work? it needs the sudo wrapper as in removeMysqlUser
 	echo "Creating database if not already existing"
-	sudo -u mysql mysql -u root -e " CREATE DATABASE IF NOT EXISTS sonar CHARACTER SET utf8 COLLATE utf8_general_ci;"
+
+	/var/lib/ambari-agent/ambari-sudo.sh su mysql -s /bin/bash - -c "mysql -u root -e \"CREATE DATABASE IF NOT EXISTS sonar CHARACTER SET utf8 COLLATE utf8_general_ci;\""
 
 	echo "Removing users with empty name"
-	sudo -u mysql mysql -u root -e "DELETE FROM mysql.user WHERE user='';"
+	/var/lib/ambari-agent/ambari-sudo.sh su mysql -s /bin/bash - -c "mysql -u root -e \"DELETE FROM mysql.user WHERE user='';\""
 
 	echo "Adding user $mysqldbuser@%"
-	sudo -u mysql mysql -u root -e "CREATE USER '$mysqldbuser'@'%' IDENTIFIED BY '$mysqldbpasswd';"
-	sudo -u mysql mysql -u root -e "GRANT ALL PRIVILEGES ON sonar.* TO '$mysqldbuser'@'%';"
+	/var/lib/ambari-agent/ambari-sudo.sh su mysql -s /bin/bash - -c "mysql -u root -e \"CREATE USER '$mysqldbuser'@'%' IDENTIFIED BY '$mysqldbpasswd';\""
+	/var/lib/ambari-agent/ambari-sudo.sh su mysql -s /bin/bash - -c "mysql -u root -e \"GRANT ALL PRIVILEGES ON *.* TO '$mysqldbuser'@'%';\""
+	/var/lib/ambari-agent/ambari-sudo.sh su mysql -s /bin/bash - -c "mysql -u root -e \"flush privileges;\""
 
-	sudo -u mysql mysql -u root -e "flush privileges;"
 else
 	# 1.7!
 	service $mysqldservice restart

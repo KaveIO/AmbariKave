@@ -54,7 +54,6 @@ class FreeipaClient(Script):
             print 'ipa client already installed, nothing to do here.'
             return
 
-        # freeipa.create_required_users(params.required_users)
 
         rm = freeipa.RobotAdmin()
         # Native package installation system driven by metainfo.xml intentionally

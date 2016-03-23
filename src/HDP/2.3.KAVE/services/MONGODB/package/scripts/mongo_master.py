@@ -38,7 +38,7 @@ class MongoMaster(MongoBase):
     def start(self, env):
         print "start mongodb"
         self.configure(env)
-        Execute('service mongod start')
+        Execute('service mongod start', wait_for_finish=False)
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
         import params

@@ -257,10 +257,10 @@ all_hosts = default("/clusterHostInfo/all_hosts", [hostname])
 #
 #service_users = InlineTemplate(service_users, **chi_replace).get_content()
 #service_users = json.loads(service_users)
-#
-#ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
-#ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
-#
+
+ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
+ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
+
 #
 # required_users = default('configurations/freeipa/required_users', """{
 #    "nagios": {"groups": ["hadoop", "nagios"]},

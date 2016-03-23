@@ -122,7 +122,7 @@ class TestServiceFreeIPA(TestServiceBlueprint):
         super(TestServiceFreeIPA, self).check(ambari)
         import subprocess as sub
         pwd = ambari.run("cat admin-password")
-        proc = sub.popen(ambari.sshcmd() + ['kinit admin'], shell=False,
+        proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
         output, err = proc.communicate(input=pwd + '\n')
         self.assertFalse(proc.returncode, "Failed to kinit admin on this node "

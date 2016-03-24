@@ -32,7 +32,7 @@
         <name>setname</name>
         <value>None</value>
         <description>
-            Name of the replica set this mongod will be part of. 
+            Name of the replica set this mongod will be part of.
 	    If name is None, and this is the only member of the set, this mongod will run in standalone mode and not be added to the set.
         </description>
     </property>
@@ -49,6 +49,41 @@
         <value>/var/log/mongodb/mongod.log</value>
         <description>
             The name and location of the log file.
+        </description>
+    </property>
+    <property>
+        <name>mongodb_repo</name>
+        <value>MongoDB Repository</value>
+        <description>
+            Name of mongoDB repo
+        </description>
+    </property>
+    <property>
+        <name>mongodb_baseurl</name>
+        <value>https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/</value>
+        <description>
+            Base URL of mongo repository.
+        </description>
+    </property>
+    <property>
+        <name>mongodb_gpgcheck</name>
+        <value>0</value>
+        <description>
+            Repo gpgcheck
+        </description>
+    </property>
+    <property>
+        <name>mongodb_enabled</name>
+        <value>0</value>
+        <description>
+            The name and location of the log file.
+        </description>
+    </property>
+    <property>
+        <name>mongo_db_repo</name>
+        <value>[mongodb]</value>
+        <description>
+            MongoDB repo details.
         </description>
     </property>
 

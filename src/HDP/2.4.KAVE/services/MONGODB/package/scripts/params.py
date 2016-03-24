@@ -27,12 +27,13 @@ logpath = default('configurations/mongodb/logpath', '/var/log/mongodb/mongod.log
 bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
 tcp_port = default('configurations/mongodb/tcp_port', '27017')
 setname = default('configurations/mongodb/setname', 'None')
-mongo_db_repo = default('configurations/mongodb/mongo_db_repo',"""
-[mongodb]
-name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/
-gpgcheck=0
-enabled=1""")
+
+mongo_db_repo = default('configurations/mongodb/mongo_db_repo','None')
+mongodb_repo=default('configurations/mongodb/mongodb_repo', 'None')
+mongodb_baseurl=default('configurations/mongodb/mongodb_baseurl', 'None')
+mongodb_gpgcheck=default('configurations/mongodb/mongodb_gpgcheck', 'None')
+mongodb_enabled=default('configurations/mongodb/mongodb_enabled', 'None')
+
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
 
 mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
@@ -48,3 +49,4 @@ if mongo_host == hostname:
 if setname in ["None", "False"]:
     if len(mongo_hosts) < 2:
         setname = ""
+

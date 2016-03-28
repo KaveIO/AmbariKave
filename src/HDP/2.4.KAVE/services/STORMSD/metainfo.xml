@@ -7,6 +7,19 @@
             <comment>StormSD - the KAVE version of storm, which can be used separate from YARN, SD-stands for 'SupervisorD', which wraps the storm daemons for fast-fail fast-restart operation</comment>
             <displayName>StormSD</displayName>
             <version>0.10.0</version>
+             <components>
+                    <component>
+                    <name>STORMSD_LOG_VIEWER</name>
+                    <comment>logviewer daemon,feature for debugging and monitoring topologies</comment>
+                    <displayName>STORMSD LOG VIEWER</displayName>
+                    <category>SLAVE</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/storm_logviewer.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
             <components>
                     <component>
                     <name>NIMBUS_SD_MASTER</name>

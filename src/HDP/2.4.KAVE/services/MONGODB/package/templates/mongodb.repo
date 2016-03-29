@@ -2,4 +2,4 @@ mongo_repo ={{mongo_db_repo}}
 name={{mongodb_repo}}
 baseurl={{mongodb_baseurl}}
 gpgcheck={{mongodb_gpgcheck}}
-enabled={{mongodb_oenabled}}
+enabled={{mongodb_enabled}}

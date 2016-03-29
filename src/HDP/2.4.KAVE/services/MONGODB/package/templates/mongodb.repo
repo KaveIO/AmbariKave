@@ -1,5 +1,5 @@
-mongo_repo ={{mongo_db_repo}}
-name={{mongodb_repo}}
+{{mongo_db_repo}}
+name={{mongo_repo_name}}
 baseurl={{mongodb_baseurl}}
 gpgcheck={{mongodb_gpgcheck}}
 enabled={{mongodb_enabled}}

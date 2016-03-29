@@ -29,10 +29,10 @@ tcp_port = default('configurations/mongodb/tcp_port', '27017')
 setname = default('configurations/mongodb/setname', 'None')
 
 mongo_db_repo = default('configurations/mongodb/mongo_db_repo','None')
-mongodb_repo=default('configurations/mongodb/mongodb_repo', 'None')
+mongo_repo_name=default('configurations/mongodb/mongo_repo_name', 'None')
 mongodb_baseurl=default('configurations/mongodb/mongodb_baseurl', 'None')
 mongodb_gpgcheck=default('configurations/mongodb/mongodb_gpgcheck', 'None')
-mongodb_enabled=default('configurations/mongodb/mongodb_enabled', 'None')
+mongodb_enabled=default('configurations/mongodb/mongodb_enabled', 0)
 
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
 

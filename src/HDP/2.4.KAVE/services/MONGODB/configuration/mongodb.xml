@@ -52,7 +52,7 @@
         </description>
     </property>
     <property>
-        <name>mongodb_repo</name>
+        <name>mongo_repo_name</name>
         <value>MongoDB Repository</value>
         <description>
             Name of mongoDB repo
@@ -74,7 +74,7 @@
     </property>
     <property>
         <name>mongodb_enabled</name>
-        <value>0</value>
+        <value>1</value>
         <description>
             The name and location of the log file.
         </description>

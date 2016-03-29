@@ -29,3 +29,10 @@ supervisor.slots.ports:
 {% for port in supervisor_slots_ports %}
   - {{port}}
 {% endfor %}
+
+logviewer.port: 8013
+logviewer.childopts: "-Xmx128m"
+logviewer.cleanup.age.mins: 10080
+logviewer.appender.name: "A1"
+logviewer.max.sum.worker.logs.size.mb: 4096
+logviewer.max.per.worker.logs.size.mb: 2048

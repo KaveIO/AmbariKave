@@ -53,7 +53,11 @@ class MongoBase(Script):
         import params
 
         env.set_params(params)
+#        File(self.config_file_path,
+#             content=Template("mongod.conf.j2"),
+#             mode=0644
+#             )
         File(self.config_file_path,
-             content=Template("mongod.conf.j2"),
+             content=InlineTemplate(params.mongodb_conf),
              mode=0644
              )

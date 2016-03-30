@@ -27,8 +27,10 @@ nimbus_host = default("/clusterHostInfo/nimbus_sd_master_hosts", [None])[0]
 # config['configurations']['stormsd']['stormsd.drpc.servers'].replace(", "," ").replace(","," ").split()
 drpc_servers = default("/clusterHostInfo/stormsd_drpc_server_hosts", False)
 use_drpc = (drpc_servers is not False)
-if None in [storm_zookeeper_servers, nimbus_host]:
-    raise NameError("Could not find required services from clusterHostInfo : " + str(config['clusterHostInfo']))
+if None in [storm_zookeeper_servers]:
+    raise NameError("Could not find required services from clusterHostInfo in zookeeper_hosts : " + str(config['clusterHostInfo/zookeeper_hosts']))
+if None in [storm_zookeeper_servers]:
+    raise NameError("Could not find required services from clusterHostInfo in nimbus_sd_master_hosts: " + str(config['clusterHostInfo/nimbus_sd_master_hosts']))
 
 # find/replace localhost
 if nimbus_host == hostname:

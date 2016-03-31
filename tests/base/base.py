@@ -524,7 +524,7 @@ class LDTest(unittest.TestCase):
                 break
             if '"request_status" : "COMPLETED"' in stdout and rounds > 2:
                 state = "COMPLETED"
-                #always wait at least two minutes before declaring completed
+                # always wait at least two minutes before declaring completed
                 break
             time.sleep(60)
             rounds = rounds + 1

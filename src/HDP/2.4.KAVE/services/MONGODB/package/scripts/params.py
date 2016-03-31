@@ -120,7 +120,7 @@ httpinterface=true
 #noprealloc=true
 
 # Specify .ns file size for new databases.
-# nssize={{size}}
+# nssize=<size>
 
 # Replication Options
 

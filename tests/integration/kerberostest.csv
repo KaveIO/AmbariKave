@@ -7,3 +7,11 @@ gate-001.kave.io,test_kerberos,testkuser@KAVE.IO,USER,testkuser,/etc/security/ke
 test-001.kave.io,test_kerberos,testkserviceb/test-001.kave.io@KAVE.IO,SERVICE,,/etc/security/keytabs/testkserviceb.service.keytab,root,r,root,r,400,unknown
 test-001.kave.io,test_kerberos,testkuser@KAVE.IO,USER,testkuser,/etc/security/keytabs/testkuser.headless.keytab,testkuser,r,testkgroup,r,440,unknown
 test-001.kave.io,test_kerberos,testtestuser@KAVE.IO,USER,testtestuser,/etc/security/keytabs/testtestuser.headless.keytab,testtestuser,r,testgroup,r,440,unknown
+ambari.kave.io,/spnego,HTTP/ambari.kave.io@KAVE.IO,SERVICE,,/etc/security/keytabs/spnego.service.keytab,root,r,hadoop,r,440,unknown
+ambari.kave.io,/smokeuser,ambari-qa@KAVE.IO,USER,ambari-qa,/etc/security/keytabs/smokeuser.headless.keytab,ambari-qa,r,hadoop,r,440,unknown
+ambari.kave.io,ams_collector,amshbase/ambari.kave.io@KAVE.IO,SERVICE,ams,/etc/security/keytabs/ams.collector.keytab,ams,r,hadoop,,400,unknown
+ambari.kave.io,ams_zookeeper,amszk/ambari.kave.io@KAVE.IO,SERVICE,ams,/etc/security/keytabs/ams-zk.service.keytab,ams,r,hadoop,,400,unknown
+test-001.kave.io,/spnego,HTTP/test-001.kave.io@KAVE.IO,SERVICE,,/etc/security/keytabs/spnego.service.keytab,root,r,hadoop,r,440,unknown
+test-001.kave.io,/smokeuser,ambari-qa@KAVE.IO,USER,ambari-qa,/etc/security/keytabs/smokeuser.headless.keytab,ambari-qa,r,hadoop,r,440,unknown
+gate-001.kave.io,/spnego,HTTP/gate-001.kave.io@KAVE.IO,SERVICE,,/etc/security/keytabs/spnego.service.keytab,root,r,hadoop,r,440,unknown
+gate-001.kave.io,/smokeuser,ambari-qa@KAVE.IO,USER,ambari-qa,/etc/security/keytabs/smokeuser.headless.keytab,ambari-qa,r,hadoop,r,440,unknown

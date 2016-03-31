@@ -506,10 +506,27 @@ class LDTest(unittest.TestCase):
                   "~/.netrc")
         time.sleep(10)
         while rounds <= max_rounds:
-            stdout = ambari.run(
-                "curl --netrc "
-                + " http://localhost:8080/api/v1/clusters/"
-                + clustername + "/requests/" + str(requestid))
+            # if curl fails, the ambari server may have dies for some reason
+            # the standard restart_all_services script will then work to recover this failure
+            try:
+                stdout = ambari.run(
+                    "curl --netrc "
+                    + " http://localhost:8080/api/v1/clusters/"
+                    + clustername + "/requests/" + str(requestid))
+            except RuntimeError:
+                time.sleep(3)
+                try:
+                    stdout = ambari.run(
+                        "curl --netrc "
+                        + " http://localhost:8080/api/v1/clusters/"
+                        + clustername + "/requests/" + str(requestid))
+                except RuntimeError as e:
+                    stdout2 = ambari.run("ambari-server status")
+                    if "not running" in stdout2:
+                        state = "ABORTED"
+                        break
+                    raise e
+
             # print stdout.split('\n')[1:22]
             # for n,s in enumerate(stdout.split('\n')):
             #    for f in ['"request_status" : "FAILED"',

@@ -131,11 +131,6 @@ class TestServiceFreeIPA(TestServiceBlueprint):
                          )
         ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ambari.run("./createkeytabs.py ./kerberostest.csv")
-        klist = ambari.run("klist")
-        self.assertTrue("krbtgt/KAVE.IO@KAVE.IO" in klist
-                        and "testkserviceb/ambari.kave.io@KAVE.IO" in klist,
-                        "kinit test/tokens were not successful here :" + klist
-                        + ' '.join(ambari.sshcmd()))
 
 if __name__ == "__main__":
     import sys

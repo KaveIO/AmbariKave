@@ -504,6 +504,7 @@ class LDTest(unittest.TestCase):
         ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
                   + "/../remotescripts/default.netrc",
                   "~/.netrc")
+        time.sleep(10)
         while rounds <= max_rounds:
             stdout = ambari.run(
                 "curl --netrc "
@@ -521,8 +522,9 @@ class LDTest(unittest.TestCase):
             if '"request_status" : "ABORTED"' in stdout:
                 state = "ABORTED"
                 break
-            if '"request_status" : "COMPLETED"' in stdout:
+            if '"request_status" : "COMPLETED"' in stdout and rounds > 2:
                 state = "COMPLETED"
+                #always wait at least two minutes before declaring completed
                 break
             time.sleep(60)
             rounds = rounds + 1

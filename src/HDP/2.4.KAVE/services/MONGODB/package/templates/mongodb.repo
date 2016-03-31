@@ -1,6 +1,5 @@
 [mongodb]
-name=MongoDB Repository
-#baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
-baseurl=https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/
+name=MongoDB repository
+baseurl={{mongodb_baseurl}}
 gpgcheck=0
 enabled=1

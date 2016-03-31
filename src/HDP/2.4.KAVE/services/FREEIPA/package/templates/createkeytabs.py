@@ -164,6 +164,16 @@ if __name__ == "__main__":
                           "Running in some strange configuration??")
     # grab csv from iterator. The whole thing since I need to do multiple iterations
     keytabs = [k for k in yieldConfig(sys.argv[-1])]
+    # Check that the tuples (host,file,principal) are unique
+    tuples = [(k["host"], k["principal name"], k["keytab file path"]) for k in keytabs]
+    if len(set(tuples)) != len(tuples):
+        print ("Warning: your kerberos csv calls for multiple principal tabs to"
+               + " be saved in the same file, this may fail")
+    # check that (host,file,user,group) are unique
+    tuples = [(k["host"], k["keytab file path"], k["keytab file owner"], k["keytab file group"]) for k in keytabs]
+    if len(set(tuples)) != len(tuples):
+        print ("Warning: your kerberos csv calls for multiple different ownership"
+               + " statuses for the same file, this may fail")
     # test that all machines are contactable
     for keytab in keytabs:
         remote = Remote(keytab["host"])

@@ -165,7 +165,7 @@ if __name__ == "__main__":
         raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
     test = TestCluster()
-    if service == "FreeIPA":
+    if service == "FREEIPA":
         test = TestFreeIPACluster()
     test.service = service
     test.debug = verbose

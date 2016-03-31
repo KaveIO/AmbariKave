@@ -10,13 +10,13 @@
   },
   { "Name" : "gate",
     "Count" : 1,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "t2.small",
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "test",
     "Count" : 1,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "t2.small",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   }

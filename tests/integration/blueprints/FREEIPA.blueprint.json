@@ -39,7 +39,6 @@
       "configurations" : [      ],
       "components" : [
         { "name" : "KAVELANDING"          },
-        { "name" : "SONARQUBE_RUNNER"     },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }

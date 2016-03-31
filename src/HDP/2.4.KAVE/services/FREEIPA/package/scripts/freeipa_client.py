@@ -54,7 +54,6 @@ class FreeipaClient(Script):
             print 'ipa client already installed, nothing to do here.'
             return
 
-        freeipa.create_required_users(params.required_users)
 
         rm = freeipa.RobotAdmin()
         # Native package installation system driven by metainfo.xml intentionally
@@ -70,29 +69,7 @@ class FreeipaClient(Script):
             rm.client_install(params.ipa_server, params.domain, params.client_init_wait, params.install_with_dns)
 
         with rm.get_freeipa(not installed_on_server) as fi:
-
-            for definition in params.service_users.itervalues():
-                if params.hostname in definition['hosts']:
-                    principal = '%s/%s' % (definition['identity'], params.hostname)
-                    fi.create_service_principal(principal)
-                    fi.create_keytab(
-                        params.ipa_server,
-                        principal,
-                        params.realm,
-                        definition['file'],
-                        definition['user'],
-                        definition['group'],
-                        definition['permissions'])
-
-            for definition in params.headless_users.itervalues():
-                fi.create_keytab(
-                    params.ipa_server,
-                    definition['identity'],
-                    params.realm,
-                    definition['file'],
-                    definition['user'],
-                    definition['group'],
-                    definition['permissions'])
+            pass
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:

@@ -17,9 +17,11 @@
 ##############################################################################
 """Simple mock for tests where we use src packages.
 """
-import mock
+# import mock
 import random
 import string
+import core
+from core import *
 
 
 def genrand():

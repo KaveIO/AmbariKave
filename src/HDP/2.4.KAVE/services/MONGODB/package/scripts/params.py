@@ -28,7 +28,8 @@ bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
 tcp_port = default('configurations/mongodb/tcp_port', '27017')
 setname = default('configurations/mongodb/setname', 'None')
 
-mongodb_baseurl=default('configurations/mongodb/mongodb_baseurl', 'https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/')
+mongodb_baseurl = default('configurations/mongodb/mongodb_baseurl',
+                          'https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/')
 
 
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
@@ -47,7 +48,7 @@ if setname in ["None", "False"]:
     if len(mongo_hosts) < 2:
         setname = ""
 
-mongodb_conf=default('configurations/mongodb/mongodb_conf',"""
+mongodb_conf = default('configurations/mongodb/mongodb_conf', """
 # mongod.conf
 
 #where to log
@@ -119,7 +120,7 @@ httpinterface=true
 #noprealloc=true
 
 # Specify .ns file size for new databases.
-# nssize=<size>
+# nssize={{size}}
 
 # Replication Options
 
@@ -129,7 +130,4 @@ replSet={{setname}}
 #oplogSize=1024
 # path to a key file storing authentication info for connections
 # between replica set members
-#keyFile=/path/to/keyfile
-""")
-
-
+#keyFile=/path/to/keyfile """)

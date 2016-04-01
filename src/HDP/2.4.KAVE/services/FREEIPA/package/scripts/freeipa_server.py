@@ -149,6 +149,8 @@ class FreeipaServer(Script):
         rm = freeipa.RobotAdmin()
 
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
+            # Always create the hadoop group
+            fi.create_group('hadoop', 'the hadoop user group')
             fi.create_user_principal(
                 rm.get_login(),
                 groups=['admins'],

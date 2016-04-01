@@ -121,6 +121,30 @@ class TestCluster(base.LDTest):
         return self.check(ambari)
 
 
+class TestFreeIPACluster(TestCluster):
+    """
+    Add test of the createkeytabs script to the test of the FreeIPA cluster installation
+    """
+
+    def check(self, ambari):
+        super(TestFreeIPACluster, self).check(ambari)
+        import time
+        import os
+        import subprocess as sub
+        if 'yes' not in ambari.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
+            time.sleep(60)
+        import subprocess as sub
+        pwd = ambari.run("cat admin-password")
+        proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
+                         stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
+        output, err = proc.communicate(input=pwd + '\n')
+        self.assertFalse(proc.returncode, "Failed to kinit admin on this node "
+                         + ' '.join(ambari.sshcmd())
+                         + output + " " + err
+                         )
+        ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
+        ambari.run("./createkeytabs.py ./kerberostest.csv")
+
 if __name__ == "__main__":
     import sys
 
@@ -143,6 +167,8 @@ if __name__ == "__main__":
         raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
     test = TestCluster()
+    if service == "FREEIPA":
+        test = TestFreeIPACluster()
     test.service = service
     test.debug = verbose
     test.clustername = clustername

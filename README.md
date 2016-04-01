@@ -68,16 +68,26 @@ Installation of a full cluster
 If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
 If you have git access, and are working from the git version, See the wiki.
 
+Installation Kerberization with FreeIPA
+=======================================
 
-Installation of spark on a yarn cluster
-==============================
+FreeIPA can provide all necessary keytabs for your kerberized cluster, using the kerberos.csv given by the Ambari wizard.
+Be careful because you need to pause while using the wizard when given the option to download the csv, and do some things on the command line before continuing.
 
-Currently spark is not directly installable through the ambarikave installer. If
-you do want to experiment with spark follow this guide http://hortonworks.com/hadoop-tutorial/using-apache-spark-technical-preview-with-hdp-2-2/
-After installation modfify /etc/spark/conf/spark-defaults.conf so that it contains this:
+ * Installed and configure the cluster how you wish, with all services.
+ * Start the wizard
+ * Select the manual configuration option and say yes that you have installed all requirements.
+ * Modify the realm to match your FreeIPA realm
+ * Modify advanced settings only if you think it's very necessary or you know what you are doing
+ * When given the option, download the csv of all keytabs, then do not continue on the wizard, don't click anything, don't stop or exit the wizard, before you've created the keytabs you need using the instructions below
+ * copy this csv to the ambari node, somewhere readable by the root user
+ * ssh to your ambari node
+ * become the root user (sudo su)
+ * kinit as a user with full administration rights (kinit admin)
+ * run the /root/createkeytabs.py script over the kerberos.csv file you downloaded/copied (./createkeytabs.py ./kerberos.csv)
+ * Once this script is finished, if everything worked, continue with the wizard
 
-   spark.driver.extraJavaOptions -Dhdp.version=2.2.0.0-2041
-   spark.yarn.am.extraJavaOptions -Dhdp.version=2.2.0.0-2041
+The createkeytabs.py script creates all necessary service and user principals, any missing local users or groups, creates temporary keytabs on the ambari node, copies them to the required places on the nodes, removes the local intermediate files, and tests that the new ketyabs work for those services.
 
 
 Deployment tools

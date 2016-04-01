@@ -22,23 +22,32 @@ import base
 class TestScan(unittest.TestCase):
     resolves_to_html = """<h3><font size=5px>'MOCK' cluster</font></h3>
 <b>Servers</b><p><ul>
-  <li>Ambari <a href='http://test1/'></li>
-  <li>Ganglia (['elsewhere.com'])</li>
+  <li>Ambari <a href='http://test1/'><a href='http://nowhere:8080'>admin</a> </li>
+  <li>Ganglia <a href='http://elsewhere:80/ganglia'>monitor</a> </li>
+  <li>Stormsd log <a href='http://nimbus:8008'>log</a> <a href='http://node:8008'>log</a>
+       <a href='http://here:8008'>log</a> <a href='http://there:8008'>log</a> </li>
 </ul><p><b>Clients</b><p><ul>
   <li>elsewhere.com []</li>
   <li>here.com ['kavetoolbox', 'ganglia_monitor']</li>
+  <li>nimbus.com []</li>
+  <li>node.com []</li>
   <li>nowhere.none []</li>
   <li>there.com ['kavetoolbox', 'ganglia_monitor']</li>
 </ul>"""
     resolves_to_plain = """==================
 * 'MOCK' cluster
 |--* Servers
-|  |--* Ambari <a href='http://test1/'>
-|  |--* Ganglia (['elsewhere.com'])
+|  |--* Ambari <a href='http://test1/'><a href='http://nowhere:8080'>admin</a>
+|  |--* Ganglia <a href='http://elsewhere:80/ganglia'>monitor</a>
+|  |--* Stormsd log <a href='http://nimbus:8008'>log</a>
+                <a href='http://node:8008'>log</a>
+                <a href='http://here:8008'>log</a> <a href='http://there:8008'>log</a>
 |
 |--* Clients
 |  |--* elsewhere.com []
 |  |--* here.com ['kavetoolbox', 'ganglia_monitor']
+|  |--* nimbus.com []
+|  |--* node.com []
 |  |--* nowhere.none []
 |  |--* there.com ['kavetoolbox', 'ganglia_monitor']"""
 
@@ -64,26 +73,53 @@ class TestScan(unittest.TestCase):
         self.assertTrue(mockd2 == mockout, "Cloning dictionaries failed")
         mockservices = {"MOCK": {"AMBARI_SERVER": ["nowhere.none"], "GANGLIA_SERVER": ["elsewhere.com"],
                                  "KAVETOOLBOX": ["here.com", "there.com"],
-                                 "GANGLIA_MONITOR": ["here.com", "there.com"]}}
+                                 "GANGLIA_MONITOR": ["here.com", "there.com"],
+                                 "STORMSD_LOG_VIEWER": ["there.com", "node.com", "nimbus.com"]}}
         mocklinks = {"MOCK": {"AMBARI_SERVER": ["<a href='http://test1/'>"]}}
         mockhosts = {"MOCK": {"nowhere.none": ["AMBARI_SERVER"], "elsewhere.com": ["GANGLIA_SERVER"],
-                              "here.com": ["KAVETOOLBOX", "GANGLIA_MONITOR"],
-                              "there.com": ["KAVETOOLBOX", "GANGLIA_MONITOR"]}}
+                              "here.com": ["KAVETOOLBOX", "GANGLIA_MONITOR", "STORMSD_LOG_VIEWER"],
+                              "there.com": ["KAVETOOLBOX", "GANGLIA_MONITOR", "STORMSD_LOG_VIEWER"],
+                              "node.com": ["STORMSD_LOG_VIEWER"],
+                              "nimbus.com": ["STORMSD_LOG_VIEWER"]}}
         mockblueprint = {}
         mockblueprint["host_groups"] = [{"name": "silly1", "components": [{"name": "GANGLIA_SERVER"}]},
                                         {"name": "silly2",
-                                         "components": [{"name": "KAVETOOLBOX"}, {"name": "GANGLIA_MONITOR"}]},
-                                        {"name": "silly3", "components": [{"name": "NOTHING"}]}]
+                                         "components": [{"name": "KAVETOOLBOX"},
+                                                        {"name": "GANGLIA_MONITOR"}, {"name": "STORMSD_LOG_VIEWER"}]},
+                                        {"name": "silly3", "components": [
+                                            {"name": "NOTHING"}, {"name": "STORMSD_LOG_VIEWER"}]},
+                                        {"name": "silly4", "components": [{"name": "STORMSD_LOG_VIEWER"}]}
+                                        ]
 
         self.assertTrue(ls.host_to_hostgroup(["GANGLIA_SERVER", "AMBARI_SERVER"], mockblueprint) == "silly1",
                         "failed to get correct hostgroup")
-        self.assertTrue(ls.host_to_hostgroup(["KAVETOOLBOX", "GANGLIA_MONITOR"], mockblueprint) == "silly2",
+        self.assertTrue(ls.host_to_hostgroup(["KAVETOOLBOX", "GANGLIA_MONITOR", "STORMSD_LOG_VIEWER"],
+                                             mockblueprint) == "silly2",
                         "incorrect hostgroup")
+        # check that pickprop works
         aconfig = {"apache": {"APACHE_PORT": 9999, "DUMMY": 77}}
         noconfig = {}
         self.assertTrue(ls.pickprop(noconfig, [80]) == 80, "didn't pick correct config")
         self.assertTrue(ls.pickprop(noconfig, [80, "apache/APACHE_PORT"]) == 80, "didn't pick correct config")
         self.assertTrue(ls.pickprop(aconfig, [80, "apache/APACHE_PORT"]) == 9999, "didn't pick correct config")
+        # for service in
+        # mocklinks[cluster][component].append(
+        #                    "<a href='http://" + host.split('.')[0] + ":" + str(
+        #                        pickprop(myconfigs, port)) + "'>" + linkname + "</a> ")
+        # Basic test of service_portproperty_dict and pickprop
+        for host in mockhosts["MOCK"]:
+            # print components
+            for component in mockhosts["MOCK"][host]:
+                if component in ls.service_portproperty_dict:
+                    if component not in mocklinks["MOCK"]:
+                        mocklinks["MOCK"][component] = []
+                    for linkname, port in ls.service_portproperty_dict[component].iteritems():
+                        mocklinks["MOCK"][component].append(
+                            "<a href='http://" + host.split('.')[0] + ":"
+                            + str(ls.pickprop({'stormsd': {'stormsd.logviewer.port': 8008}}, port))
+                            + "'>" + linkname + "</a> ")
+        self.assertTrue("MOCK" in mocklinks and "STORMSD_LOG_VIEWER" in mocklinks["MOCK"]
+                        and "<a href='http://nimbus:8008'>log</a> " in mocklinks["MOCK"]["STORMSD_LOG_VIEWER"])
         ppp = ls.pretty_print(mockservices, mockhosts, mocklinks, "plain")
         pph = ls.pretty_print(mockservices, mockhosts, mocklinks, "html")
         # ignore whitespace in this test!

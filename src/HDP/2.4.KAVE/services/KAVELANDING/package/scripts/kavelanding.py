@@ -96,6 +96,8 @@ class KaveLanding(ApacheScript):
                 HUE_LINK_IF_KNOWN = "<li>" + cluster_service_link[cluster]["HUE_SERVER"][0] + "</li>"
         for cluster in cluster_service_link:
             for service in cluster_service_link[cluster]:
+                if len(cluster_service_link[cluster][service]) > 2:
+                    continue
                 all_links = all_links + ["<li>" + l + "</li>" for l in cluster_service_link[cluster][service]]
         f = open(params.www_folder + '/index.html')
         content = f.read()

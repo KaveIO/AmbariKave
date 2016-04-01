@@ -43,7 +43,7 @@ if use_drpc:
 storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts',
                            '-Xmx1024m -Djava.net.preferIPv4Stack=true')
-ui.port = default('configurations/stormsd/stormsd.ui.port', "8744")
+ui_port = default('configurations/stormsd/stormsd.ui.port', "8744")
 ui_childopts = default('configurations/stormsd/stormsd.ui.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 supervisor_slots_ports = default('configurations/stormsd/stormsd.supervisor.slots.ports',
                                  '6700, 6701').replace(", ", " ").replace(",", " ").split()

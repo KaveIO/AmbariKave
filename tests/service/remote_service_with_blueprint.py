@@ -71,9 +71,11 @@ __kavelanding_plain__ = """Welcome to your KAVE
 |--* Servers
 |  |--* Ambari <a href='http://ambari:8080'>admin</a>
 |  |--* Jenkins <a href='http://ambari:8888'>jenkins</a>
+|  |--* Metrics (['ambari.kave.io'])
+|  |--* Zookeeper (['ambari.kave.io'])
 |
 |--* Clients
-|  |--* ambari.kave.io ['ganglia_monitor', 'kavelanding']"""
+|  |--* ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']"""
 
 
 #####
@@ -83,8 +85,10 @@ __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 <b>Servers</b><p><ul>
   <li>Ambari <a href='http://ambari:8080'>admin</a></li>
   <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
+  <li>Metrics (['ambari.kave.io'])</li>
+  <li>Zookeeper (['ambari.kave.io'])</li>
 </ul><p><b>Clients</b><p><ul>
-  <li>ambari.kave.io ['ganglia_monitor', 'kavelanding']</li>
+  <li>ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']</li>
 </ul>"""
 
 

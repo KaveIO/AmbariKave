@@ -43,7 +43,7 @@ if use_drpc:
 storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts',
                            '-Xmx1024m -Djava.net.preferIPv4Stack=true')
-ui_port = default('configurations/stormsd/stormsd.ui.port', "8744")
+ui.port = default('configurations/stormsd/stormsd.ui.port', "8744")
 ui_childopts = default('configurations/stormsd/stormsd.ui.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 supervisor_slots_ports = default('configurations/stormsd/stormsd.supervisor.slots.ports',
                                  '6700, 6701').replace(", ", " ").replace(",", " ").split()
@@ -125,7 +125,7 @@ nimbus.impersonation.authorizer: "backtype.storm.security.auth.authorizer.Impers
 
 ### ui.* configs are for the master
 ui.host: 0.0.0.0
-ui.port: {{ui.port}}
+ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
 ui.actions.enabled: true
 ui.filter: null
@@ -134,7 +134,7 @@ ui.users: null
 ui.header.buffer.bytes: 4096
 ui.http.creds.plugin: backtype.storm.security.auth.DefaultHttpCredentialsPlugin
 
-logviewer.port: {{logviewer.port}}
+logviewer.port: {{logviewer_port}}
 logviewer.childopts: "-Xmx128m"
 logviewer.cleanup.age.mins: 10080
 logviewer.appender.name: "A1"

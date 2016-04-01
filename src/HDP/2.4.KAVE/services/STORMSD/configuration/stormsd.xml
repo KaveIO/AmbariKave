@@ -141,7 +141,7 @@ nimbus.impersonation.authorizer: "backtype.storm.security.auth.authorizer.Impers
 
 ### ui.* configs are for the master
 ui.host: 0.0.0.0
-ui.port: {{ui.port}}
+ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
 ui.actions.enabled: true
 ui.filter: null
@@ -150,7 +150,7 @@ ui.users: null
 ui.header.buffer.bytes: 4096
 ui.http.creds.plugin: backtype.storm.security.auth.DefaultHttpCredentialsPlugin
 
-logviewer.port: {{logviewer.port}}
+logviewer.port: {{logviewer_port}}
 logviewer.childopts: "-Xmx128m"
 logviewer.cleanup.age.mins: 10080
 logviewer.appender.name: "A1"

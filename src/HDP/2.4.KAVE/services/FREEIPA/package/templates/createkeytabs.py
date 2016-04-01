@@ -165,7 +165,11 @@ if __name__ == "__main__":
     # grab csv from iterator. The whole thing since I need to do multiple iterations
     keytabs = [k for k in yieldConfig(sys.argv[-1])]
     # Take only unique entries, don' need duplicates
-    keytabs = list(set(keytabs))
+    keytabs_unique = []
+    for keytab in keytabs:
+        if keytab not in keytabs_unique:
+            keytabs_unique.append(keytab)
+    keytabs = keytabs_unique
     # Check that the tuples (host,file,principal) are unique
     tuples = [(k["host"], k["principal name"], k["keytab file path"]) for k in keytabs]
     if len(set(tuples)) != len(tuples):
@@ -247,10 +251,21 @@ if __name__ == "__main__":
                 try:
                     remote.run("grep " + user + " /etc/passwd > /dev/null")
                 except RuntimeError:
+                    # Try a simple useradd first.
+                    # Fails if either the user already exists, or the user is already the name of a group
                     try:
                         remote.run("useradd " + user)
                     except RuntimeError:
-                        print "Failed to add a user, but it might still already exist, checking groups"
+                        # In case the user is already the name of a group, try again with -g
+                        try:
+                            group = user
+                            if keytab["keytab file group"]:
+                                group = keytab["keytab file group"]
+                            remote.run("useradd " + user + " -g " + group)
+                        except RuntimeError:
+                            # Finally, assume that the user exists
+                            print "Failed to add a user, but it might still already exist, checking groups"
+
                 if keytab["keytab file group"] not in remote.run("groups " + user):
                     remote.run("usermod -a -G " + keytab["keytab file group"] + " " + user)
     #  c) Create any principles / keytabs and control permissions

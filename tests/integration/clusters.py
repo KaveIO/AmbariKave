@@ -129,7 +129,9 @@ class TestFreeIPACluster(TestCluster):
     def check(self, ambari):
         super(TestFreeIPACluster, self).check(ambari)
         import time
-        if 'yes' not in ambari.run("bash -l 'if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;'"):
+        import os
+        import subprocess as sub
+        if 'yes' not in ambari.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
         import subprocess as sub
         pwd = ambari.run("cat admin-password")

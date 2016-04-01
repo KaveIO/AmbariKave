@@ -119,7 +119,8 @@ class TestScan(unittest.TestCase):
                             + str(ls.pickprop({'stormsd': {'stormsd.logviewer.port': 8008}}, port))
                             + "'>" + linkname + "</a> ")
         self.assertTrue("MOCK" in mocklinks and "STORMSD_LOG_VIEWER" in mocklinks["MOCK"]
-                        and "<a href='http://nimbus:8008'>log</a> " in mocklinks["MOCK"]["STORMSD_LOG_VIEWER"])
+                        and "<a href='http://nimbus:8008'>log</a> " in mocklinks["MOCK"]["STORMSD_LOG_VIEWER"],
+                        "resolution of links has stopped working")
         ppp = ls.pretty_print(mockservices, mockhosts, mocklinks, "plain")
         pph = ls.pretty_print(mockservices, mockhosts, mocklinks, "html")
         # ignore whitespace in this test!

@@ -62,7 +62,9 @@ class KaveToolbox(Script):
                 if os.path.isdir(gits) and not gits.endswith("/.git"):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
             instscript = './KaveToolbox/scripts/KaveInstall'
-        Execute(instscript + ' --' + self.kind + extraopts)
+
+        commandlineargs = " " + params.command_line_args
+        Execute(instscript + ' --' + self.kind + extraopts + commandlineargs)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/kave")

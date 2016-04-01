@@ -24,7 +24,14 @@ import random
 import string
 import pwd
 import grp
-from resource_management import *
+
+
+def protect(apass):
+    try:
+        from resource_management import Logger
+        Logger.sensitive_strings[apass] = "[PROTECTED]"
+    except ImportError:
+        return
 
 
 class RobotAdmin():
@@ -120,7 +127,7 @@ class RobotAdmin():
     def _all_hosts(self):
         with open(self.ambari_db_password_file) as f:
             password = f.read()
-            Logger.sensitive_strings[password] = "[PROTECTED]"
+            protect(password)
             env = os.environ.copy()
             env['PGPASSWORD'] = password
 
@@ -129,35 +136,21 @@ class RobotAdmin():
             # the ambari server.
             p = subprocess.Popen(['psql', 'ambari', 'ambari', '-q', '-A', '-t',
                                   '-c', 'select hosts.host_name from hosts join hostcomponentstate \
-                on hostcomponentstate.host_name = hosts.host_name where \
+                on hostcomponentstate.host_id = hosts.host_id where \
                 component_name = \'FREEIPA_CLIENT\';'], stdout=subprocess.PIPE,
                                  env=env)
             output, err = p.communicate()
             hosts = filter(bool, output.split("\n"))
+            if len(hosts):
+                print "hosts found from ambari database scraping"
             return hosts
 
 
-class FreeIPA(object):
-
-    def __init__(self, principal, password_file, destroy_password_file=True):
-        self.principal = principal
-        self.password_file = password_file
-        self.destroy_password_file = destroy_password_file
-
-    def __enter__(self):
-        with open(os.devnull, "w") as devnull:
-            p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['kinit', self.principal], stdin=p1.stdout, stdout=devnull)
-            p1.stdout.close()
-            p2.communicate()
-
-        if self.destroy_password_file:
-            os.remove(self.password_file)
-
-        return self
-
-    def __exit__(self, type, value, trace):
-        subprocess.call(['kdestroy'])
+class FreeIPACommon(object):
+    """
+    Many of the methods we want to call within FreeIPA are common
+    We can make a baseclass/Mix-ins class here in order to simplify/consolidate other scripts
+    """
 
     def create_user_principal(self, identity, firstname=None,
                               lastname='auto_generated', groups=[],
@@ -171,7 +164,7 @@ class FreeIPA(object):
                 self.group_add_member(group, identity)
 
             if password is not None:
-                Logger.sensitive_strings[password] = "[PROTECTED]"
+                protect(password)
                 self.update_password(identity, password, password_file)
         else:
             print 'Skipping user creation for %s. User already exists' % identity
@@ -256,7 +249,7 @@ class FreeIPA(object):
             password_file = '/root/%s-password' % user
 
         with os.fdopen(os.open(password_file, os.O_WRONLY | os.O_CREAT, 0600), 'w') as handle:
-            Logger.sensitive_strings[password] = "[PROTECTED]"
+            protect(password)
             handle.write(password)
 
         p1 = subprocess.Popen(['cat', password_file], stdout=subprocess.PIPE)
@@ -269,6 +262,34 @@ class FreeIPA(object):
 
     def set_user_email(self, user, email):
         subprocess.call(['ipa', 'user-mod', '--email="' + email + '"', user])
+
+
+class FreeIPA(FreeIPACommon):
+    """
+    The FreeIPA Object is supposed to be used with the python "with" statement
+    This object calls kinit from a local password file, and then can destroy that file when done with it.
+    Otherwise inherits all the methods from the FreeIPACommon class
+    """
+
+    def __init__(self, principal, password_file, destroy_password_file=True):
+        self.principal = principal
+        self.password_file = password_file
+        self.destroy_password_file = destroy_password_file
+
+    def __enter__(self):
+        with open(os.devnull, "w") as devnull:
+            p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(['kinit', self.principal], stdin=p1.stdout, stdout=devnull)
+            p1.stdout.close()
+            p2.communicate()
+
+        if self.destroy_password_file:
+            os.remove(self.password_file)
+
+        return self
+
+    def __exit__(self, type, value, trace):
+        subprocess.call(['kdestroy'])
 
 
 def generate_random_password(length=16):

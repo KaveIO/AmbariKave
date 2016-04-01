@@ -5,6 +5,34 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v2.0-Beta
+
+* MAJOR release to migrate to the latest Ambari version 2.2.1
+* KAVE stack now on top of HDP 2.4 (2.4.KAVE)
+
+Major modifications in services:
+
+* MongoDB,
+    version increase to MongoDB 3. MongoDB 3 is not 100% backwards compatible
+* FreeIPA
+    Major modifications to how we handle keytabs for kerberos.
+    During the kerberization of your cluster with Ambari, you can download a
+    kerberos.csv containing the list of all keytabs to be created
+    With this list, on the ambari node, as the root user:
+    - kinit admin
+    - createketabs.py kerberos.csv
+    Then continue with the wizard through the web interface
+* KaveToolbox
+    Version update to 2.0-Beta, many changes described separately in the KTB readme
+    Most major change: creation of versioned directories
+    Bugfix: eliminate unrealiable dumbo library from standard installation
+
+Notes about the new ambari/HDP version:
+
+* Ganglia and Nagios are replaced by AmbariMetrics
+  The new HDP assumes the user will install Ganglia/Nagios themselves if needed
+
+
 # v1.4-Beta
 
 * Bugfix release in preparation to migration to Ambari 2.X

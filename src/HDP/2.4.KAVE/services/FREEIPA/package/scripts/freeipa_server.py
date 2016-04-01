@@ -37,8 +37,6 @@ class FreeipaServer(Script):
                             ' on the ambari server. ambari_server: %s freeipa_server %s'
                             % (params.amb_server, params.hostname))
 
-        freeipa.create_required_users(params.required_users)
-
         for package in self.packages:
             Package(package)
 
@@ -52,19 +50,16 @@ class FreeipaServer(Script):
             --ds-password="%s" --admin-password="%s"' \
             % (params.realm, params.directory_password, admin_password)
 
-        if params.forwarders:
-            for forwarder in params.forwarders:
-                install_command += ' --forwarder="%s"' % forwarder
-        else:
-            install_command += ' --no-forwarders'
-
         if params.install_with_dns:
             install_command += ' --setup-dns --domain="%s"' % params.domain
+            if params.forwarders:
+                for forwarder in params.forwarders:
+                    install_command += ' --forwarder="%s"' % forwarder
+            else:
+                install_command += ' --no-forwarders'
 
         # Crude check to avoid reinstalling during debuging
         if not os.path.exists(self.admin_password_file):
-            # TODO avoid execute, this displays the admin passwords in the logs
-            # which is bad m'kay
             Execute(install_command)
 
             File("/root/admin-password",
@@ -116,6 +111,10 @@ class FreeipaServer(Script):
              content=InlineTemplate(params.kadm5acl_template),
              mode=0600
              )
+        File("/root/createkeytabs.py",
+             content=Template("createkeytabs.py", scriptpath=os.path.dirname(__file__)),
+             mode=0700
+             )
 
     def start(self, env):
         self.conf_on_start(env)
@@ -131,11 +130,6 @@ class FreeipaServer(Script):
         # to be tricky to achieve in Ambari. This call distributes the
         # credentials to new hosts on each status heartbeat. Pretty weird but
         # for now it serves its purpose.
-        # In the latrest ambari, we can't use the database any further
-        # because the database is modified, need to fix this at a later point
-        # unfortunately this will mostly fail during the status method
-        # if all_hosts is taken from params
-        # we need to log the failure and move on
         try:
             self.distribute_robot_admin_credentials(env)
         except (subprocess.CalledProcessError, OSError, TypeError, ImportError, ValueError, KeyError) as e:
@@ -160,17 +154,6 @@ class FreeipaServer(Script):
                 groups=['admins'],
                 password=freeipa.generate_random_password(),
                 password_file=rm.get_password_file())
-
-            for definition in params.headless_users.itervalues():
-                fi.create_user_principal(definition['identity'])
-                fi.create_keytab(
-                    params.ipa_server,
-                    definition['identity'],
-                    params.realm,
-                    definition['file'],
-                    definition['user'],
-                    definition['group'],
-                    definition['permissions'])
 
             # Create ldap bind user
             expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52 * 10)).strftime('%Y%m%d%H%M%SZ')
@@ -213,6 +196,7 @@ class FreeipaServer(Script):
             import params
             env.set_params(params)
             all_hosts = params.all_hosts
+            print "using params for all_hosts"
         except (TypeError, ImportError, ValueError, KeyError):
             all_hosts = None
 

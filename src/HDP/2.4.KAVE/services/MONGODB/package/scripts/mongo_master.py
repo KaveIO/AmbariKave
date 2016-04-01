@@ -38,10 +38,7 @@ class MongoMaster(MongoBase):
     def start(self, env):
         print "start mongodb"
         self.configure(env)
-        # TODO: Ambari 2.0 method should be replacing the below call
-        # since Ambari 1.7.3 execute method never returns the control to script
-        # So, we use nohup to detacht he start process, and we also need to redirect all the input and output
-        Execute('nohup service mongod start  2> /dev/null > /dev/null < /dev/null &')
+        Execute('service mongod start', wait_for_finish=False)
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
         import params

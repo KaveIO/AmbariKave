@@ -509,6 +509,12 @@ class LDTest(unittest.TestCase):
                 "curl --netrc "
                 + " http://localhost:8080/api/v1/clusters/"
                 + clustername + "/requests/" + str(requestid))
+            # print stdout.split('\n')[1:22]
+            # for n,s in enumerate(stdout.split('\n')):
+            #    for f in ['"request_status" : "FAILED"',
+            # '"request_status" : "ABORTED"', '"request_status" : "COMPLETED"']:
+            #        if f in s:
+            #            print n, s
             if '"request_status" : "FAILED"' in stdout:
                 state = "FAILED"
                 break
@@ -532,9 +538,8 @@ class LDTest(unittest.TestCase):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         # wait until ambari server is up
         self.waitForAmbari(ambari)
-        stdout = lD.runQuiet(
-            deploy_dir + "/deploy_from_blueprint.py " + blueprint + " " + cluster + " " + ip + " $AWSSECCONF "
-                                                                                               "--not-strict")
+        stdout = lD.runQuiet(deploy_dir + "/deploy_from_blueprint.py " + blueprint
+                             + " " + cluster + " " + ip + " $AWSSECCONF --not-strict")
         state = self.monitor_request(ambari, cname)
         if state == "ABORTED":
             print "Trying to recover from aborted blueprint with restarts"

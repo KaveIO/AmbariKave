@@ -52,7 +52,7 @@ worker_childopts = default('configurations/stormsd/stormsd.worker.childopts',
                            '-Xmx768m -Djava.net.preferIPv4Stack=true')
 drpc_childopts = default('configurations/stormsd/stormsd.drpc.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 log_level = default('configurations/stormsd/stormsd.loglevel', 'WARN')
-logviewer_childopts = default('configurations/stormsd/logviewer.childopts', 'Xmx128m -Djava.net.preferIPv4Stack=true')
+logviewer_childopts = default('configurations/stormsd/stormsd.logviewer.childopts', 'Xmx128m -Djava.net.preferIPv4Stack=true')
 logviewer_port = default('configurations/stormsd/stormsd.logviewer.port', '2013')
 storm_yaml_config =default('configurations/stormsd/storm_yaml_config',"""# Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -137,7 +137,7 @@ ui.header.buffer.bytes: 4096
 ui.http.creds.plugin: backtype.storm.security.auth.DefaultHttpCredentialsPlugin
 
 logviewer.port: {{logviewer_port}}
-logviewer.childopts: "-Xmx128m"
+logviewer.childopts: {{logviewer_childopts}}
 logviewer.cleanup.age.mins: 10080
 logviewer.appender.name: "A1"
 

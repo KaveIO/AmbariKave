@@ -139,7 +139,7 @@ wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta-Pre/ambarik
 tar -xzf ambarikave-deployment-2.0-Beta-Pre.tar.gz
 ```
 
-Or download the head from github. See the github readme on the deployment tools, the help written for each tool, or better yet, contact us if you'd like some advice on how to use anything here.
+Or download the head from github. See the github readme on the deployment tools, the help written for each tool, or better yet, contact us if you'd like some advice on how to use anything here. [Deployment readme](https://github.com/KaveIO/AmbariKave/tree/master/deployment)
 
 Internet during installation, firewalls and nearside cache/mirror options
 -------------------------------------------------------------------------

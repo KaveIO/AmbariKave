@@ -134,7 +134,7 @@ storm.meta.serialization.delegate: "backtype.storm.serialization.GzipThriftSeria
 ### nimbus.* configs are for the master
 nimbus.host: "{{nimbus_host}}"
 nimbus.thrift.port: 6627
-nimbus.thrift.threads: 64l
+nimbus.thrift.threads: 64
 nimbus.thrift.max_buffer_size: 1048576
 nimbus.childopts: "{{nimbus_childopts}}"
 nimbus.task.timeout.secs: 30

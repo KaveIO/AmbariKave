@@ -30,7 +30,10 @@ alternative_download = default('configurations/kavetoolbox/alternative_download'
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)
 command_line_args = default('configurations/kavetoolbox/command_line_args', "False")
-command_line_args = kc.trueorfalse(command_line_args)
+try:
+    command_line_args = kc.trueorfalse(command_line_args)
+except ValueError:
+    print "The value for command_line_args is not correct"
 custom_install_template_default = """
 # -------------------------------
 import DefaultConfig as cnf

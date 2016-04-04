@@ -72,7 +72,7 @@ in the ambari configuration web interface.
     </property>
     <property>
         <name>stormsd.logviewer.childopts</name>
-        <value>-Xmx128m</value>
+        <value>-Xmx128m -Djava.net.preferIPv4Stack=true</value>
         <description>Default memory/HeapSize for the Java Virtual Machine.</description>
     </property>
     <property>

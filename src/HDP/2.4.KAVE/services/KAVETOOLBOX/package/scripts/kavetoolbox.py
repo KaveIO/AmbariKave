@@ -64,8 +64,10 @@ class KaveToolbox(Script):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
 #            instscript = './KaveToolbox/scripts/KaveInstall'
             instscript = '.' + kavetoolbox_path
-
-        commandlineargs = " " + params.command_line_args
+        if not params.command_line_args:
+            commandlineargs = ""
+        else:
+            commandlineargs = " " + params.command_line_args
         Execute(instscript + ' --' + self.kind + extraopts + commandlineargs)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")

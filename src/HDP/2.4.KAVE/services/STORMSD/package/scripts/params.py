@@ -52,6 +52,8 @@ worker_childopts = default('configurations/stormsd/stormsd.worker.childopts',
                            '-Xmx768m -Djava.net.preferIPv4Stack=true')
 drpc_childopts = default('configurations/stormsd/stormsd.drpc.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 log_level = default('configurations/stormsd/stormsd.loglevel', 'WARN')
+logviewer_childopts = default('configurations/stormsd/logviewer.childopts', 'Xmx128m')
+logviewer_port = default('configurations/stormsd/stormsd.logviewer.port', '2013')
 storm_yaml_config =default('configurations/stormsd/storm_yaml_config',"""# Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information

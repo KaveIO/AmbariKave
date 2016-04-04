@@ -66,6 +66,16 @@ in the ambari configuration web interface.
         <description>Configure the storm logging level, by default WARN is used.</description>
     </property>
     <property>
+        <name>stormsd.logviewer.port</name>
+        <value>8013</value>
+        <description>Storm log viewer binds to this port.</description>
+    </property>
+    <property>
+        <name>stormsd.logviewer.childopts</name>
+        <value>-Xmx128m</value>
+        <description>Default memory/HeapSize for the Java Virtual Machine.</description>
+    </property>
+    <property>
         <name>storm_yaml_config</name>
         <description>yaml config file for Storm 0.10.</description>
         <value># Licensed to the Apache Software Foundation (ASF) under one
@@ -124,7 +134,7 @@ storm.meta.serialization.delegate: "backtype.storm.serialization.GzipThriftSeria
 ### nimbus.* configs are for the master
 nimbus.host: "{{nimbus_host}}"
 nimbus.thrift.port: 6627
-nimbus.thrift.threads: 64
+nimbus.thrift.threads: 64l
 nimbus.thrift.max_buffer_size: 1048576
 nimbus.childopts: "{{nimbus_childopts}}"
 nimbus.task.timeout.secs: 30
@@ -151,7 +161,7 @@ ui.header.buffer.bytes: 4096
 ui.http.creds.plugin: backtype.storm.security.auth.DefaultHttpCredentialsPlugin
 
 logviewer.port: {{logviewer_port}}
-logviewer.childopts: "-Xmx128m"
+logviewer.childopts: {{logviewer_childopts}}
 logviewer.cleanup.age.mins: 10080
 logviewer.appender.name: "A1"
 

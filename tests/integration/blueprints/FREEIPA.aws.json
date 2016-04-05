@@ -6,8 +6,7 @@
     "InstanceType" : "t2.small",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/mongo",   "Size" : 10, "Attach" : "/dev/sdd" }  ]
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "gate",
     "Count" : 1,
@@ -15,13 +14,11 @@
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
-  { "Name" : "replica",
-    "Count" : 3,
+  { "Name" : "test",
+    "Count" : 1,
     "InstanceType" : "t2.small",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/mongo",   "Size" : 10, "Attach" : "/dev/sdd" }]
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   }
   ]
 }

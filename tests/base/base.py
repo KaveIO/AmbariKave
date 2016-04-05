@@ -504,19 +504,44 @@ class LDTest(unittest.TestCase):
         ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
                   + "/../remotescripts/default.netrc",
                   "~/.netrc")
+        time.sleep(10)
         while rounds <= max_rounds:
-            stdout = ambari.run(
-                "curl --netrc "
-                + " http://localhost:8080/api/v1/clusters/"
-                + clustername + "/requests/" + str(requestid))
+            # if curl fails, the ambari server may have dies for some reason
+            # the standard restart_all_services script will then work to recover this failure
+            try:
+                stdout = ambari.run(
+                    "curl --netrc "
+                    + " http://localhost:8080/api/v1/clusters/"
+                    + clustername + "/requests/" + str(requestid))
+            except RuntimeError:
+                time.sleep(3)
+                try:
+                    stdout = ambari.run(
+                        "curl --netrc "
+                        + " http://localhost:8080/api/v1/clusters/"
+                        + clustername + "/requests/" + str(requestid))
+                except RuntimeError as e:
+                    stdout2 = ambari.run("ambari-server status")
+                    if "not running" in stdout2:
+                        state = "ABORTED"
+                        break
+                    raise e
+
+            # print stdout.split('\n')[1:22]
+            # for n,s in enumerate(stdout.split('\n')):
+            #    for f in ['"request_status" : "FAILED"',
+            # '"request_status" : "ABORTED"', '"request_status" : "COMPLETED"']:
+            #        if f in s:
+            #            print n, s
             if '"request_status" : "FAILED"' in stdout:
                 state = "FAILED"
                 break
             if '"request_status" : "ABORTED"' in stdout:
                 state = "ABORTED"
                 break
-            if '"request_status" : "COMPLETED"' in stdout:
+            if '"request_status" : "COMPLETED"' in stdout and rounds > 2:
                 state = "COMPLETED"
+                # always wait at least two minutes before declaring completed
                 break
             time.sleep(60)
             rounds = rounds + 1
@@ -532,9 +557,8 @@ class LDTest(unittest.TestCase):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         # wait until ambari server is up
         self.waitForAmbari(ambari)
-        stdout = lD.runQuiet(
-            deploy_dir + "/deploy_from_blueprint.py " + blueprint + " " + cluster + " " + ip + " $AWSSECCONF "
-                                                                                               "--not-strict")
+        stdout = lD.runQuiet(deploy_dir + "/deploy_from_blueprint.py " + blueprint
+                             + " " + cluster + " " + ip + " $AWSSECCONF --not-strict")
         state = self.monitor_request(ambari, cname)
         if state == "ABORTED":
             print "Trying to recover from aborted blueprint with restarts"

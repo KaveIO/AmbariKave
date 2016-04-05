@@ -116,6 +116,23 @@ class TestServiceKaveLanding(TestServiceBlueprint):
         self.assertTrue(nowhite(__kavelanding_html__) in nowhite(pph2), "KaveLanding page is incomplete")
 
 
+class TestServiceFreeIPA(TestServiceBlueprint):
+
+    def check(self, ambari):
+        super(TestServiceFreeIPA, self).check(ambari)
+        import subprocess as sub
+        import os
+        pwd = ambari.run("cat admin-password")
+        proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
+                         stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
+        output, err = proc.communicate(input=pwd + '\n')
+        self.assertFalse(proc.returncode, "Failed to kinit admin on this node "
+                         + ' '.join(ambari.sshcmd())
+                         + output + " " + err
+                         )
+        ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
+        ambari.run("./createkeytabs.py ./kerberostest.csv")
+
 if __name__ == "__main__":
     import sys
 
@@ -136,6 +153,8 @@ if __name__ == "__main__":
     test = TestServiceBlueprint()
     if service == "KAVELANDING":
         test = TestServiceKaveLanding()
+    if service == "FREEIPA":
+        test = TestServiceFreeIPA()
     test.service = service
     test.debug = verbose
     test.branch = branch

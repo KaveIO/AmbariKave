@@ -8,12 +8,22 @@ This repository has three parts:
 
 We also endeavor to provide an extensive [wiki documentation](https://github.com/KaveIO/AmbariKave/wiki)
 
+Relationship to Ambari
+======================
+
+AmbariKave extends Ambari adding some more services. It does this by adding a stack to Ambari. Ambari is nicely extensible and adding a stack does not interfere with older stacks, not can it interfere with already running services.
+
+This means there are two genral ways to install these services
+
+* Install ambari however you wish to, and then add our patch for a new stack
+* Use our wrapper around the ambari installer to install and also patch
+
 Installation (on the 'ambari node' of your cluster, or one large machine)
 =========================================================================
 
-* AmbariKave is intended to be installed within a large cluster of machines. For installation on one machine, consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
+* Ambari is a cluster installation management system for hadoop-based clusters. It installs separate services on different machines across a cluster. AmbariKave is a small extention fo this. If what you're looking for is a common set of data science tools to install on one single machine (without a database or hdfs) consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
-* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta-Pre, with username repos and password kaverepos
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta-Pre, with username repos and password kaverepos, including downloading and installing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip
 wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.0-Beta-Pre/ambarikave-installer-centos6-2.0-Beta-Pre.sh
@@ -40,6 +50,29 @@ sudo ambari-server start
 
 Then to provision your cluster go to: http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
 
+Installation (patch) over existing Ambari
+=========================================
+
+* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta-Pre, with username repos and password kaverepos, over existing ambari:
+```
+yum -y install wget curl tar zip unzip gzip
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta-Pre/ambarikave-package-2.0-Beta-Pre.tar.gz
+tar -xzf ambarikave-package-2.0-Beta-Pre.tar.gz -C /var/lib/
+```
+
+* OR to install the HEAD from git: example given with ssh copying from this github repo.
+```
+#test ssh keys with
+ssh -T git@github.com
+#if this works,
+git clone git@github.com:KaveIO/AmbariKave.git
+# Once you have a local checkout, install it with:
+sudo ambari-server stop
+cd AmbariKave
+sudo dev/patch.sh
+sudo ambari-server start
+```
+
 
 Update our patches
 ====================
@@ -52,7 +85,7 @@ sudo where/I/checked/out/ambari/dev/pull-update.sh
 ```
 pull-update also respects git branches, as a command-line argument and is linked into the way we do automated deployment and testing
 
-To update between released versions, simply install the new version over the old version after stopping the ambari server:
+To update between released versions, simply install the new version over the old version after stopping the ambari server. Installing a new version of the stack, will not trigger an update of any running service. You would need to do this manually in the current state.
 ```
 sudo ambari-server stop
 wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.0-Beta-Pre/ambarikave-installer-centos6-2.0-Beta-Pre.sh
@@ -68,22 +101,45 @@ Installation of a full cluster
 If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
 If you have git access, and are working from the git version, See the wiki.
 
+We really recommend installation beginning from a blueprint, but first one must carfully design the blueprint and/or test on some other test resource. The web interface is great for single one-time custom installations, a blueprint is good for pre-tested redeployable installations.
 
-Installation of spark on a yarn cluster
-==============================
+Installation Kerberization with FreeIPA
+=======================================
 
-Currently spark is not directly installable through the ambarikave installer. If
-you do want to experiment with spark follow this guide http://hortonworks.com/hadoop-tutorial/using-apache-spark-technical-preview-with-hdp-2-2/
-After installation modfify /etc/spark/conf/spark-defaults.conf so that it contains this:
+FreeIPA can provide all necessary keytabs for your kerberized cluster, using the kerberos.csv given by the Ambari wizard.
+Be careful because you need to pause while using the wizard when given the option to download the csv, and do some things on the command line before continuing.
 
-   spark.driver.extraJavaOptions -Dhdp.version=2.2.0.0-2041
-   spark.yarn.am.extraJavaOptions -Dhdp.version=2.2.0.0-2041
+ * Installed and configure the cluster how you wish, with all services.
+ * Start the wizard
+ * Select the manual configuration option and say yes that you have installed all requirements.
+ * Modify the realm to match your FreeIPA realm
+ * Modify advanced settings only if you think it's very necessary or you know what you are doing
+ * When given the option, download the csv of all keytabs, then do not continue on the wizard, don't click anything, don't stop or exit the wizard, before you've created the keytabs you need using the instructions below
+ * copy this csv to the ambari node, somewhere readable by the root user
+ * ssh to your ambari node
+ * become the root user (sudo su)
+ * kinit as a user with full administration rights (kinit admin)
+ * run the /root/createkeytabs.py script over the kerberos.csv file you downloaded/copied (./createkeytabs.py ./kerberos.csv)
+ * Once this script is finished, if everything worked, continue with the wizard
+
+The createkeytabs.py script creates all necessary service and user principals, any missing local users or groups, creates temporary keytabs on the ambari node, copies them to the required places on the nodes, removes the local intermediate files, and tests that the new ketyabs work for those services.
 
 
 Deployment tools
 ==============================
 
 See the deployment subdirectory, or the deployment tarball kept separately
+
+Downloading deployment tools
+----------------------------
+
+```
+yum -y install wget curl tar zip unzip gzip
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta-Pre/ambarikave-deployment-2.0-Beta-Pre.tar.gz
+tar -xzf ambarikave-deployment-2.0-Beta-Pre.tar.gz
+```
+
+Or download the head from github. See the github readme on the deployment tools, the help written for each tool, or better yet, contact us if you'd like some advice on how to use anything here. [Deployment readme](https://github.com/KaveIO/AmbariKave/tree/master/deployment)
 
 Internet during installation, firewalls and nearside cache/mirror options
 -------------------------------------------------------------------------

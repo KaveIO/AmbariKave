@@ -17,11 +17,6 @@
         "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
         "initial_sudoers" : "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}"
         }
-    },
-    { "sonarqube" : {
-    	"sonar_database_url":"ci.kave.io",
-    	"sonar_database_user_passwd" : "admin"
-    	}
     }
   ],
   "host_groups" : [
@@ -44,7 +39,6 @@
       "configurations" : [      ],
       "components" : [
         { "name" : "KAVELANDING"          },
-        { "name" : "SONARQUBE_RUNNER"     },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
@@ -53,12 +47,9 @@
       "cardinality" : "1+"
     },
     {
-      "name" : "ci",
+      "name" : "test",
       "configurations" : [ ],
       "components" : [
-        { "name" : "SONARQUBE_SERVER"      },
-        { "name" : "SONARQUBE_MYSQL_SERVER"},
-        { "name" : "SONARQUBE_RUNNER"      },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "FREEIPA_CLIENT"        }
@@ -67,7 +58,7 @@
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "sonarldap",
+    "blueprint_name" : "freeipa",
     "stack_name" : "HDP",
     "stack_version" : "2.4.KAVE"
   }

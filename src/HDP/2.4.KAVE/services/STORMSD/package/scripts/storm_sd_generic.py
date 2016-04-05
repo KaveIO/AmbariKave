@@ -71,11 +71,13 @@ class StormGeneric(Script):
         import params
         env.set_params(params)
         File(params.storm_conf_file,
-             content=Template("storm.yaml"),
+             # content=Template("storm.yaml"),
+             content=InlineTemplate(params.storm_yaml_config),
              mode=0644
              )
         File("/usr/local/storm/log4j2/cluster.xml",
-             content=Template("cluster.xml.j2"),
+             # content=Template("cluster.xml.j2"),
+             content=InlineTemplate(params.storm_cluster_config),
              mode=0664)
 
 

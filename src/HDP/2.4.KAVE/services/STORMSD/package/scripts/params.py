@@ -28,9 +28,11 @@ nimbus_host = default("/clusterHostInfo/nimbus_sd_master_hosts", [None])[0]
 drpc_servers = default("/clusterHostInfo/stormsd_drpc_server_hosts", False)
 use_drpc = (drpc_servers is not False)
 if None in [storm_zookeeper_servers]:
-    raise NameError("Could not find required services of zookeeper_hostsfrom in clusterHostInfo : " + str(config['clusterHostInfo']))
+    raise NameError("Could not find required services of zookeeper_hostsfrom in clusterHostInfo : " +
+                    str(config['clusterHostInfo']))
 if None in [nimbus_host]:
-    raise NameError("Could not find required services of nimbus_sd_master_hosts in clusterHostInfo: " + str(config['clusterHostInfo']))
+    raise NameError("Could not find required services of nimbus_sd_master_hosts in clusterHostInfo: " +
+                    str(config['clusterHostInfo']))
 
 # find/replace localhost
 if nimbus_host == hostname:
@@ -52,9 +54,11 @@ worker_childopts = default('configurations/stormsd/stormsd.worker.childopts',
                            '-Xmx768m -Djava.net.preferIPv4Stack=true')
 drpc_childopts = default('configurations/stormsd/stormsd.drpc.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 log_level = default('configurations/stormsd/stormsd.loglevel', 'WARN')
-logviewer_childopts = default('configurations/stormsd/stormsd.logviewer.childopts', 'Xmx128m -Djava.net.preferIPv4Stack=true')
-logviewer_port = default('configurations/stormsd/stormsd.logviewer.port', '2013')
-storm_yaml_config =default('configurations/stormsd/storm_yaml_config',"""# Licensed to the Apache Software Foundation (ASF) under one
+logviewer_childopts = default('configurations/stormsd/stormsd.logviewer.childopts',
+                              '-Xmx128m -Djava.net.preferIPv4Stack=true')
+logviewer_port = default('configurations/stormsd/stormsd.logviewer.port', '8013')
+storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
+# Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
 # regarding copyright ownership.  The ASF licenses this file
@@ -137,7 +141,7 @@ ui.header.buffer.bytes: 4096
 ui.http.creds.plugin: backtype.storm.security.auth.DefaultHttpCredentialsPlugin
 
 logviewer.port: {{logviewer_port}}
-logviewer.childopts: {{logviewer_childopts}}
+logviewer.childopts: "{{logviewer_childopts}}"
 logviewer.cleanup.age.mins: 10080
 logviewer.appender.name: "A1"
 
@@ -206,17 +210,24 @@ zmq.hwm: 0
 storm.messaging.netty.server_worker_threads: 1
 storm.messaging.netty.client_worker_threads: 1
 storm.messaging.netty.buffer_size: 5242880 #5MB buffer
-# Since nimbus.task.launch.secs and supervisor.worker.start.timeout.secs are 120, other workers should also wait at least that long before giving up on connecting to the other worker. The reconnection period need also be bigger than storm.zookeeper.session.timeout(default is 20s), so that we can abort the reconnection when the target worker is dead.
+# Since nimbus.task.launch.secs and supervisor.worker.start.timeout.secs are 120,
+# other workers should also wait at least that long before giving up on connecting to the other worker.
+# The reconnection period need also be bigger than storm.zookeeper.session.timeout(default is 20s),
+# so that we can abort the reconnection when the target worker is dead.
 storm.messaging.netty.max_retries: 300
 storm.messaging.netty.max_wait_ms: 1000
 storm.messaging.netty.min_wait_ms: 100
 
-# If the Netty messaging layer is busy(netty internal buffer not writable), the Netty client will try to batch message as more as possible up to the size of storm.messaging.netty.transfer.batch.size bytes, otherwise it will try to flush message as soon as possible to reduce latency.
+# If the Netty messaging layer is busy(netty internal buffer not writable),
+# the Netty client will try to batch message as more as possible up to the size of
+# storm.messaging.netty.transfer.batch.size bytes,
+# otherwise it will try to flush message as soon as possible to reduce latency.
 storm.messaging.netty.transfer.batch.size: 262144
 # Sets the backlog value to specify when the channel binds to a local address
 storm.messaging.netty.socket.backlog: 500
 
-# By default, the Netty SASL authentication is set to false.  Users can override and set it true for a specific topology.
+# By default, the Netty SASL authentication is set to false.
+# Users can override and set it true for a specific topology.
 storm.messaging.netty.authentication: false
 
 # default number of seconds group mapping service will cache user group
@@ -261,7 +272,8 @@ topology.disruptor.wait.timeout.millis: 1000
 dev.zookeeper.path: "/tmp/dev-storm-zookeeper"
 
 """)
-storm_cluster_config =default('configurations/stormsd/storm_cluster_config',"""<?xml version="1.0" encoding="UTF-8"?>
+storm_cluster_config = default('configurations/stormsd/storm_cluster_config',
+                               """<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Licensed to the Apache Software Foundation (ASF) under one or more
  contributor license agreements.  See the NOTICE file distributed with
@@ -320,6 +332,3 @@ storm_cluster_config =default('configurations/stormsd/storm_cluster_config',"""<
 </loggers>
 </configuration>
 """)
-
-
-

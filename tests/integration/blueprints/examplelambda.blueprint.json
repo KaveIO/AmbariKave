@@ -187,6 +187,7 @@
       "components" : [
         { "name" : "NIMBUS_SD_MASTER"   },
         { "name" : "STORMSD_UI_SERVER"  },
+        { "name" : "STORMSD_LOG_VIEWER" },
         { "name" : "STORMSD_DRPC_SERVER"},
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "ZOOKEEPER_CLIENT"   },
@@ -204,6 +205,7 @@
         { "name" : "KAVETOOLBOXNODE"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "SUPERVISOR_SD_SLAVE" },
+        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "FREEIPA_CLIENT"      }
       ],
       "cardinality" : "1+"

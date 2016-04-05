@@ -47,7 +47,8 @@ class KaveToolbox(Script):
         extraopts = ""
         if params.ignore_missing_groups:
             extraopts = " --ignore-missing-groups"
-        kavetoolbox_path = '/KaveToolbox/' + params.releaseversion + 'scripts/KaveInstall'
+#        kavetoolbox_path = '/KaveToolbox/' + params.releaseversion + 'scripts/KaveInstall'
+        kavetoolbox_path = '/KaveToolbox/scripts/KaveInstall'
         instscript = params.top_dir + kavetoolbox_path
         # no need to download if install script already exists
         if not os.path.exists(instscript):

@@ -47,8 +47,7 @@ class KaveToolbox(Script):
         extraopts = ""
         if params.ignore_missing_groups:
             extraopts = " --ignore-missing-groups"
-#        kavetoolbox_path = '/KaveToolbox/' + params.releaseversion + 'scripts/KaveInstall'
-        kavetoolbox_path = '/KaveToolbox/scripts/KaveInstall'
+        kavetoolbox_path = '/KaveToolbox/' + params.releaseversion + 'scripts/KaveInstall'
         instscript = params.top_dir + kavetoolbox_path
         # no need to download if install script already exists
         if not os.path.exists(instscript):
@@ -63,8 +62,7 @@ class KaveToolbox(Script):
             for gits in glob.glob(self.sttmpdir + "/*.git"):
                 if os.path.isdir(gits) and not gits.endswith("/.git"):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
-#            instscript = './KaveToolbox/scripts/KaveInstall'
-            instscript = '.' + kavetoolbox_path
+            instscript = './KaveToolbox/scripts/KaveInstall'
         if not params.command_line_args:
             commandlineargs = ""
         else:

@@ -161,35 +161,111 @@ if __name__ == "__main__":
     ipa = freeipa.FreeIPACommon()
     if not ipa.group_exists('admins'):
         raise SystemError("No ipa group admins found ... did you forget to kinit or are you"
-                          "Running in some strange configuration??")
+                          " running in some strange configuration??")
     # grab csv from iterator. The whole thing since I need to do multiple iterations
     keytabs = [k for k in yieldConfig(sys.argv[-1])]
+    # Take only unique entries, don' need duplicates
+    keytabs_unique = []
+    for keytab in keytabs:
+        if keytab not in keytabs_unique:
+            keytabs_unique.append(keytab)
+    keytabs = keytabs_unique
+    # Check that the tuples (host,file,principal) are unique
+    tuples = [(k["host"], k["principal name"], k["keytab file path"]) for k in keytabs]
+    if len(set(tuples)) != len(tuples):
+        print ("Warning: your kerberos csv calls for multiple principal tabs to"
+               + " be saved in the same file, this may fail")
+    # check that (host,file,user,group) are unique
+    tuples = [(k["host"], k["keytab file path"], k["keytab file owner"], k["keytab file group"]) for k in keytabs]
+    if len(set(tuples)) != len(tuples):
+        print ("Warning: your kerberos csv calls for multiple different ownership"
+               + " statuses for the same file, this may fail")
     # test that all machines are contactable
     for keytab in keytabs:
         remote = Remote(keytab["host"])
         remote.check()
+    # Check realm and identity
+    for keytab in keytabs:
+        identity = keytab["principal name"].split('@')[0]
+        realm = keytab["principal name"].split('@')[-1]
+        if not len(identity):
+            raise NameError("I could not interpret the identity of " + str(keytab))
+        if not len(realm):
+            raise NameError("I could not interpret the realm of " + str(keytab))
+    # build a list of user principles which are going to be created first
+    user_princ = [keytab["principal name"].split('@')[0] for keytab in keytabs if keytab["principal type"] == "USER"]
+    # build a list of groups which are going to be created first
+    group_princ = [keytab["keytab file group"].split('@')[0] for keytab in keytabs if keytab["principal type"] == "USER"
+                   and keytab["keytab file group"] != keytab["principal name"].split('@')[0]]
+    # Create user principals first
+    for keytab in keytabs:
+        identity = keytab["principal name"].split('@')[0]
+        realm = keytab["principal name"].split('@')[-1]
+        # Users are slightly different from
+        if keytab["principal type"] == "USER":
+            groups = []
+            if keytab["keytab file owner"] == identity and keytab["keytab file group"] != identity:
+                groups.append(keytab["keytab file group"])
+            # First create any groups if needed
+            for group in groups:
+                ipa.create_group(group, 'automatic group for principals/keytabs')
+            # Then create any users if needed
+            ipa.create_user_principal(identity, groups=groups)
+            # Finally double-check the groups just in case the user already existed
+            for group in groups:
+                ipa.group_add_member(group, identity)
     # add local users if required, fix groups if required
     for keytab in keytabs:
         remotes = [Remote(keytab["host"]), Remote("localhost")]
         # add groups if they do not exist
         for remote in remotes:
+            group = keytab["keytab file group"]
+            if group == 'root':
+                continue
+            if not len(group):
+                continue
+            if group in group_princ:
+                continue
+            if group in user_princ:
+                continue
             if keytab["keytab file group"] not in remote.run("cut -d: -f1 /etc/group"):
                 remote.run("groupadd " + keytab["keytab file group"])
+        # now add users if required
+        users = [keytab["local username"], keytab["keytab file owner"]]
         if keytab["principal type"] == "USER":
-            continue
+            # Skip if the local user is going to be a user principal or root
+            identity = keytab["principal name"].split('@')[0]
+            if len([u for u in users if u in [identity, '', 'root']]) != 2:
+                continue
         if keytab["keytab file owner"] is "root":
             continue
         # add users if they do not exist
         for remote in remotes:
-            for user in [keytab["local username"], keytab["keytab file owner"]]:
+            for user in users:
                 if user == 'root':
                     continue
                 if not len(user):
                     continue
+                if user in user_princ:
+                    continue
                 try:
                     remote.run("grep " + user + " /etc/passwd > /dev/null")
                 except RuntimeError:
-                    remote.run("useradd " + user)
+                    # Try a simple useradd first.
+                    # Fails if either the user already exists, or the user is already the name of a group
+                    try:
+                        remote.run("useradd " + user)
+                    except RuntimeError:
+                        # In case the user is already the name of a group, try again with -g
+                        try:
+                            group = user
+                            if keytab["keytab file group"]:
+                                group = keytab["keytab file group"]
+                            remote.run("useradd " + user + " -g " + group)
+                        except RuntimeError:
+                            # Finally, assume that the user exists
+                            print "Failed to add a user, but it might still already exist, checking groups"
+
                 if keytab["keytab file group"] not in remote.run("groups " + user):
                     remote.run("usermod -a -G " + keytab["keytab file group"] + " " + user)
     #  c) Create any principles / keytabs and control permissions
@@ -198,12 +274,7 @@ if __name__ == "__main__":
     for keytab in keytabs:
         identity = keytab["principal name"].split('@')[0]
         realm = keytab["principal name"].split('@')[-1]
-        if not len(identity):
-            raise NameError("I could not interpret the identity of " + str(keytab))
-        if not len(realm):
-            raise NameError("I could not interpret the realm of " + str(keytab))
-        if keytab["principal type"] == "USER":
-            ipa.create_user_principal(identity)
+        # Services
         if keytab["principal type"] == "SERVICE":
             ipa.create_service_principal(identity)
         intermediate_file = keytab["keytab file path"] + identity.replace('/', '_')
@@ -217,7 +288,7 @@ if __name__ == "__main__":
                 # Special case for HTTP, needed by the FreeIPA server!
                 popen("cp /etc/httpd/conf/ipa.keytab " + intermediate_file)
                 popen("chown " + keytab["keytab file owner"] + ":" + keytab["keytab file group"]
-                      + " " + keytab["keytab file path"])
+                      + " " + intermediate_file)
                 popen("chmod " + keytab["keytab file mode"] + " " + intermediate_file)
             else:
                 ipa.create_keytab(popen("hostname -f"), identity, realm,
@@ -262,3 +333,5 @@ if __name__ == "__main__":
         for k, v in failed:
             print keytab["host"], k["principal name"], k["keytab file path"], e
         raise RuntimeError("Failed to create some keytabs! " + str(len(failed)) + "/" + str(len(keytabs)))
+    else:
+        print "All keytabs tested successfully"

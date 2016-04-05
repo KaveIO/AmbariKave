@@ -121,6 +121,7 @@ class TestServiceFreeIPA(TestServiceBlueprint):
     def check(self, ambari):
         super(TestServiceFreeIPA, self).check(ambari)
         import subprocess as sub
+        import os
         pwd = ambari.run("cat admin-password")
         proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
@@ -131,11 +132,6 @@ class TestServiceFreeIPA(TestServiceBlueprint):
                          )
         ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ambari.run("./createkeytabs.py ./kerberostest.csv")
-        klist = ambari.run("klist")
-        self.assertTrue("krbtgt/KAVE.IO@KAVE.IO" in klist
-                        and "testkserviceb/ambari.kave.io@KAVE.IO" in klist,
-                        "kinit test/tokens were not successful here :" + klist
-                        + ' '.join(ambari.sshcmd()))
 
 if __name__ == "__main__":
     import sys

@@ -32,8 +32,12 @@ ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)
 command_line_args = default('configurations/kavetoolbox/command_line_args', "False")
 try:
     command_line_args = kc.trueorfalse(command_line_args)
-except TypeError:
-    print "The value for command_line_args is not correct"
+except TypeError, ValueError:
+    if type(command_line_args) is str:
+        pass
+    else:
+        print "could not interpret value of command_line_args correctly"
+        raise
 custom_install_template_default = """
 # -------------------------------
 import DefaultConfig as cnf

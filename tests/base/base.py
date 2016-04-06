@@ -521,10 +521,15 @@ class LDTest(unittest.TestCase):
                         + " http://localhost:8080/api/v1/clusters/"
                         + clustername + "/requests/" + str(requestid))
                 except RuntimeError as e:
-                    stdout2 = ambari.run("ambari-server status")
-                    if "not running" in stdout2:
+                    try:
+                        stdout2 = ambari.run("ambari-server status")
+                        if "not running" in stdout2:
+                            state = "ABORTED"
+                            break
+                    except RuntimeError:
                         state = "ABORTED"
                         break
+
                     raise e
 
             # print stdout.split('\n')[1:22]

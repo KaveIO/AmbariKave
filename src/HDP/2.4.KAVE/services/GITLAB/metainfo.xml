@@ -6,7 +6,7 @@
             <name>GITLAB</name>
             <displayName>GitLab</displayName>
             <comment>collaborate on your code with your team through git</comment>
-            <version>7.6.2</version>
+            <version>8.6.4</version>
             <components>
                     <component>
                     <name>GITLAB_SERVER</name>

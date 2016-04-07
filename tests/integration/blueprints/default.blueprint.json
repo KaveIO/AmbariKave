@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     }
   ],
@@ -13,9 +12,10 @@
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"   },
-        { "name" : "GANGLIA_SERVER"  },
-        { "name" : "NAGIOS_SERVER"   },
-        { "name" : "GANGLIA_MONITOR" }
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
     },
@@ -23,7 +23,8 @@
       "name" : "default",
       "configurations" : [ ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR" }
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  }
       ],
       "cardinality" : "0-10"
     }
@@ -31,6 +32,6 @@
   "Blueprints" : {
     "blueprint_name" : "dev",
     "stack_name" : "HDP",
-    "stack_version" : "2.2.KAVE"
+    "stack_version" : "2.4.KAVE"
   }
 }

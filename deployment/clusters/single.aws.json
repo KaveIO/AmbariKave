@@ -4,7 +4,11 @@
     "Count" : -1,
     "InstanceType" : "c3.large",
     "AccessType" : "admin",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" }  ]
   }
   ]
 }

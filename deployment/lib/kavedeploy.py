@@ -563,7 +563,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "1.4-Beta"
+        version = "2.0-Beta-Pre"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -652,9 +652,14 @@ def waitforrequest(ambari, clustername, request, timeout=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= timeout:
-        stdout = ambari.run(
-            "curl --netrc http://localhost:8080/api/v1/clusters/"
-            + clustername + "/requests/" + str(request))
+        cmd = ("curl --netrc http://localhost:8080/api/v1/clusters/"
+               + clustername + "/requests/" + str(request))
+        # If this fails, wait a second and try again, then really fail
+        try:
+            stdout = ambari.run(cmd)
+        except RuntimeError:
+            time.sleep(3)
+            stdout = ambari.run(cmd)
         if '"request_status" : "FAILED"' in stdout:
             raise ValueError("request from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
         if '"request_status" : "COMPLETED"' in stdout:

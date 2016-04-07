@@ -32,7 +32,7 @@ from grp import getgrnam
 #  this password is intended to be widely known and is used here as an extension of the URL
 #
 __repo_url__ = "http://repos:kaverepos@repos.kave.io"
-__version__ = "1.4-Beta"
+__version__ = "2.0-Beta-Pre"
 __main_dir__ = "AmbariKave"
 __arch__ = "Centos6"
 __mirror_list_file__ = "/etc/kave/mirror"
@@ -69,7 +69,11 @@ def trueorfalse(astring):
     if I don't understand it, raise a TypeError
     """
     cnv = {'true': True, 'y': True, 'ye': True, 'yes': True, 'positive': True, 'affirmative': True,
-           'false': False, 'n': False, 'no': False, 'none': False, 'negative': False}
+           'aye': True, 'certainly': True, 'yep': True, 'indubitably': True, 'ok': True, 'okay': True,
+           'o.k.': True, 'yeah': True, 'positively': True, 'sure': True, 'ja': True, 'one': True,
+           'agree': True, 'false': False, 'n': False, 'no': False, 'none': False, 'negative': False,
+           'nope': False, 'never': False, 'nix': False, 'nay': False, 'nee': False, 'refuse': False,
+           'abort': False, 'veto': False, 'negatory': False, 'null': False, 'zero': False, 'stop': False}
     ts = type(astring)
     if ts is bool:
         return astring

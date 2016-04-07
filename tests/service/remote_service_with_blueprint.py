@@ -54,6 +54,7 @@ class TestServiceBlueprint(base.LDTest):
                 "try remote_blueprint.py")
         ambari, iid = self.deployDev()
         # clean the existing blueprint ready for re-install
+        self.pull(ambari)
         self.resetambari(ambari)
         self.deployBlueprint(ambari, bp, cf)
         # wait for the install and then check if the directories etc. are there
@@ -69,12 +70,12 @@ __kavelanding_plain__ = """Welcome to your KAVE
 * 'default' cluster
 |--* Servers
 |  |--* Ambari <a href='http://ambari:8080'>admin</a>
-|  |--* Ganglia <a href='http://ambari:80/ganglia'>monitor</a>
 |  |--* Jenkins <a href='http://ambari:8888'>jenkins</a>
-|  |--* Nagios <a href='http://ambari:80/nagios'>alerts</a>
+|  |--* Metrics (['ambari.kave.io'])
+|  |--* Zookeeper (['ambari.kave.io'])
 |
 |--* Clients
-|  |--* ambari.kave.io ['ganglia_monitor', 'kavelanding']"""
+|  |--* ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']"""
 
 
 #####
@@ -83,11 +84,11 @@ __kavelanding_plain__ = """Welcome to your KAVE
 __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 <b>Servers</b><p><ul>
   <li>Ambari <a href='http://ambari:8080'>admin</a></li>
-  <li>Ganglia <a href='http://ambari:80/ganglia'>monitor</a></li>
   <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
-  <li>Nagios <a href='http://ambari:80/nagios'>alerts</a></li>
+  <li>Metrics (['ambari.kave.io'])</li>
+  <li>Zookeeper (['ambari.kave.io'])</li>
 </ul><p><b>Clients</b><p><ul>
-  <li>ambari.kave.io ['ganglia_monitor', 'kavelanding']</li>
+  <li>ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']</li>
 </ul>"""
 
 
@@ -115,6 +116,23 @@ class TestServiceKaveLanding(TestServiceBlueprint):
         self.assertTrue(nowhite(__kavelanding_html__) in nowhite(pph2), "KaveLanding page is incomplete")
 
 
+class TestServiceFreeIPA(TestServiceBlueprint):
+
+    def check(self, ambari):
+        super(TestServiceFreeIPA, self).check(ambari)
+        import subprocess as sub
+        import os
+        pwd = ambari.run("cat admin-password")
+        proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
+                         stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
+        output, err = proc.communicate(input=pwd + '\n')
+        self.assertFalse(proc.returncode, "Failed to kinit admin on this node "
+                         + ' '.join(ambari.sshcmd())
+                         + output + " " + err
+                         )
+        ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
+        ambari.run("./createkeytabs.py ./kerberostest.csv")
+
 if __name__ == "__main__":
     import sys
 
@@ -135,6 +153,8 @@ if __name__ == "__main__":
     test = TestServiceBlueprint()
     if service == "KAVELANDING":
         test = TestServiceKaveLanding()
+    if service == "FREEIPA":
+        test = TestServiceFreeIPA()
     test.service = service
     test.debug = verbose
     test.branch = branch

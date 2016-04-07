@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>STORMSD</name>
+            <comment>StormSD - the KAVE version of storm, which can be used separate from YARN, SD-stands for 'SupervisorD', which wraps the storm daemons for fast-fail fast-restart operation</comment>
+            <displayName>StormSD</displayName>
+            <version>0.10.0</version>
+            <components>
+                    <component>
+                    <name>NIMBUS_SD_MASTER</name>
+                    <displayName>NimbusSD</displayName>
+                    <category>MASTER</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/storm_nimbus.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>SUPERVISOR_SD_SLAVE</name>
+                    <displayName>SupervisorSD</displayName>
+                    <category>SLAVE</category>
+                    <cardinality>1+</cardinality>
+                    <commandScript>
+                        <script>scripts/storm_supervisor.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>STORMSD_UI_SERVER</name>
+                    <displayName>StormSD UI server</displayName>
+                    <category>MASTER</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/ui_server.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>STORMSD_LOG_VIEWER</name>
+                    <comment>logviewer daemon,feature for debugging and monitoring topologies</comment>
+                    <displayName>STORMSD LOG VIEWER</displayName>
+                    <category>SLAVE</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/storm_logviewer.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>STORMSD_DRPC_SERVER</name>
+                    <displayName>StormSD DRPC server</displayName>
+                    <category>MASTER</category>
+                    <commandScript>
+                        <script>scripts/storm_drpc.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>STORMSD_CLIENT</name>
+                    <displayName>StormSD client install</displayName>
+                    <category>CLIENT</category>
+                    <commandScript>
+                        <script>scripts/storm_client.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                    	<package><name>wget</name></package>
+                    	<package><name>java-1.7.0-openjdk</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

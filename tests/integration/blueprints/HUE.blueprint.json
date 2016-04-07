@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -23,18 +22,18 @@
     				   "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
     				   } },
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
-    { "hive-site" : { "hive.heapsize" : "1024", "javax.jdo.option.ConnectionPassword" : "admin" } }
+    { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
+    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } }
   ],
   "host_groups":[
     {
       "name":"admin",
       "components" : [
         { "name" : "AMBARI_SERVER"        },
-        { "name" : "NAGIOS_SERVER"        },
-        { "name" : "GANGLIA_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"    },
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
         { "name" : "NAMENODE"             },
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "ZOOKEEPER_SERVER"     },
@@ -66,6 +65,6 @@
   "Blueprints" : {
     "blueprint_name" : "hue",
     "stack_name" : "HDP",
-    "stack_version" : "2.2.KAVE"
+    "stack_version" : "2.4.KAVE"
   }
 }

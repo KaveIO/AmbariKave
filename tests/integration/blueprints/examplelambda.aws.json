@@ -3,7 +3,7 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "m1.medium",
     "AccessType" : "admin"
   },
   { "Name" : "gate",
@@ -14,7 +14,7 @@
   },
   { "Name" : "kafka",
     "Count" : 1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "m1.medium",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   },
@@ -32,7 +32,7 @@
   },
   { "Name" : "mongo",
     "Count" : -1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "m1.medium",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib/mongo", "Size" : 10, "Attach" : "/dev/sdc" }]
@@ -58,7 +58,7 @@
   },
   { "Name" : "wrk",
     "Count" : 3,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "m1.medium",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
   }

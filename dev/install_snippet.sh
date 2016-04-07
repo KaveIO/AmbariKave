@@ -22,19 +22,25 @@
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
+# This should be the way, we think this file works now
+yum install -y wget curl
+wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.2.1.0/ambari.repo
+cp ambari.repo /etc/yum.repos.d
 yum install ambari-server -y
-yum install -y pdsh wget curl
 ambari-server setup -s
 
 # install requests library for python
-yum -y install epel-release
-yum install -y python-pip
+yum install -y epel-release
+yum install -y pdsh python-pip
 pip install requests
+
 encrypt_number="4"
 
 version=`ambari-server --version`
 
 if [[ "$version" == "2.1."* ]]; then
+	encrypt_number="2"
+elif [[ "$version" == "2.2."* ]]; then
 	encrypt_number="2"
 elif [[ "$version" == "1.7."* ]]; then
 	encrypt_number="4"

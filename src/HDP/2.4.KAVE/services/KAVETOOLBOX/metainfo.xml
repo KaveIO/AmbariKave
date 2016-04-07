@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>KAVETOOLBOX</name>
+            <displayName>KaveToolbox</displayName>
+            <comment>The KPMG standard analytics tools. Install as master on all gateway machines, install client on all worker nodes.
+            A suite of analysis tools, and user experience features, including python R and ROOT.
+            Needs at least 4GB of free space in /opt, with an additional 3GB in /tmp for unpacking during the install</comment>
+            <version>2.0-Beta-Pre</version>
+            <components>
+                <component>
+                    <name>KAVETOOLBOXGATE</name>
+                    <displayName>KaveToolbox (Gate)</displayName>
+                    <comment>X and IDEs on top of KaveToolbox, to be installed on your gateway machines</comment>
+                    <category>MASTER</category>
+                    <cardinality>0+</cardinality>
+                    <commandScript>
+                        <script>scripts/kavetoolboxgate.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+                <component>
+                    <name>KAVETOOLBOXNODE</name>
+                    <displayName>KaveToolbox (Node)</displayName>
+                    <comment>Install this on all your worker nodes, storm/namenode/nimbus etc.</comment>
+                    <category>CLIENT</category>
+                    <commandScript>
+                        <script>scripts/kavetoolbox.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+           </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>wget</name></package>
+                        <package><name>rsync</name></package>
+                        <package><name>tar</name></package>
+                        <package><name>zip</name></package>
+                        <package><name>unzip</name></package>
+                        <package><name>gzip</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

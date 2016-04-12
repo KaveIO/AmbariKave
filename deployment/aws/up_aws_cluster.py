@@ -176,7 +176,10 @@ sys.stdout.flush()
 
 def regionreplacements(instancetype):
     region = "-".join(lA.detectRegion().split("-")[0:2])
-    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium"},
+    # ap region has different strange behaviour for new generation instances, default centos image not hvm
+    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
+                                       "c4.large" : "c3.large", "c4.xlarge" : "c3.xlarge",
+                                       "c4.2xlarge" : "c3.2xlarge"},
                       "eu-west": {"m1.medium": "t2.small"}}
     try:
         return regioninstdict[region][instancetype]

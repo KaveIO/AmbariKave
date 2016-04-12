@@ -356,7 +356,7 @@ class LDTest(unittest.TestCase):
     def deployDev(self, itype=None):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c3.large
+        itype -> None: c4.large
         """
         import kavedeploy as lD
 
@@ -417,7 +417,7 @@ class LDTest(unittest.TestCase):
     def deployOS(self, osval, itype=None):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c3.large
+        itype -> None: c4.large
         """
         import kavedeploy as lD
 

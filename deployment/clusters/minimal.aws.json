@@ -4,7 +4,7 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "t2.medium",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
@@ -13,7 +13,7 @@
   {
     "Name" : "gate",
     "Count" : -1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "t2.medium",
     "AccessType" : "gateway",,
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdc" } ]

@@ -173,19 +173,6 @@ print "up the instance groups"
 print "===================================="
 sys.stdout.flush()
 
-
-def regionreplacements(instancetype):
-    region = "-".join(lA.detectRegion().split("-")[0:2])
-    # ap region has different strange behaviour for new generation instances, default centos image not hvm
-    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
-                                       "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
-                                       "c4.2xlarge": "c3.2xlarge"},
-                      "eu-west": {"m1.medium": "t2.small"}}
-    try:
-        return regioninstdict[region][instancetype]
-    except KeyError:
-        return instancetype
-
 for instancegroup in cluster_config["InstanceGroups"]:
     count = instancegroup["Count"]
     autoname = True
@@ -194,7 +181,7 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if count == 0:
         continue
-    up = lA.upCentos6(type=regionreplacements(instancegroup["InstanceType"]),
+    up = lA.upCentos6(type=lA.chooseitype(instancegroup["InstanceType"]),
                       secGroup=security_group, keys=amazon_keypair_name,
                       count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iidFromUpJSON(up)

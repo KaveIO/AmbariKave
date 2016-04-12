@@ -54,15 +54,18 @@ class TestKaveToolbox(base.LDTest):
         rounds = 1
         flag = False
         while rounds <= 60:
-            stdout = ambari.run(" tail -n 4 inst.stdout ")
-            if ("Successful install" in stdout):
-                flag = True
-                break
-            stdout = ambari.run(" cat inst.stderr ")
-            self.assertFalse("xception" in stdout or "rror" in stdout,
-                             "Errors detected in head KaveToolbox installation \n" + stdout + "\n-----------------\n"
-                             + ' '.join(
-                                 ambari.sshcmd()))
+            try:
+                stdout = ambari.run(" tail -n 4 inst.stdout ")
+                if ("Successful install" in stdout):
+                    flag = True
+                    break
+                stdout = ambari.run(" cat inst.stderr ")
+                self.assertFalse("xception" in stdout or "rror" in stdout,
+                                 "Errors detected in head KaveToolbox installation \n" + stdout + "\n-----------------\n"
+                                 + ' '.join(
+                                            ambari.sshcmd()))
+            except RuntimeError:
+                pass
             rounds = rounds + 1
             time.sleep(60)
         self.assertTrue(flag, "Installation of KaveToolbox not completed after 60 minutes")

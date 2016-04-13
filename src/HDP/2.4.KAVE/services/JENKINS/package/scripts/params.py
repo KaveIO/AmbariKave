@@ -34,7 +34,7 @@ if JENKINS_ADMIN_EMAIL == 'default':
 JENKINS_ADMIN_PASSWORD = config['configurations']['jenkins']['JENKINS_ADMIN_PASSWORD']
 Logger.sensitive_strings[JENKINS_ADMIN_PASSWORD] = "[PROTECTED]"
 
-download_version = default("configurations/jenkins/download_version", "1.624")
+download_version = default("configurations/jenkins/download_version", "1.642")
 plugins = default("configurations/jenkins/plugins",
                   "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, "
                   "gitlab-plugin, git-parameter, git-tag-message, matrix-project, "

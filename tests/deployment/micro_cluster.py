@@ -34,10 +34,7 @@ class MicroCluster(base.LDTest):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
         import kaveaws as lA
-        region = lA.detectRegion()
         clusterfile = "micro.aws.json"
-        if region.startswith("ap"):
-            clusterfile = "microtokyo.aws.json"
         stdout = self.deploycluster(blueprint_dir + '/' + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)

@@ -26,7 +26,7 @@ usage deploy_one_centos_instance.py hostname [security_config.json] [instance_ty
 
 optional:
     --verbose : print all remotely running commands
-    [instance_type]: optional, if not specified will use c3.large
+    [instance_type]: optional, if not specified will use c4.large
     [security_config.json]: optional, if not specified will use the environemnt variable AWSSECCONF
     [--ambari-dev] : will use our ambari development image, this should speed up testing *a lot*
 """
@@ -77,7 +77,7 @@ def parseOpts():
         raise AttributeError("You supplied too many arguments")
     macname = sys.argv[1]
     secf = ""
-    insttype = "c3.large"
+    insttype = "c4.large"
     if len(sys.argv) > 2 and os.path.exists(sys.argv[2]):
         secf = sys.argv[2]
         if len(sys.argv) > 3:

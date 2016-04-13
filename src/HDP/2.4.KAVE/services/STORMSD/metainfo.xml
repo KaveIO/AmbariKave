@@ -42,6 +42,18 @@
                     </commandScript>
                 </component>
                 <component>
+                    <name>STORMSD_LOG_VIEWER</name>
+                    <comment>logviewer daemon,feature for debugging and monitoring topologies</comment>
+                    <displayName>STORMSD LOG VIEWER</displayName>
+                    <category>SLAVE</category>
+                    <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/storm_logviewer.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+                <component>
                     <name>STORMSD_DRPC_SERVER</name>
                     <displayName>StormSD DRPC server</displayName>
                     <category>MASTER</category>

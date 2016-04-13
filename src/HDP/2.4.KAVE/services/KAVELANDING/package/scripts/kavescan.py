@@ -90,6 +90,7 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                                                 "mongo_web": [28017, "mongodb/tcp_port +1000"]},
                              "GITLAB_SERVER": {"gitlab": [80, "gitlab/gitlab_port"]},
                              "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/stormsd.ui.port"]},
+                             "STORMSD_LOG_VIEWER": {"log": [8013, "stormsd/stormsd.logviewer.port"]},
                              "HUE_SERVER": {"hue": [8744, "hue/web_ui_port"]},
                              "FREEIPA_SERVER": {"users": [80]},
                              "NAMENODE": {"hdfs_nn1": [50070]},
@@ -311,17 +312,24 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
             retstr = retstr + "<h3><font size=5px>'" + cluster + "' cluster</font></h3>\n"
         masters_with_links = [service for service in cluster_service_host[cluster] if
                               ("SERVER" in service or "MASTER" in service
-                               or "NAMENODE" in service or "MANAGER" in service)
+                               or "NAMENODE" in service or "MANAGER" in service
+                               or "COLLECTOR" in service)
                               and (service in cluster_service_link[cluster])]
         masters_with_links.sort()
         masters_without_links = [service for service in cluster_service_host[cluster] if
                                  ("SERVER" in service or "MASTER" in service
-                                  or "NAMENODE" in service or "MANAGER" in service)
+                                  or "NAMENODE" in service or "MANAGER" in service
+                                  or "COLLECTOR" in service)
                                  and (service not in cluster_service_link[cluster])
                                  and (service not in masters_with_links)]
         masters_without_links.sort()
+        others_with_links = [service for service in cluster_service_host[cluster] if
+                             (service in cluster_service_link[cluster])
+                             and (service not in masters_with_links)
+                             and (service not in masters_without_links)]
+        others_with_links.sort()
         others = [service for service in cluster_service_host[cluster] if
-                  service not in (masters_without_links + masters_with_links)]
+                  service not in (masters_without_links + masters_with_links + others_with_links)]
         others.sort()
         # first print services with links!
         if format == "plain":
@@ -356,6 +364,24 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
                 retstr = retstr + "  <li>"
             retstr = retstr + sprint + " "
             retstr = retstr + "(" + cluster_service_host[cluster][service].__str__() + ")"
+            if format == "plain":
+                retstr = retstr + "\n"
+            else:
+                retstr = retstr + "</li>\n"
+
+        # first print others with links!
+        for service in others_with_links:
+            sprint = service
+            if "_" in service:
+                sprint = ' '.join(service.split("_")[:-1])
+            sprint = sprint.upper()[0] + sprint.lower()[1:]
+            if format == "plain":
+                retstr = retstr + "|  |--* "
+            else:
+                retstr = retstr + "  <li>"
+            retstr = retstr + sprint + " "
+            for link in cluster_service_link[cluster][service]:
+                retstr = retstr + link
             if format == "plain":
                 retstr = retstr + "\n"
             else:

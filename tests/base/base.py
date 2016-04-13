@@ -417,7 +417,7 @@ class LDTest(unittest.TestCase):
         itype = lA.chooseitype(itype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.runQuiet(deploy_dir + "/aws/deploy_known_instance.py "
-                             + osval + "Test-" + osval + "-" + self.service + " "
+                             + osval + " Test-" + osval + "-" + self.service + " "
                              + itype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]

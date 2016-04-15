@@ -109,6 +109,9 @@ Installation Kerberization with FreeIPA
 FreeIPA can provide all necessary keytabs for your kerberized cluster, using the kerberos.csv given by the Ambari wizard.
 Be careful because you need to pause while using the wizard when given the option to download the csv, and do some things on the command line before continuing.
 
+YOu can follow the tutorial here: https://youtu.be/hL1yiMlgg0E
+[![Kerberizing Cluster](http://img.youtube.com/vi/hL1yiMlgg0E/0.jpg)](https://youtu.be/hL1yiMlgg0E "Kerberizing Cluster")
+
  * Installed and configure the cluster how you wish, with all services.
  * Start the wizard
  * Select the manual configuration option and say yes that you have installed all requirements.

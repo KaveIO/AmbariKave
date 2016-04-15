@@ -89,6 +89,7 @@ if [ -e .pgpass ]; then
 fi
 echo -ne "*:*:ambari:ambari:" > .pgpass; cat /etc/ambari-server/conf/password.dat >> .pgpass; chmod 0600 .pgpass
 psql -U ambari ambari -c "ALTER USER ambari WITH PASSWORD '$temppw';" ; echo $temppw > /etc/ambari-server/conf/password.dat
+rm -f .pgpass
 if [ -e .pgpass_blacp ]; then
 	mv .pgpass_blacp .pgpass
 fi

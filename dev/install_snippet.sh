@@ -84,14 +84,15 @@ rm /tmp/tmp.mkey.temp
 ##########################################################
 # By default change the ambari database password!
 temppw=`(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c 32; date +%s | head -c 10; hostname) | sha256sum | base64 | head -c 32`
-if [ -e .pgpass ]; then
-	mv .pgpass .pgpass_blacp
+if [ -e ~/.pgpass ]; then
+	mv ~/.pgpass ~/.pgpass_blacp
 fi
-echo -ne "*:*:ambari:ambari:" > .pgpass; cat /etc/ambari-server/conf/password.dat >> .pgpass; chmod 0600 .pgpass
+echo -ne "*:*:ambari:ambari:" > ~/.pgpass; cat /etc/ambari-server/conf/password.dat >> ~/.pgpass; chmod 0600 ~/.pgpass
 psql -U ambari ambari -c "ALTER USER ambari WITH PASSWORD '$temppw';" ; echo $temppw > /etc/ambari-server/conf/password.dat
-rm -f .pgpass
-if [ -e .pgpass_blacp ]; then
-	mv .pgpass_blacp .pgpass
+chmod 0600 /etc/ambari-server/conf/password.dat
+rm -f ~/.pgpass
+if [ -e ~/.pgpass_blacp ]; then
+	mv ~/.pgpass_blacp ~/.pgpass
 fi
 ##########################################################
 # end of install snippet file

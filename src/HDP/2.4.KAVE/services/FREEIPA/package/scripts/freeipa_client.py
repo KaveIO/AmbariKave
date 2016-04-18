@@ -108,16 +108,16 @@ class FreeipaClient(Script):
                         for folderpath in params.folderpath:
                             if os.path.isdir(folderpath):
                                 if '1.7' == self.javaVersionInstalled(dir):
-                                    kc.copyCacheOrRepo("UnlimitedJCEPolicyJDK7.zip", arch="noarch")
-                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d '+dir+'/'+folderpath)
+                                    kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
+                                    Execute('unzip -o -j -q jce_policy-7.zip -d '+dir+'/'+folderpath)
                                 else:
                                     kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
                                     Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d '+dir+'/'+folderpath)
                             else:
                                 Execute('mkdir -p '+dir+'/'+folderpath)
                                 if '1.7' == self.javaVersionInstalled(dir):
-                                    kc.copyCacheOrRepo("UnlimitedJCEPolicyJDK7.zip", arch="noarch")
-                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d '+dir+'/'+folderpath)
+                                    kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
+                                    Execute('unzip -o -j -q jce_policy-7.zip -d '+dir+'/'+folderpath)
                                 else:
                                     kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
                                     Execute('unzip -o -j -q jce_policy-8.zip -d '+dir+'/'+folderpath)

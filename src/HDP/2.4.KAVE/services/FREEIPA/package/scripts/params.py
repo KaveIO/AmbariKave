@@ -102,4 +102,4 @@ for user, passwd in initial_user_passwords.iteritems():
 searchpath = default('configurations/freeipa/searchpath',
                      '/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*')
 # folderpath="/jre/lib/security:/lib/security"
-folderpath = default('configurations/freeipa/searchpath', '/jre/lib/security:/lib/security')
+folderpath = default('configurations/freeipa/folderpath', '/jre/lib/security:/lib/security')

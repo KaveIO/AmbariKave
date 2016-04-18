@@ -146,15 +146,15 @@ nameserver {{ipa_server_ip_address}}
         <name>searchpath</name>
         <value>/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*</value>
         <description>
-			Java installation locations where JCE needs to be installed. This is required for keberizing the cluster using freeIPA
+			Java installation locations where JCE needs to be installed. This is required for kerberizing the cluster using freeIPA
+			With the default this will look in common installation directories for both openjdk and oraclejdk on centos6
         </description>
     </property>
     <property>
         <name>folderpath</name>
-        <value>/jre/lib/security</value>
+        <value>/jre/lib/security:/lib/security</value>
         <description>
 			Folder location for Java Cryptographic Extension jar files need to be placed
         </description>
     </property>
-    searchpath
 </configuration>

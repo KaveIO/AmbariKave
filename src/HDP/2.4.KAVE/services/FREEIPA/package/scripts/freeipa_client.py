@@ -123,7 +123,7 @@ class FreeipaClient(Script):
                                     Execute('unzip -o -j -q jce_policy-8.zip -d '+dir+'/'+folderpath)
 
     def javaVersionInstalled(self,dir):
-        if 'java-1.7' in dir:
+        if '1.7' in dir:
             return '1.7'
         else:
             return '1.8'

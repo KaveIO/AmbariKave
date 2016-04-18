@@ -17,7 +17,8 @@
 ##############################################################################
 import freeipa
 import os
-
+import glob
+import kavecommon as kc
 from resource_management import *
 from resource_management.core.exceptions import ComponentIsNotRunning
 
@@ -32,9 +33,26 @@ class FreeipaClient(Script):
         if not os.path.exists(self.ipa_client_install_lock_file):
             raise ComponentIsNotRunning()
 
+    def start(self, env):
+        """
+        Since Ambari 2.1, it appears as if this client needs a start and stop method
+        implemented. Start for a client is simple install, if this has already been called
+        it's no problem, because the lock file will prevent re-install
+        """
+        return self.install(env)
+
+    def stop(self, env):
+        """
+        Since Ambari 2.1, it appears as if this client needs a start and stop method
+        implemented. Stop is very easy to implement, i.e. do nothing.
+        """
+        return True
+
     def install(self, env):
         import params
         env.set_params(params)
+
+        self.installJCE()
         installed_on_server = (params.ipa_server == params.hostname)
 
         if installed_on_server:
@@ -73,6 +91,36 @@ class FreeipaClient(Script):
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:
                 f.write('')
+
+    def installJCE(self):
+        import params
+        # cache this download so that this can be redistributed on restart of the service
+        kc.copyCacheOrRepo("jce_policy-7.zip", cache_dir='/etc/kave/cache', arch="noarch")
+        kc.copyCacheOrRepo("jce_policy-8.zip", cache_dir='/etc/kave/cache', arch="noarch")
+        # need to think of some protection against recursive softlinks
+        for javapath in params.searchpath.split(':'):
+            # print "this is javaPath"+javapath
+            if not len(javapath):
+                continue
+            # Does the top directory exist and is it a directory?
+            if os.path.isdir(os.path.realpath(os.sep.join(javapath.split(os.sep)[:-1]))):
+                for dir in glob.glob(javapath):
+                    dir = os.path.realpath(dir)
+                    if os.path.isdir(dir):
+                        # print os.listdir(dir)
+                        for folderpath in params.folderpath.split(':'):
+                            if not os.path.isdir(dir + '/' + folderpath):
+                                Execute('mkdir -p ' + dir + '/' + folderpath)
+                            if '1.7' == self.javaVersionInstalled(dir):
+                                Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
+                            else:
+                                Execute('unzip -o -j -q jce_policy-8.zip -d ' + dir + '/' + folderpath)
+
+    def javaVersionInstalled(self, dir):
+        if '1.7' in dir:
+            return '1.7'
+        else:
+            return '1.8'
 
 if __name__ == "__main__":
     FreeipaClient().execute()

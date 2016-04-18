@@ -96,7 +96,7 @@ class FreeipaClient(Script):
         import params
         # need to think of some protection against recursive softlinks
         for javapath in params.searchpath.split(':'):
-            #print "this is javaPath"+javapath
+            # print "this is javaPath"+javapath
             if not len(javapath):
                 continue
             # Does the top directory exist and is it a directory?
@@ -109,20 +109,20 @@ class FreeipaClient(Script):
                             if os.path.isdir(folderpath):
                                 if '1.7' == self.javaVersionInstalled(dir):
                                     kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
-                                    Execute('unzip -o -j -q jce_policy-7.zip -d '+dir+'/'+folderpath)
+                                    Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
                                 else:
                                     kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
-                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d '+dir+'/'+folderpath)
+                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d ' + dir + '/' + folderpath)
                             else:
-                                Execute('mkdir -p '+dir+'/'+folderpath)
+                                Execute('mkdir -p ' + dir + '/' + folderpath)
                                 if '1.7' == self.javaVersionInstalled(dir):
                                     kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
-                                    Execute('unzip -o -j -q jce_policy-7.zip -d '+dir+'/'+folderpath)
+                                    Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
                                 else:
                                     kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
-                                    Execute('unzip -o -j -q jce_policy-8.zip -d '+dir+'/'+folderpath)
+                                    Execute('unzip -o -j -q jce_policy-8.zip -d ' + dir + '/' + folderpath)
 
-    def javaVersionInstalled(self,dir):
+    def javaVersionInstalled(self, dir):
         if '1.7' in dir:
             return '1.7'
         else:
@@ -130,4 +130,3 @@ class FreeipaClient(Script):
 
 if __name__ == "__main__":
     FreeipaClient().execute()
-l

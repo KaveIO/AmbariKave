@@ -42,7 +42,7 @@
   </property>
   <property>
     <name>download_version</name>
-    <value>1.624</value>
+    <value>1.642</value>
     <description>Which version of Jenkins to download initially</description>
   </property>
 </configuration>

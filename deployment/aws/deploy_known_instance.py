@@ -26,7 +26,7 @@ usage deploy_known_instance.py os hostname [security_config.json] [instance_type
 
 optional:
     --verbose : print all remotely running commands
-    [instance_type]: optional, if not specified will use c3.large
+    [instance_type]: optional, if not specified will use c4.large
     [security_config.json]: optional, if not specified will use the environment variable AWSSECCONF
 """
 
@@ -74,7 +74,7 @@ def parseOpts():
     osval = sys.argv[1]
     macname = sys.argv[2]
     secf = ""
-    insttype = "c3.large"
+    insttype = "c4.large"
     if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
         secf = sys.argv[3]
         if len(sys.argv) > 4:

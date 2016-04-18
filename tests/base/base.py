@@ -353,22 +353,18 @@ class LDTest(unittest.TestCase):
                                                                                 "to run this automated test")
         return lD
 
-    def deployDev(self, itype=None):
+    def deployDev(self, itype="c4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c3.large
+        itype -> None: c4.large
         """
         import kavedeploy as lD
+        import kaveaws as lA
+        itype = lA.chooseitype(itype)
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = ""
-        if itype is None:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_one_centos_instance.py Test-" + self.service + " --ambari-dev --not-strict")
-        else:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_one_centos_instance.py Test-" + self.service + " " + itype + " --ambari-dev "
-                                                                                                       "--not-strict")
+        stdout = lD.runQuiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
+                             + self.service + " " + itype + " --ambari-dev --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -384,9 +380,6 @@ class LDTest(unittest.TestCase):
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
         # add 10GB as /opt by default!
-        import kaveaws as lA
-
-        region = lA.detectRegion()
         ambari = lD.remoteHost("root", ip, keyfile)
         ambari.register()
         #
@@ -414,23 +407,18 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return ambari
 
-    def deployOS(self, osval, itype=None):
+    def deployOS(self, osval, itype="c4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c3.large
+        itype -> None: c4.large
         """
         import kavedeploy as lD
-
+        import kaveaws as lA
+        itype = lA.chooseitype(itype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = ""
-        if itype is None:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_known_instance.py "
-                + osval + " Test-" + osval + "-" + self.service + " --not-strict")
-        else:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_known_instance.py " + osval + "Test-" + osval + "-" + self.service + " "
-                + itype + " --not-strict")
+        stdout = lD.runQuiet(deploy_dir + "/aws/deploy_known_instance.py "
+                             + osval + " Test-" + osval + "-" + self.service + " "
+                             + itype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -521,10 +509,15 @@ class LDTest(unittest.TestCase):
                         + " http://localhost:8080/api/v1/clusters/"
                         + clustername + "/requests/" + str(requestid))
                 except RuntimeError as e:
-                    stdout2 = ambari.run("ambari-server status")
-                    if "not running" in stdout2:
+                    try:
+                        stdout2 = ambari.run("ambari-server status")
+                        if "not running" in stdout2:
+                            state = "ABORTED"
+                            break
+                    except RuntimeError:
                         state = "ABORTED"
                         break
+
                     raise e
 
             # print stdout.split('\n')[1:22]

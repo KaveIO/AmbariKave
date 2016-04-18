@@ -3,7 +3,7 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "c4.large",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
@@ -12,7 +12,7 @@
   {
     "Name" : "task",
     "Count" : 6,
-    "InstanceType" : "c3.xlarge",
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
@@ -22,7 +22,7 @@
   {
     "Name" : "nno",
     "Count" : 2,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "c4.large",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
@@ -32,7 +32,7 @@
   {
     "Name" : "gitlabs",
     "Count" : 1,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "c4.large",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
@@ -40,14 +40,14 @@
   {
     "Name" : "web",
     "Count" : 1,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "c4.large",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/var/log",   "Size" : 2, "Attach" : "/dev/sdb" } ]
   },
   {
     "Name" : "gate",
     "Count" : -1,
-    "InstanceType" : "c3.xlarge",
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
                      {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },

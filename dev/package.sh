@@ -80,9 +80,6 @@ rm -rf $BUILD_DIR/ambarikave-deployment/aws
 rm -rf $BUILD_DIR/ambarikave-deployment/lib/kaveaws.py
 rm -rf $BUILD_DIR/ambarikave-deployment/clusters
 rm -rf $BUILD_DIR/ambarikave-deployment/add_toolbox.py
-#copy the repo directory
-cp -r $PROJECT_DIR/dev/repo $BUILD_DIR/ambarikave-deployment/
-
 
 # Tar autocollapses. If I'm not in the same path as I'm taring than my tarball
 # contains the full path.

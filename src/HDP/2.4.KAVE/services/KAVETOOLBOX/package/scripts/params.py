@@ -29,6 +29,15 @@ releaseversion = default('configurations/kavetoolbox/releaseversion', "2.0-Beta-
 alternative_download = default('configurations/kavetoolbox/alternative_download', "none")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)
+command_line_args = default('configurations/kavetoolbox/command_line_args', "False")
+try:
+    command_line_args = kc.trueorfalse(command_line_args)
+except TypeError, ValueError:
+    if type(command_line_args) is str:
+        pass
+    else:
+        print "could not interpret value of command_line_args correctly"
+        raise
 custom_install_template_default = """
 # -------------------------------
 import DefaultConfig as cnf

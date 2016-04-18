@@ -21,6 +21,7 @@
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
         { "name" : "STORMSD_UI_SERVER"   },
+        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "STORMSD_CLIENT"      },
         { "name" : "STORMSD_DRPC_SERVER" }
       ],
@@ -32,6 +33,7 @@
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
+        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "STORMSD_CLIENT"      }
       ],
       "cardinality" : "1+"
@@ -39,10 +41,11 @@
     {
       "name" : "nimbus",
       "components" : [
-        { "name" : "METRICS_MONITOR"  },
-        { "name" : "ZOOKEEPER_SERVER" },
-        { "name" : "ZOOKEEPER_CLIENT" },
-        { "name" : "NIMBUS_SD_MASTER" }
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "STORMSD_LOG_VIEWER" },
+        { "name" : "NIMBUS_SD_MASTER"   }
       ],
       "cardinality" : "1"
     },
@@ -51,6 +54,7 @@
       "components" : [
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "SUPERVISOR_SD_SLAVE" }
       ],
       "cardinality" : "1+"

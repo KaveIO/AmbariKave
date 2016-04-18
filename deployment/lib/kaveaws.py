@@ -126,6 +126,22 @@ def upOS(os, type, secGroup, keys, count=1, subnet=None):
     return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
 
+def chooseitype(instancetype):
+    """
+    Send in one instance type, read the locally configured aws region and return something that works here
+    """
+    region = "-".join(detectRegion().split("-")[0:2])
+    # ap region has different strange behaviour for new generation instances, default centos image not hvm
+    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
+                                       "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
+                                       "c4.2xlarge": "c3.2xlarge"},
+                      "eu-west": {"m1.medium": "t2.small"}}
+    try:
+        return regioninstdict[region][instancetype]
+    except KeyError:
+        return instancetype
+
+
 def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
     cmd = " ec2 run-instances --image-id " + amiid + " --count " + str(
         count) + " --instance-type " + type + " --key-name " + keys

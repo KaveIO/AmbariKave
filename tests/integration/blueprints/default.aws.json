@@ -3,7 +3,7 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "c4.large",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },

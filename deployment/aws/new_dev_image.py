@@ -125,13 +125,13 @@ if "Subnet" in security_config:
 lA.testaws()
 
 if iid is None:
-    print "upping new c3.large"
+    print "upping new c4.large"
     if lD.detect_proxy() and lD.proxy_blocks_22:
         raise SystemError(
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.upCentos6("c3.large", secGroup, keypair, subnet=subnet)
+    upped = lA.upCentos6("c4.large", secGroup, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iidFromUpJSON(upped)[0]
     import time

@@ -21,8 +21,8 @@ import unittest
 
 class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
-    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root', '/opt/eclipse', '/opt/anaconda',
-                 '/opt/kettle']
+    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
+                 '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
     ostype = "Centos6"
 
     def runTest(self):
@@ -61,9 +61,10 @@ class TestKaveToolbox(base.LDTest):
                     break
                 stdout = ambari.run(" cat inst.stderr ")
                 self.assertFalse("xception" in stdout or "rror" in stdout,
-                                 "Errors detected in head KaveToolbox installation \n" + stdout + "\n-----------------\n"
+                                 "Errors detected in head KaveToolbox installation \n"
+                                 + stdout + "\n-----------------\n"
                                  + ' '.join(
-                                            ambari.sshcmd()))
+                                     ambari.sshcmd()))
             except RuntimeError:
                 pass
             rounds = rounds + 1

@@ -97,3 +97,9 @@ for user, passwd in initial_user_passwords.iteritems():
         raise ValueError("User : " + user + " cannot be assigned an intital password less than 8 characters")
     else:
         Logger.sensitive_strings[passwd] = "[PROTECTED]"
+
+#JCE Installation
+searchpath="/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*"
+# NB: not sure if the untarring/zipping makes a directory or not
+#folderpath="/jre/lib/security:/lib/security"
+folderpath="/jre/lib/security"

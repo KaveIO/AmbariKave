@@ -17,7 +17,7 @@
 ##############################################################################
 import freeipa
 import os
-
+import glob
 from resource_management import *
 from resource_management.core.exceptions import ComponentIsNotRunning
 
@@ -50,6 +50,9 @@ class FreeipaClient(Script):
     def install(self, env):
         import params
         env.set_params(params)
+
+        #self.instalJava()
+        self.installJCE()
         installed_on_server = (params.ipa_server == params.hostname)
 
         if installed_on_server:
@@ -88,6 +91,44 @@ class FreeipaClient(Script):
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:
                 f.write('')
+    #def instalJava(self):
+        #To be implemented if we see that ambari client does not install JAVA
+        #Execute('yum install java-1.8.0-openjdk')
+    def installJCE(self):
+        import params
+        #http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
+        #http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
+        # need to think of some protection against recursive softlinks
+        for javapath in params.searchpath.split(':'):
+            #print "this is javaPath"+javapath
+            if not len(javapath):
+                continue
+            # Does the top directory exist and is it a directory?
+            if os.path.isdir(os.path.realpath(os.sep.join(javapath.split(os.sep)[:-1]))):
+                for dir in glob.glob(javapath):
+                    dir = os.path.realpath(dir)
+                    if os.path.isdir(dir):
+                       # print os.listdir(dir)
+                        #Then use mkdir -p if the folderpath does not exist,
+                        #then copy the correct JCE there, so need an if between 1.7 and 1.8
+                        for folderpath in params.folderpath:
+                            if os.path.isdir(folderpath):
+                                if '1.7' == self.javaVersionInstalled(dir):
+                                    Execute('unzip -o -j -q jce_policy-8.zip -d '+dir+'/'+folderpath)
+                                else:
+                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d '+dir+'/'+folderpath)
+                            else:
+                                Execute('mkdir -p '+dir+'/'+folderpath)
+                                if '1.7' == self.javaVersionInstalled(dir):
+                                    Execute('unzip -o -j -q jce_policy-8.zip -d '+dir+'/'+folderpath)
+                                else:
+                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d '+dir+'/'+folderpath)
+
+    def javaVersionInstalled(self,dir):
+        if 'java-1.7' in dir:
+            return '1.7'
+        else:
+            return '1.8'
 
 if __name__ == "__main__":
     FreeipaClient().execute()

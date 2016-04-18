@@ -105,7 +105,7 @@ class FreeipaClient(Script):
                     dir = os.path.realpath(dir)
                     if os.path.isdir(dir):
                         # print os.listdir(dir)
-                        for folderpath in params.folderpath:
+                        for folderpath in params.folderpath.split(':'):
                             if os.path.isdir(folderpath):
                                 if '1.7' == self.javaVersionInstalled(dir):
                                     kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")

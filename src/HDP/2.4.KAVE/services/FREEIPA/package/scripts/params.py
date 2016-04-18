@@ -101,4 +101,4 @@ for user, passwd in initial_user_passwords.iteritems():
 #JCE Installation
 searchpath=default('configurations/freeipa/searchpath','/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*')
 #folderpath="/jre/lib/security:/lib/security"
-folderpath=default('configurations/freeipa/searchpath','/jre/lib/security')
+folderpath=default('configurations/freeipa/searchpath','/jre/lib/security:/lib/security')

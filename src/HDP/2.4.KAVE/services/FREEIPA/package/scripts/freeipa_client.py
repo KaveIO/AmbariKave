@@ -106,21 +106,15 @@ class FreeipaClient(Script):
                     if os.path.isdir(dir):
                         # print os.listdir(dir)
                         for folderpath in params.folderpath.split(':'):
-                            if os.path.isdir(folderpath):
-                                if '1.7' == self.javaVersionInstalled(dir):
-                                    kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
-                                    Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
-                                else:
-                                    kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
-                                    Execute('unzip -o -j -q UnlimitedJCEPolicyJDK7.zip -d ' + dir + '/' + folderpath)
-                            else:
+                            if not os.path.isdir(dir + '/' +folderpath):
                                 Execute('mkdir -p ' + dir + '/' + folderpath)
-                                if '1.7' == self.javaVersionInstalled(dir):
-                                    kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
-                                    Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
-                                else:
-                                    kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
-                                    Execute('unzip -o -j -q jce_policy-8.zip -d ' + dir + '/' + folderpath)
+
+                            if '1.7' == self.javaVersionInstalled(dir):
+                                kc.copyCacheOrRepo("jce_policy-7.zip", arch="noarch")
+                                Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
+                            else:
+                                kc.copyCacheOrRepo("jce_policy-8.zip", arch="noarch")
+                                Execute('unzip -o -j -q jce_policy-8.zip -d ' + dir + '/' + folderpath)
 
     def javaVersionInstalled(self, dir):
         if '1.7' in dir:

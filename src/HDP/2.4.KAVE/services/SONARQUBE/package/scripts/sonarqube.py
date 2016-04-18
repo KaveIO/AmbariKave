@@ -36,7 +36,7 @@ class SonarQube(Script):
             kc.copyCacheOrRepo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
             Execute('mkdir -p %s ' % params.sonarqube_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
-            Execute('ln -sfn %s/sonarqube-5.0.1 %s/current' % (
+            Execute('ln -sfn %s/sonarqube-5.4 %s/current' % (
                 params.sonarqube_install_directory,
                 params.sonarqube_install_directory))
 

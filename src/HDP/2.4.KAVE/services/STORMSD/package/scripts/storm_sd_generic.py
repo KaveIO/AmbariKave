@@ -186,7 +186,7 @@ class StormGenericSD(StormGeneric):
              )
         File("/etc/init.d/supervisord",
              content=Template("supervisor.j2"),
-             mode=0644
+             mode=0755
              )
         # This is quite annoying, supervisord is supposed to understand import statements,
         # However, it does not work correctly. So in order to avoid clobbering I need to

@@ -117,13 +117,7 @@ class StormGenericSD(StormGeneric):
         Package('epel-release')
         Package('python-meld3')
         Package('python-pip')
-        Package('supervisor')
-#        yum install epel-release
-#        yum install python-meld3
-#        yum install python-pip
-#        #pip install supervisor
-
-
+        Execute('pip install supervisor')
         Execute('chkconfig supervisord on')
 
     def start(self, env):

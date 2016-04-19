@@ -115,7 +115,15 @@ class StormGenericSD(StormGeneric):
                  mode=0755
                  )
         Package('epel-release')
+        Package('python-meld3')
+        Package('python-pip')
         Package('supervisor')
+#        yum install epel-release
+#        yum install python-meld3
+#        yum install python-pip
+#        #pip install supervisor
+
+
         Execute('chkconfig supervisord on')
 
     def start(self, env):
@@ -181,9 +189,13 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
+        File("/etc/init.d/supervisor",
+             content=Template("supervisor.j2"),
+             mode=0644
+             )
         # This is quite annoying, supervisord is supposed to understand import statements,
         # However, it does not work correctly. So in order to avoid clobbering I need to
         # Append to the end of the supervisord.conf file each time I restart. This is very silly
         # And it really should be fixed, I just don't know how at the moment.
-        Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
+        #Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
         kc.chownR('/etc/supervisord.d/', 'storm')

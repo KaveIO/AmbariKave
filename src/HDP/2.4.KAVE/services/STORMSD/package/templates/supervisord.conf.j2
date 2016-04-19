@@ -1,12 +1,12 @@
 [unix_http_server]
-file=/root/tmp/supervisor.sock
+file=/var/tmp/supervisor.sock
 
 [supervisord]
-logfile=/root/tmp/supervisord.log  ; (main log file;default $CWD/supervisord.log)
+logfile=/tmp/supervisord.log  ; (main log file;default $CWD/supervisord.log)
 logfile_maxbytes=50MB                    ; (max main logfile bytes b4 rotation;default 50MB)
 logfile_backups=10                       ; (num of main logfile rotation backups;default 10)
 loglevel=info                            ; (log level;default info; others: debug,warn,trace)
-pidfile=/root/tmp/supervisord.pid  ; (supervisord pidfile;default supervisord.pid)
+pidfile=/tmp/supervisord.pid  ; (supervisord pidfile;default supervisord.pid)
 nodaemon=false                           ; (start in foreground if true;default false)
 minfds=1024                              ; (min. avail startup file descriptors;default 1024)
 minprocs=200
@@ -16,7 +16,7 @@ childlogdir=/root/tmp
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [supervisorctl]
-serverurl=unix:///root/tmp/supervisor.sock
+serverurl=unix:///var/tmp/supervisor.sock
 
 [include]
 files = /etc/supervisord.d/*.conf

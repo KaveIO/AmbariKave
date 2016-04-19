@@ -2,7 +2,7 @@
 file=/var/tmp/supervisor.sock
 
 [supervisord]
-logfile=/var/log/supervisord.log  ; (main log file;default $CWD/supervisord.log)
+logfile={{supervisor_logfile}}  ; (main log file;default $CWD/supervisord.log)
 logfile_maxbytes=50MB                    ; (max main logfile bytes b4 rotation;default 50MB)
 logfile_backups=10                       ; (num of main logfile rotation backups;default 10)
 loglevel=info                            ; (log level;default info; others: debug,warn,trace)
@@ -10,7 +10,7 @@ pidfile=/var/run/supervisord.pid  ; (supervisord pidfile;default supervisord.pid
 nodaemon=false                           ; (start in foreground if true;default false)
 minfds=1024                              ; (min. avail startup file descriptors;default 1024)
 minprocs=200
-childlogdir=/var/log/supervisord/child
+childlogdir={{childlogdir}}
 
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface

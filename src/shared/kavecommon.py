@@ -156,7 +156,7 @@ def copyOrCache(sources, filename, cache_dir=None):
         res.Execute(copymethods(source, filename))
         if cache_dir is not None:
             if not os.path.exists(cache_dir):
-                Execute("mkdir -p " + cache_dir)
+                res.Execute("mkdir -p " + cache_dir)
             shutil.copyfile(filename, cache_dir + os.sep + filename)
     return
 

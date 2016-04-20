@@ -32,10 +32,28 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+if ! type pdsh >/dev/null 2>/dev/null ; then
+	echo 'no pdsh installed'
+	exit 1
+fi
+
+pdsh_version=`pdsh -V | head -n 1 | awk '{print $1}' | awk -F '-' '{print $2}'`
+
+if [[  ${pdsh_version} < "2.27" ]]; then
+	echo "pdsh version >= 2.27 needed for this script, you have"
+	pdsh -V
+	exit 1
+fi
+
+if [ ! -e ~/.dsh/group/$1 ]; then
+	echo "no dsh group called "$1" found, did you type the cluster name in wrongly?"
+	exit 1
+fi
+
 
 if [ ! -f "$HOME/.netrc" ]; then
 	echo "You must supply a .netrc file with the credentials to connect"
-	echo "the file $HOME/netrc does not exist or is unreadable"
+	echo "to ambari. The file $HOME/netrc does not exist or is unreadable"
 	exit 1
 fi
 
@@ -68,10 +86,15 @@ if [[ "$allnames" == *"FREEIPA"* ]]; then
 	echo $service
 	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds, (heartbeat duration)"
-	sleep 70
+	sleep 30
+	# manual start to ensure the correct ordering
+	service ipa start
+	sleep 40
 	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds (heartbeat duration)"
 	sleep 70
+	# end with manual start in case the stop/install takes too long.
+	service ipa start
 fi
 
 echo "Stopping all services"

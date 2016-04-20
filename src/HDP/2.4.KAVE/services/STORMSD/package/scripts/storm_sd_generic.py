@@ -112,11 +112,12 @@ class StormGenericSD(StormGeneric):
                  content=Template("supervisord.conf.j2"),
                  mode=0755
                  )
+        Execute('mkdir -p %s' % params.childlogdir)
         Package('epel-release')
         Package('python-meld3')
         Package('python-pip')
         Execute('pip install supervisor')
-        Execute('chkconfig supervisord on')
+        #Execute('chkconfig supervisord on')
 
     def start(self, env):
         """
@@ -181,8 +182,8 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
-        File("/etc/init.d/supervisor",
+        File("/etc/init.d/supervisord",
              content=Template("supervisor.j2"),
-             mode=0644
+             mode=0755
              )
         kc.chownR('/etc/supervisord.d/', 'storm')

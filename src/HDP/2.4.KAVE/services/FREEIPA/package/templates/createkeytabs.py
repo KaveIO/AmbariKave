@@ -147,6 +147,7 @@ class Remote(object):
 # Working with the keytabs and FreeIPA
 ######################################
 
+
 def yieldConfig(filename):
     """
     CSV iterator
@@ -156,6 +157,7 @@ def yieldConfig(filename):
         for line in fp:
             if len(line.strip()):
                 yield dict((n, v) for n, v in zip(topline, line.strip().split(',')))
+
 
 def check_keytabdict_consistency(keytabs):
     """
@@ -194,7 +196,8 @@ def check_keytabdict_consistency(keytabs):
 
     return keytabs
 
-def create_user_principals(keytabs,ipa):
+
+def create_user_principals(keytabs, ipa):
     """
     For all user types, make an ipa principal, and a group
     """
@@ -216,6 +219,7 @@ def create_user_principals(keytabs,ipa):
             for group in groups:
                 ipa.group_add_member(group, identity)
     return
+
 
 def local_users_and_groups(keytabs, user_princ, group_princ):
     """
@@ -277,6 +281,7 @@ def local_users_and_groups(keytabs, user_princ, group_princ):
                     remote.run("usermod -a -G " + keytab["keytab file group"] + " " + user)
     return
 
+
 def create_and_copy_local_keytabs(keytabs, ipa):
     """
     Create a load of keytabs into temporary files,
@@ -332,6 +337,7 @@ def create_and_copy_local_keytabs(keytabs, ipa):
 
     return
 
+
 def search_failed_keytabs(keytabs):
     """
     Use kinit to check that keytabs actually work that I
@@ -378,14 +384,14 @@ if __name__ == "__main__":
                    if keytab["principal type"] == "USER"
                    and keytab["keytab file group"] != keytab["principal name"].split('@')[0]]
     # Create user principals first
-    create_user_principals(keytabs,ipa)
+    create_user_principals(keytabs, ipa)
     # now that ipa has all users, I can create any extra local users needed
     # add local users if required, fix groups if required, be careful since ipa groups
     # and users may not exist in passwd or /etc/groups yet
     local_users_and_groups(keytabs, user_princ, group_princ)
     #  c) Create any principles / keytabs and control permissions
     #  d) Copy keytabs to required machines and control permissions
-    create_and_copy_local_keytabs(keytabs,ipa)
+    create_and_copy_local_keytabs(keytabs, ipa)
     # e) Check if everything works with the correct kinit command
     popen('kdestroy')
     failed = search_failed_keytabs(keytabs)

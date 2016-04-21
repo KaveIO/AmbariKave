@@ -65,6 +65,10 @@ except ImportError:
     import freeipa
 
 
+######################################
+# Helper methods for shell interaction
+######################################
+
 def popen(cmd, exit=True, shell=None):
     """ Wrapper around popen """
     if shell is None:
@@ -139,6 +143,9 @@ class Remote(object):
             sshopts.append("-r")
         return popen(["scp"] + sshopts + [local, self.user + "@" + self.host + ":" + remote])
 
+######################################
+# Working with the keytabs and FreeIPA
+######################################
 
 def yieldConfig(filename):
     """
@@ -150,20 +157,12 @@ def yieldConfig(filename):
             if len(line.strip()):
                 yield dict((n, v) for n, v in zip(topline, line.strip().split(',')))
 
-if __name__ == "__main__":
-    if "--help" in sys.argv:
-        print __doc__
-        sys.exit(0)
-    if len(sys.argv) < 2:
-        raise AttributeError("Supply the name of the kerberos keytabs csv file")
-    # Todo, check if the user has done kinit!
-    # simple test that this works
-    ipa = freeipa.FreeIPACommon()
-    if not ipa.group_exists('admins'):
-        raise SystemError("No ipa group admins found ... did you forget to kinit or are you"
-                          " running in some strange configuration??")
-    # grab csv from iterator. The whole thing since I need to do multiple iterations
-    keytabs = [k for k in yieldConfig(sys.argv[-1])]
+def check_keytabdict_consistency(keytabs):
+    """
+    Pre checks of the contets of the keytabs dictionary, making sure
+    no faulty descriptions exist.
+    Return a unique group of keytabs
+    """
     # Take only unique entries, don' need duplicates
     keytabs_unique = []
     for keytab in keytabs:
@@ -192,16 +191,18 @@ if __name__ == "__main__":
             raise NameError("I could not interpret the identity of " + str(keytab))
         if not len(realm):
             raise NameError("I could not interpret the realm of " + str(keytab))
-    # build a list of user principles which are going to be created first
-    user_princ = [keytab["principal name"].split('@')[0] for keytab in keytabs if keytab["principal type"] == "USER"]
-    # build a list of groups which are going to be created first
-    group_princ = [keytab["keytab file group"].split('@')[0] for keytab in keytabs if keytab["principal type"] == "USER"
-                   and keytab["keytab file group"] != keytab["principal name"].split('@')[0]]
+
+    return keytabs
+
+def create_user_principals(keytabs,ipa):
+    """
+    For all user types, make an ipa principal, and a group
+    """
     # Create user principals first
     for keytab in keytabs:
         identity = keytab["principal name"].split('@')[0]
         realm = keytab["principal name"].split('@')[-1]
-        # Users are slightly different from
+        # Users are slightly different from SERVICEs
         if keytab["principal type"] == "USER":
             groups = []
             if keytab["keytab file owner"] == identity and keytab["keytab file group"] != identity:
@@ -214,7 +215,13 @@ if __name__ == "__main__":
             # Finally double-check the groups just in case the user already existed
             for group in groups:
                 ipa.group_add_member(group, identity)
-    # add local users if required, fix groups if required
+    return
+
+def local_users_and_groups(keytabs, user_princ, group_princ):
+    """
+    Check that the user to whom the file is chowned exists on each machine,
+    and verify that they are a member of the correct group
+    """
     for keytab in keytabs:
         remotes = [Remote(keytab["host"]), Remote("localhost")]
         # add groups if they do not exist
@@ -268,8 +275,13 @@ if __name__ == "__main__":
 
                 if keytab["keytab file group"] not in remote.run("groups " + user):
                     remote.run("usermod -a -G " + keytab["keytab file group"] + " " + user)
-    #  c) Create any principles / keytabs and control permissions
-    #  d) Copy keytabs to required machines and control permissions
+    return
+
+def create_and_copy_local_keytabs(keytabs, ipa):
+    """
+    Create a load of keytabs into temporary files,
+    copy them and delete the temporary files
+    """
     already_created = []
     for keytab in keytabs:
         identity = keytab["principal name"].split('@')[0]
@@ -317,9 +329,16 @@ if __name__ == "__main__":
     # Remove the intermediate files
     for intermediate_file in already_created:
         popen('rm -f ' + intermediate_file)
-    # e) Check if everything works with the correct kinit command
+
+    return
+
+def search_failed_keytabs(keytabs):
+    """
+    Use kinit to check that keytabs actually work that I
+    have kist created
+    """
     failed = []
-    popen('kdestroy')
+
     for keytab in keytabs:
         if not len(keytab["keytab file path"]):
             continue
@@ -330,7 +349,48 @@ if __name__ == "__main__":
                        + keytab["keytab file path"] + " " + identity + "; kdestroy;'")
         except RuntimeError as e:
             failed.append((keytab, e))
+    return failed
+
+################################################
+# The main function, put all in order and run it
+################################################
+
+if __name__ == "__main__":
+    if "--help" in sys.argv:
+        print __doc__
+        sys.exit(0)
+    if len(sys.argv) < 2:
+        raise AttributeError("Supply the name of the kerberos keytabs csv file")
+    # simple test that this works
+    ipa = freeipa.FreeIPACommon()
+    if not ipa.group_exists('admins'):
+        raise SystemError("No ipa group admins found ... did you forget to kinit or are you"
+                          " running in some strange configuration??")
+    # grab csv from iterator. The whole thing since I need to do multiple iterations
+    keytabs = [k for k in yieldConfig(sys.argv[-1])]
+    # Preform pre-checks for consistency
+    keytabs = check_keytabdict_consistency(keytabs)
+    # build a list of user principles which are going to be created first
+    user_princ = [keytab["principal name"].split('@')[0] for keytab in keytabs
+                  if keytab["principal type"] == "USER"]
+    # build a list of groups which are going to be created first
+    group_princ = [keytab["keytab file group"].split('@')[0] for keytab in keytabs
+                   if keytab["principal type"] == "USER"
+                   and keytab["keytab file group"] != keytab["principal name"].split('@')[0]]
+    # Create user principals first
+    create_user_principals(keytabs,ipa)
+    # now that ipa has all users, I can create any extra local users needed
+    # add local users if required, fix groups if required, be careful since ipa groups
+    # and users may not exist in passwd or /etc/groups yet
+    local_users_and_groups(keytabs, user_princ, group_princ)
+    #  c) Create any principles / keytabs and control permissions
+    #  d) Copy keytabs to required machines and control permissions
+    create_and_copy_local_keytabs(keytabs,ipa)
+    # e) Check if everything works with the correct kinit command
     popen('kdestroy')
+    failed = search_failed_keytabs(keytabs)
+    popen('kdestroy')
+    # Either print what failed, or print what succeeded
     if len(failed):
         for k, v in failed:
             print keytab["host"], k["principal name"], k["keytab file path"], e

@@ -42,7 +42,7 @@ class MongoMaster(MongoBase):
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
         import params
-        if params.setname not in ["None", "False"]:
+        if params.setname and params.setname not in ["None", "False"]:
             if len(params.mongo_hosts) > 1:
                 # write the configuration document to a file
                 File('/tmp/replicaset_conf.js',

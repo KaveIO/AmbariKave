@@ -40,10 +40,6 @@ class MongoBase(Script):
                  content=Template("mongodb.repo"),
                  mode=0644
                  )
-#          File(self.repos_file_path,
-#               content=InlineTemplate(params.mongo_db_repo),
-#               mode=0644
-#               )
         print "installing mongodb..."
         if self.mongo_packages is not None and len(self.mongo_packages):
             for pack in self.mongo_packages:
@@ -53,10 +49,6 @@ class MongoBase(Script):
         import params
 
         env.set_params(params)
-#        File(self.config_file_path,
-#             content=Template("mongod.conf.j2"),
-#             mode=0644
-#             )
         File(self.config_file_path,
              content=InlineTemplate(params.mongodb_conf),
              mode=0644

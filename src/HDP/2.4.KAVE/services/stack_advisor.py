@@ -18,7 +18,7 @@ limitations under the License.
 """
 
 
-class HDP23KAVEStackAdvisor(HDP24StackAdvisor):
+class HDP24KAVEStackAdvisor(HDP24StackAdvisor):
 
     # List of validators which should also be evaluated if there is not recommended default present.
     validateWithoutRecommendedDefault = ['freeipa']

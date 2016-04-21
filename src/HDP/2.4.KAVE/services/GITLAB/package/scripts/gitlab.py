@@ -33,8 +33,7 @@ class Gitlab(Script):
         if os.path.exists('/var/lib/pgsql/data/pg_hba.conf'):
             raise SystemError(
                 "You appear to already have a default postgre database installed (probably you're trying to put "
-                "Gitlabs on the same machine as Ambari). This type of operation is not implemented yet. If this is "
-                "very annoying for you please email us.")
+                "Gitlabs on the same machine as Ambari). This type of operation is not implemented yet.")
         import params
         import kavecommon as kc
 

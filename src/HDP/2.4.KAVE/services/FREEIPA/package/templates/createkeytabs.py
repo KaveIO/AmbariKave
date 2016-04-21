@@ -298,7 +298,7 @@ def create_and_copy_local_keytabs(keytabs, ipa):
         if not len(keytab["keytab file path"]):
             continue
         if not os.path.exists(os.path.dirname(keytab["keytab file path"])):
-            remote.run("mkdir -p " + os.path.dirname(keytab["keytab file path"]))
+            popen("mkdir -p " + os.path.dirname(keytab["keytab file path"]))
         if intermediate_file not in already_created:
             if os.path.exists(intermediate_file):
                 popen('rm -f ' + intermediate_file)

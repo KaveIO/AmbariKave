@@ -54,7 +54,7 @@ def help():
 ambaridev = False
 
 
-def parseOpts():
+def parse_opts():
     global ambaridev
     if "-h" in sys.argv or "--help" in sys.argv:
         help()
@@ -89,7 +89,7 @@ def parseOpts():
     return osval, macname, secf, insttype
 
 
-osval, machinename, secf, itype = parseOpts()
+osval, machinename, secf, itype = parse_opts()
 jsondat = open(secf)
 security_config = json.loads(jsondat.read())
 jsondat.close()
@@ -112,22 +112,22 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
 
 lD.testproxy()
 
-upped = lA.upOS(osval, itype, secGroup, keypair, subnet=subnet)
+upped = lA.up_os(osval, itype, secGroup, keypair, subnet=subnet)
 print "submitted"
 
-iid = lA.iidFromUpJSON(upped)[0]
+iid = lA.iid_from_up_json(upped)[0]
 
 import time
 
 time.sleep(5)
-lA.nameInstance(iid, machinename)
+lA.name_instance(iid, machinename)
 
-ip = lA.pubIP(iid)
+ip = lA.pub_ip(iid)
 acount = 0
 while (ip is None and acount < 20):
     print "waiting for IP"
     lD.mysleep(1)
-    ip = lA.pubIP(iid)
+    ip = lA.pub_ip(iid)
     acount = acount + 1
 
 if osval == "Centos6":
@@ -139,13 +139,13 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
         remote = lD.remoteHost(uname, ip, keyloc)
-        lD.waitUntilUp(remote, 20)
+        lD.wait_until_up(remote, 20)
         remote.register()
         if uname != 'root':
             # Note the twice -t here such that I can run as a sudo command (fake tty)
             remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t', '-t'])
             remote = lD.remoteHost('root', ip, keyloc)
-        lD.renameRemoteHost(remote, machinename, 'kave.io')
+        lD.rename_remote_host(remote, machinename, 'kave.io')
         lD.confallssh(remote)
         remote.describe()
     except KeyboardInterrupt:

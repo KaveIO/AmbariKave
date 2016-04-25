@@ -34,16 +34,16 @@ class TestKaveToolbox(base.LDTest):
         import os
         import sys
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         ambari, iid = (None, None)
         if self.ostype == "Centos6":
-            ambari, iid = self.deployDev()
+            ambari, iid = self.deploy_dev()
         else:
-            ambari, iid = self.deployOS(self.ostype)
+            ambari, iid = self.deploy_os(self.ostype)
             if self.ostype.startswith("Ubuntu"):
                 ambari.run('apt-get update')
-        stdout = lD.runQuiet(
+        stdout = lD.run_quiet(
             deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict")
         self.assertTrue("installing toolbox in background process (check before bringing down the machine)" in stdout,
                         "Failed to install KaveToolbox from git, check: " + ' '.join(ambari.sshcmd()))

@@ -25,7 +25,7 @@ class MongoBase(Script):
     config_file_path = '/etc/mongod.conf'
     mongo_packages = None
 
-    def installMongo(self, env):
+    def install_mongo(self, env):
         import params
 
         env.set_params(params)
@@ -45,7 +45,7 @@ class MongoBase(Script):
             for pack in self.mongo_packages:
                 Package(pack)
 
-    def configureMongo(self, env):
+    def configure_mongo(self, env):
         import params
 
         env.set_params(params)

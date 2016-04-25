@@ -29,11 +29,11 @@ class Twiki(ApacheScript):
 
         super(Twiki, self).install(env)
         env.set_params(params)
-        kc.copyCacheOrRepo('TWiki-6.0.0.zip')
+        kc.copy_cache_or_repo('TWiki-6.0.0.zip')
         Execute("mkdir -p " + params.install_dir)
         Execute("unzip -o -q TWiki-6.0.0.zip -d " + params.install_dir)
         Execute("mkdir -p " + params.install_dir + 'authtest')
-        kc.chownR(params.install_dir, "apache")
+        kc.chown_r(params.install_dir, "apache")
         Execute("cp " + params.install_dir + "/bin/LocalLib.cfg.txt " + params.install_dir + "/bin/LocalLib.cfg")
         Execute("chown apache:apache " + params.install_dir + "/bin/LocalLib.cfg")
         self.configure(env)

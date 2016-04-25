@@ -52,7 +52,7 @@ class KaveToolbox(Script):
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copyCacheOrRepo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch",
+            kc.copy_cache_or_repo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch",
                                ver=params.releaseversion,
                                dir="KaveToolbox")
             Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')

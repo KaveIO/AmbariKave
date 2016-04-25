@@ -38,7 +38,7 @@ __arch__ = "Centos6"
 __mirror_list_file__ = "/etc/kave/mirror"
 
 
-def repoURL(filename, repo=__repo_url__, arch=__arch__, dir=__main_dir__, ver=__version__):
+def repo_url(filename, repo=__repo_url__, arch=__arch__, dir=__main_dir__, ver=__version__):
     """
     Construct the repository address for our code
     """
@@ -126,7 +126,7 @@ def copymethods(source, destination):
     raise IOError("no method to copy from " + source)
 
 
-def failoverSource(sources):
+def failover_source(sources):
     """
     try a list of locations where a file could be, one after the other
     """
@@ -143,7 +143,7 @@ def failoverSource(sources):
     raise IOError("no available sources detected from the options " + sources.__str__())
 
 
-def copyOrCache(sources, filename, cache_dir=None):
+def copy_or_cache(sources, filename, cache_dir=None):
     """
     Try a list of sources, first cache the file before copying locally for install
     """
@@ -152,7 +152,7 @@ def copyOrCache(sources, filename, cache_dir=None):
     if cache_dir is not None and os.path.isfile(cache_dir + os.sep + filename):
         shutil.copyfile(cache_dir + os.sep + filename, filename)
     else:
-        source = failoverSource(sources)
+        source = failover_source(sources)
         res.Execute(copymethods(source, filename))
         if cache_dir is not None:
             if not os.path.exists(cache_dir):
@@ -161,7 +161,7 @@ def copyOrCache(sources, filename, cache_dir=None):
     return
 
 
-def copyCacheOrRepo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__, ver=__version__, alternates=None):
+def copy_cache_or_repo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__, ver=__version__, alternates=None):
     """
     Combines all the little functions above into a simple piece of code to copy stuff of the internet from our repo
     or from the local cache
@@ -176,16 +176,16 @@ def copyCacheOrRepo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__, v
     # default goes last
     sources = []
     for mirror in mirrors():
-        sources.append(repoURL(filename, arch=arch.lower(), repo=mirror, dir=dir, ver=ver))
-    sources.append(repoURL(filename, arch=arch.lower(), dir=dir, ver=ver))
+        sources.append(repo_url(filename, arch=arch.lower(), repo=mirror, dir=dir, ver=ver))
+    sources.append(repo_url(filename, arch=arch.lower(), dir=dir, ver=ver))
     if type(alternates) is list:
         sources = sources + alternates
     if type(alternates) is str:
         sources.append(alternates)
-    return copyOrCache(sources=sources, filename=filename, cache_dir=cache_dir)
+    return copy_or_cache(sources=sources, filename=filename, cache_dir=cache_dir)
 
 
-def chownR(dir, user):
+def chown_r(dir, user):
     """
     recursive chown wrapper, chown all lower files
     """
@@ -197,7 +197,7 @@ def chownR(dir, user):
             os.chown(os.path.join(root, momo), getpwnam(user).pw_uid, getgrnam(user).gr_gid)
 
 
-def chmodUp(lowest, mode, seen=[]):
+def chmod_up(lowest, mode, seen=[]):
     """
     chmod wrapper, add certain modes to all directories walking up towards root
     """
@@ -219,7 +219,7 @@ def chmodUp(lowest, mode, seen=[]):
     if lowest == os.path.realpath(os.sep.join(lowest.split(os.sep)[:-1])):
         # prevent infinite recursion!
         return
-    return chmodUp(os.sep.join(lowest.split(os.sep)[:-1]), mode, seen=seen)
+    return chmod_up(os.sep.join(lowest.split(os.sep)[:-1]), mode, seen=seen)
 
 
 class ApacheScript(res.Script):
@@ -238,7 +238,7 @@ class ApacheScript(res.Script):
 
         env.set_params(params)
         res.Execute("mkdir -p " + params.www_folder)
-        chownR(params.www_folder, "apache")
+        chown_r(params.www_folder, "apache")
         # self.configure(env)
         # self.start(env)
 
@@ -252,8 +252,8 @@ class ApacheScript(res.Script):
                  content=res.InlineTemplate(params.template_000_default),
                  mode=0644
                  )
-        chownR('/etc/httpd/conf.d/', "apache")
-        chownR(params.www_folder, "apache")
+        chown_r('/etc/httpd/conf.d/', "apache")
+        chown_r(params.www_folder, "apache")
         if not os.path.isfile('/etc/httpd/conf/httpd.conf'):
             raise RuntimeError("Service not installed correctly")
         os.system("grep -v '^Listen' /etc/httpd/conf/httpd.conf > tmp.cnf")
@@ -263,7 +263,7 @@ class ApacheScript(res.Script):
         if len(r) < 13 or "ServerRoot" not in r:
             raise IOError("Temporary httpd.conf file corrupted!")
         res.Execute("cp tmp.cnf /etc/httpd/conf/httpd.conf")
-        chownR('/etc/httpd/conf/', "apache")
+        chown_r('/etc/httpd/conf/', "apache")
 
     def start(self, env):
         print "start apache"

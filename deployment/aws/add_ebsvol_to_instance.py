@@ -99,4 +99,4 @@ lA.testaws()
 lA.lD.testproxy()
 
 print "Initial tests OK, now adding volume (may take considerable time depending on volume size)"
-lA.addNewEBSVol(iid, mount_conf, ssh_keyfile)
+lA.add_new_ebs_vol(iid, mount_conf, ssh_keyfile)

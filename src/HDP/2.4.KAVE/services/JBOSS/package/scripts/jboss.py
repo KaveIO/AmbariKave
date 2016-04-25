@@ -32,8 +32,8 @@ class Jboss(Script):
         env.set_params(params)
         self.install_packages(env)
 
-        kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
-        self.cleanUpFailedInstall()
+        kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path)
+        self.clean_up_failed_install()
         Execute('unzip -o -q %s -d %s' % (self.package, params.installation_dir))
         Execute('mv %s/jb*/* %s' % (params.installation_dir, params.installation_dir))
         Execute('rm -rf %s/jb*.Final' % params.installation_dir)
@@ -58,7 +58,7 @@ class Jboss(Script):
 
         self.configure(env)
 
-    def cleanUpFailedInstall(self):
+    def clean_up_failed_install(self):
         import params
         if os.path.exists(params.installation_dir):
             Execute('rm -rf %s' % params.installation_dir)

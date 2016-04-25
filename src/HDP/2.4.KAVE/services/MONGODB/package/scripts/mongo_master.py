@@ -27,13 +27,13 @@ class MongoMaster(MongoBase):
     def install(self, env):
         import params
         env.set_params(params)
-        self.installMongo(env)
+        self.install_mongo(env)
         self.configure(env)
 
     def configure(self, env):
         import params
         env.set_params(params)
-        self.configureMongo(env)
+        self.configure_mongo(env)
 
     def start(self, env):
         print "start mongodb"

@@ -30,7 +30,7 @@ ignoreServices = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS",
                   "JBOSS", "KAVELANDING", "HUE", "STORMSD", "SONARQUBE", "MAIL"]
 # Gitlab cannot be installed on the ambari server because of the conflicting SQL databases
 
-services = [s for s, ds in base.findServices() if s not in ignoreServices]
+services = [s for s, ds in base.find_services() if s not in ignoreServices]
 
 checks = {"APACHE": ["http://localhost/"],
           "KAVETOOLBOX": ["/opt/KaveToolbox", '/etc/profile.d/kave.sh'],
@@ -60,7 +60,7 @@ blueprints = glob.glob(os.path.dirname(__file__) + "/blueprints/*.blueprint.json
 
 blueprints = [b.split("/")[-1].split(".")[0] for b in blueprints]
 
-all_services = [s for s, ds in base.findServices()]
+all_services = [s for s, ds in base.find_services()]
 
 blueprint_services = [b for b in blueprints if b in all_services]
 

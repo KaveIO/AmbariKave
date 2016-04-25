@@ -47,14 +47,14 @@ strict_host_key_checking = True
 #
 
 
-def prLc(loc):
+def pr_lc(loc):
     """
     return project name from location of project
     """
     return loc.split('/')[-1].split('.')[0]
 
 
-def htLc(loc):
+def ht_lc(loc):
     """
     return host name name from location of project
     """
@@ -89,7 +89,7 @@ def which(program):
     return None
 
 
-def runQuiet(cmd, exit=True, shell=True):
+def run_quiet(cmd, exit=True, shell=True):
     """
     Run a command, if this command fails raise a RuntimeError.
     Do not print the output of the command while it is running
@@ -188,7 +188,7 @@ class remoteHost(object):
         self.strict = strict_host_key_checking
         if not os.path.exists(os.path.realpath(os.path.expanduser(access_key))):
             raise IOError("Key file does not exist! " + access_key)
-        if "------" not in runQuiet("ls -l " + os.path.realpath(os.path.expanduser(access_key))):
+        if "------" not in run_quiet("ls -l " + os.path.realpath(os.path.expanduser(access_key))):
             raise IOError("Your private keyfile " + access_key + " needs to have X00 permissions (400 or 600).")
         self.access_key = os.path.realpath(os.path.expanduser(access_key))
 
@@ -205,9 +205,9 @@ class remoteHost(object):
         sleep(0.005 * float(randint(10, 100)))
         if detect_proxy() and proxy_blocks_22:
             print "Warning, can't do ssh-keyscan over proxy which blocks port 22, skipping host key checks"
-        runQuiet("ssh-keyscan -H " + self.host + " >> ~/.ssh/known_hosts ")
-        runQuiet("ssh-keygen -R " + self.host)
-        runQuiet("ssh-keyscan -H " + self.host + " >> ~/.ssh/known_hosts ")
+        run_quiet("ssh-keyscan -H " + self.host + " >> ~/.ssh/known_hosts ")
+        run_quiet("ssh-keygen -R " + self.host)
+        run_quiet("ssh-keyscan -H " + self.host + " >> ~/.ssh/known_hosts ")
         return
 
     def sshcmd(self, extrasshopts=[]):
@@ -222,7 +222,7 @@ class remoteHost(object):
         run a command through ssh
         """
         cmd = cmd.strip()
-        return runQuiet(self.sshcmd(extrasshopts) + [cmd], exit=exit, shell=False)
+        return run_quiet(self.sshcmd(extrasshopts) + [cmd], exit=exit, shell=False)
 
     def describe(self):
         """
@@ -247,7 +247,7 @@ class remoteHost(object):
             strictopts()) + " -i " + self.access_key + " " + local + " " + self.user + "@" + self.host + ":" + remote
         if directory:
             cmd = cmd.replace(" -i ", " -r -i ")
-        return runQuiet(cmd)
+        return run_quiet(cmd)
 
     def pull(self, local, remote):
         """
@@ -262,7 +262,7 @@ class remoteHost(object):
                + " -r -i " + self.access_key + " " + self.user + "@"
                + self.host + ":" + remote + " " + local
                )
-        return runQuiet(cmd)
+        return run_quiet(cmd)
 
     def check(self, firsttime=False):
         """
@@ -279,7 +279,7 @@ class remoteHost(object):
                 "Unable to contact machine " + self.user + "@" + self.host + "! or machine did not respond correctly")
         return True
 
-    def detectLinuxVersion(self):
+    def detect_linux_version(self):
         """
         Which flavour of linux is running?
         """
@@ -310,7 +310,7 @@ class remoteHost(object):
             return "Centos7"
         raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
-    def prepGit(self, github_key_local, force=False, git_origin="git@gitlab-nl.dna.kpmglab.com"):
+    def prep_git(self, github_key_local, force=False, git_origin="git@gitlab-nl.dna.kpmglab.com"):
         """
         prepare the destination to be able to git clone
         """
@@ -328,7 +328,7 @@ class remoteHost(object):
         self.run("chmod 600 " + github_key_remote)
         self.run("chmod a+x ~/gitwrap.sh")
         try:
-            ver = self.detectLinuxVersion()
+            ver = self.detect_linux_version()
             try:
                 if ver.startswith("Centos"):
                     self.run("yum -y install git ")
@@ -345,9 +345,9 @@ class remoteHost(object):
                     self.run("apt-get -y install git")
         except SystemError:
             print "Could not detect linux version, assuming git already installed"
-        self.run("ssh-keyscan -H " + htLc(git_origin) + " >> ~/.ssh/known_hosts")
-        self.run("ssh-keygen -R " + htLc(git_origin) + " ")
-        self.run("ssh-keyscan -H " + htLc(git_origin) + " >> ~/.ssh/known_hosts")
+        self.run("ssh-keyscan -H " + ht_lc(git_origin) + " >> ~/.ssh/known_hosts")
+        self.run("ssh-keygen -R " + ht_lc(git_origin) + " ")
+        self.run("ssh-keyscan -H " + ht_lc(git_origin) + " >> ~/.ssh/known_hosts")
         self.gitprep = True
         self.github_key_local = github_key_local
         self.github_key_remote = github_key_remote
@@ -357,12 +357,12 @@ class remoteHost(object):
         Run a git command remotely
         """
         if not self.gitprep:
-            raise RuntimeError("host must be prepared with the github access key and gitwrap, run prepGit first")
+            raise RuntimeError("host must be prepared with the github access key and gitwrap, run prep_git first")
         cmd = cmd.replace("'", "\'")
         out = self.run(
             "bash -c 'export GIT_SSH=" + self.github_script_remote + " ; env | grep GIT_SSH; git " + cmd + " '")
 
-    def cleanGit(self):
+    def clean_git(self):
         self.gitprep = False
         self.run('rm -f ' + self.github_key_remote)
         self.run('rm -f ~/gitwrap.sh')
@@ -394,7 +394,7 @@ class multiremotes(object):
         if jump is None:
             if not os.path.exists(os.path.realpath(os.path.expanduser(access_key))):
                 raise IOError("Key file does not exist! " + access_key)
-            if "------" not in runQuiet("ls -l " + os.path.realpath(os.path.expanduser(access_key))):
+            if "------" not in run_quiet("ls -l " + os.path.realpath(os.path.expanduser(access_key))):
                 raise IOError("Your private keyfile " + access_key + " needs to have X00 permissions (400 or 600).")
             self.access_key = os.path.realpath(os.path.expanduser(access_key))
 
@@ -454,7 +454,7 @@ class multiremotes(object):
                 excmd = "export PDSH_SSH_ARGS_APPEND=' " + ' '.join(strictopts()) + " -i " + self.access_key + " '; "
             else:
                 excmd = "export PDSH_SSH_ARGS_APPEND=' -i " + self.access_key + " '; "
-            return runQuiet(excmd + "pdsh -S -w " + ','.join(self.hosts) + " -R ssh " + cmd, exit=exit)
+            return run_quiet(excmd + "pdsh -S -w " + ','.join(self.hosts) + " -R ssh " + cmd, exit=exit)
         else:
             return self.jump.run("pdsh -S -w " + ','.join(self.hosts) + " -R ssh " + cmd, exit=exit)
 
@@ -501,15 +501,15 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
         else:
             raise NameError("Cannot guess the toolbox project name from " + git_origin)
     remote.check()
-    installcmd = "./" + prLc(toolbox_proj) + '/scripts/KaveInstall --quiet'
+    installcmd = "./" + pr_lc(toolbox_proj) + '/scripts/KaveInstall --quiet'
     if dest_type == "workstation":
         # default at the moment
         installcmd = installcmd
     elif dest_type == "node":
         # add the --node flag
         installcmd = installcmd + " --node"
-    # remote.run("rm -rf "+prLc(toolbox_proj))
-    remote.prepGit(github_key_location)
+    # remote.run("rm -rf "+pr_lc(toolbox_proj))
+    remote.prep_git(github_key_location)
     br = ""
     if len(branch) and branch != "HEAD" and branch != "head" and branch != "master":
         br = "-b " + branch
@@ -519,7 +519,7 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
     else:
         remote.run("nohup " + installcmd + " < /dev/null > inst.stdout 2> inst.stderr &")
         print "installing toolbox in background process (check before bringing down the machine)"
-        # remote.cleanGit()
+        # remote.clean_git()
 
 
 def _addambaritoremote(remote, github_key_location, git_origin, branch="", background=True):
@@ -530,12 +530,12 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     remote.run("chkconfig iptables off")
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
-    remote.prepGit(github_key_location)
+    remote.prep_git(github_key_location)
     br = ""
     if len(branch) and branch != "HEAD" and branch != "head" and branch != "master":
         br = "-b " + branch
     remote.git("clone " + br + " " + git_origin)
-    installcmd = "bash -c \"" + prLc(git_origin) + "/dev/install.sh; " + prLc(
+    installcmd = "bash -c \"" + pr_lc(git_origin) + "/dev/install.sh; " + pr_lc(
         git_origin) + "/dev/patch.sh; ambari-server start\""
     if not background:
         remote.run(installcmd)
@@ -546,7 +546,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
 
 # @TODO: Implement the local functionality!
 # @TODO: Consolidate the repo functionality from kavecommon!
-def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambarikave",
+def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="ambarikave",
                   repo="http://repos:kaverepos@repos.kave.io", background=True, options=""):
     """
     Add ambari or KaveToolbox to a remote machine.
@@ -611,7 +611,7 @@ def deployOurSoft(remote, version="latest", git=False, gitenv=None, pack="ambari
             return
 
 
-def waitforambari(ambari, maxrounds=10):
+def wait_for_ambari(ambari, maxrounds=10):
     """
     Wait until ambari server is up and running, error if it doesn't appear!
     """
@@ -721,7 +721,7 @@ def confallssh(remote, restart=True):
         time.sleep(2)
 
 
-def waitUntilUp(remote, max_wait):
+def wait_until_up(remote, max_wait):
     """
     Wait a little while for a machine to be contactable
     """
@@ -762,7 +762,7 @@ def getsshid(remote, saveas, retry=0):
     return
 
 
-def configureKeyless(source, destination, dest_internal_ip=None, preservehostname=False):
+def configure_keyless(source, destination, dest_internal_ip=None, preservehostname=False):
     """
     Given two remote connections, configure the first to have keyless access to the second
     If the destination has an internal network ip from the source then it needs to be added separately
@@ -772,12 +772,12 @@ def configureKeyless(source, destination, dest_internal_ip=None, preservehostnam
         dest_internal_ip = destination.host
     localcopy = "/tmp/somepublickey" + destination.host
     if os.path.exists(localcopy):
-        runQuiet("rm -rf " + localcopy)
+        run_quiet("rm -rf " + localcopy)
     getsshid(source, localcopy)
     # copy public key
     destination.cp(localcopy, "~/.ssh/" + source.host + ".pub")
     if os.path.exists(localcopy):
-        runQuiet("rm -rf " + localcopy)
+        run_quiet("rm -rf " + localcopy)
     # append to authorized_keys
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
@@ -805,7 +805,7 @@ def configureKeyless(source, destination, dest_internal_ip=None, preservehostnam
     return True
 
 
-def renameRemoteHost(remote, new_name, newdomain=None):
+def rename_remote_host(remote, new_name, newdomain=None):
     """
     rename a remote host to new_name.
     If newdomain is given, also add the new domain, if not given, use localdomain
@@ -817,7 +817,7 @@ def renameRemoteHost(remote, new_name, newdomain=None):
     remote.run(cmd)
 
 
-def addAsHost(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):  # ["localdomain"]):
+def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):  # ["localdomain"]):
     """
     will add 'ip hostname' of add_remote as a host shortcut in edit_remote
 

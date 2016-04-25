@@ -116,8 +116,8 @@ BrowserMatchNoCase ^$ blockAccess
     # File to return on access control error (e.g. wrong password)
     # ErrorDocument 401 /twiki/bin/view/TWiki/TWikiRegistration
     # Alternatively if your users are all known to be registered you may want
-    # to redirect them to the ResetPassword page.
-    # ErrorDocument 401 /twiki/bin/view/TWiki/ResetPassword
+    # to redirect them to the Reset_password page.
+    # ErrorDocument 401 /twiki/bin/view/TWiki/Reset_password
 
 
 &lt;/Directory&gt;
@@ -217,8 +217,8 @@ BrowserMatchNoCase ^$ blockAccess
     # in all webs or change the path to a static html page.
     ErrorDocument 401 /twiki/bin/view/TWiki/TWikiRegistration
     # Alternatively if your users are all known to be registered you may want
-    # to redirect them to the ResetPassword page.
-    # ErrorDocument 401 /twiki/bin/view/TWiki/ResetPassword
+    # to redirect them to the Reset_password page.
+    # ErrorDocument 401 /twiki/bin/view/TWiki/Reset_password
 
 # When using Apache type login the following defines the TWiki scripts
 # that makes Apache ask the browser to authenticate. It is correct that

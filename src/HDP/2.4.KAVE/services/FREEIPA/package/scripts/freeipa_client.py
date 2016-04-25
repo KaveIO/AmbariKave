@@ -52,7 +52,7 @@ class FreeipaClient(Script):
         import params
         env.set_params(params)
 
-        self.installJCE()
+        self.install_jce()
         installed_on_server = (params.ipa_server == params.hostname)
 
         if installed_on_server:
@@ -92,11 +92,11 @@ class FreeipaClient(Script):
             with open(self.ipa_client_install_lock_file, 'w') as f:
                 f.write('')
 
-    def installJCE(self):
+    def install_jce(self):
         import params
         # cache this download so that this can be redistributed on restart of the service
-        kc.copyCacheOrRepo("jce_policy-7.zip", cache_dir='/etc/kave/cache', arch="noarch")
-        kc.copyCacheOrRepo("jce_policy-8.zip", cache_dir='/etc/kave/cache', arch="noarch")
+        kc.copy_cache_or_repo("jce_policy-7.zip", cache_dir='/etc/kave/cache', arch="noarch")
+        kc.copy_cache_or_repo("jce_policy-8.zip", cache_dir='/etc/kave/cache', arch="noarch")
         # need to think of some protection against recursive softlinks
         for javapath in params.searchpath.split(':'):
             # print "this is javaPath"+javapath
@@ -111,12 +111,12 @@ class FreeipaClient(Script):
                         for folderpath in params.folderpath.split(':'):
                             if not os.path.isdir(dir + '/' + folderpath):
                                 Execute('mkdir -p ' + dir + '/' + folderpath)
-                            if '1.7' == self.javaVersionInstalled(dir):
+                            if '1.7' == self.java_version_installed(dir):
                                 Execute('unzip -o -j -q jce_policy-7.zip -d ' + dir + '/' + folderpath)
                             else:
                                 Execute('unzip -o -j -q jce_policy-8.zip -d ' + dir + '/' + folderpath)
 
-    def javaVersionInstalled(self, dir):
+    def java_version_installed(self, dir):
         if '1.7' in dir:
             return '1.7'
         else:

@@ -21,7 +21,7 @@ Common code for multiple tests and simplified wrappers for running tests
 run(mods) and parallel(mods,modargs) are wrappers for running existing test modules as a suite
 ^ in sequence   ^in multiple subprocesses
 
-findServices is a helper function to return a list of services present in a given stack of this checkout
+find_services is a helper function to return a list of services present in a given stack of this checkout
 
 LDTest is a derived test case class from unittest.TestCase, adding common methods for running tests on newly-created
 aws machines
@@ -36,7 +36,7 @@ import Queue
 import subprocess as sub
 
 
-def findServices(stack="HDP/2.4.KAVE/services"):
+def find_services(stack="HDP/2.4.KAVE/services"):
     """
     Nice little helper function which lists all our services.
     returns a list of [(service-name, directory)]
@@ -303,9 +303,9 @@ class LDTest(unittest.TestCase):
     usually:
     self.service='some-service-name'
     self.checklist=[list of websites or files to check exist after install]
-    lD=self.preCheck()
-    ambari,iid=self.deployDev()
-    self.waitForAmbari(ambari)
+    lD=self.pre_check()
+    ambari,iid=self.deploy_dev()
+    self.wait_for_ambari(ambari)
     stdout=ambari.run ... some installation commands
     self.assert("PASS" in stdout)
     self.check() #verify the checklist is present
@@ -314,7 +314,7 @@ class LDTest(unittest.TestCase):
     branch = "__local__"
     branchtype = "__local__"
 
-    def preCheck(self):
+    def pre_check(self):
         """
         Check that security config exists and that lD library is importable
         """
@@ -330,7 +330,7 @@ class LDTest(unittest.TestCase):
                 "You need to set the environment variable AWSSECCONF to point to your security config file before "
                 "running this test")
         self.assertTrue(lA.testaws(), "Local aws installation incomplete, try again")
-        self.assertTrue(len(lA.detectRegion()) > 0, "Failed to detect aws region, have you run aws configure?")
+        self.assertTrue(len(lA.detect_region()) > 0, "Failed to detect aws region, have you run aws configure?")
         import json
 
         jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
@@ -342,18 +342,18 @@ class LDTest(unittest.TestCase):
         self.assertTrue(lA.checksecjson(security_config),
                         "Security config not readable correctly or does not contain enough keys!")
         if self.branch == "__local__":
-            self.branch = lD.runQuiet(
+            self.branch = lD.run_quiet(
                 "bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
         if self.branch == "__service__":
             self.branch = self.service
         if self.branch is not None:
-            stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
+            stdout = lD.run_quiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
             self.assertTrue("origin/" + self.branch in [s.strip() for s in stdout.split() if len(s.strip())],
                             "There is no remote branch called " + self.branch + " push your branch back to the origin "
                                                                                 "to run this automated test")
         return lD
 
-    def deployDev(self, itype="c4.large"):
+    def deploy_dev(self, itype="c4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
         itype -> None: c4.large
@@ -363,7 +363,7 @@ class LDTest(unittest.TestCase):
         itype = lA.chooseitype(itype)
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = lD.runQuiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
+        stdout = lD.run_quiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
                              + self.service + " " + itype + " --ambari-dev --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
@@ -385,10 +385,10 @@ class LDTest(unittest.TestCase):
         #
         # configure keyless access to itself! Needed for blueprints, but already done now by the new_dev_image script,
         #  but the internal ip will be different here!
-        # lD.addAsHost(edit_remote=ambari,add_remote=ambari,dest_internal_ip=lA.privIP(iid)) #done in the deploy
+        # lD.add_as_host(edit_remote=ambari,add_remote=ambari,dest_internal_ip=lA.priv_ip(iid)) #done in the deploy
         # script...
         #
-        lD.configureKeyless(ambari, ambari, dest_internal_ip=lA.privIP(iid), preservehostname=True)
+        lD.configure_keyless(ambari, ambari, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
         abranch = ""
         if self.branch:
             abranch = self.branch
@@ -407,7 +407,7 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return ambari
 
-    def deployOS(self, osval, itype="c4.large"):
+    def deploy_os(self, osval, itype="c4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
         itype -> None: c4.large
@@ -416,7 +416,7 @@ class LDTest(unittest.TestCase):
         import kaveaws as lA
         itype = lA.chooseitype(itype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = lD.runQuiet(deploy_dir + "/aws/deploy_known_instance.py "
+        stdout = lD.run_quiet(deploy_dir + "/aws/deploy_known_instance.py "
                              + osval + " Test-" + osval + "-" + self.service + " "
                              + itype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
@@ -439,7 +439,7 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         if osval.startswith("Centos"):
             # add 10GB to /opt
-            stdout = lD.runQuiet(
+            stdout = lD.run_quiet(
                 deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict")
         return ambari, iid
 
@@ -454,7 +454,7 @@ class LDTest(unittest.TestCase):
         cmd = deploy_dir + "/aws/up_aws_cluster.py " + cname + " " + clusterfile + "  --not-strict"
         if self.branchtype in ["__local__"]:
             cmd = cmd + " --this-branch"
-        return lD.runQuiet(cmd)
+        return lD.run_quiet(cmd)
 
     def resetambari(self, ambari):
         """
@@ -540,7 +540,7 @@ class LDTest(unittest.TestCase):
             rounds = rounds + 1
         return state
 
-    def deployBlueprint(self, ambari, blueprint, cluster):
+    def deploy_blueprint(self, ambari, blueprint, cluster):
         """
         Deploy a blueprint on this ambari node, and wait for it to be up!
         """
@@ -549,8 +549,8 @@ class LDTest(unittest.TestCase):
         ip = ambari.host
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         # wait until ambari server is up
-        self.waitForAmbari(ambari)
-        stdout = lD.runQuiet(deploy_dir + "/deploy_from_blueprint.py " + blueprint
+        self.wait_for_ambari(ambari)
+        stdout = lD.run_quiet(deploy_dir + "/deploy_from_blueprint.py " + blueprint
                              + " " + cluster + " " + ip + " $AWSSECCONF --not-strict")
         state = self.monitor_request(ambari, cname)
         if state == "ABORTED":
@@ -575,7 +575,7 @@ class LDTest(unittest.TestCase):
             raise ValueError("Unknown state: " + str(state) + " (" + ' '.join(ambari.sshcmd()) + ")")
         return
 
-    def waitForAmbari(self, ambari):
+    def wait_for_ambari(self, ambari):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
@@ -618,7 +618,7 @@ class LDTest(unittest.TestCase):
             stdout = ambari.run("./[a,A]mbari[k,K]ave/bin/service.sh " + call + " " + service + " -h " + host)
         return stdout
 
-    def waitForService(self, ambari, service=None):
+    def wait_for_service(self, ambari, service=None):
         """
         Wait until service is installed
         """

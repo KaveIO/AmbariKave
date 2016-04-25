@@ -26,14 +26,14 @@ class StormGeneric(Script):
 
     def install(self, env):
         self.install_packages(env)
-        self.installStorm(env)
+        self.install_storm(env)
         self.configure(env)
 
-    def installStorm(self, env):
+    def install_storm(self, env):
         # install ZeroMQ which is prerequisite for storm
         user_exist = os.system('grep storm /etc/passwd > /dev/null')
         if user_exist != 0:
-            kc.copyCacheOrRepo('zeromq-2.1.7-1.el6.x86_64.rpm')
+            kc.copy_cache_or_repo('zeromq-2.1.7-1.el6.x86_64.rpm')
             Execute('yum install -y zeromq-2.1.7-1.el6.x86_64.rpm')
             Execute('groupadd -g 53001 storm')
             Execute('mkdir -p /app/home')
@@ -43,7 +43,7 @@ class StormGeneric(Script):
         storm_dir_present = os.path.isdir('/usr/local/storm')
         if not storm_dir_present:
             # download storm
-            kc.copyCacheOrRepo('storm-10.0.zip')
+            kc.copy_cache_or_repo('storm-10.0.zip')
             # http://ftp.riken.jp/net/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip
             Execute('unzip -o -q storm-10.0.zip -d /usr/local')
             Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')
@@ -65,9 +65,9 @@ class StormGeneric(Script):
             Execute('chmod 750 /var/log/storm')
 
     def configure(self, env):
-        return self.configureStorm(env)
+        return self.configure_storm(env)
 
-    def configureStorm(self, env):
+    def configure_storm(self, env):
         import params
         env.set_params(params)
         File(params.storm_conf_file,
@@ -100,11 +100,11 @@ class StormGenericSD(StormGeneric):
 
     def install(self, env):
         self.install_packages(env)
-        self.installStorm(env)
-        self.installSupervisor(env)
+        self.install_storm(env)
+        self.install_supervisor(env)
         self.configure(env)
 
-    def installSupervisor(self, env):
+    def install_supervisor(self, env):
         import params
 
         params.PROG = self.PROG
@@ -164,10 +164,10 @@ class StormGenericSD(StormGeneric):
             raise ComponentIsNotRunning()
 
     def configure(self, env):
-        self.configureStorm(env)
-        return self.configureSD(env)
+        self.configure_storm(env)
+        return self.configure_sd(env)
 
-    def configureSD(self, env):
+    def configure_sd(self, env):
         import params
         params.PROG = self.PROG
         env.set_params(params)
@@ -186,4 +186,4 @@ class StormGenericSD(StormGeneric):
         # Append to the end of the supervisord.conf file each time I restart. This is very silly
         # And it really should be fixed, I just don't know how at the moment.
         Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
-        kc.chownR('/etc/supervisord.d/', 'storm')
+        kc.chown_r('/etc/supervisord.d/', 'storm')

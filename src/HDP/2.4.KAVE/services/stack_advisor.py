@@ -24,7 +24,7 @@ class HDP24KAVEStackAdvisor(HDP24StackAdvisor):
     validateWithoutRecommendedDefault = ['freeipa']
 
     def validatorPasswordStrength(self, properties, propertyName, minLength=8):
-        if not propertyName in properties:
+        if propertyName not in properties:
             return self.getErrorItem("Value should be set")
         if len(properties[propertyName]) < minLength:
             return self.getErrorItem("Password should be at least %s chars long" % minLength)

@@ -53,8 +53,8 @@ class KaveToolbox(Script):
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
             kc.copy_cache_or_repo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch",
-                               ver=params.releaseversion,
-                               dir="KaveToolbox")
+                                  ver=params.releaseversion,
+                                  dir="KaveToolbox")
             Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
             # try to cope with the annoying way the tarball contains something with .git at the end!
             import glob

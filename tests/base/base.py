@@ -364,7 +364,7 @@ class LDTest(unittest.TestCase):
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.run_quiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
-                             + self.service + " " + itype + " --ambari-dev --not-strict")
+                              + self.service + " " + itype + " --ambari-dev --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -417,8 +417,8 @@ class LDTest(unittest.TestCase):
         itype = lA.chooseitype(itype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.run_quiet(deploy_dir + "/aws/deploy_known_instance.py "
-                             + osval + " Test-" + osval + "-" + self.service + " "
-                             + itype + " --not-strict")
+                              + osval + " Test-" + osval + "-" + self.service + " "
+                              + itype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -551,7 +551,7 @@ class LDTest(unittest.TestCase):
         # wait until ambari server is up
         self.wait_for_ambari(ambari)
         stdout = lD.run_quiet(deploy_dir + "/deploy_from_blueprint.py " + blueprint
-                             + " " + cluster + " " + ip + " $AWSSECCONF --not-strict")
+                              + " " + cluster + " " + ip + " $AWSSECCONF --not-strict")
         state = self.monitor_request(ambari, cname)
         if state == "ABORTED":
             print "Trying to recover from aborted blueprint with restarts"

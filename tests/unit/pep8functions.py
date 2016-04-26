@@ -22,6 +22,7 @@ import imp
 import sys
 import re
 
+
 class TestFunctions(unittest.TestCase):
     """
     Checks conformance of all function names with pep8 standard
@@ -29,7 +30,7 @@ class TestFunctions(unittest.TestCase):
     Except for the function runTest inherited form the underlying library, of course!
     """
     re = re.compile("\s*def *[a-z,_,0-9]*([A-Z])[a-z,A-Z,_,0-9]*\(")
-    ignorefiles = ['pep8functions.py','stack_advisor.py']
+    ignorefiles = ['pep8functions.py', 'stack_advisor.py']
     ignorefunctions = ["def runTest"]
 
     def find_definitions(self, fullpath):
@@ -38,7 +39,7 @@ class TestFunctions(unittest.TestCase):
             with open(fullpath) as fp:
                 for i, line in enumerate(fp):
                     for match in re.finditer(self.re, line):
-                        found.append((fullpath, i + 1, line.strip().split('(')[0].replace('  ',' ')))
+                        found.append((fullpath, i + 1, line.strip().split('(')[0].replace('  ', ' ')))
         return found
 
     def runTest(self):

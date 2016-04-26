@@ -247,7 +247,7 @@ class ApacheScript(res.Script):
         import os
 
         env.set_params(params)
-        res.Execute('chkconfig --levels 235 httpd on')
+        res.Execute('chkconfig httpd on')
         res.File('/etc/httpd/conf.d/000_default.conf',
                  content=res.InlineTemplate(params.template_000_default),
                  mode=0644

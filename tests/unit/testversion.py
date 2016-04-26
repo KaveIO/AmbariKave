@@ -59,7 +59,7 @@ class TestVersions(unittest.TestCase):
                 if f in self.ignore:
                     continue
                 found = found + self.findversion(os.path.join(root, f))
-        found = [i for i in found if i is not None and len(found)]
+        found = [i for i in found if i is not None and len(i)]
         foundn = [i[-1][0] for i in found]
         self.assertTrue(len(set(foundn)) == 1, "Mis-matching version numbers found! \n\t" +
                         '\n\t'.join([str(i) for i in found]))

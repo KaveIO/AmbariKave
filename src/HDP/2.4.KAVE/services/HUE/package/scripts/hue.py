@@ -37,7 +37,7 @@ class Hue(Script):
         import kavecommon as kc
 
         env.set_params(params)
-        Execute('chkconfig --levels 235 hue on')
+        Execute('chkconfig hue on')
         edit_dirs = self.mandatory_conf_dirs
         for mdir in self.mandatory_conf_dirs:
             Execute("mkdir -p " + mdir)

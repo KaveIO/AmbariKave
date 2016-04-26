@@ -58,7 +58,7 @@ class StormGeneric(Script):
             Execute('chown -R storm:storm /app/storm')
             Execute('chmod 750 /app/storm')
         storm_log_dir = os.path.isdir('/var/log/storm')
-        if not storm_home_dir:
+        if not storm_log_dir:
             # Creating local directory for storm
             Execute('mkdir -p /var/log/storm')
             Execute('chown -R storm:storm /var/log/storm')
@@ -71,12 +71,10 @@ class StormGeneric(Script):
         import params
         env.set_params(params)
         File(params.storm_conf_file,
-             # content=Template("storm.yaml"),
              content=InlineTemplate(params.storm_yaml_config),
              mode=0644
              )
         File("/usr/local/storm/log4j2/cluster.xml",
-             # content=Template("cluster.xml.j2"),
              content=InlineTemplate(params.storm_cluster_config),
              mode=0664)
 
@@ -114,9 +112,12 @@ class StormGenericSD(StormGeneric):
                  content=Template("supervisord.conf.j2"),
                  mode=0755
                  )
+        Execute('mkdir -p %s' % params.childlogdir)
         Package('epel-release')
-        Package('supervisor')
-        Execute('chkconfig supervisord on')
+        Package('python-meld3')
+        Package('python-pip')
+        Execute('pip install supervisor')
+        #Execute('chkconfig supervisord on')
 
     def start(self, env):
         """
@@ -148,8 +149,8 @@ class StormGenericSD(StormGeneric):
     def restart(self, env):
         """
         Akin to the start method, the storm restart method must also be treated with care
-        Since the stop command is run in the background, we must wait unitl the service is actually stopped before
-        trying to start it.
+        Since the stop command is run in the background, we must wait until the service
+        is actually stopped before trying to start it.
         Tests indicated 5s is enough of a wait for this
         """
         self.stop(env)
@@ -181,9 +182,8 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
-        # This is quite annoying, supervisord is supposed to understand import statements,
-        # However, it does not work correctly. So in order to avoid clobbering I need to
-        # Append to the end of the supervisord.conf file each time I restart. This is very silly
-        # And it really should be fixed, I just don't know how at the moment.
-        Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
+        File("/etc/init.d/supervisord",
+             content=Template("supervisor.j2"),
+             mode=0755
+             )
         kc.chownR('/etc/supervisord.d/', 'storm')

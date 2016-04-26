@@ -34,7 +34,7 @@ class PostfixSrv(Script):
         import params
 
         env.set_params(params)
-        Execute('chkconfig --levels 235 postfix on')
+        Execute('chkconfig postfix on')
         File('/etc/postfix/main.cf',
              content=Template("main.cf.j2"),
              mode=0644

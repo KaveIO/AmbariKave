@@ -157,9 +157,9 @@ elif data >= 0.3:
     # @ 1.2 TB, 24 cores, 112 GB
     hadoop_nodes = 3
     disk_per_node = ceil(max(float(data * 9) / hadoop_nodes, 0.5) * 2) / 2
-    cores_per_node = min(max(round_to_upper_even(disk_per_node*disk_per_node * 1.9 - disk_per_node * 2.8 + 7), 2), 32)
-    cores_per_node = min([8,12,16,24,32], key=lambda x:abs(x-cores_per_node))
-    ram_per_node = min(round_to_upper_even(cores_per_node * 4.5),128)
+    cores_per_node = min(max(round_to_upper_even(disk_per_node * disk_per_node * 1.9 - disk_per_node * 2.8 + 7), 2), 32)
+    cores_per_node = min([8, 12, 16, 24, 32], key=lambda x: abs(x - cores_per_node))
+    ram_per_node = min(round_to_upper_even(cores_per_node * 4.5), 128)
 
     resultdf.loc[len(resultdf)] = ['datanodes', hadoop_nodes, cores_per_node, ram_per_node, disk_per_node, 30]
     nncores = max(cores_per_node / 2, min(cores_per_node, 8))
@@ -176,7 +176,7 @@ if ds > 0:
     gateways = max(ceil(float(ds) / 8) * multinode, 1)
     ds_per_gateway = ceil(float(ds) / gateways)
     gw_cores = round_to_upper_even(2 + ds_per_gateway)
-    gw_cores = min([8,12,16,24,32,48,64], key=lambda x:abs(x-gw_cores-1.5))
+    gw_cores = min([8, 12, 16, 24, 32, 48, 64], key=lambda x: abs(x - gw_cores - 1.5))
     # if more than namenode, round down
     if nncores:
         gw_cores = min(nncores, gw_cores)
@@ -188,8 +188,7 @@ if ds > 0:
     # 5 users 350 GB
     # 8 users 500 GB
     home_space = max(
-                     min(ceil(1.5 * ds_per_gateway - 0.05 * ds_per_gateway * ds_per_gateway + 0.5)*50, 500)
-                     ,100)
+        min(ceil(1.5 * ds_per_gateway - 0.05 * ds_per_gateway * ds_per_gateway + 0.5) * 50, 500), 100)
     os_space = 20 * multinode + 10
     other_space = 0.1
 

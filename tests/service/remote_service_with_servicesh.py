@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -25,34 +25,35 @@ class TestAService(base.LDTest):
         """
         The remote_blueprint test ups a dev machine and installs a service simply through service.sh.
         It monitors the status of the service specified with service.sh
-        This can only be applied to services which have no forced parameters, i.e. where the defauls
+        This can only be applied to services which have no forced parameters, i.e. where the default
         parameters work fine and are all that is needed.
         """
         # create remote machine
         import os
         import sys
 
-        lD = self.preCheck()
-        known = [s for s, d in base.findServices()]
+        lD = self.pre_check()
+        known = [s for s, d in base.find_services()]
         self.assertTrue(self.service in known, "The service " + self.service + " is unknown, check the case")
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari, iid = self.deployDev()
+        ambari, iid = self.deploy_dev()
+        self.pull(ambari)
         # restart ganglia and nagios
         if self.branch:
             abranch = self.service
-        for restart in ["GANGLIA", "NAGIOS"]:
+        for restart in ["METRICS_MONITOR", "AMBARI_METRICS", "ZOOKEEPER"]:
             stdout = self.servicesh(ambari, "stop", restart)
-        for restart in ["GANGLIA", "NAGIOS"]:
-            self.waitForService(ambari, restart)
+        for restart in ["ZOOKEEPER", "AMBARI_METRICS", "METRICS_MONITOR"]:
+            self.wait_for_service(ambari, restart)
         import time
 
         time.sleep(15)
         # install the component on top of the blueprint
         stdout = self.servicesh(ambari, "install", self.service)
-        self.assertTrue("InProgress" in stdout,
+        self.assertTrue("IN_PROGRESS" in stdout or "InProgress" in stdout or "status\" : \"Accepted" in stdout,
                         "Was unable to install " + self.service + " through service.sh, (" + ' '.join(
                             ambari.sshcmd()) + ")")
-        self.waitForService(ambari)
+        self.wait_for_service(ambari)
         return self.check(ambari)
 
 

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ class SingleMachineCluster(base.LDTest):
         """
         import os
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         import kaveaws as lA
-        region = lA.detectRegion()
+        region = lA.detect_region()
         clusterfile = "single.aws.json"
         if region.startswith("ap"):
             clusterfile = "singletokyo.aws.json"

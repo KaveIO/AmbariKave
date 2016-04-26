@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ Common code for multiple tests and simplified wrappers for running tests
 run(mods) and parallel(mods,modargs) are wrappers for running existing test modules as a suite
 ^ in sequence   ^in multiple subprocesses
 
-findServices is a helper function to return a list of services present in a given stack of this checkout
+find_services is a helper function to return a list of services present in a given stack of this checkout
 
 LDTest is a derived test case class from unittest.TestCase, adding common methods for running tests on newly-created
 aws machines
@@ -36,7 +36,7 @@ import Queue
 import subprocess as sub
 
 
-def findServices(stack="HDP/2.2.KAVE/services"):
+def find_services(stack="HDP/2.4.KAVE/services"):
     """
     Nice little helper function which lists all our services.
     returns a list of [(service-name, directory)]
@@ -303,9 +303,9 @@ class LDTest(unittest.TestCase):
     usually:
     self.service='some-service-name'
     self.checklist=[list of websites or files to check exist after install]
-    lD=self.preCheck()
-    ambari,iid=self.deployDev()
-    self.waitForAmbari(ambari)
+    lD=self.pre_check()
+    ambari,iid=self.deploy_dev()
+    self.wait_for_ambari(ambari)
     stdout=ambari.run ... some installation commands
     self.assert("PASS" in stdout)
     self.check() #verify the checklist is present
@@ -314,7 +314,7 @@ class LDTest(unittest.TestCase):
     branch = "__local__"
     branchtype = "__local__"
 
-    def preCheck(self):
+    def pre_check(self):
         """
         Check that security config exists and that lD library is importable
         """
@@ -330,7 +330,7 @@ class LDTest(unittest.TestCase):
                 "You need to set the environment variable AWSSECCONF to point to your security config file before "
                 "running this test")
         self.assertTrue(lA.testaws(), "Local aws installation incomplete, try again")
-        self.assertTrue(len(lA.detectRegion()) > 0, "Failed to detect aws region, have you run aws configure?")
+        self.assertTrue(len(lA.detect_region()) > 0, "Failed to detect aws region, have you run aws configure?")
         import json
 
         jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
@@ -342,33 +342,29 @@ class LDTest(unittest.TestCase):
         self.assertTrue(lA.checksecjson(security_config),
                         "Security config not readable correctly or does not contain enough keys!")
         if self.branch == "__local__":
-            self.branch = lD.runQuiet(
+            self.branch = lD.run_quiet(
                 "bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
         if self.branch == "__service__":
             self.branch = self.service
         if self.branch is not None:
-            stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
+            stdout = lD.run_quiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
             self.assertTrue("origin/" + self.branch in [s.strip() for s in stdout.split() if len(s.strip())],
                             "There is no remote branch called " + self.branch + " push your branch back to the origin "
                                                                                 "to run this automated test")
         return lD
 
-    def deployDev(self, itype=None):
+    def deploy_dev(self, itype="c4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c3.large
+        itype -> None: c4.large
         """
         import kavedeploy as lD
+        import kaveaws as lA
+        itype = lA.chooseitype(itype)
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = ""
-        if itype is None:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_one_centos_instance.py Test-" + self.service + " --ambari-dev --not-strict")
-        else:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_one_centos_instance.py Test-" + self.service + " " + itype + " --ambari-dev "
-                                                                                                       "--not-strict")
+        stdout = lD.run_quiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
+                              + self.service + " " + itype + " --ambari-dev --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -384,47 +380,45 @@ class LDTest(unittest.TestCase):
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
         # add 10GB as /opt by default!
-        import kaveaws as lA
-
-        region = lA.detectRegion()
         ambari = lD.remoteHost("root", ip, keyfile)
         ambari.register()
         #
         # configure keyless access to itself! Needed for blueprints, but already done now by the new_dev_image script,
         #  but the internal ip will be different here!
-        # lD.addAsHost(edit_remote=ambari,add_remote=ambari,dest_internal_ip=lA.privIP(iid)) #done in the deploy
+        # lD.add_as_host(edit_remote=ambari,add_remote=ambari,dest_internal_ip=lA.priv_ip(iid)) #done in the deploy
         # script...
         #
-        lD.configureKeyless(ambari, ambari, dest_internal_ip=lA.privIP(iid), preservehostname=True)
+        lD.configure_keyless(ambari, ambari, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
         abranch = ""
         if self.branch:
             abranch = self.branch
         ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
                   + "/../remotescripts/default.netrc",
                   "~/.netrc")
+        return ambari, iid
+
+    def pull(self, ambari):
+        abranch = ""
+        if self.branch:
+            abranch = self.branch
         stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
         import time
 
         time.sleep(5)
-        return ambari, iid
+        return ambari
 
-    def deployOS(self, osval, itype=None):
+    def deploy_os(self, osval, itype="c4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c3.large
+        itype -> None: c4.large
         """
         import kavedeploy as lD
-
+        import kaveaws as lA
+        itype = lA.chooseitype(itype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = ""
-        if itype is None:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_known_instance.py "
-                + osval + " Test-" + osval + "-" + self.service + " --not-strict")
-        else:
-            stdout = lD.runQuiet(
-                deploy_dir + "/aws/deploy_known_instance.py " + osval + "Test-" + osval + "-" + self.service + " "
-                + itype + " --not-strict")
+        stdout = lD.run_quiet(deploy_dir + "/aws/deploy_known_instance.py "
+                              + osval + " Test-" + osval + "-" + self.service + " "
+                              + itype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -445,7 +439,7 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         if osval.startswith("Centos"):
             # add 10GB to /opt
-            stdout = lD.runQuiet(
+            stdout = lD.run_quiet(
                 deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict")
         return ambari, iid
 
@@ -460,7 +454,7 @@ class LDTest(unittest.TestCase):
         cmd = deploy_dir + "/aws/up_aws_cluster.py " + cname + " " + clusterfile + "  --not-strict"
         if self.branchtype in ["__local__"]:
             cmd = cmd + " --this-branch"
-        return lD.runQuiet(cmd)
+        return lD.run_quiet(cmd)
 
     def resetambari(self, ambari):
         """
@@ -498,25 +492,55 @@ class LDTest(unittest.TestCase):
         ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
                   + "/../remotescripts/default.netrc",
                   "~/.netrc")
+        time.sleep(10)
         while rounds <= max_rounds:
-            stdout = ambari.run(
-                "curl --netrc "
-                + " http://localhost:8080/api/v1/clusters/"
-                + clustername + "/requests/" + str(requestid))
+            # if curl fails, the ambari server may have dies for some reason
+            # the standard restart_all_services script will then work to recover this failure
+            try:
+                stdout = ambari.run(
+                    "curl --netrc "
+                    + " http://localhost:8080/api/v1/clusters/"
+                    + clustername + "/requests/" + str(requestid))
+            except RuntimeError:
+                time.sleep(3)
+                try:
+                    stdout = ambari.run(
+                        "curl --netrc "
+                        + " http://localhost:8080/api/v1/clusters/"
+                        + clustername + "/requests/" + str(requestid))
+                except RuntimeError as e:
+                    try:
+                        stdout2 = ambari.run("ambari-server status")
+                        if "not running" in stdout2:
+                            state = "ABORTED"
+                            break
+                    except RuntimeError:
+                        state = "ABORTED"
+                        break
+
+                    raise e
+
+            # print stdout.split('\n')[1:22]
+            # for n,s in enumerate(stdout.split('\n')):
+            #    for f in ['"request_status" : "FAILED"',
+            # '"request_status" : "ABORTED"', '"request_status" : "COMPLETED"']:
+            #        if f in s:
+            #            print n, s
             if '"request_status" : "FAILED"' in stdout:
                 state = "FAILED"
                 break
             if '"request_status" : "ABORTED"' in stdout:
                 state = "ABORTED"
                 break
-            if '"request_status" : "COMPLETED"' in stdout:
+            if '"request_status" : "COMPLETED"' in stdout and rounds > 2:
                 state = "COMPLETED"
+                # always wait at least two minutes before declaring completed
                 break
             time.sleep(60)
             rounds = rounds + 1
         return state
 
-    def deployBlueprint(self, ambari, blueprint, cluster):
+    def deploy_blueprint(self, ambari, blueprint, cluster):
         """
         Deploy a blueprint on this ambari node, and wait for it to be up!
         """
@@ -525,10 +549,9 @@ class LDTest(unittest.TestCase):
         ip = ambari.host
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         # wait until ambari server is up
-        self.waitForAmbari(ambari)
-        stdout = lD.runQuiet(
-            deploy_dir + "/deploy_from_blueprint.py " + blueprint + " " + cluster + " " + ip + " $AWSSECCONF "
-                                                                                               "--not-strict")
+        self.wait_for_ambari(ambari)
+        stdout = lD.run_quiet(deploy_dir + "/deploy_from_blueprint.py " + blueprint
+                              + " " + cluster + " " + ip + " $AWSSECCONF --not-strict")
         state = self.monitor_request(ambari, cname)
         if state == "ABORTED":
             print "Trying to recover from aborted blueprint with restarts"
@@ -552,7 +575,7 @@ class LDTest(unittest.TestCase):
             raise ValueError("Unknown state: " + str(state) + " (" + ' '.join(ambari.sshcmd()) + ")")
         return
 
-    def waitForAmbari(self, ambari):
+    def wait_for_ambari(self, ambari):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
@@ -595,7 +618,7 @@ class LDTest(unittest.TestCase):
             stdout = ambari.run("./[a,A]mbari[k,K]ave/bin/service.sh " + call + " " + service + " -h " + host)
         return stdout
 
-    def waitForService(self, ambari, service=None):
+    def wait_for_service(self, ambari, service=None):
         """
         Wait until service is installed
         """

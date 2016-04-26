@@ -2,10 +2,6 @@
     "blueprint" : "management",
     "default_password" : "admin",
     "configurations" : [
-      { "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "TEST@TEST.COM"
-      } },
       { "freeipa": {
         "ldap_bind_password": "bla456789",
         "directory_password": "bla12345"

@@ -2,7 +2,6 @@
     "blueprint" : "mongodbreplica",
     "default_password" : "admin",
     "configurations" : [
-      { "nagios-env" : { "nagios_web_password" : "admin", "nagios_contact" : "nothing@nobody.com"} }
     ],
     "host_groups" : [
 	{
@@ -18,8 +17,8 @@
 	{
 	    "name" : "replica",
 	    "configurations" : [ ],
-	    "hosts" : [ { "fqdn" : "replica-001.kave.io" }, 
-	                { "fqdn" : "replica-002.kave.io" }, 
+	    "hosts" : [ { "fqdn" : "replica-001.kave.io" },
+	                { "fqdn" : "replica-002.kave.io" },
 	                { "fqdn" : "replica-003.kave.io" } ]
 	}
 	]

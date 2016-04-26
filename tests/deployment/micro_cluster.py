@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -30,14 +30,11 @@ class MicroCluster(base.LDTest):
         """
         import os
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
         import kaveaws as lA
-        region = lA.detectRegion()
         clusterfile = "micro.aws.json"
-        if region.startswith("ap"):
-            clusterfile = "microtokyo.aws.json"
         stdout = self.deploycluster(blueprint_dir + '/' + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
@@ -73,8 +70,8 @@ class MicroCluster(base.LDTest):
         self.assertTrue("has address" in stdout, "Lookup broken on test-001.kave.io! (" + connectcmd + ")")
         import kaveaws as lA
 
-        privip = lA.privIP(iid)
-        stdout = ahost.run("host " + privip)
+        priv_ip = lA.priv_ip(iid)
+        stdout = ahost.run("host " + priv_ip)
         self.assertTrue("domain name pointer" in stdout,
                         "Reverse lookup broken on testing-001.kave.io! (" + connectcmd + ")")
 

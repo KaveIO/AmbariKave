@@ -3,35 +3,46 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "InstanceType" : "t2.medium",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "gate",
     "Count" : 1,
-    "InstanceType" : "c3.xlarge",
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
                      {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
-                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" } ]
+                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "ci",
     "Count" : 1,
-    "InstanceType" : "c3.xlarge",
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   },
   { "Name" : "nno",
     "Count" : 2,
-    "InstanceType" : "c3.xlarge",
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   { "Name" : "data",
     "Count" : 3,
-    "InstanceType" : "c3.large",
+    "InstanceType" : "c4.large",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/hadoop",   "Size" : 100, "Attach" : "/dev/sdc" }  ]
+    				 {"Mount": "/hadoop",   "Size" : 100, "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" }  ]
   }
   ]
 }

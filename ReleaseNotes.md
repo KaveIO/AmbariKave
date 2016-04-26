@@ -5,6 +5,79 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v2.0-Beta
+
+* MAJOR release to migrate to the latest Ambari version 2.2.1
+* KAVE stack now on top of HDP 2.4 (2.4.KAVE)
+
+Major modifications in services:
+
+* MongoDB,
+    version increase to MongoDB 3. MongoDB 3 is not 100% backwards compatible
+* FreeIPA
+    Major modifications to how we handle keytabs for kerberos.
+    During the kerberization of your cluster with Ambari, you can download a
+    kerberos.csv containing the list of all keytabs to be created
+    With this list, on the ambari node, as the root user:
+    - kinit admin
+    - createketabs.py kerberos.csv
+    Then continue with the wizard through the web interface
+    See the wiki and readme for details
+    In the new Ambari version we need to distribute the Java Cryptographic Extensions
+    into the correct directories before enabling kerberos on the cluster.
+    This is now take into account by the FreeIPA client install
+* KaveToolbox
+    Version update to 2.0-Beta, many changes described separately in the KTB readme
+    Most major change: creation of versioned directories
+* StormSD
+    Added the Storm Logviewer service, an optional service for each node, providing a web
+    interface for the storm logs
+
+General improvements:
+
+* Example blueprints and diagrams modified to respect new services
+* Tests modified to reduce fragility
+* Modifications to installer to improve pdsh and Ambari install with new Ambari version
+* Workarounds only necessary for old Ambari versions reviewed and removed
+* Check pdsh version and group names during restart\_all\_services.sh script
+* addition of resource\_wizard.py script, which naively guesses cluster size requirements
+
+Minor modifications in services:
+
+* MongoDB
+    Conf file and repo file now configurable with an InlineTeplate through the web interface
+* JBOSS
+    In previous versions JBOSS would overwrite the standalone.xml with defaults on restart
+    Now the standalone.xml is an InlineTemplate and configurable
+* StormSD
+    Updated version of Supervisord to v3.X. This new version of supervisord respects import statements
+    which makes it a lot easier to configure and does not invoke duplication of code
+* SonarQube
+    Updated to version 5.4 of the server, only a minor update
+* Jenkins: updated to version 1.642
+* Gitlabs: updated to version 8.63
+
+
+Bugfixes:
+
+* StormSD
+    re-installation of partially completed install fixed.
+    installation errors now with better error messages
+    installation error when on top of FreeIPA fixed
+* JBOSS
+    fix removing of users during install
+    fix re-installation of partially completed install
+* FreeIPA: Installation without DNS fixed
+
+
+Notes about the new ambari/HDP version:
+
+* Ganglia and Nagios are replaced by AmbariMetrics
+  The new HDP assumes the user will install Ganglia/Nagios themselves if needed
+* The latest stack requires more RAM on the ambari (+500MB) node and more disk space to run HDP components (+2GB)
+* Ranger, Atlas and Falcon, although they have been added are not installable in a simple way
+  the installer must install and create specific databases before following the install wizard
+
 # v1.4-Beta
 
 * Bugfix release in preparation to migration to Ambari 2.X

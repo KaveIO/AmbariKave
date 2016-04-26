@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -15,7 +14,8 @@
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
         "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}"
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
+        "initial_sudoers" : "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}"
         }
     },
     { "sonarqube" : {
@@ -29,12 +29,13 @@
       "name" : "admin",
       "configurations" : [ ],
       "components" : [
-        { "name" : "AMBARI_SERVER"   },
-        { "name" : "GANGLIA_SERVER"  },
-        { "name" : "NAGIOS_SERVER"   },
-        { "name" : "FREEIPA_SERVER"  },
-        { "name" : "FREEIPA_CLIENT"  },
-        { "name" : "GANGLIA_MONITOR" }
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "FREEIPA_SERVER"     },
+        { "name" : "FREEIPA_CLIENT"     },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
     },
@@ -44,7 +45,8 @@
       "components" : [
         { "name" : "KAVELANDING"          },
         { "name" : "SONARQUBE_RUNNER"     },
-        { "name" : "GANGLIA_MONITOR"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
 
       ],
@@ -57,7 +59,8 @@
         { "name" : "SONARQUBE_SERVER"      },
         { "name" : "SONARQUBE_MYSQL_SERVER"},
         { "name" : "SONARQUBE_RUNNER"      },
-        { "name" : "GANGLIA_MONITOR"       },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
@@ -66,6 +69,6 @@
   "Blueprints" : {
     "blueprint_name" : "sonarldap",
     "stack_name" : "HDP",
-    "stack_version" : "2.2.KAVE"
+    "stack_version" : "2.4.KAVE"
   }
 }

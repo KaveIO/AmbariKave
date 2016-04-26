@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,14 +29,15 @@ class DepCentos(base.LDTest):
         """
         import os
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.service = "CentosDev"
-        ambari, iid = self.deployDev()
+        ambari, iid = self.deploy_dev()
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
-        self.waitForAmbari(ambari)
+        self.pull(ambari)
+        self.wait_for_ambari(ambari)
         # test other features of ambari.run
         stdout = ambari.run("ls -l '/opt'")
         stdout = ambari.run('ls -l "/opt"')
@@ -44,8 +45,8 @@ class DepCentos(base.LDTest):
         ma = lD.multiremotes(["ssh:root@" + ambari.host], access_key=ambari.access_key)
         stdout = ma.run("ls -l '/opt'")
         self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
-        stdout = lD.runQuiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
-                             ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdc"}\'')
+        stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
+                              ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdf"}\'')
 
 
 def suite(verbose=False):

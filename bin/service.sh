@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -290,6 +290,15 @@ elif [ $service = "TWIKI" ]; then
   component="TWIKI_SERVER"
 elif [ $service = "NAGIOS" ]; then
   component="NAGIOS_SERVER"
+elif [ $service = "AMBARI_METRICS" ]; then
+  component="METRICS_COLLECTOR"
+elif [ $service = "ZOOKEEPER" ]; then
+  component="ZOOKEEPER_SERVER"
+elif [ $service = "METRICS" ]; then
+  component="METRICS_COLLECTOR"
+elif [ $service = "METRICS_MONITOR" ]; then
+  service="AMBARI_METRICS"
+  component="METRICS_MONITOR"
 else
   echo "ERROR: unknown service caught: $service"
   runHelp

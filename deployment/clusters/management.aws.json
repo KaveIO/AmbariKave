@@ -3,15 +3,19 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "InstanceType" : "t2.medium",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdd" } ]
   },
   {
     "Name" : "gitlabs-nl",
     "Count" : -1,
-    "InstanceType" : "t2.small",
+    "InstanceType" : "t2.medium",
     "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdb" } ]
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdc" } ]
   }
   ]
 }

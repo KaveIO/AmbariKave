@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ except:
 
 if not os.path.exists(os.path.expanduser(keyfile)):
     raise IOError("That is not a valid keyfile!", keyfile)
-if "------" not in lD.runQuiet("ls -l " + keyfile):
+if "------" not in lD.run_quiet("ls -l " + keyfile):
     raise IOError("Your private keyfile " + keyfile + " needs to have X00 permissions (400 or 600).")
 
 print "Choose instance ID from:"
@@ -81,7 +81,7 @@ nametoip = {}
 ips = []
 
 print "Name,      iid,     SecGroup(s),   itype,   publicIP, status"
-json = lA.descInstance()
+json = lA.desc_instance()
 for reservation in json["Reservations"]:
     for instance in reservation["Instances"]:
         # print instance

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -22,19 +22,26 @@
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
+yum install -y wget curl
+wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.2.1.0/ambari.repo
+cp ambari.repo /etc/yum.repos.d/
+wget http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.4.0.0/hdp.repo
+cp hdp.repo /etc/yum.repos.d/HDP.repo
 yum install ambari-server -y
-yum install -y pdsh wget curl
 ambari-server setup -s
 
 # install requests library for python
-yum -y install epel-release
-yum install -y python-pip
+yum install -y epel-release
+yum install -y pdsh python-pip
 pip install requests
+
 encrypt_number="4"
 
 version=`ambari-server --version`
 
 if [[ "$version" == "2.1."* ]]; then
+	encrypt_number="2"
+elif [[ "$version" == "2.2."* ]]; then
 	encrypt_number="2"
 elif [[ "$version" == "1.7."* ]]; then
 	encrypt_number="4"
@@ -75,6 +82,19 @@ expect /tmp/tmp.mkeywrap.temp
 echo
 rm /tmp/tmp.mkeywrap.temp
 rm /tmp/tmp.mkey.temp
+##########################################################
+# By default change the ambari database password!
+temppw=`(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c 32; date +%s | head -c 10; hostname) | sha256sum | base64 | head -c 32`
+if [ -e ~/.pgpass ]; then
+	mv ~/.pgpass ~/.pgpass_blacp
+fi
+echo -ne "*:*:ambari:ambari:" > ~/.pgpass; cat /etc/ambari-server/conf/password.dat >> ~/.pgpass; chmod 0600 ~/.pgpass
+psql -U ambari ambari -c "ALTER USER ambari WITH PASSWORD '$temppw';" ; echo $temppw > /etc/ambari-server/conf/password.dat
+chmod 0600 /etc/ambari-server/conf/password.dat
+rm -f ~/.pgpass
+if [ -e ~/.pgpass_blacp ]; then
+	mv ~/.pgpass_blacp ~/.pgpass
+fi
 ##########################################################
 # end of install snippet file
 ##########################################################

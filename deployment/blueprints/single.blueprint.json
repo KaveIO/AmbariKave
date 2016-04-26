@@ -1,11 +1,5 @@
 {
   "configurations" : [
-    {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
-      }
-    },
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
@@ -23,42 +17,45 @@
     				   "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
     				   } },
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
-    { "hive-site" : { "hive.heapsize" : "1024", "javax.jdo.option.ConnectionPassword" : "admin" } }
+    { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
+    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } }
   ],
   "host_groups":[
     {
       "name":"single_node_group",
       "components" : [
         { "name" : "AMBARI_SERVER"        },
-        { "name" : "NAGIOS_SERVER"        },
-        { "name" : "GANGLIA_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"    },
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
-        { "name" : "GANGLIA_MONITOR"      },
         { "name" : "NAMENODE"             },
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "ZOOKEEPER_SERVER"     },
-        { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "DATANODE"             },
-        { "name" : "HDFS_CLIENT"          },
-        { "name" : "YARN_CLIENT"          },
         { "name" : "HISTORYSERVER"        },
         { "name" : "RESOURCEMANAGER"      },
         { "name" : "NODEMANAGER"          },
-        { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "APP_TIMELINE_SERVER"  },
         { "name" : "PIG"                  },
         { "name" : "HCAT"                 },
         { "name" : "SQOOP"                },
         { "name" : "OOZIE_SERVER"         },
-        { "name" : "OOZIE_CLIENT"         },
+        { "name" : "SPARK_THRIFTSERVER"     },
+        { "name" : "SPARK_JOBHISTORYSERVER" },
         { "name" : "HIVE_SERVER"          },
         { "name" : "HIVE_METASTORE"       },
-        { "name" : "HIVE_CLIENT"          },
         { "name" : "WEBHCAT_SERVER"       },
         { "name" : "TEZ_CLIENT"           },
         { "name" : "HUE_SERVER"           },
-        { "name" : "MYSQL_SERVER"         }
+        { "name" : "MYSQL_SERVER"         },
+        { "name" : "HIVE_CLIENT"          },
+        { "name" : "HDFS_CLIENT"          },
+        { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "OOZIE_CLIENT"         },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "SPARK_CLIENT"         },
+        { "name" : "YARN_CLIENT"          }
       ],
       "cardinality" : "1"
     }
@@ -66,6 +63,6 @@
   "Blueprints" : {
     "blueprint_name" : "single",
     "stack_name" : "HDP",
-    "stack_version" : "2.2.KAVE"
+    "stack_version" : "2.4.KAVE"
   }
 }

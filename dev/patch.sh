@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 ##############################################################################
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET_DIR="/var/lib/ambari-server/resources/stacks/"
+TARGET_DIR_COMMON="/var/lib/ambari-server/resources/common-services/"
 
-rsync -razl "$CURRENT_DIR/../src/" $TARGET_DIR --exclude 'shared'
+rsync -razl "$CURRENT_DIR/../src/" $TARGET_DIR --exclude 'shared' --exclude 'common-services'
+rsync -razl "$CURRENT_DIR/../src/common-services/" $TARGET_DIR_COMMON
 python $CURRENT_DIR/dist_kavecommon.py $TARGET_DIR

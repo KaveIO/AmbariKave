@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class TestBlueprint(base.LDTest):
         import sys
         import json
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
         cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
@@ -48,10 +48,11 @@ class TestBlueprint(base.LDTest):
                 interp = json.loads(l)
             except:
                 self.assertTrue(False, "json file " + ason + " is not complete or not readable")
-        ambari, iid = self.deployDev("c3.2xlarge")  # 2xlarge needed for single node hadoop!
+        ambari, iid = self.deploy_dev("c4.2xlarge")  # 2xlarge needed for single node hadoop!
         # clean the existing blueprint ready for re-install
+        self.pull(ambari)
         self.resetambari(ambari)
-        self.deployBlueprint(ambari, bp, cf)
+        self.deploy_blueprint(ambari, bp, cf)
         return self.check(ambari)
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ import time
 import requests
 from requests.auth import HTTPBasicAuth
 import copy
+import tempfile
 
 if "--help" in sys.argv or "-h" in sys.argv:
     print __doc__
@@ -192,6 +193,7 @@ try:
     ambari.run("which pdsh")
     ambari.run("which curl")
 except RuntimeError:
+    ambari.run("yum -y install epel-release")
     ambari.run("yum -y install pdsh curl")
 
 ambari.run("service iptables stop")
@@ -226,23 +228,42 @@ try:
 except RuntimeError:
     whole_cluster.register()
     whole_cluster.run("yum -y install epel-release")
-    # TODO: instead copy this file _from_ the ambari node *to* the others!
-    # For the time being, copy to tmp, distribute if necessary
+    # TODO: instead copy this file _from_ the ambari node *to* the others directly
+    # For the time being, copy to tmp, then redistribute if necessary
     copy_from = None
-    for _repoption in ["/etc/yum.repos.d/ambari.repo", installfrom + "/repo/ambari.repo",
-                       installfrom + "/../dev/repo/ambari.repo"]:
-        if os.path.exists(_repoption) and os.access(_repoption, os.R_OK):
-            copy_from = _repoption
-            break
+    # First handle the localhost case: repo already exists
+    atmp = None
+    if thehost == "localhost":
+        for _repoption in ["/etc/yum.repos.d/ambari.repo", installfrom + "/repo/ambari.repo",
+                           installfrom + "/../dev/repo/ambari.repo"]:
+            if os.path.exists(_repoption) and os.access(_repoption, os.R_OK):
+                copy_from = _repoption
+                break
+    # Then handle the remote case where repo already exists
+    else:
+        for _repoption in ["/etc/yum.repos.d/ambari.repo", installfrom + "/repo/ambari.repo",
+                           installfrom + "/../dev/repo/ambari.repo"]:
+            if "YES" in ambari.run("if [ -e " + _repoption + " ]; then echo 'YES'; fi;"):
+                atmp = tempfile.mkdtemp()
+                copy_from = atmp + '/ambari.repo'
+                ambari.pull(copy_from, _repoption)
+                break
+    # Then handle the remote case where repo does not yet exist, this would be strange
     if copy_from is None:
-        raise IOError("Could not find local ambari.repo file!")
+        raise IOError("Could not find ambari.repo file! We think this means that ambari was not installed yet"
+                      " deploy_from_blueprint.py needs ambari to be installed on the server first")
     whole_cluster.cp(copy_from, "/tmp/ambari.repo")
+    # clean tmp file
+    if atmp:
+        if os.path.exists(atmp) and len(atmp) > 4:
+            os.system('rm -rf ' + atmp)
+
     whole_cluster.run(
         "\"bash -c 'if [ ! -e /etc/yum.repos.d/ambari.repo ] ; then cp /tmp/ambari.repo /etc/yum.repos.d/ambari.repo "
         "; fi; rm -f /tmp/ambari.repo ;'\"")
     try:
         # try and retry
-        whole_cluster.run("yum -y install ambari-agent curl wget")
+        whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
     except RuntimeError:
         time.sleep(5)
         whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
@@ -266,9 +287,12 @@ except RuntimeError:
 time.sleep(5)
 
 # Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp;'
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then if [[ `ambari-agent --version` < \'2.2\' ]]; '
+                  ' then mkdir -p /var/lib/ambari-agent/data/tmp;'
                   ' chmod -R 0600 /var/lib/ambari-agent/data;'
-                  'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
+                  ' chmod -R a+X /var/lib/ambari-agent/data;'
+                  ' chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi; fi;\\""')
+
 whole_cluster.run(
     '"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1;'
     ' then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')
@@ -295,9 +319,12 @@ if not ok:
         thehost + ":8080/api/v1/hosts")
 
 # Modify permissions of installed ambari agent components
-whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then mkdir -p /var/lib/ambari-agent/tmp;'
+whole_cluster.run('"bash -c \\"if [ -d /var/lib/ambari-agent ]; then if [[ `ambari-agent --version` < \'2.2\' ]]; '
+                  ' then mkdir -p /var/lib/ambari-agent/data/tmp;'
                   ' chmod -R 0600 /var/lib/ambari-agent/data;'
-                  'chmod -R a+X /var/lib/ambari-agent/data; chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi;\\""')
+                  ' chmod -R a+X /var/lib/ambari-agent/data;'
+                  ' chmod -R a+rx /var/lib/ambari-agent/data/tmp; fi; fi;\\""')
+
 whole_cluster.run(
     '"bash -c \\"if ls /var/lib/ambari-agent/keys/*.key 1>/dev/null 2>&1;'
     ' then chmod 0600 /var/lib/ambari-agent/keys/*.key; fi\\""')

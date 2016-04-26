@@ -4,15 +4,19 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "admin"
+    "InstanceType" : "t2.medium",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdd" } ]
   },
   {
     "Name" : "gate",
     "Count" : -1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdb" } ]
+    "InstanceType" : "t2.medium",
+    "AccessType" : "gateway",,
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdc" } ]
   }
   ]
 }

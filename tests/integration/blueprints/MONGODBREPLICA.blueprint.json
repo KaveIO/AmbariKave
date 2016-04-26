@@ -1,9 +1,8 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
@@ -17,9 +16,10 @@
       "name" : "admin",
       "components" : [
         { "name" : "AMBARI_SERVER"       },
-        { "name" : "GANGLIA_SERVER"      },
-        { "name" : "NAGIOS_SERVER"       },
-        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "ZOOKEEPER_SERVER"    },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         }
       ],
       "cardinality" : "1"
@@ -27,7 +27,8 @@
     {
       "name" : "gateway",
       "components" : [
-        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
         { "name" : "MONGODB_CLIENT"      }
       ],
@@ -37,16 +38,17 @@
       "name" : "replica",
       "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0" } } ],
       "components" : [
-        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "MONGODB_MASTER"     },
-        { "name" : "MONGODB_CLIENT"      }
+        { "name" : "MONGODB_CLIENT"     }
       ],
       "cardinality" : "1+"
-    }	
+    }
   ],
   "Blueprints" : {
     "blueprint_name" : "mongodbreplica",
     "stack_name" : "HDP",
-    "stack_version" : "2.2.KAVE"
+    "stack_version" : "2.4.KAVE"
   }
 }

@@ -1,15 +1,22 @@
 {
   "configurations" : [
     {
-      "nagios-env" : {
-        "nagios_web_password" : "admin",
-        "nagios_contact" : "test@test.com"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
     	}
+    },
+    { "freeipa": {
+        "ldap_bind_password": "testtestdirpass1234",
+        "directory_password": "testtestdirpass1234",
+        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
+        "initial_sudoers" : "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}"
+        }
     }
   ],
   "host_groups" : [
@@ -17,12 +24,13 @@
       "name" : "admin",
       "components" : [
         { "name" : "AMBARI_SERVER"       },
-        { "name" : "GANGLIA_SERVER"      },
-        { "name" : "NAGIOS_SERVER"       },
-        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "FREEIPA_SERVER"      },
         { "name" : "KAVELANDING"         },
         { "name" : "STORMSD_UI_SERVER"   },
+        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "STORMSD_CLIENT"      },
         { "name" : "STORMSD_DRPC_SERVER" }
       ],
@@ -31,29 +39,35 @@
     {
       "name" : "gateway",
       "components" : [
-        { "name" : "GANGLIA_MONITOR"     },
+        { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
-        { "name" : "STORMSD_CLIENT"      }
+        { "name" : "STORMSD_LOG_VIEWER"  },
+        { "name" : "STORMSD_CLIENT"      },
+        { "name" : "FREEIPA_CLIENT"      }
       ],
       "cardinality" : "1+"
     },
     {
       "name" : "nimbus",
       "components" : [
-        { "name" : "GANGLIA_MONITOR"  },
-        { "name" : "ZOOKEEPER_SERVER" },
-        { "name" : "ZOOKEEPER_CLIENT" },
-        { "name" : "NIMBUS_SD_MASTER"    }
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "STORMSD_LOG_VIEWER" },
+        { "name" : "NIMBUS_SD_MASTER"   },
+        { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
     },
     {
       "name" : "supervisor",
       "components" : [
-        { "name" : "GANGLIA_MONITOR"  },
-        { "name" : "ZOOKEEPER_CLIENT" },
-        { "name" : "SUPERVISOR_SD_SLAVE" }
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "STORMSD_LOG_VIEWER"  },
+        { "name" : "SUPERVISOR_SD_SLAVE" },
+        { "name" : "FREEIPA_CLIENT"      }
       ],
       "cardinality" : "1+"
     }
@@ -61,6 +75,6 @@
   "Blueprints" : {
     "blueprint_name" : "storm",
     "stack_name" : "HDP",
-    "stack_version" : "2.2.KAVE"
+    "stack_version" : "2.4.KAVE"
   }
 }

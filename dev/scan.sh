@@ -1,7 +1,7 @@
 #! /bin/bash
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -20,6 +20,6 @@
 # usage scan.sh [hostname=localhost] [username=admin] [password=admin]
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export PYTHONPATH=$CURRENT_DIR/../deployment:$CURRENT_DIR/../tests/base:$CURRENT_DIR/../src/shared:$CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts:$PYTHONPATH
+export PYTHONPATH=$CURRENT_DIR/../deployment:$CURRENT_DIR/../tests/base:$CURRENT_DIR/../src/shared:$CURRENT_DIR/../src/HDP/2.4.KAVE/services/KAVELANDING/package/scripts:$PYTHONPATH
 
-python $CURRENT_DIR/../src/HDP/2.2.KAVE/services/KAVELANDING/package/scripts/kavescan.py $@
+python $CURRENT_DIR/../src/HDP/2.4.KAVE/services/KAVELANDING/package/scripts/kavescan.py $@

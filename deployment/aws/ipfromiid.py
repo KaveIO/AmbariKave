@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ for iid in sys.argv[1:]:
     if len(ips):
         ips = ips + " "
     try:
-        ip = lA.pubIP(iid)
+        ip = lA.pub_ip(iid)
         if ip is None:
             ips = ips + "NoIP"
         else:

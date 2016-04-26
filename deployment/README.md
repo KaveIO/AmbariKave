@@ -83,6 +83,7 @@ With these three files, and your security config you have everything you need.
 ## Tools
 
 * add\_toolbox.py: add the KaveToolbox to a given remote machine
+* resource\_wizard.py: based upon our recent clusters make a guess on the resources required for a given cluster
 * deploy\_from\_blueprint.py: deploy service groups across an entire cluster
 
 # More on blueprints

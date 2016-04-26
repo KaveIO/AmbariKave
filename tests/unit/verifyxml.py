@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -58,8 +58,18 @@ class TestXMLCompleteness(unittest.TestCase):
 
 
 class TestXMLContent(unittest.TestCase):
-    config_files = {"configuration": {"property": ["name", "value",
-                                                   "description", "comment", "property-type", "deleted"]}}
+    prop_dict_struct = {"name": [], "value": [], 'final': [],
+                        "display-name": [],
+                        "value-attributes": {"type": [], "overridable": [], "minimum": [],
+                                             "maximum": [], "increment-step": [],
+                                             "unit": [], 'empty-value-valid': [],
+                                             'entries': {"entry": ["value", "description"]},
+                                             },
+                        "description": [], "comment": [],
+                        "property-type": [], "deleted": [],
+                        "depends-on": {"property": ["type", "name"]}
+                        }
+    config_files = {"configuration": {"property": prop_dict_struct}}
     command_script_struct = ["script", "scriptType", "timeout"]
     components_struct = {"component": {"name": [], "displayName": [],
                                        "comment": [], "version": [],
@@ -126,7 +136,7 @@ class TestXMLContent(unittest.TestCase):
 
 
 class TestMatchRequiredOrDefault(unittest.TestCase):
-    skip = ['hive-site.xml']
+    skip = ['hive-site.xml', 'hdfs-site.xml', 'oozie-site.xml', 'yarn-site.xml']
     skip_prop = ['kavetoolbox/custom_install_template', 'twiki/ldap_bind_password',
                  'mail/hostname', 'mail/domain']
 

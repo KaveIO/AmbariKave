@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ class DepCentos7(base.LDTest):
         """
         import os
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.service = "Deploy"
         self.ostype = "Centos7"
-        ambari, iid = self.deployOS(self.ostype)
+        ambari, iid = self.deploy_os(self.ostype)
         if self.ostype.startswith("Ubuntu"):
             ambari.run('apt-get update')
         stdout = ambari.run("echo Hello world from $HOSTNAME")

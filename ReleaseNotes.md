@@ -40,6 +40,7 @@ General improvements:
 * Modifications to installer to improve pdsh and Ambari install with new Ambari version
 * Workarounds only necessary for old Ambari versions reviewed and removed
 * Check pdsh version and group names during restart\_all\_services.sh script
+* addition of resource\_wizard.py script, which naively guesses cluster size requirements
 
 Minor modifications in services:
 

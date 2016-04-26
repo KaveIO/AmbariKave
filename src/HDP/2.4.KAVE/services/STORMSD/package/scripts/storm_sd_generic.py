@@ -117,7 +117,6 @@ class StormGenericSD(StormGeneric):
         Package('python-meld3')
         Package('python-pip')
         Execute('pip install supervisor')
-        #Execute('chkconfig supervisord on')
 
     def start(self, env):
         """

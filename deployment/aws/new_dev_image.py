@@ -59,7 +59,7 @@ def help():
     # sys.exit(code)
 
 
-def parseOpts():
+def parse_opts():
     global skip_ambari
     global skip_blueprint
     global version
@@ -76,9 +76,9 @@ def parseOpts():
         lD.debug = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
     if "--this-branch" in sys.argv:
-        version = lD.runQuiet(
+        version = lD.run_quiet(
             "bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
-        stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
+        stdout = lD.run_quiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
         if ("origin/" + version not in [s.strip() for s in stdout.split() if len(s.strip())]):
             raise AttributeError("There is no remote branch called " + version
                                  + " push your branch back to the origin to deploy")
@@ -103,7 +103,7 @@ if "AWSSECCONF" not in os.environ:
 
 secf = os.path.expanduser(os.environ["AWSSECCONF"])
 
-iid = parseOpts()
+iid = parse_opts()
 jsondat = open(secf)
 security_config = json.loads(jsondat.read())
 jsondat.close()
@@ -131,48 +131,48 @@ if iid is None:
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.upCentos6("c4.large", secGroup, keypair, subnet=subnet)
+    upped = lA.up_centos6("c4.large", secGroup, keypair, subnet=subnet)
     print "submitted"
-    iid = lA.iidFromUpJSON(upped)[0]
+    iid = lA.iid_from_up_json(upped)[0]
     import time
 
     time.sleep(5)
-    lA.nameInstance(iid, "new-dev-image")
-    ip = lA.pubIP(iid)
+    lA.name_instance(iid, "new-dev-image")
+    ip = lA.pub_ip(iid)
     acount = 0
     while (ip is None and acount < 20):
         print "waiting for IP"
         lD.mysleep(1)
-        ip = lA.pubIP(iid)
+        ip = lA.pub_ip(iid)
         acount = acount + 1
     remote = lD.remoteHost('root', ip, keyloc)
     print "waiting until contactable"
-    lD.waitUntilUp(remote, 20)
+    lD.wait_until_up(remote, 20)
     remote.register()
     print "Renaming, configuring firewall and adding more disk space"
-    lD.renameRemoteHost(remote, "ambari", 'kave.io')
+    lD.rename_remote_host(remote, "ambari", 'kave.io')
     remote.run("mkdir -p /etc/kave/")
     remote.run("/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
-    lD.addAsHost(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.privIP(iid))
-    lD.configureKeyless(remote, remote, dest_internal_ip=lA.privIP(iid), preservehostname=True)
+    lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_ip(iid))
+    lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     remote.run("service iptables stop")
     remote.run("chkconfig iptables off")
     lD.confallssh(remote)
-    lA.addNewEBSVol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
-    lA.addNewEBSVol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
-    lA.addNewEBSVol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    lA.addNewEBSVol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip
 
 ip = ""
 remote = ""
 if (not skip_ambari) or (not skip_blueprint):
-    ip = lA.pubIP(iid)
+    ip = lA.pub_ip(iid)
     remote = lD.remoteHost('root', ip, keyloc)
-    lD.configureKeyless(remote, remote, lA.privIP(iid), preservehostname=True)
+    lD.configure_keyless(remote, remote, lA.priv_ip(iid), preservehostname=True)
 #
 #
 # INSTALL AMBARI HEAD and Deploy a very simple default blueprint!
@@ -180,13 +180,13 @@ if (not skip_ambari) or (not skip_blueprint):
 #
 if not skip_ambari:
     print "Installing ambari " + version + " from git"
-    lD.deployOurSoft(remote, version=version, git=git, gitenv=gitenv)
+    lD.deploy_our_soft(remote, version=version, git=git, gitenv=gitenv)
     print "Awaiting ambari installation ..."
-    lD.waitforambari(remote)
+    lD.wait_for_ambari(remote)
 
 if not skip_blueprint:
     print "Deploying default blueprint"
-    stdout = lD.runQuiet(
+    stdout = lD.run_quiet(
         base + "/../deploy_from_blueprint.py --not-strict " + base + "/../blueprints/default.blueprint.json " + base
         + "/../blueprints/default.cluster.json " + remote.host + " " + secf)
     print stdout
@@ -199,7 +199,7 @@ if not skip_blueprint:
 #
 #
 print "Creating image from this installation"
-instance = lA.descInstance(iid)["Reservations"][0]["Instances"][0]
+instance = lA.desc_instance(iid)["Reservations"][0]["Instances"][0]
 # print instance
 if instance["State"]["Name"] is "running":
     lA.killinstance(iid, "stop")
@@ -208,6 +208,6 @@ if instance["State"]["Name"] is "running":
 ami = lA.createimage(iid, "AmbDev-" + keypair + "-" + time.strftime("%Y%m%d-%H"),
                      "Ambari dev image with keys for " + keypair + " keypair")
 time.sleep(5)
-lA.nameInstance(ami, keypair)
+lA.name_instance(ami, keypair)
 print ami, "created and registered, might take a few minutes to be available,",
 print " don't forget to set your environment variable export AMIAMBDEV=" + ami

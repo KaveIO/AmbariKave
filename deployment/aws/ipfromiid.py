@@ -44,7 +44,7 @@ for iid in sys.argv[1:]:
     if len(ips):
         ips = ips + " "
     try:
-        ip = lA.pubIP(iid)
+        ip = lA.pub_ip(iid)
         if ip is None:
             ips = ips + "NoIP"
         else:

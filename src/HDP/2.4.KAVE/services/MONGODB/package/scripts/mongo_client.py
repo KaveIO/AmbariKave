@@ -28,7 +28,7 @@ class MongoClient(MongoBase):
     def install(self, env):
         import params
         env.set_params(params)
-        self.installMongo(env)
+        self.install_mongo(env)
         self.configure(env)
         File('/usr/local/bin/mongok',
              content=Template("mongok"),
@@ -38,7 +38,7 @@ class MongoClient(MongoBase):
     def configure(self, env):
         import params
         env.set_params(params)
-        self.configureMongo(env)
+        self.configure_mongo(env)
         File(self.client_config_path,
              content=Template("mongoclient.conf.j2"),
              mode=0644

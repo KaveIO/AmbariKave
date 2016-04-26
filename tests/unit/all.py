@@ -25,9 +25,11 @@ import testversion
 import testpythonimport
 import verifyxml
 import checkpep8
+import pep8functions
 import base
 
-mods = [checkpep8, testpythonimport, testversion, deploylib, kclib, servicesh, scan, license, pyfilenames, verifyxml]
+mods = [checkpep8, testpythonimport, testversion, pep8functions,
+        deploylib, kclib, servicesh, scan, license, pyfilenames, verifyxml]
 
 if __name__ == "__main__":
     base.parallel(mods)

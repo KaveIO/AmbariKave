@@ -29,11 +29,11 @@ class DepCentos7(base.LDTest):
         """
         import os
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.service = "Deploy"
         self.ostype = "Centos7"
-        ambari, iid = self.deployOS(self.ostype)
+        ambari, iid = self.deploy_os(self.ostype)
         if self.ostype.startswith("Ubuntu"):
             ambari.run('apt-get update')
         stdout = ambari.run("echo Hello world from $HOSTNAME")

@@ -30,7 +30,7 @@ class MicroCluster(base.LDTest):
         """
         import os
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
         import kaveaws as lA
@@ -70,8 +70,8 @@ class MicroCluster(base.LDTest):
         self.assertTrue("has address" in stdout, "Lookup broken on test-001.kave.io! (" + connectcmd + ")")
         import kaveaws as lA
 
-        privip = lA.privIP(iid)
-        stdout = ahost.run("host " + privip)
+        priv_ip = lA.priv_ip(iid)
+        stdout = ahost.run("host " + priv_ip)
         self.assertTrue("domain name pointer" in stdout,
                         "Reverse lookup broken on testing-001.kave.io! (" + connectcmd + ")")
 

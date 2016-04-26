@@ -64,7 +64,7 @@ def help():
 version = "latest"
 
 
-def checkOpts():
+def check_opts():
     if "-h" in sys.argv or "--help" in sys.argv:
         help()
         sys.exit(0)
@@ -79,8 +79,8 @@ def checkOpts():
     if "--this-branch" in sys.argv:
         sys.argv = [s for s in sys.argv if s not in ["--this-branch"]]
         global version
-        version = lD.runQuiet("bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
-        stdout = lD.runQuiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
+        version = lD.run_quiet("bash -c \"cd " + os.path.dirname(__file__) + "; git branch | sed -n '/\* /s///p'\"")
+        stdout = lD.run_quiet("bash -c 'cd " + os.path.dirname(__file__) + "; git branch -r;'")
         if not ("origin/" + version in [s.strip() for s in stdout.split() if len(s.strip())]):
             raise NameError("There is no remote branch called "
                             + version
@@ -95,7 +95,7 @@ def checkOpts():
         raise IOError("json config file must exist " + sys.argv[2])
 
 
-checkOpts()
+check_opts()
 
 cluster_name = sys.argv[1]
 jsondat = open(os.path.expanduser(sys.argv[2]))
@@ -133,7 +133,7 @@ if "Subnet" in security_config.keys():
 
 # Check that pdsh is locally installed
 try:
-    lD.runQuiet('which pdsh')
+    lD.run_quiet('which pdsh')
 except RuntimeError:
     raise SystemError('pdsh is not installed, please install pdsh first. Pdsh is useful to speed up large deployments.')
 
@@ -149,9 +149,9 @@ if "CloudFormation" in cluster_config:
 
     _vpc_name = cluster_name + "-" + \
         amazon_keypair_name.replace('_', '') + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
-    lA.createCloudFormation(_vpc_name, cluster_config["CloudFormation"]["Script"],
-                            parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
-    _info = lA.waitForStack(_vpc_name)
+    lA.create_cloud_formation(_vpc_name, cluster_config["CloudFormation"]["Script"],
+                              parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
+    _info = lA.wait_for_stack(_vpc_name)
     # print _info["Outputs"]
     for _output in _info["Outputs"]:
         if _output['OutputKey'] == "SubnetId":
@@ -162,7 +162,7 @@ if "CloudFormation" in cluster_config:
             dnsiid = _output['OutputValue']
     # authorize group members to see themselves
     # print security_group, subnet, dnsiid
-    lA.addGroupToGroup(security_group, security_group)
+    lA.add_group_to_group(security_group, security_group)
     # auto assign public IPs here
     lA.runawstojson("ec2 modify-subnet-attribute --subnet-id " + subnet + " --map-public-ip-on-launch")
     print "Created stack:", _vpc_name
@@ -181,10 +181,10 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if count == 0:
         continue
-    up = lA.upCentos6(type=lA.chooseitype(instancegroup["InstanceType"]),
-                      secGroup=security_group, keys=amazon_keypair_name,
-                      count=count, subnet=subnet)
-    instancegroups[instancegroup["Name"]] = lA.iidFromUpJSON(up)
+    up = lA.up_centos6(type=lA.chooseitype(instancegroup["InstanceType"]),
+                       secGroup=security_group, keys=amazon_keypair_name,
+                       count=count, subnet=subnet)
+    instancegroups[instancegroup["Name"]] = lA.iid_from_up_json(up)
 
 instance_to_remote = {}
 
@@ -203,7 +203,7 @@ for k, ig in instancegroups.iteritems():
         acount = 0
         while (ip is None and acount < 10):
             try:
-                ip = lA.pubIP(iid)
+                ip = lA.pub_ip(iid)
             except ValueError:
                 pass
             if ip is None:
@@ -213,7 +213,7 @@ for k, ig in instancegroups.iteritems():
         if ip is None:
             raise SystemError(iid + " no ip assigned after quite some time")
         remote = lD.remoteHost("root", ip, amazon_keyfile)
-        lD.waitUntilUp(remote, 20)
+        lD.wait_until_up(remote, 20)
         remote.register()
         instance_to_remote[iid] = remote
 
@@ -240,19 +240,19 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if not autoname:
         instance_to_name[instancegroups[instancegroup["Name"]][0]] = instancegroup["Name"]
-        lA.nameInstance(instancegroups[instancegroup["Name"]][0], cluster_name + '-' + instancegroup["Name"])
+        lA.name_instance(instancegroups[instancegroup["Name"]][0], cluster_name + '-' + instancegroup["Name"])
         continue
     for num, instance in enumerate(instancegroups[instancegroup["Name"]]):
         instance_to_name[instance] = instancegroup["Name"] + ("-%03d" % (num + 1))
-        lA.nameInstance(instance, cluster_name + '-' + instancegroup["Name"] + ("-%03d" % (num + 1)))
+        lA.name_instance(instance, cluster_name + '-' + instancegroup["Name"] + ("-%03d" % (num + 1)))
 
 # Also name the attached volumes
 for instance, iname in instance_to_name.iteritems():
-    idesc = lA.descInstance(instance)
+    idesc = lA.desc_instance(instance)
     vols = idesc["Reservations"][0]["Instances"][0]["BlockDeviceMappings"]
     for v in vols:
         if "Ebs" in v and "DeviceName" in v:
-            lA.nameInstance(v["Ebs"]["VolumeId"], cluster_name + '-' + iname + v["DeviceName"].replace("/", "_"))
+            lA.name_instance(v["Ebs"]["VolumeId"], cluster_name + '-' + iname + v["DeviceName"].replace("/", "_"))
 
 # TODO: use a proper dns configuration here instead of writing into the host file
 print "=============================================="
@@ -264,7 +264,7 @@ for instance, remote in instance_to_remote.iteritems():
     if "Domain" in cluster_config:
         domainName = cluster_config["Domain"]["Name"]
     # print "configuring", remote.host, "->", instance_to_name[instance]
-    lD.renameRemoteHost(remote, instance_to_name[instance].lower(), domainName)
+    lD.rename_remote_host(remote, instance_to_name[instance].lower(), domainName)
     if domainName == "kave.io":
         allremotes.run("mkdir -p /etc/kave/")
         allremotes.run("'/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror'")
@@ -276,22 +276,22 @@ if dnsiid is not None:
     domainName = 'kave.io'
     if "Domain" in cluster_config:
         domainName = cluster_config["Domain"]["Name"]
-    ip = lA.pubIP(dnsiid)
-    privip = lA.privIP(dnsiid)
-    # print ip, privip
+    ip = lA.pub_ip(dnsiid)
+    priv_ip = lA.priv_ip(dnsiid)
+    # print ip, priv_ip
     dnsserv = lD.remoteHost("root", ip, amazon_keyfile)
-    lD.waitUntilUp(dnsserv, 20)
+    lD.wait_until_up(dnsserv, 20)
     dnsserv.register()
     date = dnsserv.run('date "+%Y%m%d%H%M"').strip()
-    nameandprivip = []
-    nameandprivip = [(name, lA.privIP(instance)) for instance, name in instance_to_name.iteritems()]
+    nameandpriv_ip = []
+    nameandpriv_ip = [(name, lA.priv_ip(instance)) for instance, name in instance_to_name.iteritems()]
     # resolve repos server
-    repos = lD.runQuiet('host repos.kave.io')
+    repos = lD.run_quiet('host repos.kave.io')
     if repos.startswith("repos.kave.io has address "):
         repos = repos[len("repos.kave.io has address "):]
     else:
         repos = '94.143.213.26'
-    # print nameandprivip
+    # print nameandpriv_ip
     forward = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
         %DATE%  ;Serial
@@ -308,7 +308,7 @@ ns     IN      A       %PRIVATE%
 
 ; Define hostname -> IP pairs which you wish to resolve
 repos IN A %REPOS%
-""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", privip).replace("%DATE%", date).replace("%REPOS%", repos)
+""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", priv_ip).replace("%DATE%", date).replace("%REPOS%", repos)
     reverse = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
         %DATE%  ;Serial
@@ -325,11 +325,11 @@ ns     IN      A       %PRIVATE%
 
 ; Define hostname -> IP pairs which you wish to resolve
 %PRIVATE%.in-addr.arpa. IN PTR ns.%DOMAIN%.
-""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", '.'.join(reversed(privip.split('.')))).replace("%DATE%", date)
-    forward = forward + '\n' + '\n'.join([n + " IN A " + ip for n, ip in nameandprivip])
+""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", '.'.join(reversed(priv_ip.split('.')))).replace("%DATE%", date)
+    forward = forward + '\n' + '\n'.join([n + " IN A " + ip for n, ip in nameandpriv_ip])
     reverse = reverse + '\n' + '\n'.join(
         ['.'.join(reversed(ip.split('.'))) + ".in-addr.arpa. IN PTR " + n + "." + domainName + "." for n, ip in
-         nameandprivip])
+         nameandpriv_ip])
     # write into temp local file and then copy it
     ff = open("/tmp/forward" + domainName + dnsiid, 'w')
     ff.write(forward)
@@ -341,8 +341,8 @@ ns     IN      A       %PRIVATE%
     # print reverse
     dnsserv.cp("/tmp/forward" + domainName + dnsiid, "/var/named/forward." + domainName)
     dnsserv.cp("/tmp/reverse" + domainName + dnsiid, "/var/named/reverse." + domainName)
-    lD.runQuiet("rm -rf /tmp/reverse" + domainName + dnsiid)
-    lD.runQuiet("rm -rf /tmp/forward" + domainName + dnsiid)
+    lD.run_quiet("rm -rf /tmp/reverse" + domainName + dnsiid)
+    lD.run_quiet("rm -rf /tmp/forward" + domainName + dnsiid)
     dnsserv.run("service named restart")
 
 print "=============================================="
@@ -358,8 +358,8 @@ for instance, remote in instance_to_remote.iteritems():
     for otherinstance, othername in instance_to_name.iteritems():
         # if otherinstance==instance:
         #    continue
-        lD.addAsHost(edit_remote=remote, add_remote=instance_to_remote[otherinstance],
-                     dest_internal_ip=lA.privIP(otherinstance))
+        lD.add_as_host(edit_remote=remote, add_remote=instance_to_remote[otherinstance],
+                       dest_internal_ip=lA.priv_ip(otherinstance))
 
 print "==================================="
 print "add any extra disk space (parallelized per instance)"
@@ -372,10 +372,10 @@ for instancegroup in cluster_config["InstanceGroups"]:
         for instance in instancegroups[instancegroup["Name"]]:
             admounts.append(instancegroup["ExtraDisks"])
             adtoiids.append(instance)
-lA.addEbsVolumes(adtoiids, admounts, amazon_keyfile)
+lA.add_ebs_volumes(adtoiids, admounts, amazon_keyfile)
 #        #for conf in instancegroup["ExtraDisks"]:
 #        #    for instance in instancegroups[instancegroup["Name"]]:
-#        #        lA.addNewEBSVol(instance, conf, amazon_keyfile)
+#        #        lA.add_new_ebs_vol(instance, conf, amazon_keyfile)
 
 
 print "==================================="
@@ -401,8 +401,8 @@ for instancegroup in cluster_config["InstanceGroups"]:
             for otherinstance in instance_to_remote:
                 if otherinstance:
                     # give itself also keyless root access to itself!
-                    lD.configureKeyless(instance_to_remote[instance], instance_to_remote[otherinstance],
-                                        lA.privIP(otherinstance), preservehostname=True)
+                    lD.configure_keyless(instance_to_remote[instance], instance_to_remote[otherinstance],
+                                         lA.priv_ip(otherinstance), preservehostname=True)
 
 print "=============================================="
 print "Add ambari to admin node"
@@ -413,7 +413,7 @@ for instancegroup in cluster_config["InstanceGroups"]:
         # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
             # lD.confremotessh(instance_to_remote[instance])
-            lD.deployOurSoft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave", version=version)
+            lD.deploy_our_soft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave", version=version)
 
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"

@@ -28,7 +28,7 @@
   <property>
     <name>custom_install_template</name>
     <value># -------------------------------
-import DefaultConfig as cnf
+import kavedefaults as cnf
 
 cnf.li.InstallTopDir="{{top_dir}}"
 

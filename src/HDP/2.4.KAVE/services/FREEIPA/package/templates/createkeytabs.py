@@ -148,7 +148,7 @@ class Remote(object):
 ######################################
 
 
-def yieldConfig(filename):
+def yield_config(filename):
     """
     CSV iterator
     """
@@ -373,7 +373,7 @@ if __name__ == "__main__":
         raise SystemError("No ipa group admins found ... did you forget to kinit or are you"
                           " running in some strange configuration??")
     # grab csv from iterator. The whole thing since I need to do multiple iterations
-    keytabs = [k for k in yieldConfig(sys.argv[-1])]
+    keytabs = [k for k in yield_config(sys.argv[-1])]
     # Preform pre-checks for consistency
     keytabs = check_keytabdict_consistency(keytabs)
     # build a list of user principles which are going to be created first

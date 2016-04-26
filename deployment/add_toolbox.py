@@ -50,7 +50,7 @@ import kavedeploy as lD
 lD.debug = False
 
 
-def parseOpts():
+def parse_opts():
     if "-h" in sys.argv or "--help" in sys.argv:
         help()
         sys.exit(0)
@@ -93,7 +93,7 @@ def parseOpts():
 
 
 if __name__ == "__main__":
-    ip, iid, security_conf, dest_type = parseOpts()
+    ip, iid, security_conf, dest_type = parse_opts()
     # only needed in main function
     installfrom = os.path.realpath(os.sep.join(__file__.split(os.sep)[:-1]))
     liblocation = os.path.realpath(installfrom)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     lA.checksecjson(security_config, requirefield=[], requirekeys=["SSH"])
     if ip is None:
         lA.testaws()
-        ip = lA.pubIP(iid)
+        ip = lA.pub_ip(iid)
     git = False
     gitenv = None
     if lD.detect_proxy():
@@ -118,6 +118,6 @@ if __name__ == "__main__":
     if "GIT" in security_config["AccessKeys"]:
         git = True
         gitenv = security_config["AccessKeys"]["GIT"]
-    lD.deployOurSoft(remote, pack="kavetoolbox", git=git, gitenv=gitenv)
+    lD.deploy_our_soft(remote, pack="kavetoolbox", git=git, gitenv=gitenv)
     # if dest_type == "workstation":
     #    lD.confremotessh(remote)

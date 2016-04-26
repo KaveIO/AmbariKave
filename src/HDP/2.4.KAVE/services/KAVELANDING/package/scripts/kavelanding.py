@@ -42,10 +42,10 @@ class KaveLanding(ApacheScript):
         import os
         import kavecommon as kc
         env.set_params(params)
-        self.writeHTML(env)
+        self.write_html(env)
         super(KaveLanding, self).configure(env)
 
-    def writeHTML(self, env):
+    def write_html(self, env):
         import params
         import kavecommon as kc
         env.set_params(params)
@@ -109,7 +109,7 @@ class KaveLanding(ApacheScript):
                                 bodyhtml).replace("HUE_LINK_IF_KNOWN",
                                                   HUE_LINK_IF_KNOWN).replace("ALL_OTHER_LINKS", "\n".join(all_links)))
         f.close()
-        kc.chownR(params.www_folder, "apache")
+        kc.chown_r(params.www_folder, "apache")
 
     def start(self, env):
         if not os.path.exists(os.path.dirname(self.status_file)):

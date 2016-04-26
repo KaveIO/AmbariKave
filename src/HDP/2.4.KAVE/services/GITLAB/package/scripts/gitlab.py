@@ -40,11 +40,11 @@ class Gitlab(Script):
         self.install_packages(env)
         env.set_params(params)
 
-        kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
-        # reset the password with setPassword method
+        kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path)
+        # reset the password with set_password method
         Execute('rpm --replacepkgs -i %s' % self.package)
         self.configure(env)
-        self.setPassword(env)
+        self.set_password(env)
 
     def start(self, env):
         self.configure(env)
@@ -54,7 +54,7 @@ class Gitlab(Script):
         Execute('gitlab-ctl stop')
 
     # method to set admin password
-    def setPassword(self, env):
+    def set_password(self, env):
         import params
         env.set_params(params)
         admin_password = params.gitlab_admin_password

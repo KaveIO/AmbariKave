@@ -54,7 +54,7 @@ class Jboss(Script):
              )
 
         Execute('chkconfig --add jboss')
-        Execute('chkconfig --level 234 jboss on')
+        Execute('chkconfig jboss on')
 
         self.configure(env)
 

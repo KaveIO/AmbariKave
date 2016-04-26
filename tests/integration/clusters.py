@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class TestCluster(base.LDTest):
         import sys
         import json
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         pref = os.path.dirname(__file__) + "/blueprints/" + self.service
         a = os.path.exists(pref + ".aws.json")
@@ -114,10 +114,10 @@ class TestCluster(base.LDTest):
                         "wrong keyfile seen in (" + connectcmd + ")")
         ambari = lD.remoteHost("root", ip, keyfile)
         ambari.register()
-        self.waitForAmbari(ambari)
+        self.wait_for_ambari(ambari)
         self.pull(ambari)
-        self.waitForAmbari(ambari)
-        self.deployBlueprint(ambari, pref + ".blueprint.json", pref + ".cluster.json")
+        self.wait_for_ambari(ambari)
+        self.deploy_blueprint(ambari, pref + ".blueprint.json", pref + ".cluster.json")
         return self.check(ambari)
 
 

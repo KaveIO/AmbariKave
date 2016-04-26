@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -38,11 +38,11 @@ class TestServiceSH(unittest.TestCase):
         import kavedeploy as lD
 
         lD.debug = False
-        for service, sdir in base.findServices():
+        for service, sdir in base.find_services():
             if service in ignore_services:
                 continue
             cmd = "grep -e " + service + " " + dir + "/bin/service.sh" + " | wc -l"
-            stdout = lD.runQuiet(cmd)
+            stdout = lD.run_quiet(cmd)
             count = int(stdout.strip())
             self.assertTrue(count >= 2, "Not enough copies of " + service + " in service.sh")
 

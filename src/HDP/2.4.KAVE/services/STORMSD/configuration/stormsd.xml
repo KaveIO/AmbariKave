@@ -76,6 +76,17 @@ in the ambari configuration web interface.
         <description>Default memory/HeapSize for the Java Virtual Machine.</description>
     </property>
     <property>
+        <name>childlogdir</name>
+        <value>/var/log/supervisord/child</value>
+        <description>Default Child log directory.</description>
+    </property>
+    <property>
+        <name>supervisor_logfile</name>
+        <value>/var/log/supervisord.log</value>
+        <description>Main log file</description>
+    </property>
+
+    <property>
         <name>stormsd.yaml.config</name>
         <description>yaml config file for Storm 0.10.</description>
         <value>#

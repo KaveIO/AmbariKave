@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -99,4 +99,4 @@ lA.testaws()
 lA.lD.testproxy()
 
 print "Initial tests OK, now adding volume (may take considerable time depending on volume size)"
-lA.addNewEBSVol(iid, mount_conf, ssh_keyfile)
+lA.add_new_ebs_vol(iid, mount_conf, ssh_keyfile)

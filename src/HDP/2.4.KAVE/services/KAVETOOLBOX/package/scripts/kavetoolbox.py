@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -47,13 +47,14 @@ class KaveToolbox(Script):
         extraopts = ""
         if params.ignore_missing_groups:
             extraopts = " --ignore-missing-groups"
-        instscript = params.top_dir + '/KaveToolbox/scripts/KaveInstall'
+        kavetoolbox_path = '/KaveToolbox/' + params.releaseversion + 'scripts/KaveInstall'
+        instscript = params.top_dir + kavetoolbox_path
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copyCacheOrRepo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch",
-                               ver=params.releaseversion,
-                               dir="KaveToolbox")
+            kc.copy_cache_or_repo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch="noarch",
+                                  ver=params.releaseversion,
+                                  dir="KaveToolbox")
             Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
             # try to cope with the annoying way the tarball contains something with .git at the end!
             import glob
@@ -62,7 +63,11 @@ class KaveToolbox(Script):
                 if os.path.isdir(gits) and not gits.endswith("/.git"):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
             instscript = './KaveToolbox/scripts/KaveInstall'
-        Execute(instscript + ' --' + self.kind + extraopts)
+
+        commandlineargs = ""
+        if params.command_line_args:
+            commandlineargs = " " + params.command_line_args
+        Execute(instscript + ' --' + self.kind + extraopts + commandlineargs)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/kave")

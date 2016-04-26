@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class Jenkins(Script):
         env.set_params(params)
         self.install_packages(env)
         dlname = 'jenkins-' + str(params.download_version) + '-1.1.noarch.rpm'
-        kc.copyCacheOrRepo(dlname, arch='noarch', alternates='http://pkg.jenkins-ci.org/redhat/' + dlname)
+        kc.copy_cache_or_repo(dlname, arch='noarch', alternates='http://pkg.jenkins-ci.org/redhat/' + dlname)
         Execute('rpm -qa | grep -qw jenkins || yum -y install ' + dlname)
 
         self.configure(env)
@@ -44,9 +44,9 @@ class Jenkins(Script):
             mirrorsources = []
             for mirror in kc.mirrors():
                 mirrorsources = mirrorsources + \
-                    [kc.repoURL('jenkins_plugins/' + plugin + h, arch='noarch', repo=mirror) for h in [".hpi", ".jpi"]]
-            intsources = [kc.repoURL('jenkins_plugins/' + plugin + h, arch='noarch') for h in [".hpi", ".jpi"]]
-            source = kc.failoverSource(mirrorsources + intsources + extsources)
+                    [kc.repo_url('jenkins_plugins/' + plugin + h, arch='noarch', repo=mirror) for h in [".hpi", ".jpi"]]
+            intsources = [kc.repo_url('jenkins_plugins/' + plugin + h, arch='noarch') for h in [".hpi", ".jpi"]]
+            source = kc.failover_source(mirrorsources + intsources + extsources)
             dest = params.JENKINS_HOME + "/plugins/" + source.split('/')[-1]
             Execute(kc.copymethods(source, dest))
 
@@ -54,7 +54,7 @@ class Jenkins(Script):
              content=Template("config.xml.j2"),
              mode=0644
              )
-        kc.chownR(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
+        kc.chown_r(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
         Execute('chkconfig jenkins on')
         self.start(env)
         # using curl to create username password for jenkinsl
@@ -129,10 +129,10 @@ class Jenkins(Script):
              content=Template("jenkins.j2"),
              mode=0600
              )
-        kc.chmodUp(self.config_file_path, "a+rx")
-        kc.chmodUp(params.JENKINS_HOME, "a+rx")
-        kc.chownR(self.config_file_path, params.JENKINS_USER)
-        kc.chownR(params.JENKINS_HOME, params.JENKINS_USER)
+        kc.chmod_up(self.config_file_path, "a+rx")
+        kc.chmod_up(params.JENKINS_HOME, "a+rx")
+        kc.chown_r(self.config_file_path, params.JENKINS_USER)
+        kc.chown_r(params.JENKINS_HOME, params.JENKINS_USER)
 
 
 if __name__ == "__main__":

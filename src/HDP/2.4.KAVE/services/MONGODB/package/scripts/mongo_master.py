@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ class MongoMaster(MongoBase):
     def install(self, env):
         import params
         env.set_params(params)
-        self.installMongo(env)
+        self.install_mongo(env)
         self.configure(env)
 
     def configure(self, env):
         import params
         env.set_params(params)
-        self.configureMongo(env)
+        self.configure_mongo(env)
 
     def start(self, env):
         print "start mongodb"
@@ -42,7 +42,7 @@ class MongoMaster(MongoBase):
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
         import params
-        if params.setname not in ["None", "False"]:
+        if params.setname and params.setname not in ["None", "False"]:
             if len(params.mongo_hosts) > 1:
                 # write the configuration document to a file
                 File('/tmp/replicaset_conf.js',

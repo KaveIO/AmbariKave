@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ class Twiki(ApacheScript):
 
         super(Twiki, self).install(env)
         env.set_params(params)
-        kc.copyCacheOrRepo('TWiki-6.0.0.zip')
+        kc.copy_cache_or_repo('TWiki-6.0.0.zip')
         Execute("mkdir -p " + params.install_dir)
         Execute("unzip -o -q TWiki-6.0.0.zip -d " + params.install_dir)
         Execute("mkdir -p " + params.install_dir + 'authtest')
-        kc.chownR(params.install_dir, "apache")
+        kc.chown_r(params.install_dir, "apache")
         Execute("cp " + params.install_dir + "/bin/LocalLib.cfg.txt " + params.install_dir + "/bin/LocalLib.cfg")
         Execute("chown apache:apache " + params.install_dir + "/bin/LocalLib.cfg")
         self.configure(env)

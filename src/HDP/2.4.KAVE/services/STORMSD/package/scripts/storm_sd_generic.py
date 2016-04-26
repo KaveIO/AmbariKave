@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@ class StormGeneric(Script):
 
     def install(self, env):
         self.install_packages(env)
-        self.installStorm(env)
+        self.install_storm(env)
         self.configure(env)
 
-    def installStorm(self, env):
+    def install_storm(self, env):
         # install ZeroMQ which is prerequisite for storm
         user_exist = os.system('grep storm /etc/passwd > /dev/null')
         if user_exist != 0:
-            kc.copyCacheOrRepo('zeromq-2.1.7-1.el6.x86_64.rpm')
+            kc.copy_cache_or_repo('zeromq-2.1.7-1.el6.x86_64.rpm')
             Execute('yum install -y zeromq-2.1.7-1.el6.x86_64.rpm')
             Execute('groupadd -g 53001 storm')
             Execute('mkdir -p /app/home')
@@ -43,7 +43,7 @@ class StormGeneric(Script):
         storm_dir_present = os.path.isdir('/usr/local/storm')
         if not storm_dir_present:
             # download storm
-            kc.copyCacheOrRepo('storm-10.0.zip')
+            kc.copy_cache_or_repo('storm-10.0.zip')
             # http://ftp.riken.jp/net/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip
             Execute('unzip -o -q storm-10.0.zip -d /usr/local')
             Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')
@@ -58,25 +58,23 @@ class StormGeneric(Script):
             Execute('chown -R storm:storm /app/storm')
             Execute('chmod 750 /app/storm')
         storm_log_dir = os.path.isdir('/var/log/storm')
-        if not storm_home_dir:
+        if not storm_log_dir:
             # Creating local directory for storm
             Execute('mkdir -p /var/log/storm')
             Execute('chown -R storm:storm /var/log/storm')
             Execute('chmod 750 /var/log/storm')
 
     def configure(self, env):
-        return self.configureStorm(env)
+        return self.configure_storm(env)
 
-    def configureStorm(self, env):
+    def configure_storm(self, env):
         import params
         env.set_params(params)
         File(params.storm_conf_file,
-             # content=Template("storm.yaml"),
              content=InlineTemplate(params.storm_yaml_config),
              mode=0644
              )
         File("/usr/local/storm/log4j2/cluster.xml",
-             # content=Template("cluster.xml.j2"),
              content=InlineTemplate(params.storm_cluster_config),
              mode=0664)
 
@@ -100,11 +98,11 @@ class StormGenericSD(StormGeneric):
 
     def install(self, env):
         self.install_packages(env)
-        self.installStorm(env)
-        self.installSupervisor(env)
+        self.install_storm(env)
+        self.install_supervisor(env)
         self.configure(env)
 
-    def installSupervisor(self, env):
+    def install_supervisor(self, env):
         import params
 
         params.PROG = self.PROG
@@ -114,9 +112,11 @@ class StormGenericSD(StormGeneric):
                  content=Template("supervisord.conf.j2"),
                  mode=0755
                  )
+        Execute('mkdir -p %s' % params.childlogdir)
         Package('epel-release')
-        Package('supervisor')
-        Execute('chkconfig supervisord on')
+        Package('python-meld3')
+        Package('python-pip')
+        Execute('pip install supervisor')
 
     def start(self, env):
         """
@@ -148,8 +148,8 @@ class StormGenericSD(StormGeneric):
     def restart(self, env):
         """
         Akin to the start method, the storm restart method must also be treated with care
-        Since the stop command is run in the background, we must wait unitl the service is actually stopped before
-        trying to start it.
+        Since the stop command is run in the background, we must wait until the service
+        is actually stopped before trying to start it.
         Tests indicated 5s is enough of a wait for this
         """
         self.stop(env)
@@ -164,10 +164,10 @@ class StormGenericSD(StormGeneric):
             raise ComponentIsNotRunning()
 
     def configure(self, env):
-        self.configureStorm(env)
-        return self.configureSD(env)
+        self.configure_storm(env)
+        return self.configure_sd(env)
 
-    def configureSD(self, env):
+    def configure_sd(self, env):
         import params
         params.PROG = self.PROG
         env.set_params(params)
@@ -181,9 +181,8 @@ class StormGenericSD(StormGeneric):
              content=Template("prog.conf"),
              mode=0644
              )
-        # This is quite annoying, supervisord is supposed to understand import statements,
-        # However, it does not work correctly. So in order to avoid clobbering I need to
-        # Append to the end of the supervisord.conf file each time I restart. This is very silly
-        # And it really should be fixed, I just don't know how at the moment.
-        Execute("cat /etc/supervisord.d/" + self.PROG + ".conf >> /etc/supervisord.conf")
-        kc.chownR('/etc/supervisord.d/', 'storm')
+        File("/etc/init.d/supervisord",
+             content=Template("supervisor.j2"),
+             mode=0755
+             )
+        kc.chown_r('/etc/supervisord.d/', 'storm')

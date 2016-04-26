@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class SonarQubeRunner(Script):
 
         # protect against client downloading behind firewall
         if not os.path.exists(params.sonarqube_runner_install_directory + '/current'):
-            kc.copyCacheOrRepo(self.package, arch="noarch")
+            kc.copy_cache_or_repo(self.package, arch="noarch")
             Execute('mkdir -p %s ' % params.sonarqube_runner_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_runner_install_directory))
             Execute('ln -sfn %s/sonar-runner-2.4 %s/current' % (

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class MongoBase(Script):
     config_file_path = '/etc/mongod.conf'
     mongo_packages = None
 
-    def installMongo(self, env):
+    def install_mongo(self, env):
         import params
 
         env.set_params(params)
@@ -40,23 +40,15 @@ class MongoBase(Script):
                  content=Template("mongodb.repo"),
                  mode=0644
                  )
-#          File(self.repos_file_path,
-#               content=InlineTemplate(params.mongo_db_repo),
-#               mode=0644
-#               )
         print "installing mongodb..."
         if self.mongo_packages is not None and len(self.mongo_packages):
             for pack in self.mongo_packages:
                 Package(pack)
 
-    def configureMongo(self, env):
+    def configure_mongo(self, env):
         import params
 
         env.set_params(params)
-#        File(self.config_file_path,
-#             content=Template("mongod.conf.j2"),
-#             mode=0644
-#             )
         File(self.config_file_path,
              content=InlineTemplate(params.mongodb_conf),
              mode=0644

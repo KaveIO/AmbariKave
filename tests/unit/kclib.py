@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ class TestKaveCommonLib(unittest.TestCase):
 
         sources = []
         for mirror in kc.mirrors():
-            sources.append(kc.repoURL("", repo=mirror))
-        sources.append(kc.repoURL(""))
-        kc.failoverSource(sources)
-        self.assertRaises(IOError, kc.failoverSource, ["non-existing-file-88989381923813.file"])  # ,"bug ABK-112"
+            sources.append(kc.repo_url("", repo=mirror))
+        sources.append(kc.repo_url(""))
+        kc.failover_source(sources)
+        self.assertRaises(IOError, kc.failover_source, ["non-existing-file-88989381923813.file"])  # ,"bug ABK-112"
         # make some directory structure to check the permissions changing...
         import tempfile
         import os
@@ -42,16 +42,16 @@ class TestKaveCommonLib(unittest.TestCase):
         os.system("mkdir -p " + tempdir + "/this/is/a/test2")
         os.system("mkdir -p " + tempdir + "/this/is/a/test3")
         os.system("chmod -R 555 " + tempdir + "/this ")
-        kc.chmodUp(tempdir + "/this/is/a/test1", "511", seen=[tempdir, tempdir + "/this"])
+        kc.chmod_up(tempdir + "/this/is/a/test1", "511", seen=[tempdir, tempdir + "/this"])
         self.assertFalse(os.access(tempdir + "/this/is/a", os.W_OK), tempdir + " permissions settings failed")
-        kc.chmodUp(tempdir + "/this/is/a/test1", "744", seen=[tempdir])
+        kc.chmod_up(tempdir + "/this/is/a/test1", "744", seen=[tempdir])
         self.assertTrue(os.access(tempdir + "/this/is/a", os.W_OK), tempdir + " permissions settings failed")
         self.assertFalse(os.access(tempdir + "/this/is/a/test2", os.W_OK), tempdir + " permissions settings failed")
         # create a file in this directory to test the copy/caching, at least for things without wget
         os.system("touch " + tempdir + "/this/is/test.test")
         topd = os.path.realpath(os.curdir)
         os.chdir(tempdir)
-        kc.copyOrCache(sources=[tempdir + "/this/is/test.test"], filename="test.test", cache_dir=tempdir + "/this/")
+        kc.copy_or_cache(sources=[tempdir + "/this/is/test.test"], filename="test.test", cache_dir=tempdir + "/this/")
         os.chdir(topd)
         self.assertTrue(os.path.exists(tempdir + "/test.test") and os.path.exists(
             tempdir + "/this/is/test.test") and os.path.exists(tempdir + "/this/test.test"),

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class MongoClient(MongoBase):
     def install(self, env):
         import params
         env.set_params(params)
-        self.installMongo(env)
+        self.install_mongo(env)
         self.configure(env)
         File('/usr/local/bin/mongok',
              content=Template("mongok"),
@@ -38,7 +38,7 @@ class MongoClient(MongoBase):
     def configure(self, env):
         import params
         env.set_params(params)
-        self.configureMongo(env)
+        self.configure_mongo(env)
         File(self.client_config_path,
              content=Template("mongoclient.conf.j2"),
              mode=0644

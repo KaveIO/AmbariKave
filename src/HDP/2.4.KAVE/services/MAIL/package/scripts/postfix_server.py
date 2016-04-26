@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class PostfixSrv(Script):
         import params
 
         env.set_params(params)
-        Execute('chkconfig --levels 235 postfix on')
+        Execute('chkconfig postfix on')
         File('/etc/postfix/main.cf',
              content=Template("main.cf.j2"),
              mode=0644

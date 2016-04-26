@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -66,9 +66,13 @@ class FreeipaServer(Script):
                  content=Template("admin-password.j2", admin_password=admin_password),
                  mode=0600
                  )
+        # Ensure service is started before trying to interact with it!
+        Execute('service ipa start')
+
         # set the default shell
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
             fi.set_default_shell(params.default_shell)
+
         self.create_base_accounts(env)
         # create initial users and groups
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
@@ -102,7 +106,8 @@ class FreeipaServer(Script):
             fi.create_sudorule('allsudo', **(params.initial_sudoers))
         # create robot admin
         self.reset_robot_admin_expire_date(env)
-        self.distribute_robot_admin_credentials(env)
+        # if FreeIPA server is not started properly, then the clients will not install
+        self.start(env)
 
     def conf_on_start(self, env):
         import params

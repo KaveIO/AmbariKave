@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ class Hue(Script):
         import kavecommon as kc
 
         env.set_params(params)
-        Execute('chkconfig --levels 235 hue on')
+        Execute('chkconfig hue on')
         edit_dirs = self.mandatory_conf_dirs
         for mdir in self.mandatory_conf_dirs:
             Execute("mkdir -p " + mdir)
@@ -49,7 +49,7 @@ class Hue(Script):
             Execute('chmod -R 755 ' + edir)
             File(edir + '/hue.ini', content=InlineTemplate(params.hue_ini), mode=0600)
             File(edir + '/hue_httpd.conf', content=InlineTemplate(params.hue_httpd_conf), mode=0644)
-            kc.chownR(edir, 'hue')
+            kc.chown_r(edir, 'hue')
 
     def start(self, env):
         self.configure(env)

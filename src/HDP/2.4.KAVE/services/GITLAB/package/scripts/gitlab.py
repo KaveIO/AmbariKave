@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 class Gitlab(Script):
-    package = 'gitlab-7.6.2_omnibus.5.3.0.ci.1-1.el6.x86_64.rpm'
+    # package = 'gitlab-7.6.2_omnibus.5.3.0.ci.1-1.el6.x86_64.rpm'
+    package = 'gitlab-ce-8.6.4-ce.0.el6.x86_64.rpm'
     installer_cache_path = '/tmp/'
 
     def install(self, env):
@@ -32,19 +33,18 @@ class Gitlab(Script):
         if os.path.exists('/var/lib/pgsql/data/pg_hba.conf'):
             raise SystemError(
                 "You appear to already have a default postgre database installed (probably you're trying to put "
-                "Gitlabs on the same machine as Ambari). This type of operation is not implemented yet. If this is "
-                "very annoying for you please email us.")
+                "Gitlabs on the same machine as Ambari). This type of operation is not implemented yet.")
         import params
         import kavecommon as kc
 
         self.install_packages(env)
         env.set_params(params)
 
-        kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
-        # reset the password with setPassword method
+        kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path)
+        # reset the password with set_password method
         Execute('rpm --replacepkgs -i %s' % self.package)
         self.configure(env)
-        self.setPassword(env)
+        self.set_password(env)
 
     def start(self, env):
         self.configure(env)
@@ -54,7 +54,7 @@ class Gitlab(Script):
         Execute('gitlab-ctl stop')
 
     # method to set admin password
-    def setPassword(self, env):
+    def set_password(self, env):
         import params
         env.set_params(params)
         admin_password = params.gitlab_admin_password

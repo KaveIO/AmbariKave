@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -97,3 +97,9 @@ for user, passwd in initial_user_passwords.iteritems():
         raise ValueError("User : " + user + " cannot be assigned an intital password less than 8 characters")
     else:
         Logger.sensitive_strings[passwd] = "[PROTECTED]"
+
+# JCE Installation
+searchpath = default('configurations/freeipa/searchpath',
+                     '/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*')
+# folderpath="/jre/lib/security:/lib/security"
+folderpath = default('configurations/freeipa/folderpath', '/jre/lib/security:/lib/security')

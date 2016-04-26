@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ usage deploy_known_instance.py os hostname [security_config.json] [instance_type
 
 optional:
     --verbose : print all remotely running commands
-    [instance_type]: optional, if not specified will use c3.large
+    [instance_type]: optional, if not specified will use c4.large
     [security_config.json]: optional, if not specified will use the environment variable AWSSECCONF
 """
 
@@ -54,7 +54,7 @@ def help():
 ambaridev = False
 
 
-def parseOpts():
+def parse_opts():
     global ambaridev
     if "-h" in sys.argv or "--help" in sys.argv:
         help()
@@ -74,7 +74,7 @@ def parseOpts():
     osval = sys.argv[1]
     macname = sys.argv[2]
     secf = ""
-    insttype = "c3.large"
+    insttype = "c4.large"
     if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
         secf = sys.argv[3]
         if len(sys.argv) > 4:
@@ -89,7 +89,7 @@ def parseOpts():
     return osval, macname, secf, insttype
 
 
-osval, machinename, secf, itype = parseOpts()
+osval, machinename, secf, itype = parse_opts()
 jsondat = open(secf)
 security_config = json.loads(jsondat.read())
 jsondat.close()
@@ -112,22 +112,22 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
 
 lD.testproxy()
 
-upped = lA.upOS(osval, itype, secGroup, keypair, subnet=subnet)
+upped = lA.up_os(osval, itype, secGroup, keypair, subnet=subnet)
 print "submitted"
 
-iid = lA.iidFromUpJSON(upped)[0]
+iid = lA.iid_from_up_json(upped)[0]
 
 import time
 
 time.sleep(5)
-lA.nameInstance(iid, machinename)
+lA.name_instance(iid, machinename)
 
-ip = lA.pubIP(iid)
+ip = lA.pub_ip(iid)
 acount = 0
 while (ip is None and acount < 20):
     print "waiting for IP"
     lD.mysleep(1)
-    ip = lA.pubIP(iid)
+    ip = lA.pub_ip(iid)
     acount = acount + 1
 
 if osval == "Centos6":
@@ -139,13 +139,13 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
         remote = lD.remoteHost(uname, ip, keyloc)
-        lD.waitUntilUp(remote, 20)
+        lD.wait_until_up(remote, 20)
         remote.register()
         if uname != 'root':
             # Note the twice -t here such that I can run as a sudo command (fake tty)
             remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t', '-t'])
             remote = lD.remoteHost('root', ip, keyloc)
-        lD.renameRemoteHost(remote, machinename, 'kave.io')
+        lD.rename_remote_host(remote, machinename, 'kave.io')
         lD.confallssh(remote)
         remote.describe()
     except KeyboardInterrupt:

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -30,14 +30,14 @@ class TestDeployLib(unittest.TestCase):
 
         lD.testproxy()
         self.assertIsNot(lD.which("ls"), None)
-        self.assertRaises(RuntimeError, lD.runQuiet, ("thisisnotacommand"))
-        stdout = lD.runQuiet(['which', 'ls'], shell=False)
+        self.assertRaises(RuntimeError, lD.run_quiet, ("thisisnotacommand"))
+        stdout = lD.run_quiet(['which', 'ls'], shell=False)
         self.assertTrue('/bin/ls' in stdout)
         self.assertIsNot(lD.which("pdsh"), None,
                          "pdsh is not installed, please install it in order to test the multiremotes functionality, "
                          "sudo yum -y install pdsh")
-        lD.runQuiet("touch /tmp/fake_test_ssh_key.pem")
-        lD.runQuiet("chmod 400 /tmp/fake_test_ssh_key.pem")
+        lD.run_quiet("touch /tmp/fake_test_ssh_key.pem")
+        lD.run_quiet("chmod 400 /tmp/fake_test_ssh_key.pem")
         test = lD.remoteHost("root", "test", '/tmp/fake_test_ssh_key.pem')
         test = lD.multiremotes([test.host], access_key='/tmp/fake_test_ssh_key.pem')
 

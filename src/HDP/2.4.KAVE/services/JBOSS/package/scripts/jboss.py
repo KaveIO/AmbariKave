@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ class Jboss(Script):
         env.set_params(params)
         self.install_packages(env)
 
-        kc.copyCacheOrRepo(self.package, cache_dir=self.installer_cache_path)
-        self.cleanUpFailedInstall()
+        kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path)
+        self.clean_up_failed_install()
         Execute('unzip -o -q %s -d %s' % (self.package, params.installation_dir))
         Execute('mv %s/jb*/* %s' % (params.installation_dir, params.installation_dir))
         Execute('rm -rf %s/jb*.Final' % params.installation_dir)
@@ -54,11 +54,11 @@ class Jboss(Script):
              )
 
         Execute('chkconfig --add jboss')
-        Execute('chkconfig --level 234 jboss on')
+        Execute('chkconfig jboss on')
 
         self.configure(env)
 
-    def cleanUpFailedInstall(self):
+    def clean_up_failed_install(self):
         import params
         if os.path.exists(params.installation_dir):
             Execute('rm -rf %s' % params.installation_dir)

@@ -28,7 +28,7 @@
   <property>
     <name>custom_install_template</name>
     <value># -------------------------------
-import DefaultConfig as cnf
+import kavedefaults as cnf
 
 cnf.li.InstallTopDir="{{top_dir}}"
 
@@ -36,6 +36,14 @@ cnf.li.InstallTopDir="{{top_dir}}"
 </value>
     <description>KaveToolbox is very customizable. You can turn on and off features and minutely control the install with the CustomInstall.py file
     Any strings surrounded by double-curled-braces will be replaced by the relevant parameter when written to disk
+    </description>
+  </property>
+    <property>
+    <name>command_line_args</name>
+    <value>False</value>
+    <description>
+    Extra options to pass to the command line installation,
+    for more details on the options read the KaveToolbox readme on github.
     </description>
   </property>
 </configuration>

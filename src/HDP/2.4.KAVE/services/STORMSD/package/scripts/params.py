@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ log_level = default('configurations/stormsd/stormsd.loglevel', 'WARN')
 logviewer_childopts = default('configurations/stormsd/stormsd.logviewer.childopts',
                               '-Xmx128m -Djava.net.preferIPv4Stack=true')
 logviewer_port = default('configurations/stormsd/stormsd.logviewer.port', '8013')
+childlogdir = default('configurations/stormsd/childlogdir', '/var/log/supervisord/child')
+supervisor_logfile = default('configurations/stormsd/supervisor_logfile', '/var/log/supervisord.log')
 storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file

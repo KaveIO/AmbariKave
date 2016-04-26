@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ class TestAService(base.LDTest):
         import os
         import sys
 
-        lD = self.preCheck()
-        known = [s for s, d in base.findServices()]
+        lD = self.pre_check()
+        known = [s for s, d in base.find_services()]
         self.assertTrue(self.service in known, "The service " + self.service + " is unknown, check the case")
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari, iid = self.deployDev()
+        ambari, iid = self.deploy_dev()
         self.pull(ambari)
         # restart ganglia and nagios
         if self.branch:
@@ -44,7 +44,7 @@ class TestAService(base.LDTest):
         for restart in ["METRICS_MONITOR", "AMBARI_METRICS", "ZOOKEEPER"]:
             stdout = self.servicesh(ambari, "stop", restart)
         for restart in ["ZOOKEEPER", "AMBARI_METRICS", "METRICS_MONITOR"]:
-            self.waitForService(ambari, restart)
+            self.wait_for_service(ambari, restart)
         import time
 
         time.sleep(15)
@@ -53,7 +53,7 @@ class TestAService(base.LDTest):
         self.assertTrue("IN_PROGRESS" in stdout or "InProgress" in stdout or "status\" : \"Accepted" in stdout,
                         "Was unable to install " + self.service + " through service.sh, (" + ' '.join(
                             ambari.sshcmd()) + ")")
-        self.waitForService(ambari)
+        self.wait_for_service(ambari)
         return self.check(ambari)
 
 

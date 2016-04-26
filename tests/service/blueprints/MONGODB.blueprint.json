@@ -16,8 +16,8 @@
         { "name" : "ZOOKEEPER_SERVER"  },
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
-		{ "name" : "MONGODB_CLIENT"    },
-		{ "name" : "MONGODB_MASTER"    }
+        { "name" : "MONGODB_CLIENT"    },
+        { "name" : "MONGODB_MASTER"    }
       ],
       "cardinality" : "1"
     }

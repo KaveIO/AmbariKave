@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -80,9 +80,6 @@ rm -rf $BUILD_DIR/ambarikave-deployment/aws
 rm -rf $BUILD_DIR/ambarikave-deployment/lib/kaveaws.py
 rm -rf $BUILD_DIR/ambarikave-deployment/clusters
 rm -rf $BUILD_DIR/ambarikave-deployment/add_toolbox.py
-#copy the repo directory
-cp -r $PROJECT_DIR/dev/repo $BUILD_DIR/ambarikave-deployment/
-
 
 # Tar autocollapses. If I'm not in the same path as I'm taring than my tarball
 # contains the full path.

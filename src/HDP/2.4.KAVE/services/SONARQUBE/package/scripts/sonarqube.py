@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ from resource_management import *
 
 class SonarQube(Script):
     installer_cache_path = '/tmp/'
-    package = 'sonarqube-5.0.1.zip'
-    # sonar_mirror='http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip'
+    package = 'sonarqube-5.4.zip'
+    # sonar_mirror='http://dist.sonar.codehaus.org/sonarqube-5.4.zip'
 
     def install(self, env):
         import params
@@ -33,10 +33,10 @@ class SonarQube(Script):
         self.install_packages(env)
         # protect against client downloading behind firewall
         if not os.path.exists(params.sonarqube_install_directory + '/current'):
-            kc.copyCacheOrRepo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
+            kc.copy_cache_or_repo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
             Execute('mkdir -p %s ' % params.sonarqube_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
-            Execute('ln -sfn %s/sonarqube-5.0.1 %s/current' % (
+            Execute('ln -sfn %s/sonarqube-5.4 %s/current' % (
                 params.sonarqube_install_directory,
                 params.sonarqube_install_directory))
 
@@ -48,7 +48,7 @@ class SonarQube(Script):
             os.chdir(tdir)
             # http://downloads.sourceforge.net/project/jpam/jpam/jpam-1.1/JPam-Linux_amd64-1.1.tgz
             # -O JPam-Linux_amd64-1.1.tgz')
-            kc.copyCacheOrRepo("JPam-Linux_amd64-1.1.tgz", arch="noarch")
+            kc.copy_cache_or_repo("JPam-Linux_amd64-1.1.tgz", arch="noarch")
             Execute('tar -xvzf JPam-Linux_amd64-1.1.tgz')
             Execute('cp JPam-1.1/JPam-1.1.jar ' + params.sonarqube_install_directory + '/current/lib/common/')
             Execute('cp JPam-1.1/libjpam.so /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/lib/amd64/')
@@ -56,7 +56,7 @@ class SonarQube(Script):
             Execute('cp JPam-1.1/net-sf-jpam /etc/pam.d/')
             # http://downloads.sonarsource.com/plugins/org/codehaus/sonar-plugins/sonar-pam-plugin
             # /0.2/sonar-pam-plugin-0.2.jar
-            kc.copyCacheOrRepo("sonar-pam-plugin-0.2.jar", arch="noarch")
+            kc.copy_cache_or_repo("sonar-pam-plugin-0.2.jar", arch="noarch")
             Execute('cp sonar-pam-plugin-0.2.jar ' + params.sonarqube_install_directory
                     + '/current/extensions/plugins/')
             os.chdir(topd)
@@ -75,7 +75,7 @@ class SonarQube(Script):
             Execute('ln -s %s/current/bin/linux-x86-32/sonar.sh /etc/init.d/sonar' % params.sonarqube_install_directory)
 
         for plugin in params.sonarqube_plugins:
-            kc.copyCacheOrRepo(plugin, arch="noarch")
+            kc.copy_cache_or_repo(plugin, arch="noarch")
             Execute('mv %s %s/current/extensions/plugins/' % (plugin, params.sonarqube_install_directory))
 
         self.configure(env)

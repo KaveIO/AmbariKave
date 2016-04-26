@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -47,19 +47,19 @@ def runawstojson(cmd):
     prox = lD.detect_proxy() and lD.no_ssl_over_proxy
     if prox:
         cmd = "--no-verify-ssl " + cmd
-    output = lD.runQuiet("aws " + cmd)
+    output = lD.run_quiet("aws " + cmd)
     if len(output.strip()):
         return json.loads(output.strip())
     else:
         return {}
 
 
-def detectRegion():
+def detect_region():
     """
     return aws cli region setting, needed to choose instance to create tokyo images, should extend it to other
     regions...
     """
-    return lD.runQuiet("aws configure get region")
+    return lD.run_quiet("aws configure get region")
 
 __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtual, 6.5 release media
                                     "eu-west": "ami-30ff5c47",  # good, centos 6 "with updates"
@@ -98,11 +98,11 @@ def chooseamiid(os, region):
     return ""
 
 
-def upCentos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
+def up_centos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
     region = "default"
     amiid = ""
     if subnet is not None:
-        region = detectRegion()
+        region = detect_region()
     if ambaridev:
         import os
         if "AMIAMBDEV" in os.environ:
@@ -117,13 +117,29 @@ def upCentos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
     return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
 
-def upOS(os, type, secGroup, keys, count=1, subnet=None):
+def up_os(os, type, secGroup, keys, count=1, subnet=None):
     region = "default"
     amiid = ""
     if subnet is not None:
-        region = detectRegion()
+        region = detect_region()
     amiid = chooseamiid(os, region)
     return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+
+
+def chooseitype(instancetype):
+    """
+    Send in one instance type, read the locally configured aws region and return something that works here
+    """
+    region = "-".join(detect_region().split("-")[0:2])
+    # ap region has different strange behaviour for new generation instances, default centos image not hvm
+    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
+                                       "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
+                                       "c4.2xlarge": "c3.2xlarge"},
+                      "eu-west": {"m1.medium": "t2.small"}}
+    try:
+        return regioninstdict[region][instancetype]
+    except KeyError:
+        return instancetype
 
 
 def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
@@ -136,15 +152,15 @@ def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
     return runawstojson(cmd)
 
 
-def iidFromUpJSON(upjsons):
+def iid_from_up_json(upjsons):
     return [inst["InstanceId"] for inst in upjsons["Instances"]]
 
 
-def nameInstance(iid, name):
+def name_instance(iid, name):
     return runawstojson("ec2 create-tags --tags Key=Name,Value=" + name + " --resources " + iid)
 
 
-def descInstance(iid=None):
+def desc_instance(iid=None):
     if iid is not None:
         return runawstojson("ec2 describe-instances --instance " + iid)
     else:
@@ -153,7 +169,7 @@ def descInstance(iid=None):
 
 def killinstance(iid, state="terminate"):
     try:
-        i = descInstance(iid)
+        i = desc_instance(iid)
     except RuntimeError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
@@ -180,9 +196,9 @@ def createimage(iid, aname, description):
     return str(descim["ImageId"])
 
 
-def pubIP(iid):
+def pub_ip(iid):
     try:
-        i = descInstance(iid)
+        i = desc_instance(iid)
     except RuntimeError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
@@ -194,9 +210,9 @@ def pubIP(iid):
         return None
 
 
-def privIP(iid):
+def priv_ip(iid):
     try:
-        i = descInstance(iid)
+        i = desc_instance(iid)
     except RuntimeError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
@@ -208,7 +224,7 @@ def privIP(iid):
         return None
 
 
-def addNewEBSVol(iid, conf, access_key):
+def add_new_ebs_vol(iid, conf, access_key):
     """
     Create and name a new ebs volume, give it to a pre-existing instance and mount it on that instance
 
@@ -224,21 +240,21 @@ def addNewEBSVol(iid, conf, access_key):
     ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
     """
     try:
-        i = descInstance(iid)
+        i = desc_instance(iid)
     except RuntimeError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Fdisk" not in conf:
         import string
         alpha = string.ascii_lowercase
         skip = 0
-        if detectRegion().startswith('eu'):
+        if detect_region().startswith('eu'):
             # eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
             skip = 0
-        elif detectRegion().startswith('ap'):
+        elif detect_region().startswith('ap'):
             # ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
             skip = 4
         conf["Fdisk"] = '/dev/xvd' + alpha[alpha.index(conf["Attach"][-1]) + skip]
-    ip = pubIP(iid)
+    ip = pub_ip(iid)
     av_zone = i["Reservations"][0]["Instances"][0]["Placement"]["AvailabilityZone"]
     voljson = runawstojson("ec2 create-volume --size " + str(conf["Size"]) + " --availability-zone " + av_zone)
     instnam = ""
@@ -247,7 +263,7 @@ def addNewEBSVol(iid, conf, access_key):
             instnam = tag["Value"]
     # print voljson
     volID = voljson["VolumeId"]
-    nameInstance(volID, instnam + conf["Mount"].replace("/", "_"))
+    name_instance(volID, instnam + conf["Mount"].replace("/", "_"))
     time.sleep(5)
     count = 0
     while count < 10:
@@ -290,7 +306,7 @@ def addNewEBSVol(iid, conf, access_key):
     return True
 
 
-class _addEbsVolumesThread(threading.Thread):
+class _add_ebs_volumesThread(threading.Thread):
     """
     A threading class which locks before printing a result,
     method should be replaced with your own method returning a
@@ -328,7 +344,7 @@ class _addEbsVolumesThread(threading.Thread):
                 self.cur = item
                 if item is not None:
                     for mount in item[1]:
-                        result = addNewEBSVol(item[0], mount, self.key)
+                        result = add_new_ebs_vol(item[0], mount, self.key)
             except Queue.Empty:
                 self.done = True
             except Exception as e:
@@ -340,7 +356,7 @@ class _addEbsVolumesThread(threading.Thread):
                 self.errors.append(str(e) + " " + str(err1) + " " + str(err2) + "\n" + str(err3) + "\n" + str(self.cur))
 
 
-def addEbsVolumes(iids, mounts, access_key, nthreads=20):
+def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     """
     Add a lot of EBS volumes in parallel with threading
     iid, list of iids,
@@ -363,7 +379,7 @@ def addEbsVolumes(iids, mounts, access_key, nthreads=20):
     lock = thread.allocate_lock()
     thethreads = []
     for _i in range(nthreads):
-        t = _addEbsVolumesThread(itemPool, lock, access_key)
+        t = _add_ebs_volumesThread(itemPool, lock, access_key)
         thethreads.append(t)
         t.start()
     # setup a timeout to prevent really infinite loops!
@@ -393,7 +409,7 @@ def waitforstate(iid, state="running"):
     rounds = 1
     flag = False
     while rounds <= 10:
-        instance = descInstance(iid)["Reservations"][0]["Instances"][0]
+        instance = desc_instance(iid)["Reservations"][0]["Instances"][0]
         if instance["State"]["Name"] is state:
             flag = True
             break
@@ -420,7 +436,7 @@ def checksecjson(json, requirefield=["SecurityGroup"], requirekeys=["AWS", "GIT"
             continue
         if not os.path.exists(os.path.expanduser(val["KeyFile"])):
             raise IOError("Keyfiles must exist " + val["KeyFile"])
-        if "------" not in lD.runQuiet("ls -l " + val["KeyFile"]):
+        if "------" not in lD.run_quiet("ls -l " + val["KeyFile"]):
             raise IOError(
                 "Your private keyfile " + val["KeyFile"] + " " + key + " needs to have X00 permissions (400 or 600).")
     return True
@@ -430,7 +446,7 @@ def checksecjson(json, requirefield=["SecurityGroup"], requirekeys=["AWS", "GIT"
 # VPC and cloudformation interactions
 #
 
-# def copySecurityGroupToVPC(group_from, vpc_to):
+# def copy_security_group_to_vpc(group_from, vpc_to):
 #    """
 #    Add inbound security rules from one security group to another
 #    """
@@ -442,7 +458,7 @@ def checksecjson(json, requirefield=["SecurityGroup"], requirekeys=["AWS", "GIT"
 #    runawstojson("ec2 authorize-security-group-ingress --group-id sg-903004f8 --protocol tcp --port 22 --cidr
 # 203.0.113.0/24")
 
-def createCloudFormation(stack_name, template_script, parameters={}):
+def create_cloud_formation(stack_name, template_script, parameters={}):
     """
     Run a cloud formation template, return the json that aws cli gives
     """
@@ -456,7 +472,7 @@ def createCloudFormation(stack_name, template_script, parameters={}):
     return _stackinfo
 
 
-def waitForStack(stack_name, okstats=["CREATE_IN_PROGRESS", "CREATE_COMPLETE"]):
+def wait_for_stack(stack_name, okstats=["CREATE_IN_PROGRESS", "CREATE_COMPLETE"]):
     """
     Enter a stack_name from cloud_formation, and wait for the status CREATE_COMPLETE
     """
@@ -479,7 +495,7 @@ def waitForStack(stack_name, okstats=["CREATE_IN_PROGRESS", "CREATE_COMPLETE"]):
     return _stackinfo["Stacks"][0]
 
 
-def addGroupToGroup(group_to_add, group_to_modify):
+def add_group_to_group(group_to_add, group_to_modify):
     """
     Whitelist one security group within a differnet security group
     """

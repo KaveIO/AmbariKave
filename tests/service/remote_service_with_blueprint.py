@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2015 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class TestServiceBlueprint(base.LDTest):
         import sys
         import json
 
-        lD = self.preCheck()
+        lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
         cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
@@ -48,17 +48,17 @@ class TestServiceBlueprint(base.LDTest):
                 interp = json.loads(l)
             except:
                 self.assertTrue(False, "json file " + ason + " is not complete or not readable")
-        if self.service not in [s for s, d in base.findServices()]:
+        if self.service not in [s for s, d in base.find_services()]:
             raise ValueError(
                 "This test can only work for blueprints where the name of the blueprint matches a known service. Else "
                 "try remote_blueprint.py")
-        ambari, iid = self.deployDev()
+        ambari, iid = self.deploy_dev()
         # clean the existing blueprint ready for re-install
         self.pull(ambari)
         self.resetambari(ambari)
-        self.deployBlueprint(ambari, bp, cf)
+        self.deploy_blueprint(ambari, bp, cf)
         # wait for the install and then check if the directories etc. are there
-        self.waitForService(ambari)
+        self.wait_for_service(ambari)
         self.check(ambari)
 
 

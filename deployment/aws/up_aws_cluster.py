@@ -150,7 +150,7 @@ if "CloudFormation" in cluster_config:
     _vpc_name = cluster_name + "-" + \
         amazon_keypair_name.replace('_', '') + "-" + datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
     lA.create_cloud_formation(_vpc_name, cluster_config["CloudFormation"]["Script"],
-                            parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
+                              parameters={"KeyName": amazon_keypair_name, "VPCNAME": _vpc_name})
     _info = lA.wait_for_stack(_vpc_name)
     # print _info["Outputs"]
     for _output in _info["Outputs"]:
@@ -182,8 +182,8 @@ for instancegroup in cluster_config["InstanceGroups"]:
     if count == 0:
         continue
     up = lA.up_centos6(type=lA.chooseitype(instancegroup["InstanceType"]),
-                      secGroup=security_group, keys=amazon_keypair_name,
-                      count=count, subnet=subnet)
+                       secGroup=security_group, keys=amazon_keypair_name,
+                       count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iid_from_up_json(up)
 
 instance_to_remote = {}
@@ -359,7 +359,7 @@ for instance, remote in instance_to_remote.iteritems():
         # if otherinstance==instance:
         #    continue
         lD.add_as_host(edit_remote=remote, add_remote=instance_to_remote[otherinstance],
-                     dest_internal_ip=lA.priv_ip(otherinstance))
+                       dest_internal_ip=lA.priv_ip(otherinstance))
 
 print "==================================="
 print "add any extra disk space (parallelized per instance)"
@@ -402,7 +402,7 @@ for instancegroup in cluster_config["InstanceGroups"]:
                 if otherinstance:
                     # give itself also keyless root access to itself!
                     lD.configure_keyless(instance_to_remote[instance], instance_to_remote[otherinstance],
-                                        lA.priv_ip(otherinstance), preservehostname=True)
+                                         lA.priv_ip(otherinstance), preservehostname=True)
 
 print "=============================================="
 print "Add ambari to admin node"

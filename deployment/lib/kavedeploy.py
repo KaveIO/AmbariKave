@@ -547,7 +547,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
 # @TODO: Implement the local functionality!
 # @TODO: Consolidate the repo functionality from kavecommon!
 def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="ambarikave",
-                  repo="http://repos:kaverepos@repos.kave.io", background=True, options=""):
+                    repo="http://repos:kaverepos@repos.kave.io", background=True, options=""):
     """
     Add ambari or KaveToolbox to a remote machine.
     version=version to deploy, branch or 'HEAD' for git, 'local' to package locally and copy

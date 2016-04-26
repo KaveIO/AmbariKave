@@ -46,7 +46,7 @@ class DepCentos(base.LDTest):
         stdout = ma.run("ls -l '/opt'")
         self.assertTrue("lost+found" in stdout, "No /opt directory :$ see " + ' '.join(ambari.sshcmd()))
         stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
-                             ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdf"}\'')
+                              ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdf"}\'')
 
 
 def suite(verbose=False):

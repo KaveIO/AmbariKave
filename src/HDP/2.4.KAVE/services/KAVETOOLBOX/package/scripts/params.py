@@ -40,7 +40,7 @@ except TypeError, ValueError:
         raise
 custom_install_template_default = """
 # -------------------------------
-import DefaultConfig as cnf
+import kavedefaults as cnf
 
 cnf.li.InstallTopDir="{{top_dir}}"
 

@@ -23,11 +23,11 @@ Installation (on the 'ambari node' of your cluster, or one large machine)
 
 * Ambari is a cluster installation management system for hadoop-based clusters. It installs separate services on different machines across a cluster. AmbariKave is a small extention fo this. If what you're looking for is a common set of data science tools to install on one single machine (without a database or hdfs) consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
-* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta-Pre, with username repos and password kaverepos, including downloading and installing ambari:
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta, with username repos and password kaverepos, including downloading and installing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.0-Beta-Pre/ambarikave-installer-centos6-2.0-Beta-Pre.sh
-sudo bash ambarikave-installer-centos6-2.0-Beta-Pre.sh
+wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.0-Beta/ambarikave-installer-centos6-2.0-Beta.sh
+sudo bash ambarikave-installer-centos6-2.0-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -53,11 +53,11 @@ Then to provision your cluster go to: http://YOUR_AMBARI_NODE:8080 or deploy usi
 Installation (patch) over existing Ambari
 =========================================
 
-* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta-Pre, with username repos and password kaverepos, over existing ambari:
+* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.0-Beta, with username repos and password kaverepos, over existing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta-Pre/ambarikave-package-2.0-Beta-Pre.tar.gz
-tar -xzf ambarikave-package-2.0-Beta-Pre.tar.gz -C /var/lib/
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta/ambarikave-package-2.0-Beta.tar.gz
+tar -xzf ambarikave-package-2.0-Beta.tar.gz -C /var/lib/
 ```
 
 * OR to install the HEAD from git: example given with ssh copying from this github repo.
@@ -88,8 +88,8 @@ pull-update also respects git branches, as a command-line argument and is linked
 To update between released versions, simply install the new version over the old version after stopping the ambari server. Installing a new version of the stack, will not trigger an update of any running service. You would need to do this manually in the current state.
 ```
 sudo ambari-server stop
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.0-Beta-Pre/ambarikave-installer-centos6-2.0-Beta-Pre.sh
-sudo bash ambarikave-installer-centos6-2.0-Beta-Pre.sh
+wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.0-Beta/ambarikave-installer-centos6-2.0-Beta.sh
+sudo bash ambarikave-installer-centos6-2.0-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -141,8 +141,8 @@ Downloading deployment tools
 
 ```
 yum -y install wget curl tar zip unzip gzip
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta-Pre/ambarikave-deployment-2.0-Beta-Pre.tar.gz
-tar -xzf ambarikave-deployment-2.0-Beta-Pre.tar.gz
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.0-Beta/ambarikave-deployment-2.0-Beta.tar.gz
+tar -xzf ambarikave-deployment-2.0-Beta.tar.gz
 ```
 
 Or download the head from github. See the github readme on the deployment tools, the help written for each tool, or better yet, contact us if you'd like some advice on how to use anything here. [Deployment readme](https://github.com/KaveIO/AmbariKave/tree/master/deployment)

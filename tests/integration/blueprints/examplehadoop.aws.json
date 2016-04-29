@@ -23,7 +23,9 @@
     "InstanceType" : "c4.xlarge",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   { "Name" : "nno",
     "Count" : 2,

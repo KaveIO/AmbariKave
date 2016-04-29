@@ -77,6 +77,7 @@ class Gitlab(Script):
              mode=0600
              )
 
+        Execute('gitlab-ctl start postgresql')
         Execute('gitlab-ctl reconfigure')
 
     def status(self, env):

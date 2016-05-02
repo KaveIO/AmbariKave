@@ -243,6 +243,10 @@ def add_new_ebs_vol(iid, conf, access_key):
         i = desc_instance(iid)
     except RuntimeError:
         raise ValueError(iid + " is not one of your instance IDs")
+    # get a reference to this instance
+    ip = pub_ip(iid)
+    remote = lD.remoteHost("root", ip, access_key)
+    # choose the fdisk device in the case this is a broken Tokyo centos6 instance
     if "Fdisk" not in conf:
         import string
         alpha = string.ascii_lowercase
@@ -250,11 +254,11 @@ def add_new_ebs_vol(iid, conf, access_key):
         if detect_region().startswith('eu'):
             # eu-*    sd<X>     xvd<X>   (e.g. sdb->xvdb)
             skip = 0
-        elif detect_region().startswith('ap'):
+        elif detect_region().startswith('ap') and remote.detect_linux_version() in ["Centos6"]:
             # ap-*    sd<Y>     xvd<Y+4>  (e.g. sbd->xvdf)
             skip = 4
         conf["Fdisk"] = '/dev/xvd' + alpha[alpha.index(conf["Attach"][-1]) + skip]
-    ip = pub_ip(iid)
+
     av_zone = i["Reservations"][0]["Instances"][0]["Placement"]["AvailabilityZone"]
     voljson = runawstojson("ec2 create-volume --size " + str(conf["Size"]) + " --availability-zone " + av_zone)
     instnam = ""
@@ -285,7 +289,6 @@ def add_new_ebs_vol(iid, conf, access_key):
             break
         time.sleep(5)
         count = count + 1
-    remote = lD.remoteHost("root", ip, access_key)
     remote.cp(os.path.dirname(__file__) + "/../remotescripts/fdiskwrap.sh", "~/fdiskwrap.sh")
     remote.run("chmod a+x fdiskwrap.sh")
     try:

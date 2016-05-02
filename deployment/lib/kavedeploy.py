@@ -526,8 +526,12 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     """
     Add our ambari to a remote machine
     """
-    remote.run("service iptables stop")
-    remote.run("chkconfig iptables off")
+    # ignore failures here for now, since iptables does not exist on centos7
+    try:
+        remote.run("service iptables stop")
+        remote.run("chkconfig iptables off")
+    except RuntimeError:
+        pass
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)
@@ -741,6 +745,22 @@ def wait_until_up(remote, max_wait):
     if not up:
         raise SystemError(remote.host + " not contactable after 10 minutes")
     return True
+
+def remote_cp_authkeys(remote, user2='root'):
+    """
+    Copy authorized_keys from one user to another on remote machine
+    return new remote with the new user
+    """
+    remote.check()
+    if remote.user == user2:
+        return remote
+    hdir = '/home/' + user2
+    if user2 == 'root':
+        hdir = '/root'
+    remote.run('sudo -u ' + user2 + " cp /home/" + remote.user + "/.ssh/authorized_keys "
+               + hdir +"/.ssh/", extrasshopts=['-t', '-t'])
+    remote2 = remoteHost(user2, remote.host, remote.access_key)
+    return remote2
 
 
 def getsshid(remote, saveas, retry=0):

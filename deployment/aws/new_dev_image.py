@@ -131,7 +131,7 @@ if iid is None:
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.up_centos6("c4.large", secGroup, keypair, subnet=subnet)
+    upped = lA.up_os("Centos7","c4.large", secGroup, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iid_from_up_json(upped)[0]
     import time
@@ -145,9 +145,11 @@ if iid is None:
         lD.mysleep(1)
         ip = lA.pub_ip(iid)
         acount = acount + 1
-    remote = lD.remoteHost('root', ip, keyloc)
+    uname = 'centos'
+    remote = lD.remoteHost(uname, ip, keyloc)
     print "waiting until contactable"
     lD.wait_until_up(remote, 20)
+    remote = lD.remote_cp_authkeys(remote, 'root')
     remote.register()
     print "Renaming, configuring firewall and adding more disk space"
     lD.rename_remote_host(remote, "ambari", 'kave.io')
@@ -157,13 +159,15 @@ if iid is None:
     lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
-    remote.run("service iptables stop")
-    remote.run("chkconfig iptables off")
+    # This is not needed for Centos7
+    # remote.run("service iptables stop")
+    # remote.run("chkconfig iptables off")
     lD.confallssh(remote)
     lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sde"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-server", "Size": 3, "Attach": "/dev/sdf"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip
 

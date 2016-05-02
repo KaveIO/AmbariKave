@@ -141,10 +141,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         remote = lD.remoteHost(uname, ip, keyloc)
         lD.wait_until_up(remote, 20)
         remote.register()
-        if uname != 'root':
-            # Note the twice -t here such that I can run as a sudo command (fake tty)
-            remote.run('sudo cp /home/' + uname + '/.ssh/authorized_keys /root/.ssh/', extrasshopts=['-t', '-t'])
-            remote = lD.remoteHost('root', ip, keyloc)
+        remote = lD.remote_cp_authkeys(remote, 'root')
         lD.rename_remote_host(remote, machinename, 'kave.io')
         lD.confallssh(remote)
         remote.describe()

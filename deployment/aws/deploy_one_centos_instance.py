@@ -133,11 +133,18 @@ while (ip is None and acount < 20):
     ip = lA.pub_ip(iid)
     acount = acount + 1
 
+osval = "Centos6"
+if osval == "Centos6" or ambaridev:
+    uname = 'root'
+else:
+    uname = ''.join([i for i in osval if not i.isdigit()]).lower()
+
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
         remote = lD.remoteHost('root', ip, keyloc)
         lD.wait_until_up(remote, 20)
+        remote = lD.remote_cp_authkeys(remote, 'root')
         remote.register()
         if not ambaridev:
             lD.rename_remote_host(remote, machinename, 'kave.io')

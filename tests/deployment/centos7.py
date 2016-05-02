@@ -34,11 +34,16 @@ class DepCentos7(base.LDTest):
         self.service = "Deploy"
         self.ostype = "Centos7"
         ambari, iid = self.deploy_os(self.ostype)
-        if self.ostype.startswith("Ubuntu"):
-            ambari.run('apt-get update')
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "Test-" in stdout,
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
+        # Test adding more space with add_new_ebs_volume
+        stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +
+                              ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdf"}\'')
+        stdout = ambari.run("ls -l /tmp/testdir1")
+        self.assertFalse("No such file or directory" in stdout,
+                        "Unable to crate/mount /dev/sdf " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
+
 
 
 def suite(verbose=False):

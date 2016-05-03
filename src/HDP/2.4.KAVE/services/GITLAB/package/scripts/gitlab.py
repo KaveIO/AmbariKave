@@ -23,7 +23,6 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 class Gitlab(Script):
-    # package = 'gitlab-7.6.2_omnibus.5.3.0.ci.1-1.el6.x86_64.rpm'
     package = 'gitlab-ce-8.7.1-ce.1.el6.x86_64.rpm'
     installer_cache_path = '/tmp/'
 

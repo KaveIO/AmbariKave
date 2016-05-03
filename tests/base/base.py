@@ -24,7 +24,6 @@ run(mods) and parallel(mods,modargs) are wrappers for running existing test modu
 find_services is a helper function to return a list of services present in a given stack of this checkout
 
 LDTest is a derived test case class from unittest.TestCase, adding common methods for running tests on newly-created
-aws machines
 """
 import unittest
 import sys

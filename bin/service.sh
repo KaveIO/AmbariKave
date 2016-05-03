@@ -139,6 +139,9 @@ function runConfigureService {
     SONARQUBE_RUNNER)
     buildConfiguration sonar sonar_database_user_passwd
      ;;
+    JENKINS)
+	buildConfiguration jenkins JENKINS_ADMIN_PASSWORD
+      ;;
   esac
 }
 

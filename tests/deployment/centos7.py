@@ -42,8 +42,7 @@ class DepCentos7(base.LDTest):
                               ' \'{"Mount": "/tmp/testdir1", "Size": 1, "Attach": "/dev/sdf"}\'')
         stdout = ambari.run("ls -l /tmp/testdir1")
         self.assertFalse("No such file or directory" in stdout,
-                        "Unable to crate/mount /dev/sdf " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
-
+                         "Unable to crate/mount /dev/sdf " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
 
 
 def suite(verbose=False):

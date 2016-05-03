@@ -627,6 +627,7 @@ def wait_for_ambari(ambari, maxrounds=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= maxrounds:
+        # ignore failures here for now, since iptables does not exist on centos7
         try:
             stdout = ambari.run("service iptables stop")
         except RuntimeError:
@@ -684,9 +685,10 @@ def confremotessh(remote, port=443):
     # selinux tools
     remote.run("yum -y install policycoreutils-python")
     remote.run("semanage port -m -t ssh_port_t -p tcp " + str(port))
-    # modify iptables
-    remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
-    remote.run("python add_incoming_port.py " + str(port))
+    # modify iptables, only in case of Centos6
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
+        remote.run("python add_incoming_port.py " + str(port))
     # modify sshconfig
     remote.run("echo >> /etc/ssh/sshd_config")
     remote.run("echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config")
@@ -699,8 +701,10 @@ def confremotessh(remote, port=443):
         remote.run("service ssh restart")
     import time
     time.sleep(2)
-    remote.run("service iptables restart")
-    time.sleep(1)
+    # modify iptables, only in case of Centos6
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.run("service iptables restart")
+        time.sleep(1)
     try:
         remote.run("service sshd restart")
     except RuntimeError:

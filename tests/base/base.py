@@ -589,11 +589,13 @@ class LDTest(unittest.TestCase):
                   "~/.netrc")
         while rounds <= 20:
             try:
-                stdout = ambari.run("service iptables stop")
+                # modify iptables, only in case of Centos6
+                if ambari.detect_linux_version() in ["Centos6"]:
+                    ambari.run("service iptables stop")
             except RuntimeError:
                 pass
             try:
-                stdout = ambari.run("curl --netrc  http://localhost:8080/api/v1/clusters")
+                ambari.run("curl --netrc  http://localhost:8080/api/v1/clusters")
                 flag = True
                 break
             except RuntimeError:

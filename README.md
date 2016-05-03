@@ -35,13 +35,14 @@ sudo bash ambarikave-installer-centos6-2.0-Beta.sh
 
 * OR to install the HEAD from git: example given with ssh copying from this github repo.
 ```
+# If on Centos6, turn off iptables with:
+sudo service iptables stop
+sudo chkconfig iptables off
 #test ssh keys with
 ssh -T git@github.com
 #if this works,
 git clone git@github.com:KaveIO/AmbariKave.git
 # Once you have a local checkout, install it with:
-sudo service iptables stop
-sudo chkconfig iptables off
 cd AmbariKave
 sudo dev/install.sh
 sudo dev/patch.sh

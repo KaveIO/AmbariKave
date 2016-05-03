@@ -418,7 +418,11 @@ for instancegroup in cluster_config["InstanceGroups"]:
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"
 print "=============================================="
-allremotes.run("service iptables stop")
+try:
+    # only needed for centos 6
+    allremotes.run("service iptables stop")
+except RuntimeError:
+    pass
 allremotes.run("'/bin/echo 0 > /selinux/enforce'")
 
 print "==================================="

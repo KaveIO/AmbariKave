@@ -131,7 +131,7 @@ if iid is None:
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.up_os("Centos7","c4.large", secGroup, keypair, subnet=subnet)
+    upped = lA.up_os("Centos7", "c4.large", secGroup, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iid_from_up_json(upped)[0]
     import time

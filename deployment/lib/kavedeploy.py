@@ -746,6 +746,7 @@ def wait_until_up(remote, max_wait):
         raise SystemError(remote.host + " not contactable after 10 minutes")
     return True
 
+
 def remote_cp_authkeys(remote, user2='root'):
     """
     Copy authorized_keys from one user to another on remote machine
@@ -758,7 +759,7 @@ def remote_cp_authkeys(remote, user2='root'):
     if user2 == 'root':
         hdir = '/root'
     remote.run('sudo -u ' + user2 + " cp /home/" + remote.user + "/.ssh/authorized_keys "
-               + hdir +"/.ssh/", extrasshopts=['-t', '-t'])
+               + hdir + "/.ssh/", extrasshopts=['-t', '-t'])
     remote2 = remoteHost(user2, remote.host, remote.access_key)
     return remote2
 

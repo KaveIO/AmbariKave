@@ -166,8 +166,8 @@ if iid is None:
     lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sde"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-server", "Size": 3, "Attach": "/dev/sdf"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc)
+    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc)
     remote.describe()
     print "OK, iid " + iid + " now lives at IP " + ip
 

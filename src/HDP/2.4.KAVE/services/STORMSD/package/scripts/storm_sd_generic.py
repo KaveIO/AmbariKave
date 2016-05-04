@@ -33,8 +33,9 @@ class StormGeneric(Script):
         # install ZeroMQ which is prerequisite for storm
         user_exist = os.system('grep storm /etc/passwd > /dev/null')
         if user_exist != 0:
-            kc.copy_cache_or_repo('zeromq-2.1.7-1.el6.x86_64.rpm')
-            Execute('yum install -y zeromq-2.1.7-1.el6.x86_64.rpm')
+            # zeromq no longer needed?
+            # kc.copy_cache_or_repo('zeromq-2.1.7-1.el6.x86_64.rpm')
+            # Execute('yum install -y zeromq-2.1.7-1.el6.x86_64.rpm')
             Execute('groupadd -g 53001 storm')
             Execute('mkdir -p /app/home')
             Execute('useradd -u 53001 -g 53001 -d /app/home/storm -s /bin/bash storm -c "Storm service account"')
@@ -43,7 +44,7 @@ class StormGeneric(Script):
         storm_dir_present = os.path.isdir('/usr/local/storm')
         if not storm_dir_present:
             # download storm
-            kc.copy_cache_or_repo('storm-10.0.zip')
+            kc.copy_cache_or_repo('storm-10.0.zip', arch='noarch')
             # http://ftp.riken.jp/net/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip
             Execute('unzip -o -q storm-10.0.zip -d /usr/local')
             Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')

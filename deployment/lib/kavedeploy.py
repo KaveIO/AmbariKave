@@ -807,24 +807,23 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
     # ensure no prompt because of the silly not recognised host yhingy
-    source.run("ssh-keyscan -H " + dest_internal_ip + " >> .ssh/known_hosts")
-    source.run("ssh-keygen -R " + dest_internal_ip)
-    source.run("ssh-keyscan -H " + dest_internal_ip + " >> .ssh/known_hosts")
+    def scan_and_store_key(remote, host_to_scan):
+        remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
+        remote.run("ssh-keygen -R " + host_to_scan)
+        remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
+        if host_to_scan!=host_to_scan.lower():
+            scan_and_store_key(remote,host_to_scan.lower())
+    scan_and_store_key(source, dest_internal_ip)
     if preservehostname:
-        hostname = destination.run("hostname -s")
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-        source.run("ssh-keygen -R " + hostname)
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-        hostname = destination.run("hostname")
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-        source.run("ssh-keygen -R " + hostname)
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
+        scan_and_store_key(source, destination.run("hostname -s"))
+        scan_and_store_key(source, destination.run("hostname"))
     # test access by trying a double-hopping ssh
     output = source.run("ssh " + destination.user + "@" + dest_internal_ip + " echo Hello friend from \\$HOSTNAME")
     if "friend" not in output or "HOST" in output:
         raise SystemError("Setting up keyless access failed!")
     if preservehostname:
-        output = source.run("ssh " + destination.user + "@" + hostname + " echo Hello friend from \\$HOSTNAME")
+        output = source.run("ssh " + destination.user + "@" + destination.run("hostname")
+                            + " echo Hello friend from \\$HOSTNAME")
         if "friend" not in output or "HOST" in output:
             raise SystemError("Setting up keyless access failed!")
     return True
@@ -836,7 +835,7 @@ def rename_remote_host(remote, new_name, newdomain=None):
     If newdomain is given, also add the new domain, if not given, use localdomain
     """
     remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
-    cmd = "python rename_me.py " + new_name
+    cmd = "python rename_me.py " + new_name.lower()
     if newdomain is not None:
         cmd = cmd + " " + newdomain
     remote.run(cmd)

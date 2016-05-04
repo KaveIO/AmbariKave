@@ -133,7 +133,9 @@ while (ip is None and acount < 20):
     ip = lA.pub_ip(iid)
     acount = acount + 1
 
-osval = "Centos6"
+# This needs to be much smarter here!!
+
+osval = "Centos7"
 if osval == "Centos6":
     uname = 'root'
 else:
@@ -142,18 +144,26 @@ else:
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
-        remote = lD.remoteHost('root', ip, keyloc)
+        remote = lD.remoteHost(uname, ip, keyloc)
         lD.wait_until_up(remote, 20)
         remote = lD.remote_cp_authkeys(remote, 'root')
         remote.register()
-        if not ambaridev:
+        if not ambaridev:# or remote.detect_linux_version() in ["Centos7"]:
             lD.rename_remote_host(remote, machinename, 'kave.io')
+        else:# or remote.detect_linux_version() in ["Centos7"]:
+            lD.rename_remote_host(remote, 'ambari', 'kave.io')
+        if not ambaridev:
             lD.confallssh(remote)
         lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_ip(iid))
+        # Give the machine ssh access into itself
+        lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
         if ambaridev:
             if "GIT" in security_config["AccessKeys"]:
                 remote.prep_git(security_config["AccessKeys"]["GIT"]["KeyFile"], force=True)
-            remote.run("echo 0 > /selinux/enforce")
+            if  remote.detect_linux_version() in ["Centos6"]:
+                remote.run("echo 0 > /selinux/enforce")
+            elif remote.detect_linux_version() in ["Centos7"]:
+                remote.run("setenforce permissive")
         remote.describe()
     except KeyboardInterrupt:
         pass

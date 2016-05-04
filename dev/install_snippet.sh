@@ -22,10 +22,19 @@
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
+os=`uname -r`
+if [[ "$os" == *"el7"* ]]; then
+	os="centos7"
+elif [[ "$os" == *"el6"* ]]; then
+	os="centos6"
+else
+	echo "This script is not tested/ready for this operating system"
+fi
+
 yum install -y wget curl
-wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.2.1.0/ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.2.1.0/ambari.repo
 cp ambari.repo /etc/yum.repos.d/
-wget http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.4.0.0/hdp.repo
+wget http://public-repo-1.hortonworks.com/HDP/${os}/2.x/updates/2.4.0.0/hdp.repo
 cp hdp.repo /etc/yum.repos.d/HDP.repo
 yum install ambari-server -y
 ambari-server setup -s
@@ -34,6 +43,10 @@ ambari-server setup -s
 yum install -y epel-release
 yum install -y pdsh python-pip
 pip install requests
+
+if [ "$os" == "centos7" ]; then
+	yum install -y pdsh-mod-dshgroup
+fi
 
 encrypt_number="4"
 

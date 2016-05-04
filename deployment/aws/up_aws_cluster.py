@@ -213,8 +213,9 @@ for k, ig in instancegroups.iteritems():
             acount = acount + 1
         if ip is None:
             raise SystemError(iid + " no ip assigned after quite some time")
-        remote = lD.remoteHost("root", ip, amazon_keyfile)
+        remote = lD.remoteHost("centos", ip, amazon_keyfile)
         lD.wait_until_up(remote, 20)
+        remote = lD.remote_cp_authkeys(remote, 'root')
         remote.register()
         instance_to_remote[iid] = remote
 
@@ -424,7 +425,7 @@ if instance_to_remote.values()[0].detect_linux_version() in ["Centos6"]:
     allremotes.run("'echo 0 >/selinux/enforce'")
     allremotes.run("service iptables stop")
 elif instance_to_remote.values()[0].detect_linux_version() in ["Centos7"]:
-    whole_cluster.run("setenforce permissive")
+    allremotes.run("setenforce permissive")
 
 print "==================================="
 donedict = {}

@@ -370,6 +370,12 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     if len(iids) != len(mounts):
         raise ValueError("length of iids must be the same as len mounts")
     # print items
+    print mounts
+    for m in mounts:
+        for mi in m:
+            for k,v in m.iteritems():
+                print k, v
+                print [ord(ki) for ki in k],  [ord(vi) for vi in v]
     itemPool = Queue.Queue()
     for iid, mounts in zip(iids, mounts):
         # print iid, mounts

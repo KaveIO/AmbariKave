@@ -34,7 +34,7 @@ class DepCentos(base.LDTest):
         self.service = "CentosDev"
         ambari, iid = self.deploy_dev()
         stdout = ambari.run("echo Hello world from $HOSTNAME")
-        self.assertTrue("ambari" in stdout.lower() or "Test-" in stdout.lower(),
+        self.assertTrue("ambari" in stdout.lower() or "test-" in stdout.lower(),
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
         self.pull(ambari)
         self.wait_for_ambari(ambari)

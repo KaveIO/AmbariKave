@@ -29,6 +29,7 @@ class FreeipaServer(Script):
 
     def install(self, env):
         import params
+        import kavecommon as kc
         self.install_packages(env)
         env.set_params(params)
 
@@ -43,14 +44,21 @@ class FreeipaServer(Script):
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
 
-        # ipa-server install command. Currently --selfsign is mandatory because
-        # of some anoying centos6.5 problems. The underling installer uses an
-        # outdated method for the dogtag system which fails.
-        install_command = 'ipa-server-install -U  --selfsign --realm="%s" \
+        install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s"' \
             % (params.realm, params.directory_password, admin_password)
 
+        os = kc.detect_linux_version()
+        # ipa-server install command. Currently --selfsign is mandatory because
+        # of some anoying centos6.5 problems. The underling installer uses an
+        # outdated method for the dogtag system which fails.
+        # however, on centos7, this option does not exist!
+        if os in ["centos6"]:
+            install_command += " --selfsign"
+
         if params.install_with_dns:
+            if os in ["centos7"]:
+                Package("ipa-server-dns")
             install_command += ' --setup-dns --domain="%s"' % params.domain
             if params.forwarders:
                 for forwarder in params.forwarders:

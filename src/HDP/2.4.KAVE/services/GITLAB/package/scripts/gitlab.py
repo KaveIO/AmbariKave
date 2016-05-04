@@ -36,7 +36,7 @@ class Gitlab(Script):
         import params
         # intelligently choose architecture
         import kavecommon as kc
-        el = {"centos6" : "el6", "centos7": "el7"}
+        el = {"centos6": "el6", "centos7": "el7"}
         self.package = self.package % el[kc.detect_linux_version()]
         self.install_packages(env)
         env.set_params(params)

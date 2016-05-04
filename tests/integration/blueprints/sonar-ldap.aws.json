@@ -5,8 +5,11 @@
     "Count" : -1,
     "InstanceType" : "t2.medium",
     "AccessType" : "admin",
-    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" } ]
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "gate",
     "Count" : 1,

@@ -6,22 +6,25 @@
     "InstanceType" : "t2.medium",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdd" } ]
+    				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   { "Name" : "gate",
     "Count" : 1,
     "InstanceType" : "c4.large",
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" } ]
   },
   { "Name" : "ci",
     "Count" : -1,
     "InstanceType" : "c4.xlarge",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" } ]
   }
   ]
 }

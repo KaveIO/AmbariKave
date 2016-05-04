@@ -6,7 +6,8 @@
     "InstanceType" : "t2.medium",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib", "Size" : 4,   "Attach" : "/dev/sdc" } ]
+    				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" }]
   },
   { "Name" : "gate",
     "Count" : 1,

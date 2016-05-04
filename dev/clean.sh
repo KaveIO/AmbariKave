@@ -32,7 +32,7 @@ ambari-agent stop
 sleep 5
 yum -y erase ambari-agent ambari-server
 su - postgres bash -c 'psql -c "drop database ambari"; psql -c "drop database ambarirca";'
-rm -rf /var/lib/ambari-server
-rm -rf /var/lib/ambari-agent
+rm -rf /var/lib/ambari-server/*
+rm -rf /var/lib/ambari-agent/*
 rm -rf /etc/yum.repos.d/ambari.repo
 

@@ -26,7 +26,7 @@ usage deploy_one_centos_instance.py hostname [security_config.json] [instance_ty
 
 optional:
     --verbose : print all remotely running commands
-    [instance_type]: optional, if not specified will use c4.large
+    [instance_type]: optional, if not specified will use c3/4.large
     [security_config.json]: optional, if not specified will use the environemnt variable AWSSECCONF
     [--ambari-dev] : will use our ambari development image, this should speed up testing *a lot*
 """
@@ -115,7 +115,9 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
 
 lD.testproxy()
 
-upped = lA.up_centos6(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
+itype = lA.chooseitype(itype)
+
+upped = lA.up_centos7(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
 print "submitted"
 
 iid = lA.iid_from_up_json(upped)[0]
@@ -135,11 +137,7 @@ while (ip is None and acount < 20):
 
 # This needs to be much smarter here!!
 
-osval = "Centos7"
-if osval == "Centos6":
-    uname = 'root'
-else:
-    uname = ''.join([i for i in osval if not i.isdigit()]).lower()
+uname = 'centos'
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"

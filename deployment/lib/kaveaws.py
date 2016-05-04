@@ -98,7 +98,7 @@ def chooseamiid(os, region):
     return ""
 
 
-def up_centos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
+def up_centos7(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
     region = "default"
     amiid = ""
     if subnet is not None:
@@ -109,11 +109,11 @@ def up_centos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
             amiid = os.environ["AMIAMBDEV"]
         else:
             raise ValueError(
-                "To use the dev option, you must have set AMIAMBDEV environment variable to the ami of a centos6 "
+                "To use the dev option, you must have set AMIAMBDEV environment variable to the ami of a centos "
                 "image with ambari pre-installed with your keys and in your region. See the script that generates "
                 "the dev image for that.")
     else:
-        amiid = chooseamiid("Centos6", region)
+        amiid = chooseamiid("Centos7", region)
     return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
 

@@ -26,7 +26,7 @@ usage deploy_known_instance.py os hostname [security_config.json] [instance_type
 
 optional:
     --verbose : print all remotely running commands
-    [instance_type]: optional, if not specified will use c4.large
+    [instance_type]: optional, if not specified will use c3/4.large
     [security_config.json]: optional, if not specified will use the environment variable AWSSECCONF
 """
 
@@ -111,6 +111,7 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
         "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
 
 lD.testproxy()
+itype = lA.chooseitype(itype)
 
 upped = lA.up_os(osval, itype, secGroup, keypair, subnet=subnet)
 print "submitted"

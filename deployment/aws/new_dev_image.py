@@ -17,7 +17,7 @@
 #
 ##############################################################################
 """
-New dev image will first create a new centos6 machine and install the head of ambari onto it.
+New dev image will first create a new centos7 machine and install the head of ambari onto it.
 It will then stop that instance and create an image from that instance, returning the ami registered id
 
 usage: new_dev_image.py [iid] [--verbose] [--skip-ambari] [--skip-blueprint]
@@ -124,14 +124,16 @@ if "Subnet" in security_config:
 
 lA.testaws()
 
+itype = lA.chooseitype("c4.large")
+
 if iid is None:
-    print "upping new c4.large"
+    print "upping new", itype
     if lD.detect_proxy() and lD.proxy_blocks_22:
         raise SystemError(
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.up_os("Centos7", "c4.large", secGroup, keypair, subnet=subnet)
+    upped = lA.up_os("Centos7", itype, secGroup, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iid_from_up_json(upped)[0]
     import time

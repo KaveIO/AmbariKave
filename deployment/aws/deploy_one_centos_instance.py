@@ -148,9 +148,9 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         lD.wait_until_up(remote, 20)
         remote = lD.remote_cp_authkeys(remote, 'root')
         remote.register()
-        if not ambaridev:# or remote.detect_linux_version() in ["Centos7"]:
+        if not ambaridev:  # or remote.detect_linux_version() in ["Centos7"]:
             lD.rename_remote_host(remote, machinename, 'kave.io')
-        else:# or remote.detect_linux_version() in ["Centos7"]:
+        else:  # or remote.detect_linux_version() in ["Centos7"]:
             lD.rename_remote_host(remote, 'ambari', 'kave.io')
         if not ambaridev:
             lD.confallssh(remote)
@@ -160,7 +160,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         if ambaridev:
             if "GIT" in security_config["AccessKeys"]:
                 remote.prep_git(security_config["AccessKeys"]["GIT"]["KeyFile"], force=True)
-            if  remote.detect_linux_version() in ["Centos6"]:
+            if remote.detect_linux_version() in ["Centos6"]:
                 remote.run("echo 0 > /selinux/enforce")
             elif remote.detect_linux_version() in ["Centos7"]:
                 remote.run("setenforce permissive")

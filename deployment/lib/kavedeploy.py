@@ -807,12 +807,13 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
     # ensure no prompt because of the silly not recognised host yhingy
+
     def scan_and_store_key(remote, host_to_scan):
         remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
         remote.run("ssh-keygen -R " + host_to_scan)
         remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
-        if host_to_scan!=host_to_scan.lower():
-            scan_and_store_key(remote,host_to_scan.lower())
+        if host_to_scan != host_to_scan.lower():
+            scan_and_store_key(remote, host_to_scan.lower())
     scan_and_store_key(source, dest_internal_ip)
     if preservehostname:
         scan_and_store_key(source, destination.run("hostname -s"))

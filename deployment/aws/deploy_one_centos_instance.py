@@ -134,7 +134,7 @@ while (ip is None and acount < 20):
     acount = acount + 1
 
 osval = "Centos6"
-if osval == "Centos6" or ambaridev:
+if osval == "Centos6":
     uname = 'root'
 else:
     uname = ''.join([i for i in osval if not i.isdigit()]).lower()

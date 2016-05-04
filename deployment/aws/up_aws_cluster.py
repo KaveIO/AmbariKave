@@ -182,9 +182,9 @@ for instancegroup in cluster_config["InstanceGroups"]:
     if count == 0:
         continue
     up = lA.up_os("Centos7",
-                       type=lA.chooseitype(instancegroup["InstanceType"]),
-                       secGroup=security_group, keys=amazon_keypair_name,
-                       count=count, subnet=subnet)
+                  type=lA.chooseitype(instancegroup["InstanceType"]),
+                  secGroup=security_group, keys=amazon_keypair_name,
+                  count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iid_from_up_json(up)
 
 instance_to_remote = {}

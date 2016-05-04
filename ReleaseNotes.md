@@ -9,6 +9,8 @@ Contains a list of the released versions with a summary of the main changes in e
 
 * MAJOR release to migrate to the latest Ambari version 2.2.1
 * KAVE stack now on top of HDP 2.4 (2.4.KAVE)
+* HOTFIX: gitlabs CVE-2016-4340 necessitated a quick hotfix on this version,
+  updating gitlabs from 8.6.3 -> 8.7.1 (3rd May)
 
 Major modifications in services:
 
@@ -55,7 +57,7 @@ Minor modifications in services:
 * SonarQube
     Updated to version 5.4 of the server, only a minor update
 * Jenkins: updated to version 1.642
-* Gitlabs: updated to version 8.63
+* Gitlabs: updated to version 8.7.1
 
 
 Bugfixes:

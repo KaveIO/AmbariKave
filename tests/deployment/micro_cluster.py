@@ -38,7 +38,7 @@ class MicroCluster(base.LDTest):
         stdout = self.deploycluster(blueprint_dir + '/' + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
-        ahost = self.remote_from_cluster_stdout(stdout, mname="testing-001")
+        ahost, iid = self.remote_from_cluster_stdout(stdout, mname="testing-001")
         ahost.register()
         stdout = ahost.run("cat /etc/resolv.conf")
         self.assertTrue("kave.io" in stdout,
@@ -59,7 +59,8 @@ class MicroCluster(base.LDTest):
         priv_ip = lA.priv_ip(iid)
         stdout = ahost.run("host " + priv_ip)
         self.assertTrue("domain name pointer" in stdout,
-                        "Reverse lookup broken on testing-001.kave.io! (" + ' '.join(ahost.sshcmd()) + ")")
+                        "Reverse lookup broken on testing-001.kave.io! ("
+                        + ' '.join(ahost.sshcmd()) + ")")
 
 
 def suite(verbose=False, branch="__local__"):

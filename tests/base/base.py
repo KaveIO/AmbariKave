@@ -587,6 +587,12 @@ class LDTest(unittest.TestCase):
         return
 
     def remote_from_cluster_stdout(self, stdout, mname='ambari'):
+        """
+        take the output from the up_aws_cluster script and parse it
+        first check it was successful, then find one machine (mname) connect command
+        so that I may return a remoteHost object and the iid
+        remoteHost, iid
+        """
         import kavedeploy as lD
         connectcmd = ""
         for line in range(len(stdout.split('\n'))):
@@ -604,7 +610,7 @@ class LDTest(unittest.TestCase):
         keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
-        return lD.remoteHost("root", ip, keyfile)
+        return lD.remoteHost("root", ip, keyfile), iid
 
     def wait_for_ambari(self, ambari, check_inst=None):
         """

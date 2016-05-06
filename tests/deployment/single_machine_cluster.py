@@ -36,7 +36,7 @@ class SingleMachineCluster(base.LDTest):
         stdout = self.deploycluster(deploy_dir + "/clusters/" + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
-        ambari = self.remote_from_cluster_stdout(stdout)
+        ambari, iid = self.remote_from_cluster_stdout(stdout)
         ambari.register()
         self.wait_for_ambari(ambari, ["inst.stdout", "inst.stderr"])
 

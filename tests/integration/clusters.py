@@ -44,7 +44,7 @@ class TestCluster(base.LDTest):
         if self.clustername == 'prod':
             self.clustername = self.service
         stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        ambari = self.remote_from_cluster_stdout(stdout)
+        ambari, iid = self.remote_from_cluster_stdout(stdout)
         ambari.register()
         self.wait_for_ambari(ambari, ["inst.stdout", "inst.stderr"])
         self.pull(ambari)

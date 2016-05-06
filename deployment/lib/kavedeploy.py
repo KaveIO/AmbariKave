@@ -615,9 +615,10 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
             return
 
 
-def wait_for_ambari(ambari, maxrounds=10):
+def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
     """
     Wait until ambari server is up and running, error if it doesn't appear!
+    Also check if a list of files, e.g. inst.stdout or inst.stderr contains errors
     """
     import time
     # wait until ambari server is up
@@ -629,9 +630,21 @@ def wait_for_ambari(ambari, maxrounds=10):
     while rounds <= maxrounds:
         # ignore failures here for now, since iptables does not exist on centos7
         try:
-            stdout = ambari.run("service iptables stop")
+            # modify iptables, only in case of Centos6
+            if ambari.detect_linux_version() in ["Centos6"]:
+                ambari.run("service iptables stop")
         except RuntimeError:
             pass
+        # check file pointed to for failures
+        try:
+            if check_inst:
+                for afile in check_inst:
+                    cat = ambari.run("cat " + afile).strip().lower()
+                    if "error" in cat or "exception" in cat or "failed" in cat:
+                        raise SystemError("Failure in ambari server start server detected!")
+        except RuntimeError:
+            pass
+
         try:
             stdout = ambari.run("curl --netrc http://localhost:8080/api/v1/clusters")
             flag = True
@@ -641,7 +654,7 @@ def wait_for_ambari(ambari, maxrounds=10):
         time.sleep(60)
         rounds = rounds + 1
     if not flag:
-        raise ValueError("ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        raise IOError("ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
     return True
 
 

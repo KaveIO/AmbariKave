@@ -38,25 +38,7 @@ class MicroCluster(base.LDTest):
         stdout = self.deploycluster(blueprint_dir + '/' + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
-        connectcmd = ""
-        for line in range(len(stdout.split('\n'))):
-            if "testing-001 connect remotely with" in stdout.split("\n")[line]:
-                connectcmd = stdout.split("\n")[line + 1].strip()
-        adict = stdout.split("\n")[-2].replace("Complete, created:", "")
-        # try interpreting as json
-        import json
-        adict = base.d2j(adict)
-        iid, ip = adict["testing-001"]
-        self.assertTrue(ip in connectcmd)
-        jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
-        import json
-
-        acconf = json.loads(jsondat.read())
-        jsondat.close()
-        keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
-        self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
-                        "wrong keyfile seen in (" + connectcmd + ")")
-        ahost = lD.remoteHost("root", ip, keyfile)
+        ahost = self.remote_from_cluster_stdout(stdout, mname="testing-001")
         ahost.register()
         stdout = ahost.run("cat /etc/resolv.conf")
         self.assertTrue("kave.io" in stdout,

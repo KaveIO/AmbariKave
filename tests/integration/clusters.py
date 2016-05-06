@@ -39,82 +39,14 @@ class TestCluster(base.LDTest):
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         pref = os.path.dirname(__file__) + "/blueprints/" + self.service
-        a = os.path.exists(pref + ".aws.json")
-        b = os.path.exists(pref + ".blueprint.json")
-        c = os.path.exists(pref + ".cluster.json")
-        if not a or not b or not c:
-            raise ValueError(
-                "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
-                    b) + " .cluster " + str(c))
-        # check the files can be opened, and then check that the cluster contains the machines from the aws file
-        jsons = []
-        for ason in [pref + ".aws.json", pref + ".blueprint.json", pref + ".cluster.json"]:
-            f = open(ason)
-            l = f.read()
-            f.close()
-            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
-            try:
-                interp = json.loads(l)
-                jsons.append(interp)
-            except:
-                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
-        # Find what is needed for the cluster
-        need_hosts = []
-        need_groups = []
-        for hg in jsons[-1]["host_groups"]:
-            need_groups.append(hg['name'])
-            for host in hg['hosts']:
-                need_hosts.append(host["fqdn"])
-        supplies_hosts = []
-        created_groups = []
-        # check that the aws file creates the machines
-        dn = "kave.io"
-        try:
-            dn = jsons[0]["Domain"]["Name"]
-        except KeyError:
-            pass
-        for ig in jsons[0]["InstanceGroups"]:
-            if ig["Count"] > 0:
-                supplies_hosts = supplies_hosts + [ig["Name"] + '-00' +
-                                                   str(i + 1) + '.' + dn for i in range(ig["Count"])]
-            else:
-                supplies_hosts.append(ig["Name"] + '.' + dn)
-        missing = [f for f in need_hosts if f not in supplies_hosts]
-        extra = [f for f in supplies_hosts if f not in need_hosts]
-        self.assertFalse(len(missing), "Missing creation of the hosts called " + str(missing))
-        self.assertFalse(len(extra), "Asked to create hosts I won't later use " + str(extra))
-        # check that the blueprint file creates the hostgroups
-        for ig in jsons[1]["host_groups"]:
-            created_groups.append(ig["name"])
-        missing = [f for f in need_groups if f not in created_groups]
-        self.assertFalse(len(missing), "Missing creation of the host groups called " + str(missing))
-        # check that the supplied blueprint is the one which is given in the clusterfile
-        self.assertEqual(jsons[1]["Blueprints"]["blueprint_name"], jsons[-1]["blueprint"],
-                         "Blueprint name is not the same in your blueprint c.f. your clusterfile")
+        self.verify_blueprint(pref + ".aws.json", pref + ".blueprint.json", pref + ".cluster.json")
         # Deploy the cluster
         if self.clustername == 'prod':
             self.clustername = self.service
         stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        connectcmd = ""
-        for line in range(len(stdout.split('\n'))):
-            if "ambari connect remotely with" in stdout.split("\n")[line]:
-                connectcmd = stdout.split("\n")[line + 1].strip()
-        adict = stdout.split("\n")[-2].replace("Complete, created:", "")
-        # try interpreting as json
-        adict = base.d2j(adict)
-        iid, ip = adict["ambari"]
-        self.assertTrue(ip in connectcmd)
-        jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
-        import json
-
-        acconf = json.loads(jsondat.read())
-        jsondat.close()
-        keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
-        self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
-                        "wrong keyfile seen in (" + connectcmd + ")")
-        ambari = lD.remoteHost("root", ip, keyfile)
+        ambari = self.remote_from_cluster_stdout(stdout)
         ambari.register()
-        self.wait_for_ambari(ambari)
+        self.wait_for_ambari(ambari, ["inst.stdout", "inst.stderr"])
         self.pull(ambari)
         self.wait_for_ambari(ambari)
         self.deploy_blueprint(ambari, pref + ".blueprint.json", pref + ".cluster.json")

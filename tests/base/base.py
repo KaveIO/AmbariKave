@@ -35,6 +35,15 @@ import Queue
 import subprocess as sub
 
 
+def d2j(adict):
+    """Replacements to take a literal string and return a dictionary, using ajson intermediate
+    """
+    replaced = adict.strip().replace('{u\'', "{'").replace(' [u\'', "['").replace(
+        ' (u\'', "('").replace(' u\'', " '").replace("'", '"').replace('(', "[").replace(")", "]")
+    import json
+    return json.loads(replaced)
+
+
 def find_services(stack="HDP/2.4.KAVE/services"):
     """
     Nice little helper function which lists all our services.
@@ -401,6 +410,9 @@ class LDTest(unittest.TestCase):
         if self.branch:
             abranch = self.branch
         stdout = ambari.run("./[a,A]mbari[k,K]ave/dev/pull-update.sh " + abranch)
+        self.assertTrue(
+            "Waiting for server start" in stdout and "Ambari Server 'start' completed successfully." in stdout,
+            "Ambari server was not started! " + ' '.join(ambari.sshcmd()))
         import time
 
         time.sleep(5)
@@ -574,36 +586,100 @@ class LDTest(unittest.TestCase):
             raise ValueError("Unknown state: " + str(state) + " (" + ' '.join(ambari.sshcmd()) + ")")
         return
 
-    def wait_for_ambari(self, ambari):
+    def remote_from_cluster_stdout(self, stdout, mname='ambari'):
+        import kavedeploy as lD
+        connectcmd = ""
+        for line in range(len(stdout.split('\n'))):
+            if (mname + " connect remotely with") in stdout.split("\n")[line]:
+                connectcmd = stdout.split("\n")[line + 1].strip()
+        adict = stdout.split("\n")[-2].replace("Complete, created:", "")
+        # try interpreting as json
+        adict = d2j(adict)
+        iid, ip = adict[mname]
+        self.assertTrue(ip in connectcmd, ip + " Wrong IP seen for connecting to " + mname + ' ' + connectcmd)
+        jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
+        import json
+        acconf = json.loads(jsondat.read())
+        jsondat.close()
+        keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
+        self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
+                        "wrong keyfile seen in (" + connectcmd + ")")
+        return lD.remoteHost("root", ip, keyfile)
+
+    def wait_for_ambari(self, ambari, check_inst=None):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
         import kavedeploy as lD
-        import time
-        # wait until ambari server is up
-        ip = ambari.host
-        rounds = 1
-        flag = False
-        ambari.cp(os.path.realpath(os.path.dirname(lD.__file__))
-                  + "/../remotescripts/default.netrc",
-                  "~/.netrc")
-        while rounds <= 20:
-            try:
-                # modify iptables, only in case of Centos6
-                if ambari.detect_linux_version() in ["Centos6"]:
-                    ambari.run("service iptables stop")
-            except RuntimeError:
-                pass
-            try:
-                ambari.run("curl --netrc  http://localhost:8080/api/v1/clusters")
-                flag = True
-                break
-            except RuntimeError:
-                pass
-            time.sleep(60)
-            rounds = rounds + 1
-        self.assertTrue(flag, "ambari server not contactable after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        try:
+            lD.wait_for_ambari(ambari, 20, check_inst=check_inst)
+        except IOError:
+            self.assertTrue(False, "ambari server not contactable after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        except SystemError:
+            self.assertTrue(False, "ambari server failed to start (" + ' '.join(ambari.sshcmd()) + ")")
         return True
+
+    def verify_blueprint(self, aws, blueprint, cluster):
+        """
+        Check that these files are complete and self-consistent
+        Check fist that the files exist and are json complete
+        Then check that the cluster used the blueprint, that all groups and hosts in the cluster
+         appear in the blueprint and aws file.
+        """
+        import json
+        a = os.path.exists(aws)
+        b = os.path.exists(blueprint)
+        c = os.path.exists(cluster)
+        if not a or not b or not c:
+            raise ValueError(
+                "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
+                    b) + " .cluster " + str(c))
+        # check the files can be opened, and then check that the cluster contains the machines from the aws file
+        jsons = []
+        for ason in [aws, blueprint, cluster]:
+            f = open(ason)
+            l = f.read()
+            f.close()
+            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
+            try:
+                interp = json.loads(l)
+                jsons.append(interp)
+            except Exception as e:
+                print e
+                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+        # Find what is needed for the cluster
+        need_hosts = []
+        need_groups = []
+        for hg in jsons[-1]["host_groups"]:
+            need_groups.append(hg['name'])
+            for host in hg['hosts']:
+                need_hosts.append(host["fqdn"])
+        supplies_hosts = []
+        created_groups = []
+        # check that the aws file creates the machines
+        dn = "kave.io"
+        try:
+            dn = jsons[0]["Domain"]["Name"]
+        except KeyError:
+            pass
+        for ig in jsons[0]["InstanceGroups"]:
+            if ig["Count"] > 0:
+                supplies_hosts = supplies_hosts + [ig["Name"] + '-00' +
+                                                   str(i + 1) + '.' + dn for i in range(ig["Count"])]
+            else:
+                supplies_hosts.append(ig["Name"] + '.' + dn)
+        missing = [f for f in need_hosts if f not in supplies_hosts]
+        extra = [f for f in supplies_hosts if f not in need_hosts]
+        self.assertFalse(len(missing), "Missing creation of the hosts called " + str(missing))
+        self.assertFalse(len(extra), "Asked to create hosts I won't later use " + str(extra))
+        # check that the blueprint file creates the hostgroups
+        for ig in jsons[1]["host_groups"]:
+            created_groups.append(ig["name"])
+        missing = [f for f in need_groups if f not in created_groups]
+        self.assertFalse(len(missing), "Missing creation of the host groups called " + str(missing))
+        # check that the supplied blueprint is the one which is given in the clusterfile
+        self.assertEqual(jsons[1]["Blueprints"]["blueprint_name"], jsons[-1]["blueprint"],
+                         "Blueprint name is not the same in your blueprint c.f. your clusterfile")
 
     def servicesh(self, ambari, call, service, host="ambari.kave.io"):
         """
@@ -712,12 +788,3 @@ class LDTest(unittest.TestCase):
 ######################
 # Any other helper functions?
 ######################
-
-
-def d2j(adict):
-    """Replacements to take a literal string and return a dictionary, using ajson intermediate
-    """
-    replaced = adict.strip().replace('{u\'', "{'").replace(' [u\'', "['").replace(
-        ' (u\'', "('").replace(' u\'', " '").replace("'", '"').replace('(', "[").replace(")", "]")
-    import json
-    return json.loads(replaced)

@@ -640,6 +640,8 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             if check_inst:
                 for afile in check_inst:
                     cat = ambari.run("cat " + afile).strip().lower()
+                    # ignore errors with mirrors
+                    cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
                         raise SystemError("Failure in ambari server start server detected!")
         except RuntimeError:

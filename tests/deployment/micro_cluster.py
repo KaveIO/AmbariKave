@@ -42,20 +42,24 @@ class MicroCluster(base.LDTest):
         ahost.register()
         stdout = ahost.run("cat /etc/resolv.conf")
         self.assertTrue("kave.io" in stdout,
-                        "Incomplete resolv.conf, did you create a new vpc with a correct DNS? (" + connectcmd + ")")
+                        "Incomplete resolv.conf, did you create a new vpc with a correct DNS? ("
+                        + ' '.join(ahost.sshcmd()) + ")")
         ahost.run("yum -y install bind-utils")
         stdout = ahost.run("host ns.kave.io")
-        self.assertTrue("has address" in stdout, "Lookup broken on ns.kave.io! (" + connectcmd + ")")
+        self.assertTrue("has address" in stdout, "Lookup broken on ns.kave.io! ("
+                        + ' '.join(ahost.sshcmd()) + ")")
         stdout = ahost.run("host testing-001.kave.io")
-        self.assertTrue("has address" in stdout, "Lookup broken on testing-001.kave.io! (" + connectcmd + ")")
+        self.assertTrue("has address" in stdout, "Lookup broken on testing-001.kave.io! ("
+                        + ' '.join(ahost.sshcmd()) + ")")
         stdout = ahost.run("host test-001.kave.io")
-        self.assertTrue("has address" in stdout, "Lookup broken on test-001.kave.io! (" + connectcmd + ")")
+        self.assertTrue("has address" in stdout, "Lookup broken on test-001.kave.io! ("
+                        + ' '.join(ahost.sshcmd()) + ")")
         import kaveaws as lA
 
         priv_ip = lA.priv_ip(iid)
         stdout = ahost.run("host " + priv_ip)
         self.assertTrue("domain name pointer" in stdout,
-                        "Reverse lookup broken on testing-001.kave.io! (" + connectcmd + ")")
+                        "Reverse lookup broken on testing-001.kave.io! (" + ' '.join(ahost.sshcmd()) + ")")
 
 
 def suite(verbose=False, branch="__local__"):

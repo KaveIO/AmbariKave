@@ -68,7 +68,7 @@ class KaveToolbox(Script):
         if params.command_line_args:
             commandlineargs = " " + params.command_line_args
         Execute(instscript + ' --' + self.kind + extraopts + commandlineargs,
-                logoutput = True)
+                logoutput=True)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/kave")

@@ -68,7 +68,8 @@ class FreeipaServer(Script):
 
         # Crude check to avoid reinstalling during debuging
         if not os.path.exists(self.admin_password_file):
-            Execute(install_command)
+            # This is a time-consuming command, better to log the output
+            Execute(install_command, logoutput=True)
 
             File("/root/admin-password",
                  content=Template("admin-password.j2", admin_password=admin_password),

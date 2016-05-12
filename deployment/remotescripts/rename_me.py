@@ -26,35 +26,41 @@ import sys
 import os
 import commands
 
+
+def which(program):
+    import os
+
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 newname = sys.argv[1]
 domain = "localdomain"
 if len(sys.argv) > 2:
     domain = sys.argv[2]
 
-if os.path.exists("/etc/sysconfig/network"):
-    # CENTOS
-    f = open("/etc/sysconfig/network")
-    l = f.readlines()
-    f.close()
-    found = False
-    newlines = []
-    for line in l:
-        if line.startswith("#"):
-            newlines.append(line.strip())
-        elif "HOSTNAME=" in line:
-            newlines.append("HOSTNAME=" + newname + "." + domain)
-            found = True
-        else:
-            newlines.append(line.strip())
-    if not found:
-        newlines.append("HOSTNAME=" + newname + "." + domain)
-
-    f = open("/etc/sysconfig/network", "w")
-    f.write("\n".join(newlines) + "\n")
-    f.close()
+if which('hostnamectl'):
+    # Centos7
+    os.system('hostnamectl set-hostname ' + newname + "." + domain + ' ')
+elif os.path.exists("/etc/sysconfig/network"):
+    # CENTOS 6
+    os.system("sed -i 's/HOSTNAME=.*/HOSTNAME=" + newname + "\." + domain + "/' /etc/sysconfig/network ")
 elif os.path.exists('/etc/hostname'):
     # UBUNTU
     os.system('echo ' + newname + ' > /etc/hostname ')
+
 
 if domain == "localdomain":
     # support machine with no domain name / DNS ...

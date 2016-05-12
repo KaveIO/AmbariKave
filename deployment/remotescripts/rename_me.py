@@ -56,11 +56,32 @@ if which('hostnamectl'):
     os.system('hostnamectl set-hostname ' + newname + "." + domain + ' ')
 elif os.path.exists("/etc/sysconfig/network"):
     # CENTOS 6
-    os.system("sed -i 's/HOSTNAME=.*/HOSTNAME=" + newname + "\." + domain + "/' /etc/sysconfig/network ")
+    f = open("/etc/sysconfig/network")
+    l = f.readlines()
+    f.close()
+    found = False
+    newlines = []
+    for line in l:
+        if line.startswith("#"):
+            newlines.append(line.strip())
+        elif "HOSTNAME=" in line:
+            newlines.append("HOSTNAME=" + newname + "." + domain)
+            found = True
+        else:
+            newlines.append(line.strip())
+    if not found:
+        newlines.append("HOSTNAME=" + newname + "." + domain)
+
+    f = open("/etc/sysconfig/network", "w")
+    f.write("\n".join(newlines) + "\n")
+    f.close()
 elif os.path.exists('/etc/hostname'):
     # UBUNTU
-    os.system('echo ' + newname + ' > /etc/hostname ')
+    os.system('echo ' + newname + "." + domain + ' > /etc/hostname ')
 
+# AWS cloud init function will rename the machine on restarts.
+if os.path.exists('/etc/cloud/cloud.cfg'):
+    os.system("echo 'preserve_hostname : true' > /etc/cloud/cloud.cfg ")
 
 if domain == "localdomain":
     # support machine with no domain name / DNS ...

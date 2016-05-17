@@ -25,7 +25,7 @@
                     <packages>
                     	<package><name>wget</name></package>
                         <package><name>httpd</name></package>
-                        <package><name>mod_authz_ldap</name></package>
+                        <package><name>mod_ldap</name></package>
                         <package><name>mod_authnz_external</name></package>
                         <package><name>pwauth</name></package>
                     	<package><name>perl</name></package>

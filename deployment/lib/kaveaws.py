@@ -157,7 +157,11 @@ def iid_from_up_json(upjsons):
 
 
 def name_instance(iid, name):
-    return runawstojson("ec2 create-tags --tags Key=Name,Value=" + name + " --resources " + iid)
+    return tag_resource(iid, 'Name', name)
+
+
+def tag_resource(resource, tkey, tvalue):
+    return runawstojson("ec2 create-tags --tags Key=" + tkey + ",Value=" + tvalue + " --resources " + resource)
 
 
 def desc_instance(iid=None):
@@ -165,6 +169,34 @@ def desc_instance(iid=None):
         return runawstojson("ec2 describe-instances --instance " + iid)
     else:
         return runawstojson("ec2 describe-instances")
+
+
+def volumeids_from_instance(iid):
+    resp =  runawstojson("ec2 describe-volumes --filter  Name=attachment.instance-id,Values=" + iid)
+    return [v["VolumeId"] for v in resp["Volumes"]]
+
+
+def instances_from_sn_or_sg(sn_or_sg):
+    """
+    Take a subnet or a security group, and return all the unique instances
+    """
+    resp1 =  runawstojson("ec2 describe-instances --filter  Name=subnet-id,Values=" + sn_or_sg)
+    resp2 =  runawstojson("ec2 describe-instances --filter  Name=group-id,Values=" + sn_or_sg)
+    rets = []
+    for jj in [resp1, resp2]:
+        for res in jj["Reservations"]:
+            rets = rets + [r["InstanceId"] for r in res["Instances"]]
+    return list(set(rets))
+
+
+def subnets_from_vpcid(id):
+    resp =  runawstojson("ec2 describe-subnets --filter  Name=vpc-id,Values=" + id)
+    return [v["SubnetId"] for v in resp["Subnets"]]
+
+
+def sgroups_from_vpcid(id):
+    resp =  runawstojson("ec2 describe-security-groups --filter  Name=vpc-id,Values=" + id)
+    return [v["GroupId"] for v in resp["SecurityGroups"]]
 
 
 def killinstance(iid, state="terminate"):

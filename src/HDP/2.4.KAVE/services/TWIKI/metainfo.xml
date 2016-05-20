@@ -21,7 +21,40 @@
             </components>
            <osSpecifics>
                 <osSpecific>
-                    <osFamily>any</osFamily>
+                    <osFamily>redhat7</osFamily>
+                    <packages>
+                    	<package><name>wget</name></package>
+                        <package><name>httpd</name></package>
+                        <package><name>mod_ldap</name></package>
+                        <package><name>mod_authnz_external</name></package>
+                        <package><name>pwauth</name></package>
+                    	<package><name>perl</name></package>
+                    	<package><name>rcs</name></package>
+                    	<package><name>zip</name></package>
+                    	<package><name>make</name></package>
+                    	<package><name>gcc</name></package>
+                    	<package><name>gd</name></package>
+                    	<package><name>gd-devel</name></package>
+                        <package><name>php-mysql</name></package>
+                    	<package><name>php-devel</name></package>
+                    	<package><name>php-gd</name></package>
+                    	<package><name>php-pecl-memcache</name></package>
+                    	<package><name>php-pspell</name></package>
+                    	<package><name>php-snmp</name></package>
+                    	<package><name>php-xmlrpc</name></package>
+                    	<package><name>php-xml</name></package>
+                    	<package><name>perl-CPAN</name></package>
+                    	<package><name>perl-CGI</name></package>
+                    	<package><name>perl-YAML</name></package>
+                    	<package><name>perl-IPC-Cmd</name></package>
+                    	<package><name>perl-Module-CoreList</name></package>
+                    	<package><name>perl-ExtUtils-CBuilder</name></package>
+                    	<package><name>perl-Module-Build</name></package>
+                    	<package><name>perl-Time-HiRes</name></package>
+                    	<package><name>perl-CGI</name></package>
+                    	<package><name>perl-HTML-Parser</name></package>
+                    </packages>
+                    <osFamily>redhat6</osFamily>
                     <packages>
                     	<package><name>wget</name></package>
                         <package><name>httpd</name></package>

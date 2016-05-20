@@ -51,10 +51,12 @@ sys.path.append(liblocation)
 
 import kavedeploy as lD
 
+
 def help():
     print __doc__
 
 cascade = True
+
 
 def check_opts():
     global cascade

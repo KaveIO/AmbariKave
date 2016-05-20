@@ -164,6 +164,11 @@ def tag_resource(resource, tkey, tvalue):
     return runawstojson("ec2 create-tags --tags Key=" + tkey + ",Value=" + tvalue + " --resources " + resource)
 
 
+def tag_resources(resources, tags):
+    taglist = ["Key="+k+",Value="+v for k,v in tags.iteritems()]
+    return runawstojson("ec2 create-tags --tags " + ' '.join(taglist) + " --resources " + ' '.join(resources))
+
+
 def desc_instance(iid=None):
     if iid is not None:
         return runawstojson("ec2 describe-instances --instance " + iid)
@@ -197,6 +202,26 @@ def subnets_from_vpcid(id):
 def sgroups_from_vpcid(id):
     resp =  runawstojson("ec2 describe-security-groups --filter  Name=vpc-id,Values=" + id)
     return [v["GroupId"] for v in resp["SecurityGroups"]]
+
+
+def find_all_child_resources(resource):
+    """
+    Return a list of all child resources to a given resource
+    Includes the resource itself
+
+    if the resource is a vpc, it will cascade to all subgroups/subnets/machines/volumes
+    if the resource is a subgroup or subnet it will cascade to all machines/volumes
+    if the resource is an instance, it will cascade to all volumes
+    """
+    resources = [resource] + subnets_from_vpcid(resource) + sgroups_from_vpcid(resource)
+    machines = []
+    for iresource in resources:
+        machines = machines + instances_from_sn_or_sg(iresource)
+    resources = resources + machines
+    volumes = []
+    for iresource in ([resource] + machines):
+        volumes = volumes + volumeids_from_instance(iresource)
+    return list(set(resources + volumes))
 
 
 def killinstance(iid, state="terminate"):

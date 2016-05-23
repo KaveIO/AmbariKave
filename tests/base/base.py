@@ -653,6 +653,22 @@ class LDTest(unittest.TestCase):
             except Exception as e:
                 print e
                 self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+        # check that the aws creates the correct drive names, no duplicates or mounting to 'a'
+        jaws = jsons[0]
+        mount_to_sda = [group for group in jaws["InstanceGroups"]
+                        if "ExtraDisks" in group
+                        and '/dev/sda' in [d["Attach"] for d in group["ExtraDisks"]]
+                        ]
+        duplicates = [group for group in jaws["InstanceGroups"]
+                      if "ExtraDisks" in group
+                      and ( len(set([d["Attach"] for d in group["ExtraDisks"]])) != len([d["Attach"] for d in group["ExtraDisks"]])
+                            or len(set([d["Mount"] for d in group["ExtraDisks"]])) != len([d["Mount"] for d in group["ExtraDisks"]]) )
+                      ]
+        self.assertFalse(len(mount_to_sda),"At least one group of machines mounts to pre-existing sda device:\n in "
+                         + aws + " \n " + str(mount_to_sda))
+        self.assertFalse(len(duplicates),"At least one group of machines mounts to the same device/location twice:\n in "
+                         + aws + " \n " + str(duplicates))
+
         # Find what is needed for the cluster
         need_hosts = []
         need_groups = []

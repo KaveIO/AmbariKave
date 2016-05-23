@@ -661,12 +661,14 @@ class LDTest(unittest.TestCase):
                         ]
         duplicates = [group for group in jaws["InstanceGroups"]
                       if "ExtraDisks" in group
-                      and ( len(set([d["Attach"] for d in group["ExtraDisks"]])) != len([d["Attach"] for d in group["ExtraDisks"]])
-                            or len(set([d["Mount"] for d in group["ExtraDisks"]])) != len([d["Mount"] for d in group["ExtraDisks"]]) )
+                      and ((len(set([d["Attach"] for d in group["ExtraDisks"]]))
+                            != len([d["Attach"] for d in group["ExtraDisks"]]))
+                           or len((set([d["Mount"] for d in group["ExtraDisks"]]))
+                                  != len([d["Mount"] for d in group["ExtraDisks"]])))
                       ]
-        self.assertFalse(len(mount_to_sda),"At least one group of machines mounts to pre-existing sda device:\n in "
+        self.assertFalse(len(mount_to_sda), "At least one group of machines mounts to pre-existing sda device:\n in "
                          + aws + " \n " + str(mount_to_sda))
-        self.assertFalse(len(duplicates),"At least one group of machines mounts to the same device/location twice:\n in "
+        self.assertFalse(len(duplicates), "At least one group mounts to the same device/location twice:\n in "
                          + aws + " \n " + str(duplicates))
 
         # Find what is needed for the cluster

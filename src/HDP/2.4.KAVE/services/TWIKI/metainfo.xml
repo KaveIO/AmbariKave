@@ -64,6 +64,7 @@
                     <osFamily>redhat7</osFamily>
                     <packages>
                         <package><name>mod_ldap</name></package>
+                        <package><name>php</name></package>
                     </packages>
                 </osSpecific>
             </osSpecifics>

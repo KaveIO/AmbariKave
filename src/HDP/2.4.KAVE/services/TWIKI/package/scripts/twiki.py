@@ -36,7 +36,6 @@ class Twiki(ApacheScript):
         kc.chown_r(params.install_dir, "apache")
         Execute("cp " + params.install_dir + "/bin/LocalLib.cfg.txt " + params.install_dir + "/bin/LocalLib.cfg")
         Execute("chown apache:apache " + params.install_dir + "/bin/LocalLib.cfg")
-        Execute("sudo systemctl restart httpd.service")
         self.configure(env)
 
     def configure(self, env):

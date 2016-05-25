@@ -304,7 +304,6 @@ class ApacheScript(res.Script):
         import time
         time.sleep(3)
         #res.Execute("apachectl graceful")
-        #Execute("systemctl start httpd.service")
         #linux_ver = detect_linux_version()
         #if linux_ver == 'Centos7':
         #    res.Execute("systemctl restart httpd.service")

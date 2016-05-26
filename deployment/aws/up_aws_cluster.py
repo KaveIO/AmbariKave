@@ -138,6 +138,7 @@ except RuntimeError:
     raise SystemError('pdsh is not installed, please install pdsh first. Pdsh is useful to speed up large deployments.')
 
 dnsiid = None
+vpcid = None
 
 if "CloudFormation" in cluster_config:
     print "============================================"
@@ -160,12 +161,17 @@ if "CloudFormation" in cluster_config:
             security_group = _output['OutputValue']
         elif _output['OutputKey'] == "DNSId":
             dnsiid = _output['OutputValue']
+        elif _output['OutputKey'] == "VPCId":
+            vpcid = _output['OutputValue']
     # authorize group members to see themselves
     # print security_group, subnet, dnsiid
     lA.add_group_to_group(security_group, security_group)
     # auto assign public IPs here
     lA.runawstojson("ec2 modify-subnet-attribute --subnet-id " + subnet + " --map-public-ip-on-launch")
     print "Created stack:", _vpc_name
+    if "Tags" in security_config and vpcid:
+        resources = lA.find_all_child_resources(vpcid)
+        lA.tag_resources(resources, security_config["Tags"])
     # sys.exit(1)
 
 print "===================================="
@@ -214,6 +220,9 @@ for k, ig in instancegroups.iteritems():
             raise SystemError(iid + " no ip assigned after quite some time")
         remote = lD.remoteHost("root", ip, amazon_keyfile)
         lD.wait_until_up(remote, 20)
+        if "Tags" in security_config:
+            resources = lA.find_all_child_resources(iid)
+            lA.tag_resources(resources, security_config["Tags"])
         remote.register()
         instance_to_remote[iid] = remote
 
@@ -420,6 +429,13 @@ print "Turn off SE linux and IPTables (yeah, I know)"
 print "=============================================="
 allremotes.run("service iptables stop")
 allremotes.run("'/bin/echo 0 > /selinux/enforce'")
+
+if "Tags" in security_config and vpcid:
+    print "=============================================="
+    print "Tag full VPC"
+    print "=============================================="
+    resources = lA.find_all_child_resources(vpcid)
+    lA.tag_resources(resources, security_config["Tags"])
 
 print "==================================="
 donedict = {}

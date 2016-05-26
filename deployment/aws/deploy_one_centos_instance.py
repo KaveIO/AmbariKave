@@ -138,6 +138,9 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     try:
         remote = lD.remoteHost('root', ip, keyloc)
         lD.wait_until_up(remote, 20)
+        if "Tags" in security_config:
+            resources = lA.find_all_child_resources(iid)
+            lA.tag_resources(resources, security_config["Tags"])
         remote.register()
         if not ambaridev:
             lD.rename_remote_host(remote, machinename, 'kave.io')

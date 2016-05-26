@@ -140,6 +140,9 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     try:
         remote = lD.remoteHost(uname, ip, keyloc)
         lD.wait_until_up(remote, 20)
+        if "Tags" in security_config:
+            resources = lA.find_all_child_resources(iid)
+            lA.tag_resources(resources, security_config["Tags"])
         remote.register()
         if uname != 'root':
             # Note the twice -t here such that I can run as a sudo command (fake tty)

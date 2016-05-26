@@ -299,15 +299,18 @@ class ApacheScript(res.Script):
     def start(self, env):
         print "start apache"
         self.configure(env)
-        #res.Execute('service httpd start')
-        # wait 3 seconds before calling start
+
         import time
-        #res.Execute("apachectl graceful")
         if detect_linux_version() in ["Centos7"]:
-            res.Execute("service httpd start")
+        # wait 3 seconds before calling start
             time.sleep(3)
-        else:
-            res.Execute("apachectl graceful")
+            try:
+                res.Execute("service httpd start")
+            except:
+                res.Execute("apachectl graceful")
+
+        time.sleep(3)
+        res.Execute("apachectl graceful")
         time.sleep(3)
 
     def stop(self, env):

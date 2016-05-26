@@ -162,6 +162,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
                 remote.run("echo 0 > /selinux/enforce")
             elif remote.detect_linux_version() in ["Centos7"]:
                 remote.run("setenforce permissive")
+        remote.run("yum clean all")
         remote.describe()
     except KeyboardInterrupt:
         pass

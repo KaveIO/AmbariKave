@@ -145,6 +145,8 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         remote = lD.remote_cp_authkeys(remote, 'root')
         lD.rename_remote_host(remote, machinename, 'kave.io')
         lD.confallssh(remote)
+        if osval.startswith("Centos"):
+            remote.run("yum clean all")
         remote.describe()
     except KeyboardInterrupt:
         pass

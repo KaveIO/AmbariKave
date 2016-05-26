@@ -223,6 +223,7 @@ allremotes = ["ssh:root@" + remote.host for remote in instance_to_remote.values(
 allremotes = lD.multiremotes(list_of_hosts=allremotes, access_key=amazon_keyfile)
 print "test PDSH"
 print allremotes.run("echo yes")
+allremotes.run("yum clean all")
 
 print "===================================="
 print "configure SSH on all machines"

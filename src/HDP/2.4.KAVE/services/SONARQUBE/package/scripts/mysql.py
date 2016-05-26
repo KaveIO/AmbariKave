@@ -30,7 +30,7 @@ class Mysql(Script):
         import params
 
         self.install_packages(env)
-        Package('mysql-server')
+        Package('mariadb-server')
         self.configure(env)
 
     def clean(self, env):

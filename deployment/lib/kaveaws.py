@@ -363,7 +363,7 @@ def add_new_ebs_vol(iid, conf, access_key):
     res = remote.run("df -hP")
     if conf["Mount"] not in res:
         raise RuntimeError("Could not mount the requested disk, resulted in " + res)
-    return True
+    return volID
 
 
 class _add_ebs_volumesThread(threading.Thread):

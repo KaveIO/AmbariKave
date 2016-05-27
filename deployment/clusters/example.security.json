@@ -5,5 +5,6 @@
  "AccessKeys" : { "AWS" : { "KeyFile" : "~/.ssh/amazon_keys.pem", "KeyName" : "amazonkeypairname" },
  				  "SSH" : { "KeyFile" : "~/.ssh/amazon_keys.pem" },
 	  			  "GIT" : { "KeyFile" : "~/.ssh/git_keys.pem", "Origin" : "git@github.com:someorganization/ambarikaverepo.git" }
-	  			}
+	  			},
+ "Tags" : {"Project" : "AmbariKave", "User" : "SomebodySmart"}
 }

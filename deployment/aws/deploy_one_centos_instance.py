@@ -145,6 +145,9 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         remote = lD.remoteHost(uname, ip, keyloc)
         lD.wait_until_up(remote, 20)
         remote = lD.remote_cp_authkeys(remote, 'root')
+        if "Tags" in security_config:
+            resources = lA.find_all_child_resources(iid)
+            lA.tag_resources(resources, security_config["Tags"])
         remote.register()
         if not ambaridev:  # or remote.detect_linux_version() in ["Centos7"]:
             lD.rename_remote_host(remote, machinename, 'kave.io')

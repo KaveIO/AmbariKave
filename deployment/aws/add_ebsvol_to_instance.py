@@ -99,4 +99,7 @@ lA.testaws()
 lA.lD.testproxy()
 
 print "Initial tests OK, now adding volume (may take considerable time depending on volume size)"
-lA.add_new_ebs_vol(iid, mount_conf, ssh_keyfile)
+volID = lA.add_new_ebs_vol(iid, mount_conf, ssh_keyfile)
+
+if "Tags" in security_config_json:
+    lA.tag_resources([volID], security_config_json["Tags"])

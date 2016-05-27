@@ -43,6 +43,7 @@ class SonarQube(Script):
         if not os.path.exists(params.sonarqube_install_directory
                               + '/current/extensions/plugins/sonar-pam-plugin-0.2.jar'):
             import tempfile
+            import glob
             tdir = tempfile.mkdtemp()
             topd = os.path.realpath('.')
             os.chdir(tdir)

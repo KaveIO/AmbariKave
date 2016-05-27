@@ -78,6 +78,9 @@ mysql_deluser_path = format("{tmp_dir}/removeMysqlUser.sh")
 
 daemon_name = status_params.daemon_name
 
+jvmpath = default('configurations/sonarqube/jvmpath',
+                     '/usr/lib/jvm/java-1.8*:/usr/lib/jvm/jre-1.7.0-openjdk*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*')
+
 if OSCheck.is_ubuntu_family():
     mysql_configname = '/etc/mysql/my.cnf'
 else:

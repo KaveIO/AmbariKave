@@ -60,6 +60,12 @@
                     	<package><name>java-1.7.0-openjdk</name></package>
                     </packages>
                 </osSpecific>
+                <osSpecific>
+                    <osFamily>redhat7</osFamily>
+                    <packages>
+                        <package><name>mariadb-server</name></package>
+                    </packages>
+                </osSpecific>
             </osSpecifics>
         </service>
     </services>

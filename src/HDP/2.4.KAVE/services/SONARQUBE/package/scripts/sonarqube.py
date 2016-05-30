@@ -59,11 +59,11 @@ class SonarQube(Script):
                 # Does the top directory exist and is it a directory?
                 if os.path.isdir(os.path.realpath(os.sep.join(javapath.split(os.sep)[:-1]))):
                     for dir in glob.glob(javapath):
-                        dir = os.path.realpath(dir)
+                        #dir = os.path.realpath(dir)
                         if os.path.isdir(dir):
                             # print os.listdir(dir)
-                            Execute('cp JPam-1.1/libjpam.so ' + dir + '/lib/amd64/')
-                            Execute('chmod a+x ' + dir + '/lib/amd64/libjpam.so')
+                            Execute('cp JPam-1.1/libjpam.so ' + dir + '/jre/lib/amd64/')
+                            Execute('chmod a+x ' + dir + '/jre/lib/amd64/libjpam.so')
             # Execute('cp JPam-1.1/libjpam.so /usr/lib/jvm/jre-1.7.0-openjdk*.x86_64/lib/amd64/')
             # Execute('chmod a+x /usr/lib/jvm/jre-1.7.0-openjdk*.x86_64/lib/amd64/libjpam.so')
             Execute('cp JPam-1.1/net-sf-jpam /etc/pam.d/')

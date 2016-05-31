@@ -17,12 +17,15 @@
 ##############################################################################
 from resource_management import *
 from resource_management.core.system import System
+import kavecommon as kc
 
 config = Script.get_config()
+tos = kc.detect_linux_version()
 
 if System.get_instance().os_family == "suse" or System.get_instance().os_family == "ubuntu":
     daemon_name = 'mysql'
 #elif System.get_instance().os_family == "redhat7":
-#    daemon_name = 'mariadb'
+elif tos.lower() in ["centos6"]:
+   daemon_name = 'mariadb'
 else:
-    daemon_name = 'mariadb'
+    daemon_name = 'mysqld'

@@ -25,7 +25,7 @@ tos = kc.detect_linux_version()
 if System.get_instance().os_family == "suse" or System.get_instance().os_family == "ubuntu":
     daemon_name = 'mysql'
 #elif System.get_instance().os_family == "redhat7":
-elif tos.lower() in ["centos6"]:
+elif tos.lower() in ["centos7"]:
    daemon_name = 'mariadb'
 else:
     daemon_name = 'mysqld'

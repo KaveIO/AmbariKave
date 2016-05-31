@@ -22,7 +22,7 @@ config = Script.get_config()
 
 if System.get_instance().os_family == "suse" or System.get_instance().os_family == "ubuntu":
     daemon_name = 'mysql'
-elif System.get_instance().os_family == "redhat7":
-    daemon_name = 'mariadb'
+#elif System.get_instance().os_family == "redhat7":
+#    daemon_name = 'mariadb'
 else:
-    daemon_name = 'mysqld'
+    daemon_name = 'mariadb'

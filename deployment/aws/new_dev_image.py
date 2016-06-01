@@ -168,14 +168,20 @@ if iid is None:
     # remote.run("service iptables stop")
     # remote.run("chkconfig iptables off")
     lD.confallssh(remote)
-    lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc)
-    remote.describe()
+    vols = []
+    vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))
+    vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc))
+    vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc))
+    tos = remote.detect_linux_version()
+    if tos in ["Centos7"]:
+        vols.append(lA.add_new_ebs_vol(
+            iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc))
+        vols.append(lA.add_new_ebs_vol(
+            iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc))
+    elif tos in ["Centos6"]:
+        vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc))
     if "Tags" in security_config:
-        lA.tag_resources([v1, v2, v3, v4], security_config["Tags"])
+        lA.tag_resources(vols, security_config["Tags"])
     print "OK, iid " + iid + " now lives at IP " + ip
 
 ip = ""

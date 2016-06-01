@@ -43,6 +43,7 @@ class SonarQube(Script):
         if not os.path.exists(params.sonarqube_install_directory
                               + '/current/extensions/plugins/sonar-pam-plugin-0.2.jar'):
             import tempfile
+            import glob
             tdir = tempfile.mkdtemp()
             topd = os.path.realpath('.')
             os.chdir(tdir)
@@ -51,8 +52,21 @@ class SonarQube(Script):
             kc.copy_cache_or_repo("JPam-Linux_amd64-1.1.tgz", arch="noarch")
             Execute('tar -xvzf JPam-Linux_amd64-1.1.tgz')
             Execute('cp JPam-1.1/JPam-1.1.jar ' + params.sonarqube_install_directory + '/current/lib/common/')
-            Execute('cp JPam-1.1/libjpam.so /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/lib/amd64/')
-            Execute('chmod a+x /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/lib/amd64/libjpam.so')
+            for javapath in params.jvmpath.split(':'):
+                # print "this is javaPath"+javapath
+                if not len(javapath):
+                    continue
+                # Does the top directory exist and is it a directory?
+                if os.path.isdir(os.path.realpath(os.sep.join(javapath.split(os.sep)[:-1]))):
+                    for dir in glob.glob(javapath):
+                        # dir = os.path.realpath(dir)
+                        if os.path.isdir(dir):
+                            # print os.listdir(dir)
+                            Execute('mkdir -p ' + dir + '/lib/amd64')
+                            Execute('chmod -R a+r ' + dir)
+                            Execute('cp JPam-1.1/libjpam.so ' + dir + '/lib/amd64/')
+                            Execute('chmod a+x ' + dir + '/lib/amd64/libjpam.so')
+
             Execute('cp JPam-1.1/net-sf-jpam /etc/pam.d/')
             # http://downloads.sonarsource.com/plugins/org/codehaus/sonar-plugins/sonar-pam-plugin
             # /0.2/sonar-pam-plugin-0.2.jar

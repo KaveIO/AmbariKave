@@ -168,18 +168,11 @@ if iid is None:
     # remote.run("service iptables stop")
     # remote.run("chkconfig iptables off")
     lD.confallssh(remote)
-<<<<<<< HEAD
     lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc)
     lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc)
-=======
-    v1 = lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
-    v2 = lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
-    v3 = lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    v4 = lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc)
->>>>>>> refs/remotes/origin/master
     remote.describe()
     if "Tags" in security_config:
         lA.tag_resources([v1, v2, v3, v4], security_config["Tags"])

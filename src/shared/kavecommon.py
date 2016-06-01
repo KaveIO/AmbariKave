@@ -302,7 +302,7 @@ class ApacheScript(res.Script):
 
         import time
         if detect_linux_version() in ["Centos7"]:
-        # wait 3 seconds before calling start
+            # wait 3 seconds before calling start
             time.sleep(3)
             try:
                 res.Execute("service httpd start")

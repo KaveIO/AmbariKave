@@ -5,6 +5,17 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v2.1-Beta
+
+Minor release with significant bugfixes, two new services and explorations of new OS
+
+Other notes:
+
+We have begun to test KAVE on the Centos7 operating system. In version 2.1 Centos6 is still
+the only supported version, but several of the basic services already deploy on Centos7
+In the near future we intend to supply a version which also supports Centos7. At the moment
+there are major issues in FreeIPA, SonarQube and HUE.
+
 # v2.0-Beta
 
 * MAJOR release to migrate to the latest Ambari version 2.2.1

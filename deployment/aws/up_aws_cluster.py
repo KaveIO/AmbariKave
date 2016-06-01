@@ -187,10 +187,9 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if count == 0:
         continue
-    up = lA.up_os("Centos7",
-                  type=lA.chooseitype(instancegroup["InstanceType"]),
-                  secGroup=security_group, keys=amazon_keypair_name,
-                  count=count, subnet=subnet)
+    up = lA.up_default(type=lA.chooseitype(instancegroup["InstanceType"]),
+                       secGroup=security_group, keys=amazon_keypair_name,
+                       count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iid_from_up_json(up)
 
 instance_to_remote = {}
@@ -219,7 +218,10 @@ for k, ig in instancegroups.iteritems():
             acount = acount + 1
         if ip is None:
             raise SystemError(iid + " no ip assigned after quite some time")
-        remote = lD.remoteHost("centos", ip, amazon_keyfile)
+
+        uname = lA.default_usernamedict[lA.default_os]
+        remote = lD.remoteHost(uname, ip, amazon_keyfile)
+
         lD.wait_until_up(remote, 20)
         remote = lD.remote_cp_authkeys(remote, 'root')
         if "Tags" in security_config:
@@ -252,11 +254,11 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if not autoname:
         instance_to_name[instancegroups[instancegroup["Name"]][0]] = instancegroup["Name"]
-        lA.name_instance(instancegroups[instancegroup["Name"]][0], cluster_name + '-' + instancegroup["Name"])
+        lA.name_resource(instancegroups[instancegroup["Name"]][0], cluster_name + '-' + instancegroup["Name"])
         continue
     for num, instance in enumerate(instancegroups[instancegroup["Name"]]):
         instance_to_name[instance] = instancegroup["Name"] + ("-%03d" % (num + 1))
-        lA.name_instance(instance, cluster_name + '-' + instancegroup["Name"] + ("-%03d" % (num + 1)))
+        lA.name_resource(instance, cluster_name + '-' + instancegroup["Name"] + ("-%03d" % (num + 1)))
 
 # Also name the attached volumes
 for instance, iname in instance_to_name.iteritems():
@@ -264,7 +266,7 @@ for instance, iname in instance_to_name.iteritems():
     vols = idesc["Reservations"][0]["Instances"][0]["BlockDeviceMappings"]
     for v in vols:
         if "Ebs" in v and "DeviceName" in v:
-            lA.name_instance(v["Ebs"]["VolumeId"], cluster_name + '-' + iname + v["DeviceName"].replace("/", "_"))
+            lA.name_resource(v["Ebs"]["VolumeId"], cluster_name + '-' + iname + v["DeviceName"].replace("/", "_"))
 
 # TODO: use a proper dns configuration here instead of writing into the host file
 print "=============================================="

@@ -117,7 +117,7 @@ lD.testproxy()
 
 itype = lA.chooseitype(itype)
 
-upped = lA.up_centos7(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
+upped = lA.up_default(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
 print "submitted"
 
 iid = lA.iid_from_up_json(upped)[0]
@@ -125,7 +125,7 @@ iid = lA.iid_from_up_json(upped)[0]
 import time
 
 time.sleep(5)
-lA.name_instance(iid, machinename)
+lA.name_resource(iid, machinename)
 
 ip = lA.pub_ip(iid)
 acount = 0
@@ -135,9 +135,7 @@ while (ip is None and acount < 20):
     ip = lA.pub_ip(iid)
     acount = acount + 1
 
-# This needs to be much smarter here!!
-
-uname = 'centos'
+uname = lA.default_usernamedict[lA.default_os]
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"

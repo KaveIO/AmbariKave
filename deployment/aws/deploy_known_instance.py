@@ -121,7 +121,7 @@ iid = lA.iid_from_up_json(upped)[0]
 import time
 
 time.sleep(5)
-lA.name_instance(iid, machinename)
+lA.name_resource(iid, machinename)
 
 ip = lA.pub_ip(iid)
 acount = 0

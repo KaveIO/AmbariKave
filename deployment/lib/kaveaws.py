@@ -34,6 +34,10 @@ import threading
 import thread
 import Queue
 
+# Centos6 has the username root, Centos7 has the username 'centos'
+default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
+default_os = "Centos6"
+
 
 def testaws():
     try:
@@ -98,7 +102,7 @@ def chooseamiid(os, region):
     return ""
 
 
-def up_centos7(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
+def up_default(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
     region = "default"
     amiid = ""
     if subnet is not None:
@@ -113,7 +117,7 @@ def up_centos7(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
                 "image with ambari pre-installed with your keys and in your region. See the script that generates "
                 "the dev image for that.")
     else:
-        amiid = chooseamiid("Centos7", region)
+        amiid = chooseamiid(default_os, region)
     return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
 
@@ -156,15 +160,22 @@ def iid_from_up_json(upjsons):
     return [inst["InstanceId"] for inst in upjsons["Instances"]]
 
 
-def name_instance(iid, name):
-    return tag_resource(iid, 'Name', name)
+def name_resource(resource, name):
+    return tag_resource(resource, 'Name', name)
 
 
 def tag_resource(resource, tkey, tvalue):
+    """
+    Add one tag to one resource
+    """
     return runawstojson("ec2 create-tags --tags Key=" + tkey + ",Value=" + tvalue + " --resources " + resource)
 
 
 def tag_resources(resources, tags):
+    """
+    Add many tags to several resources
+    tags is a dict, resources is a list
+    """
     taglist = ["Key=" + k + ",Value=" + v for k, v in tags.iteritems()]
     return runawstojson("ec2 create-tags --tags " + ' '.join(taglist) + " --resources " + ' '.join(resources))
 
@@ -324,7 +335,7 @@ def add_new_ebs_vol(iid, conf, access_key):
             instnam = tag["Value"]
     # print voljson
     volID = voljson["VolumeId"]
-    name_instance(volID, instnam + conf["Mount"].replace("/", "_"))
+    name_resource(volID, instnam + conf["Mount"].replace("/", "_"))
     time.sleep(5)
     count = 0
     while count < 10:

@@ -133,13 +133,14 @@ if iid is None:
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.up_os("Centos7", itype, secGroup, keypair, subnet=subnet)
+
+    upped = lA.up_default(itype, secGroup, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iid_from_up_json(upped)[0]
     import time
 
     time.sleep(5)
-    lA.name_instance(iid, "new-dev-image")
+    lA.name_resource(iid, "new-dev-image")
     ip = lA.pub_ip(iid)
     acount = 0
     while (ip is None and acount < 20):
@@ -147,7 +148,8 @@ if iid is None:
         lD.mysleep(1)
         ip = lA.pub_ip(iid)
         acount = acount + 1
-    uname = 'centos'
+
+    uname = lA.default_usernamedict[lA.default_os]
     remote = lD.remoteHost(uname, ip, keyloc)
     print "waiting until contactable"
     lD.wait_until_up(remote, 20)
@@ -165,24 +167,29 @@ if iid is None:
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     # This is not needed for Centos7
-    # remote.run("service iptables stop")
-    # remote.run("chkconfig iptables off")
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.run("service iptables stop")
+        remote.run("chkconfig iptables off")
+        remote.run("echo 0 >/selinux/enforce")
+    else:
+        remote.run("setenforce permissive")
+
     lD.confallssh(remote)
-<<<<<<< HEAD
-    lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc)
-    lA.add_new_ebs_vol(iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc)
-=======
-    v1 = lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc)
-    v2 = lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc)
-    v3 = lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc)
-    v4 = lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc)
->>>>>>> refs/remotes/origin/master
+    vols = []
+    vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))
+    vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc))
+    vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/usr/hdp", "Size": 4, "Attach": "/dev/sdd"}, keyloc))
+    tos = remote.detect_linux_version()
+    if tos in ["Centos7"]:
+        vols.append(lA.add_new_ebs_vol(
+            iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc))
+        vols.append(lA.add_new_ebs_vol(
+            iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc))
+    elif tos in ["Centos6"]:
+        vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc))
     remote.describe()
     if "Tags" in security_config:
-        lA.tag_resources([v1, v2, v3, v4], security_config["Tags"])
+        lA.tag_resources(vols, security_config["Tags"])
     print "OK, iid " + iid + " now lives at IP " + ip
 
 ip = ""
@@ -226,6 +233,6 @@ if instance["State"]["Name"] is "running":
 ami = lA.createimage(iid, "AmbDev-" + keypair + "-" + time.strftime("%Y%m%d-%H"),
                      "Ambari dev image with keys for " + keypair + " keypair")
 time.sleep(5)
-lA.name_instance(ami, keypair)
+lA.name_resource(ami, keypair)
 print ami, "created and registered, might take a few minutes to be available,",
 print " don't forget to set your environment variable export AMIAMBDEV=" + ami

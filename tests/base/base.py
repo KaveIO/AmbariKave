@@ -682,8 +682,7 @@ class LDTest(unittest.TestCase):
         jbp = the json dictionary
         check that the jbp has the needed config params
         """
-        # print "================================"
-        # print bp
+
         self.assertTrue("host_groups" in jbp, bp + " blueprint misses host_groups!")
         self.assertTrue("Blueprints" in jbp, bp + " blueprint misses Blueprints directive!")
         all_services = []
@@ -692,12 +691,8 @@ class LDTest(unittest.TestCase):
         supplied_configs = {}
         if "configurations" in jbp:
             for aconf in jbp["configurations"]:
-                # print aconf
                 for k, v in aconf.iteritems():
-                    # print k, v
                     supplied_configs[k] = v
-        # print supplied_configs
-        # print "------------------"
         # find the parameters which must be forced for these services
         required_configs = {}
         known_services = find_services()
@@ -706,7 +701,6 @@ class LDTest(unittest.TestCase):
                 if service.split('_')[0] not in sname:
                     continue
                 cfg_name = glob.glob(dir + '/configuration/*.xml')[0]
-                # print sname, cfg_name
                 # Load XML and parse
                 tree = ET.ElementTree(file=cfg_name)
                 for property in tree.getroot():
@@ -726,7 +720,6 @@ class LDTest(unittest.TestCase):
         # print supplied_configs
         for k, v in required_configs.iteritems():
             for req in v:
-                # print k, req
                 try:
                     supplied_configs[k][req]
                 except KeyError:

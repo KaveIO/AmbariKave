@@ -76,7 +76,7 @@ class KaveLanding(ApacheScript):
         ls.ambari_user = params.AMBARI_ADMIN
         ls.ambari_password = params.AMBARI_ADMIN_PASS
         cluster_service_host, cluster_host_service, cluster_service_link = ls.collect_config_data(
-            params.AMBARI_SHORT_HOST)
+            params.AMBARI_SHORT_HOST, user=params.AMBARI_ADMIN, passwd=params.AMBARI_ADMIN_PASS)
         bodyhtml = ls.pretty_print(cluster_service_host, cluster_host_service, cluster_service_link, format="html")
         import json
         clinks = json.loads(params.customlinks)

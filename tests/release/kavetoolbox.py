@@ -21,8 +21,9 @@ import kavecommon as kc
 import sys
 import os
 
-sys.path.append(os.path.dirname(__file__)+'/../service')
+sys.path.append(os.path.dirname(__file__) + '/../service')
 import test_kavetoolbox_head
+
 
 class TestKaveToolboxRelease(test_kavetoolbox_head.TestKaveToolbox):
     """

@@ -35,7 +35,6 @@ class TestKaveToolbox(base.LDTest):
                         "Failed to install KaveToolbox from git, check: " + ' '.join(ambari.sshcmd()))
         return True
 
-
     def wait_for_ktb(self, ambari):
         import time
         time.sleep(15)

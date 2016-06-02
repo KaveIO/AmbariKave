@@ -19,7 +19,7 @@ import base
 import ambarikave
 import kavetoolbox
 
-mods = [ ambarikave, kavetoolbox ]
+mods = [ambarikave, kavetoolbox]
 
 
 modargs = {kavetoolbox: ['Centos6', 'Centos7', 'Ubuntu14'],

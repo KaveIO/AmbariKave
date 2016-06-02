@@ -23,6 +23,9 @@ class TestAmbariKaveRelease(base.LDTest):
     version = "2.1-Beta-Pre"
 
     def runTest(self):
+        """
+        Run the packaged installer on a blank Centos6 machine
+        """
         import os
 
         lD = self.pre_check()

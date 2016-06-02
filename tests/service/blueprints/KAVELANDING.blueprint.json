@@ -4,17 +4,23 @@
       "ams-site" : {
         "timeline.metrics.service.operation.mode" : "embedded"
       }
+    },
+    {
+      "kavelanding" : {
+        "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin",
+      	"customlinks": "{\"Google\":\"http://google.com/\" }"
+      }
+    },
+    {
+      "jenkins" : {
+        "JENKINS_PORT" : 8888,
+        "JENKINS_ADMIN_PASSWORD" : "ThisIsALongAndAnnoyingPasswordDontUseIt"
+      }
     }
   ],
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "kavelanding" : {
-      										  "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin",
-      										  "customlinks": "{\"Google\":\"http://google.com/\" }" }
-      										  },
-                           { "jenkins" : { "JENKINS_PORT" : 8888,"JENKINS_ADMIN_PASSWORD" : "ThisIsALongAndAnnoyingPasswordDontUseIt" } }
-                         ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "ZOOKEEPER_SERVER"    },

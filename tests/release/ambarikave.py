@@ -34,6 +34,7 @@ class TestAmbariKaveRelease(base.LDTest):
         self.ostype = "Centos6"
         ambari, iid = self.deploy_os(self.ostype)
         ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
+        ambari.run("service iptables stop")
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
         ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"

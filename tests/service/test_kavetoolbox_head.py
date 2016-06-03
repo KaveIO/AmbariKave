@@ -47,7 +47,7 @@ class TestKaveToolbox(base.LDTest):
                     flag = True
                     break
                 stdout = ambari.run(" cat inst.stderr ")
-                stdout = ''.join([s if ord(s)<128 else '#' for s in stdout])
+                stdout = ''.join([s if ord(s) < 128 else '#' for s in stdout])
                 self.assertFalse("exception" in stdout or "error" in stdout.lower(),
                                  "Errors detected in head KaveToolbox installation \n"
                                  + stdout + "\n-----------------\n"

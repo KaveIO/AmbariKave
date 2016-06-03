@@ -17,6 +17,7 @@
 ##############################################################################
 import base
 import unittest
+import os
 
 
 class TestKaveToolbox(base.LDTest):
@@ -25,31 +26,17 @@ class TestKaveToolbox(base.LDTest):
                  '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
     ostype = "Centos6"
 
-    def runTest(self):
-        """
-        Check that we can install the head of KaveToolbox on aws machines
-        Three OSes are possible, Centos6, Centos7 and Ubuntu14
-        """
-        # create remote machine
-        import os
-        import sys
-
+    def deploy_ktb(self, ambari):
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        ambari, iid = (None, None)
-        if self.ostype == "Centos6":
-            ambari, iid = self.deploy_dev()
-        else:
-            ambari, iid = self.deploy_os(self.ostype)
-            if self.ostype.startswith("Ubuntu"):
-                ambari.run('apt-get update')
         stdout = lD.run_quiet(
             deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict")
         self.assertTrue("installing toolbox in background process (check before bringing down the machine)" in stdout,
                         "Failed to install KaveToolbox from git, check: " + ' '.join(ambari.sshcmd()))
-        # clean the existing blueprint ready for re-install
-        import time
+        return True
 
+    def wait_for_ktb(self, ambari):
+        import time
         time.sleep(15)
         rounds = 1
         flag = False
@@ -60,7 +47,8 @@ class TestKaveToolbox(base.LDTest):
                     flag = True
                     break
                 stdout = ambari.run(" cat inst.stderr ")
-                self.assertFalse("xception" in stdout or "rror" in stdout,
+                stdout = ''.join([s if ord(s)<128 else '#' for s in stdout])
+                self.assertFalse("exception" in stdout or "error" in stdout.lower(),
                                  "Errors detected in head KaveToolbox installation \n"
                                  + stdout + "\n-----------------\n"
                                  + ' '.join(
@@ -70,7 +58,10 @@ class TestKaveToolbox(base.LDTest):
             rounds = rounds + 1
             time.sleep(60)
         self.assertTrue(flag, "Installation of KaveToolbox not completed after 60 minutes")
-        self.check(ambari)
+        return True
+
+    def check(self, ambari):
+        super(TestKaveToolbox, self).check(ambari)
         # check the installed directories
         stdout = ambari.run("bash -c \"source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; which python; which root;\"")
         self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/pro/bin" in stdout,
@@ -98,7 +89,28 @@ class TestKaveToolbox(base.LDTest):
                         "Environment file not created correctly, no eclipse part\n"
                         + env + "\n-----------------\n"
                         + ' '.join(ambari.sshcmd()))
-        return
+        return True
+
+    def runTest(self):
+        """
+        Check that we can install the head of KaveToolbox on aws machines
+        Three OSes are possible, Centos6, Centos7 and Ubuntu14
+        """
+        # create remote machine
+        import os
+        import sys
+
+        lD = self.pre_check()
+        ambari, iid = (None, None)
+        if self.ostype == "Centos6":
+            ambari, iid = self.deploy_dev()
+        else:
+            ambari, iid = self.deploy_os(self.ostype)
+            if self.ostype.startswith("Ubuntu"):
+                ambari.run('apt-get update')
+        self.deploy_ktb(ambari)
+        self.wait_for_ktb(ambari)
+        return self.check(ambari)
 
 
 if __name__ == "__main__":

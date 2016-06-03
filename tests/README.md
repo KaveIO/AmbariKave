@@ -120,7 +120,7 @@ The failed test will have some sort of name, which will tell you what file it is
 
 * Running one of the tests:
 ```
-test.sh t./<group>/<testfile.py> [arguements to test file]
+test.sh ./<group>/<testfile.py> [arguements to test file]
 ```
 * if it is a test which needs aws, you will first need to export AWSSECCONF=/path/to/your/security.config
 

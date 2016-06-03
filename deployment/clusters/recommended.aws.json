@@ -7,7 +7,7 @@
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   {
@@ -17,7 +17,7 @@
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   {
@@ -27,7 +27,7 @@
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   {
@@ -37,7 +37,7 @@
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 100, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   {
@@ -46,7 +46,7 @@
     "InstanceType" : "c4.large",
     "AccessType" : "node",
     "ExtraDisks" : [ {"Mount": "/var/log",   "Size" : 2, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdc" } ]
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   },
   {
     "Name" : "gate",
@@ -58,7 +58,7 @@
                      {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
     				 {"Mount": "/var/hdp", "Size" : 4,   "Attach" : "/dev/sdf" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdg" } ]
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdg" } ]
   }
   ]
 }

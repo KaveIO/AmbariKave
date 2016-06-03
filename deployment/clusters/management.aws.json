@@ -7,7 +7,7 @@
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
   {
@@ -17,7 +17,7 @@
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/opt",   "Size" : 12, "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" } ]
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" } ]
   }
   ]
 }

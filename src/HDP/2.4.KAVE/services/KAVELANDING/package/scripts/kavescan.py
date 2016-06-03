@@ -227,7 +227,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
     cluster_host_service = {}
     cluster_service_link = {}
 
-    clusters = apiquery("clusters", host=ambari)
+    clusters = apiquery("clusters", host=ambari, user=user, passwd=passwd)
     clusterlist = [str(c["Clusters"]["cluster_name"]) for c in clusters]
     # print clusterlist
 

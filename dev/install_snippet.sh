@@ -45,6 +45,8 @@ ambari-server setup -s
 
 # install requests library for python
 yum install -y epel-release
+# necessary step to update epel and HDP cached repos
+yum clean all
 yum install -y pdsh python-pip
 pip install requests
 

@@ -115,6 +115,7 @@ class StormGenericSD(StormGeneric):
                  )
         Execute('mkdir -p %s' % params.childlogdir)
         Package('epel-release')
+        Execute('yum clean all')
         Package('python-meld3')
         Package('python-pip')
         Execute('pip install supervisor')

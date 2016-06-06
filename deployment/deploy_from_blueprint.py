@@ -194,6 +194,7 @@ try:
     ambari.run("which curl")
 except RuntimeError:
     ambari.run("yum -y install epel-release")
+    ambari.run("yum clean all")
     ambari.run("yum -y install pdsh curl")
 
 # modify iptables, only in case of Centos6

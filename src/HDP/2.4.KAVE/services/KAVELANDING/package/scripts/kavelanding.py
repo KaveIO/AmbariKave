@@ -31,6 +31,8 @@ class KaveLanding(ApacheScript):
         import params
         import kavecommon as kc
         super(KaveLanding, self).install(env)
+        Execute('yum clean all')
+        Package('python-pip')
         import os
         Execute('pip install requests')
         Execute('cp ' + os.path.dirname(__file__) + '/KAVE-logo-thin.png ' + params.www_folder + '/')

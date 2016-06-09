@@ -105,9 +105,11 @@ class RobotAdmin():
             p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
             p2 = subprocess.Popen(['ipa-client-install', '--mkhomedir',
                                    '--principal', self.login, '-W', '--server', server, '-U'] + options,
-                                  stdin=p1.stdout)
+                                  stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p1.stdout.close()
-            p2.communicate()
+            stdout, stderr = p2.communicate()
+            if p2.returncode:
+                raise OSError("Failed to install FreeIPA client!\n\t" + stdout + '\n\t' + stderr)
         else:
             raise Exception('No robot-admin password could be found in %s ' % self.password_file)
 

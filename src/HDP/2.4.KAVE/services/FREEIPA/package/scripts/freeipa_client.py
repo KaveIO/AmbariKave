@@ -48,6 +48,19 @@ class FreeipaClient(Script):
         """
         return True
 
+    def resolvconf(self,env):
+        import params
+        env.set_params(params)
+        # If we are installing freeipa with DNS the settings in resolv.conf must
+        # be overriden. However these new settings will probably not survive a
+        # network restart. This could cause potential problems.
+        if params.install_with_dns:
+            File("/etc/resolv.conf",
+                 content=InlineTemplate(params.resolvconf_template),
+                 mode=0644
+                 )
+
+
     def install(self, env):
         import params
         env.set_params(params)
@@ -59,18 +72,9 @@ class FreeipaClient(Script):
             print 'The FreeIPA client installation is modified when installed on the freeipa server:',
             print ' %s freeipa_server %s' % (params.ipa_server, params.hostname)
 
-        # If we are installing freeipa with DNS the settings in resolv.conf must
-        # be overriden. However these new settings wil probably not survive a
-        # network restart. This could cause potential problems.
-        if params.install_with_dns:
-            File("/etc/resolv.conf",
-                 content=InlineTemplate(params.resolvconf_template),
-                 mode=0644
-                 )
-
         if os.path.exists(self.ipa_client_install_lock_file):
             print 'ipa client already installed, nothing to do here.'
-            return
+            return self.resolvconf(env)
 
         rm = freeipa.RobotAdmin()
         # Native package installation system driven by metainfo.xml intentionally
@@ -87,6 +91,9 @@ class FreeipaClient(Script):
 
         with rm.get_freeipa(not installed_on_server) as fi:
             pass
+
+        # Only write the resolv.conf if the client installation was successful, otherwise I can get into biiig trouble!
+        self.resolvconf(env)
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:

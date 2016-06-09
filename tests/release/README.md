@@ -1,0 +1,1 @@
+Tests to be run on released versions, to check the installer(s) actually work

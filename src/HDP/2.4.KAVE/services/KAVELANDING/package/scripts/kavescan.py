@@ -314,7 +314,7 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
         masters_with_links = [service for service in cluster_service_host[cluster] if
                               ("SERVER" in service or "MASTER" in service
                                or "NAMENODE" in service or "MANAGER" in service
-                               or "COLLECTOR" in service)
+                               or "COLLECTOR" in service or "GRAFANA" in service)
                               and (service in cluster_service_link[cluster])]
         masters_with_links.sort()
         masters_without_links = [service for service in cluster_service_host[cluster] if

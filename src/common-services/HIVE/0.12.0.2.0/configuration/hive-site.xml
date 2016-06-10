@@ -46,6 +46,7 @@ limitations under the License.
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
     <value>jdbc:mysql://localhost/hive?createDatabaseIfNotExist=true</value>
+    <property-type>DONT_ADD_ON_UPGRADE</property-type>
     <display-name>Database URL</display-name>
     <description>JDBC connect string for a JDBC metastore</description>
     <value-attributes>
@@ -89,6 +90,7 @@ limitations under the License.
     <name>hive.metastore.warehouse.dir</name>
     <value>/apps/hive/warehouse</value>
     <description>location of default database for the warehouse</description>
+    <property-type>NOT_MANAGED_HDFS_PATH</property-type>
   </property>
 
   <property>
@@ -108,6 +110,7 @@ limitations under the License.
     <name>hive.metastore.uris</name>
     <value>thrift://localhost:9083</value>
     <description>URI for client to contact metastore server</description>
+    <property-type>DONT_ADD_ON_UPGRADE</property-type>
   </property>
 
   <property>
@@ -415,6 +418,7 @@ limitations under the License.
 
   <property>
     <name>atlas.cluster.name</name>
+    <property-type>DONT_ADD_ON_UPGRADE</property-type>
     <value>primary</value>
     <depends-on>
       <property>
@@ -427,6 +431,7 @@ limitations under the License.
   <property>
     <name>atlas.rest.address</name>
     <value>http://localhost:21000</value>
+    <property-type>DONT_ADD_ON_UPGRADE</property-type>
     <depends-on>
       <property>
         <type>application-properties</type>

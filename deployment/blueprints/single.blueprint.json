@@ -18,7 +18,12 @@
     				   } },
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
-    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } }
+    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    }
   ],
   "host_groups":[
     {
@@ -26,6 +31,7 @@
       "components" : [
         { "name" : "AMBARI_SERVER"        },
         { "name" : "METRICS_COLLECTOR"    },
+        { "name" : "METRICS_GRAFANA"      },
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
         { "name" : "NAMENODE"             },

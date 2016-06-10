@@ -78,6 +78,7 @@ default_ambari_password = "admin"
 #  ["apache/APACHE_PORT +1000"] would return the result of adding 1000 to the apache port if set
 service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "NAGIOS_SERVER": {"alerts": ["80/nagios"]},
+                             "METRICS_GRAFANA": {"monitor": [3000, 'ams-grafana-ini/port']},
                              "AMBARI_SERVER": {"admin": [8080]},
                              "JENKINS_MASTER": {"jenkins": [8080, "jenkins/JENKINS_PORT"]},
                              "JBOSS_APP_SERVER": {"jboss": [8080, "jboss/http_port"]},

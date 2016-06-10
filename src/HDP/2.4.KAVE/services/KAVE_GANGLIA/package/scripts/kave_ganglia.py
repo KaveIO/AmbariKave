@@ -23,7 +23,6 @@ import kavecommon as kc
 
 class Kave_Ganglia(Script):
 
-
     def install(self, env):
         import params
 
@@ -38,7 +37,6 @@ class Kave_Ganglia(Script):
         env.set_params(params)
         Execute('chkconfig gmetad on')
         Execute('chkconfig gmond on')
-
 
     def start(self, env):
         self.configure(env)

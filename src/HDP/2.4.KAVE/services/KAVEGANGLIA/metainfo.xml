@@ -17,6 +17,17 @@
                         <timeout>6000</timeout>
                     </commandScript>
                 </component>
+	            <component>
+	                <name>KAVE_GANGLIA_MONITOR</name>
+	                <displayName>Kave Ganglia Monitor</displayName>
+	                <category>SLAVE</category>
+	                <cardinality>1+</cardinality>
+	                <commandScript>
+	                    <script>scripts/kave_ganglia_slave.py</script>
+	                    <scriptType>PYTHON</scriptType>
+	                    <timeout>600</timeout>
+	                </commandScript>
+	            </component>
             </components>
            <osSpecifics>
                 <osSpecific>

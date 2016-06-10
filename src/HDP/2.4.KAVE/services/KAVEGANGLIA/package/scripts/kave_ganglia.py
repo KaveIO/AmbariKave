@@ -21,13 +21,14 @@ from resource_management import *
 import kavecommon as kc
 
 
-class Kave_Ganglia(Script):
+class KaveGanglia(Script):
 
     def install(self, env):
         import params
 
         env.set_params(params)
         self.install_packages(env)
+        Package('ganglia-gmetad')
         self.configure(env)
 
     def configure(self, env):
@@ -36,21 +37,17 @@ class Kave_Ganglia(Script):
 
         env.set_params(params)
         Execute('chkconfig gmetad on')
-        Execute('chkconfig gmond on')
 
     def start(self, env):
         self.configure(env)
         Execute("service gmetad start")
-        Execute("service gmond start")
 
     def stop(self, env):
         Execute("service gmetad stop")
-        Execute("service gmond stop")
 
     def status(self, env):
         print Execute("service gmetad status")
-        print Execute("service gmond status")
 
 
 if __name__ == "__main__":
-    Kave_Ganglia().execute()
+    KaveGanglia().execute()

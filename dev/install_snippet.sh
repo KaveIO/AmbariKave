@@ -32,7 +32,7 @@ else
 fi
 
 yum install -y wget curl
-wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.2.1.0/ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.2.2.0/ambari.repo
 cp ambari.repo /etc/yum.repos.d/
 # conflicts with HDP utils and pre-installed pdsh version on centos6, need HDP repo file
 if [ "$os" == "centos6" ]; then

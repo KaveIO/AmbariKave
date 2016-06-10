@@ -22,8 +22,7 @@ import kavecommon as kc
 
 
 class Kave_Ganglia(Script):
-    mandatory_conf_dirs = ["/etc/ganglia/conf.empty", "/etc/ganglia/conf"]
-    optional_conf_dirs = ["/etc/ganglia/conf.d"]
+
 
     def install(self, env):
         import params
@@ -37,19 +36,9 @@ class Kave_Ganglia(Script):
         import kavecommon as kc
 
         env.set_params(params)
-        Execute('chkconfig hue on')
-        edit_dirs = self.mandatory_conf_dirs
-        for mdir in self.mandatory_conf_dirs:
-            Execute("mkdir -p " + mdir)
-        for odir in self.optional_conf_dirs:
-            if os.path.exists(odir):
-                edit_dirs.append(odir)
-        for edir in edit_dirs:
-            edir = os.path.realpath(edir)
-            Execute('chmod -R 755 ' + edir)
-            File(edir + '/hue.ini', content=InlineTemplate(params.hue_ini), mode=0600)
-            File(edir + '/hue_httpd.conf', content=InlineTemplate(params.hue_httpd_conf), mode=0644)
-            kc.chown_r(edir, 'hue')
+        Execute('chkconfig gmetad on')
+        Execute('chkconfig gmond on')
+
 
     def start(self, env):
         self.configure(env)

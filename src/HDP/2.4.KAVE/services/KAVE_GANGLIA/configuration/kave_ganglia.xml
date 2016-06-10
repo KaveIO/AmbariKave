@@ -4,7 +4,7 @@
 <configuration>
     <property>
         <name>web_ui_port</name>
-        <value>8000</value>
+        <value>8649</value>
         <description>HTTP PORT</description>
     </property>
 </configuration>

@@ -26,7 +26,6 @@
                         <package><name>ganglia</name></package>
                         <package><name>ganglia-gmond</name></package>
                         <package><name>ganglia-web</name></package>
-                        <package><name>httpdphpaprapr-util</name></package>
                         <package><name>httpd</name></package>
                         <package><name>rrdtool</name></package>
                     </packages>

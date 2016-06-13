@@ -48,12 +48,21 @@ class FreeipaClient(Script):
         """
         return True
 
-    def resolvconf(self,env):
+    def write_resolvconf(self,env):
+        """
+        Common method to overwrite resolv.conf if required
+        sensitive to the value of params.install_with_dns
+
+        NB: If we are installing freeipa with DNS the settings in resolv.conf must
+        be overriden. However these new settings will probably not survive a
+        network restart. This could cause potential problems.
+
+        This also can cause a lot of issues on failed FreeIPA installations, or while
+        the FreeIPA server is switched off, and so we give the user full control over
+        the resolv.conf template so that they can modify this approach if needed
+        """
         import params
         env.set_params(params)
-        # If we are installing freeipa with DNS the settings in resolv.conf must
-        # be overriden. However these new settings will probably not survive a
-        # network restart. This could cause potential problems.
         if params.install_with_dns:
             File("/etc/resolv.conf",
                  content=InlineTemplate(params.resolvconf_template),
@@ -74,7 +83,7 @@ class FreeipaClient(Script):
 
         if os.path.exists(self.ipa_client_install_lock_file):
             print 'ipa client already installed, nothing to do here.'
-            return self.resolvconf(env)
+            return self.write_resolvconf(env)
 
         rm = freeipa.RobotAdmin()
         # Native package installation system driven by metainfo.xml intentionally
@@ -93,7 +102,7 @@ class FreeipaClient(Script):
             pass
 
         # Only write the resolv.conf if the client installation was successful, otherwise I can get into biiig trouble!
-        self.resolvconf(env)
+        self.write_resolvconf(env)
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:

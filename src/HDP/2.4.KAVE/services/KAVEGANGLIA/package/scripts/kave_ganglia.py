@@ -41,15 +41,15 @@ class KaveGanglia(Script):
         env.set_params(params)
         File(self.ganglia_config_path,
              content=Template("ganglia.conf.j2"),
-             mode=0644
+             mode=0755
              )
         File(self.gmetad_config_path,
              content=Template("gmetad.conf.j2"),
-             mode=0644
+             mode=0755
              )
         File(self.gmetad_init_path,
              content=Template("gmetad.j2"),
-             mode=0644
+             mode=0755
              )
         Execute('chkconfig gmetad on')
 

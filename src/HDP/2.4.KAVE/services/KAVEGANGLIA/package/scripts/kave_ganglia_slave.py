@@ -40,15 +40,15 @@ class KaveGangliaSlave(Script):
         env.set_params(params)
         File(self.ganglia_config_path,
              content=Template("ganglia.conf.j2"),
-             mode=0644
+             mode=0755
              )
         File(self.gmond_config_path,
              content=Template("gmond.conf.j2"),
-             mode=0644
+             mode=0755
              )
         File(self.gmond_init_path,
              content=Template("gmond.j2"),
-             mode=0644
+             mode=0755
              )
         Execute('chkconfig gmond on')
 

@@ -27,5 +27,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
+kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'unspecified')
+kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_gridname', 'gridname')
 kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
 gangliaslave = default('/clusterHostInfo/kave_ganglia_monitor', ['unknown'])

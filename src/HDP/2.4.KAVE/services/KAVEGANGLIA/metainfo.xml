@@ -5,7 +5,7 @@
         <service>
             <name>KAVE_GANGLIA</name>
             <comment>Ganglia, Cluster monitoring tools</comment>
-            <displayName>Kave_Ganglia</displayName>
+            <displayName>KaveGanglia</displayName>
             <components>
                     <component>
                     <name>KAVE_GANGLIA_SERVER</name>

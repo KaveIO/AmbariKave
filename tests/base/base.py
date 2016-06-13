@@ -370,10 +370,10 @@ class LDTest(unittest.TestCase):
                                                                                 "to run this automated test")
         return lD
 
-    def deploy_dev(self, itype="c4.large"):
+    def deploy_dev(self, itype="m4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c4.large
+        itype -> None: m4.large
         """
         import kavedeploy as lD
         import kaveaws as lA
@@ -427,10 +427,10 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return ambari
 
-    def deploy_os(self, osval, itype="c4.large"):
+    def deploy_os(self, osval, itype="m4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c4.large
+        itype -> None: m4.large
         """
         import kavedeploy as lD
         import kaveaws as lA

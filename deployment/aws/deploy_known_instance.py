@@ -74,7 +74,7 @@ def parse_opts():
     osval = sys.argv[1]
     macname = sys.argv[2]
     secf = ""
-    insttype = "c4.large"
+    insttype = "m4.large"
     if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
         secf = sys.argv[3]
         if len(sys.argv) > 4:

@@ -22,6 +22,9 @@ import kavecommon as kc
 
 
 class KaveGanglia(Script):
+    gmetad_config_path = "/etc/ganglia/getmad.conf"
+    gmetad_init_path = "/etc/init.d/gmetad"
+    ganglia_conf_path = "/etc/httpd/conf.d/ganglia.conf"
 
     def install(self, env):
         import params
@@ -36,6 +39,18 @@ class KaveGanglia(Script):
         import kavecommon as kc
 
         env.set_params(params)
+        File(self.ganglia_config_path,
+             content=Template("ganglia.conf.j2"),
+             mode=0644
+             )
+        File(self.gmetad_config_path,
+             content=Template("gmetad.conf.j2"),
+             mode=0644
+             )
+        File(self.gmetad_init_path,
+             content=Template("gmetad.j2"),
+             mode=0644
+             )
         Execute('chkconfig gmetad on')
 
     def start(self, env):

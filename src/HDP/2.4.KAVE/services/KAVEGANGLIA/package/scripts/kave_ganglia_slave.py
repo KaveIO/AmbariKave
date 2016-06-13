@@ -22,6 +22,9 @@ import kavecommon as kc
 
 
 class KaveGangliaSlave(Script):
+    gmond_config_path = "/etc/ganglia/gmond.conf"
+    gmond_init_path = "/etc/init.d/gmond"
+    ganglia_conf_path = "/etc/httpd/conf.d/ganglia.conf"
 
     def install(self, env):
         import params
@@ -35,6 +38,18 @@ class KaveGangliaSlave(Script):
         import kavecommon as kc
 
         env.set_params(params)
+        File(self.ganglia_config_path,
+             content=Template("ganglia.conf.j2"),
+             mode=0644
+             )
+        File(self.gmond_config_path,
+             content=Template("gmond.conf.j2"),
+             mode=0644
+             )
+        File(self.gmond_init_path,
+             content=Template("gmond.j2"),
+             mode=0644
+             )
         Execute('chkconfig gmond on')
 
     def start(self, env):

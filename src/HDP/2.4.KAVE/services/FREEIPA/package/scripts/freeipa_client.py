@@ -48,7 +48,7 @@ class FreeipaClient(Script):
         """
         return True
 
-    def write_resolvconf(self,env):
+    def write_resolvconf(self, env):
         """
         Common method to overwrite resolv.conf if required
         sensitive to the value of params.install_with_dns
@@ -68,7 +68,6 @@ class FreeipaClient(Script):
                  content=InlineTemplate(params.resolvconf_template),
                  mode=0644
                  )
-
 
     def install(self, env):
         import params

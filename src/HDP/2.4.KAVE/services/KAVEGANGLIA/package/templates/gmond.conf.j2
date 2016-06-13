@@ -3,7 +3,7 @@
 globals {
   daemonize = yes
   setuid = yes
-  user = ganglia
+  user = {{kaveganglia_username}}
   debug_level = 0
   max_udp_msg_len = 1472
   mute = no
@@ -48,13 +48,13 @@ udp_send_channel {
                        # interface and the DNS names associated with
                        # those IPs will be used to create the RRDs.
   #mcast_join = 192.168.1.40
-  port = 8649
+  port = {{kaveganglia_port}}
   ttl = 1
 }
 
 /* You can specify as many udp_recv_channels as you like as well. */
 udp_recv_channel {
-  port = 8649
+  port = {{kaveganglia_port}}
   retry_bind = true
   # Size of the UDP buffer. If you are handling lots of metrics you really
   # should bump it up to e.g. 10MB or even higher.
@@ -64,7 +64,7 @@ udp_recv_channel {
 /* You can specify as many tcp_accept_channels as you like to share
    an xml description of the state of the cluster */
 tcp_accept_channel {
-  port = 8649
+  port = {{kaveganglia_port}}
   # If you want to gzip XML output
   gzip_output = no
 }

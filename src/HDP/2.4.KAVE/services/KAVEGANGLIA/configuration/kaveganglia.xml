@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>kaveganglia_port</name>
+        <value>8649</value>
+        <description>HTTP PORT</description>
+    </property>
+    <property>
+        <name>kaveganglia_username</name>
+        <value>ganglia</value>
+        <description>Ganglia Username, the username under which the ganglia serivce will run</description>
+    </property>
+</configuration>

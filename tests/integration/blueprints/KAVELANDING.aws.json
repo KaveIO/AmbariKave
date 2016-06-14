@@ -4,7 +4,7 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "c4.large",
+    "InstanceType" : "m4.large",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
@@ -14,7 +14,7 @@
   },
   { "Name" : "gate",
     "Count" : 1,
-    "InstanceType" : "c4.large",
+    "InstanceType" : "m4.large",
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   }

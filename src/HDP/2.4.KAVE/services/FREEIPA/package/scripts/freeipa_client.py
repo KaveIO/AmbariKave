@@ -95,7 +95,7 @@ class FreeipaClient(Script):
             Execute('chkconfig ntpd on')
 
             # patch for long domain names!
-            if True: #params.long_domain_patch:
+            if params.long_domain_patch:
                 Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
                         "| xargs sed -i 's/Certificate Authority/CA/g'")
 

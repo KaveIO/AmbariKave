@@ -74,7 +74,7 @@ class FreeipaServer(Script):
         if not os.path.exists(self.admin_password_file):
 
             # patch for long domain names!
-            if True: #params.long_domain_patch:
+            if params.long_domain_patch:
                 Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
                         "| xargs sed -i 's/Certificate Authority/CA/g'")
 

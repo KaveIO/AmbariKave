@@ -43,7 +43,7 @@ class FreeipaServer(Script):
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
-        import subprocess as subp
+        import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:

@@ -24,7 +24,6 @@ import random
 import string
 import pwd
 import grp
-import subprocess as subp
 
 
 def protect(apass):

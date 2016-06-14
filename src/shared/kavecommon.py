@@ -37,7 +37,7 @@ __main_dir__ = "AmbariKave"
 __mirror_list_file__ = "/etc/kave/mirror"
 
 
-def mycmd(cmd):
+def shell_call_wrapper(cmd):
     proc = sub.Popen(cmd, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
     stdout, stderr = proc.communicate()
     status = proc.returncode
@@ -45,14 +45,14 @@ def mycmd(cmd):
 
 
 try:
-    # when unit testing, res might not be importable, so replace execute with mycmd
+    # when unit testing, res might not be importable, so replace execute with shell_call_wrapper
     import resource_management as res
 except ImportError:
     class Object(object):
         pass
 
     res = Object()
-    res.Execute = mycmd
+    res.Execute = shell_call_wrapper
 
     class Script(object):
         pass
@@ -80,13 +80,10 @@ def detect_linux_version():
 
     # try commands first...
     for cmd in ["cat /etc/redhat-release", "lsb_release -a", "uname -r"]:
-        try:
-            output = mycmd(cmd)[1]
-            v = find_return(output)
-            if v:
-                return v
-        except RuntimeError:
-            pass
+        output = shell_call_wrapper(cmd)[1]
+        v = find_return(output)
+        if v:
+            return v
     raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
 
@@ -165,7 +162,7 @@ def failover_source(sources):
         if source is None:
             continue
         if source.startswith("ftp:") or (source.startswith("http") and ":" in source):
-            stat, stdout, stderr = mycmd("curl -i -X HEAD " + source)
+            stat, stdout, stderr = shell_call_wrapper("curl -i -X HEAD " + source)
             if "200 OK" not in stdout and "302 Found" not in stdout:
                 continue
             return source

@@ -179,7 +179,7 @@ class FreeipaServer(Script):
                  mode=0600
                  )
             import kavecommon as kc
-            _stat, _stdout, _stderr = kc.mycmd(
+            _stat, _stdout, _stderr = kc.shell_call_wrapper(
                 'ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'
                 % (params.directory_password, params.ldap_bind_user))
             # is this user already added?

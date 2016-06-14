@@ -196,7 +196,7 @@ if yn_ids in yes:
     for iid in i_younger_than_x_hours + i_stopped:
         try:
             lA.killinstance(iid)
-        except RuntimeError:
+        except lD.ShellExecuteError:
             failed.append(iid)
     time.sleep(5)
 
@@ -241,7 +241,7 @@ if yn_stk in yes:
     for stack in stacks_to_delete:
         try:
             lA.runawstojson("cloudformation delete-stack --stack-name " + stack)
-        except RuntimeError:
+        except lD.ShellExecuteError:
             failed.append(stack)
     time.sleep(5)
 
@@ -272,7 +272,7 @@ if yn_vls in yes:
     for volID in vol_to_kill:
         try:
             lA.killvolume(volID)
-        except RuntimeError:
+        except lD.ShellExecuteError:
             failed.append(volID)
 
 if yn_ids in yes:

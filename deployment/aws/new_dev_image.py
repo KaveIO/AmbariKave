@@ -124,7 +124,7 @@ if "Subnet" in security_config:
 
 lA.testaws()
 
-itype = lA.chooseitype("c4.large")
+itype = lA.chooseitype("m4.large")
 
 if iid is None:
     print "upping new", itype

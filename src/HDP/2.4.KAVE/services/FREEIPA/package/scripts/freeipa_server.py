@@ -44,7 +44,7 @@ class FreeipaServer(Script):
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
         import subprocess as subp
-        _hostname = check_output(["hostname", "-f"]).strip()
+        _hostname = subp.check_output(["hostname", "-f"]).strip()
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
             % (params.realm, params.directory_password, admin_password, hostname)
@@ -73,7 +73,7 @@ class FreeipaServer(Script):
             Execute(install_command, logoutput=True)
 
             # patch for long domain names!
-            if True: #params.log_domain_patch:
+            if True: #params.long_domain_patch:
                 Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
                         "| xargs sed -i 's/Certificate Authority/CA/g'")
 

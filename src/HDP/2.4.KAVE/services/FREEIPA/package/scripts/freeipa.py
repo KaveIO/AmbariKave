@@ -24,6 +24,7 @@ import random
 import string
 import pwd
 import grp
+import subprocess as subp
 
 
 def protect(apass):
@@ -99,7 +100,7 @@ class RobotAdmin():
 
         if os.path.isfile(self.password_file):
 
-            hostname = check_output(["hostname", "-f"]).strip()
+            hostname = subp.check_output(["hostname", "-f"]).strip()
             options = ['--enable-dns-updates', '--ssh-trust-dns', '--domain', domain,
                        '--hostname', hostname] if install_with_dns else ['--hostname', hostname]
 

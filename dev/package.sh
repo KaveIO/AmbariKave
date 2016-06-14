@@ -22,7 +22,7 @@
 #     2. Tag the git repo at the right commit
 #     3. Checkout the tag and rebuild within that tag
 #     4. Upload the tarball to the correct noarch repos directory
-#     5. Upload the install script to the correct centos6 (architecture specific directory)
+#     5. Upload the install script to the correct centos (architecture specific directory)
 #
 
 

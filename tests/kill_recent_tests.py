@@ -27,6 +27,9 @@ Remove all available volumes
 If younger than X hours and "Test" in the name:
     terminate instance
 
+If younger than X hours, older than two hours, and "new-dev-image" in the name:
+    terminate instance
+
 If stopped and "Test" in the name and older than 22 hours:
     terminate instance
 
@@ -122,27 +125,37 @@ i_all = []
 
 exclude_names = [".*_dev_.*"]
 require_names = ["Test.*"]
+dev_names = ["new-dev-image"]
 
 # Exclude _dev_box names!
 
 for reservation in instances["Reservations"]:
     for instance in reservation["Instances"]:
-        skip = False
+        skip = True
+        dev = False
         # print instance.keys()
         if "Tags" in instance.keys():
             for tag in instance["Tags"]:
                 if tag["Key"] == "Name":
+                    for req in require_names:
+                        if re.match(req, tag["Value"]) is None:
+                            continue
+                        else:
+                            skip = False
+                            break
+                    for req in dev_names:
+                        if re.match(req, tag["Value"]) is None:
+                            continue
+                        else:
+                            skip = False
+                            dev = True
+                            break
                     for ex in exclude_names:
                         if re.match(ex, tag["Value"]) is not None:
                             skip = True
                             break
-                    for req in require_names:
-                        if re.match(req, tag["Value"]) is None:
-                            skip = True
-                            break
-                            # print tag["Value"]
-                if skip:
-                    break
+                    if skip:
+                        break
         if skip:
             continue
         i_all.append(instance["InstanceId"])
@@ -153,11 +166,13 @@ for reservation in instances["Reservations"]:
         seconds = (datetime.datetime.utcnow() - lt).seconds
         # print days, seconds, instance["State"]["Name"] # bigger than 0 days, or bigger than 20 hours.
         # print instance["State"]["Name"]=="running", days==0, instance["State"]["Name"]=="stopped"
-        if instance["State"]["Name"] == "running" and days == 0 and seconds < (hours * 3600):
+        if dev and (seconds > (2 * 3600) or days > 0) and days < 5:
             i_younger_than_x_hours.append(instance["InstanceId"])
-        if instance["State"]["Name"] == "stopped" and days == 0 and seconds < (hours * 3600):
+        if (not dev) and instance["State"]["Name"] == "running" and days == 0 and seconds < (hours * 3600):
             i_younger_than_x_hours.append(instance["InstanceId"])
-        if instance["State"]["Name"] == "stopped" and (days > 1 or seconds > 79200):
+        if (not dev) and instance["State"]["Name"] == "stopped" and days == 0 and seconds < (hours * 3600):
+            i_younger_than_x_hours.append(instance["InstanceId"])
+        if (not dev) and instance["State"]["Name"] == "stopped" and (days > 1 or seconds > 79200):
             i_stopped.append(instance["InstanceId"])
 
 yn_ids = None

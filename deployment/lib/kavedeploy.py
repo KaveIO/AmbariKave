@@ -526,8 +526,12 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     """
     Add our ambari to a remote machine
     """
-    remote.run("service iptables stop")
-    remote.run("chkconfig iptables off")
+    # ignore failures here for now, since iptables does not exist on centos7
+    try:
+        remote.run("service iptables stop")
+        remote.run("chkconfig iptables off")
+    except RuntimeError:
+        pass
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)
@@ -563,7 +567,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "2.0-Beta"
+        version = "2.1-Beta-Pre"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -611,9 +615,10 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
             return
 
 
-def wait_for_ambari(ambari, maxrounds=10):
+def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
     """
     Wait until ambari server is up and running, error if it doesn't appear!
+    Also check if a list of files, e.g. inst.stdout or inst.stderr contains errors
     """
     import time
     # wait until ambari server is up
@@ -623,10 +628,25 @@ def wait_for_ambari(ambari, maxrounds=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= maxrounds:
+        # ignore failures here for now, since iptables does not exist on centos7
         try:
-            stdout = ambari.run("service iptables stop")
+            # modify iptables, only in case of Centos6
+            if ambari.detect_linux_version() in ["Centos6"]:
+                ambari.run("service iptables stop")
         except RuntimeError:
             pass
+        # check file pointed to for failures
+        try:
+            if check_inst:
+                for afile in check_inst:
+                    cat = ambari.run("cat " + afile).strip().lower()
+                    # ignore errors with mirrors
+                    cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
+                    if "error" in cat or "exception" in cat or "failed" in cat:
+                        raise SystemError("Failure in ambari server start server detected!")
+        except RuntimeError:
+            pass
+
         try:
             stdout = ambari.run("curl --netrc http://localhost:8080/api/v1/clusters")
             flag = True
@@ -636,7 +656,7 @@ def wait_for_ambari(ambari, maxrounds=10):
         time.sleep(60)
         rounds = rounds + 1
     if not flag:
-        raise ValueError("ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        raise IOError("ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
     return True
 
 
@@ -680,9 +700,10 @@ def confremotessh(remote, port=443):
     # selinux tools
     remote.run("yum -y install policycoreutils-python")
     remote.run("semanage port -m -t ssh_port_t -p tcp " + str(port))
-    # modify iptables
-    remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
-    remote.run("python add_incoming_port.py " + str(port))
+    # modify iptables, only in case of Centos6
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
+        remote.run("python add_incoming_port.py " + str(port))
     # modify sshconfig
     remote.run("echo >> /etc/ssh/sshd_config")
     remote.run("echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config")
@@ -695,8 +716,10 @@ def confremotessh(remote, port=443):
         remote.run("service ssh restart")
     import time
     time.sleep(2)
-    remote.run("service iptables restart")
-    time.sleep(1)
+    # modify iptables, only in case of Centos6
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.run("service iptables restart")
+        time.sleep(1)
     try:
         remote.run("service sshd restart")
     except RuntimeError:
@@ -743,6 +766,23 @@ def wait_until_up(remote, max_wait):
     return True
 
 
+def remote_cp_authkeys(remote, user2='root'):
+    """
+    Copy authorized_keys from one user to another on remote machine
+    return new remote with the new user
+    """
+    remote.check()
+    if remote.user == user2:
+        return remote
+    hdir = '/home/' + user2
+    if user2 == 'root':
+        hdir = '/root'
+    remote.run('sudo -u ' + user2 + " cp /home/" + remote.user + "/.ssh/authorized_keys "
+               + hdir + "/.ssh/", extrasshopts=['-t', '-t'])
+    remote2 = remoteHost(user2, remote.host, remote.access_key)
+    return remote2
+
+
 def getsshid(remote, saveas, retry=0):
     """
     If the machine does not yet have an id_rsa.pub, then generate it
@@ -782,24 +822,24 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
     # ensure no prompt because of the silly not recognised host yhingy
-    source.run("ssh-keyscan -H " + dest_internal_ip + " >> .ssh/known_hosts")
-    source.run("ssh-keygen -R " + dest_internal_ip)
-    source.run("ssh-keyscan -H " + dest_internal_ip + " >> .ssh/known_hosts")
+
+    def scan_and_store_key(remote, host_to_scan):
+        remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
+        remote.run("ssh-keygen -R " + host_to_scan)
+        remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
+        if host_to_scan != host_to_scan.lower():
+            scan_and_store_key(remote, host_to_scan.lower())
+    scan_and_store_key(source, dest_internal_ip)
     if preservehostname:
-        hostname = destination.run("hostname -s")
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-        source.run("ssh-keygen -R " + hostname)
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-        hostname = destination.run("hostname")
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
-        source.run("ssh-keygen -R " + hostname)
-        source.run("ssh-keyscan -H " + hostname + " >> .ssh/known_hosts")
+        scan_and_store_key(source, destination.run("hostname -s"))
+        scan_and_store_key(source, destination.run("hostname"))
     # test access by trying a double-hopping ssh
     output = source.run("ssh " + destination.user + "@" + dest_internal_ip + " echo Hello friend from \\$HOSTNAME")
     if "friend" not in output or "HOST" in output:
         raise SystemError("Setting up keyless access failed!")
     if preservehostname:
-        output = source.run("ssh " + destination.user + "@" + hostname + " echo Hello friend from \\$HOSTNAME")
+        output = source.run("ssh " + destination.user + "@" + destination.run("hostname")
+                            + " echo Hello friend from \\$HOSTNAME")
         if "friend" not in output or "HOST" in output:
             raise SystemError("Setting up keyless access failed!")
     return True
@@ -811,7 +851,7 @@ def rename_remote_host(remote, new_name, newdomain=None):
     If newdomain is given, also add the new domain, if not given, use localdomain
     """
     remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
-    cmd = "python rename_me.py " + new_name
+    cmd = "python rename_me.py " + new_name.lower()
     if newdomain is not None:
         cmd = cmd + " " + newdomain
     remote.run(cmd)

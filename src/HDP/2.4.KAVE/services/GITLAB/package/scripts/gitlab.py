@@ -23,7 +23,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 class Gitlab(Script):
-    package = 'gitlab-ce-8.7.1-ce.1.el6.x86_64.rpm'
+    package = 'gitlab-ce-8.7.1-ce.1.%s.x86_64.rpm'
     installer_cache_path = '/tmp/'
 
     def install(self, env):
@@ -34,8 +34,10 @@ class Gitlab(Script):
                 "You appear to already have a default postgre database installed (probably you're trying to put "
                 "Gitlabs on the same machine as Ambari). This type of operation is not implemented yet.")
         import params
+        # intelligently choose architecture
         import kavecommon as kc
-
+        el = {"centos6": "el6", "centos7": "el7"}
+        self.package = self.package % el[kc.detect_linux_version()]
         self.install_packages(env)
         env.set_params(params)
 

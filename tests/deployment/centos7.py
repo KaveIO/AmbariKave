@@ -35,7 +35,7 @@ class DepCentos7(base.LDTest):
         self.ostype = "Centos7"
         ambari, iid = self.deploy_os(self.ostype)
         stdout = ambari.run("echo Hello world from $HOSTNAME")
-        self.assertTrue("ambari" in stdout or "Test-" in stdout,
+        self.assertTrue("ambari" in stdout or "test-" in stdout.lower(),
                         "Unable to contact " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
         # Test adding more space with add_new_ebs_volume
         stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict " + iid +

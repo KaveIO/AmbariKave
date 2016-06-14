@@ -33,11 +33,12 @@ class SingleMachineCluster(base.LDTest):
         import kaveaws as lA
         region = lA.detect_region()
         clusterfile = "single.aws.json"
-        if region.startswith("ap"):
-            clusterfile = "singletokyo.aws.json"
         stdout = self.deploycluster(deploy_dir + "/clusters/" + clusterfile, cname="TestDeploy")
         self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
                         "failed to generate cluster, \n" + stdout)
+        ambari, iid = self.remote_from_cluster_stdout(stdout)
+        ambari.register()
+        self.wait_for_ambari(ambari, ["inst.stdout", "inst.stderr"])
 
 
 def suite(verbose=False, branch="__local__"):

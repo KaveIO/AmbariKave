@@ -36,18 +36,10 @@ class TestServiceBlueprint(base.LDTest):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
         cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
+        af = os.path.dirname(__file__) + "/blueprints/default.aws.json"
         if not os.path.exists(bp):
             raise ValueError("No blueprint with which to install " + self.service)
-        # print ason
-        for ason in [bp, cf]:
-            f = open(ason)
-            l = f.read()
-            f.close()
-            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
-            try:
-                interp = json.loads(l)
-            except:
-                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+        self.verify_blueprint(af, bp, cf)
         if self.service not in [s for s, d in base.find_services()]:
             raise ValueError(
                 "This test can only work for blueprints where the name of the blueprint matches a known service. Else "

@@ -26,7 +26,7 @@ usage deploy_one_centos_instance.py hostname [security_config.json] [instance_ty
 
 optional:
     --verbose : print all remotely running commands
-    [instance_type]: optional, if not specified will use c4.large
+    [instance_type]: optional, if not specified will use c3/4.large
     [security_config.json]: optional, if not specified will use the environemnt variable AWSSECCONF
     [--ambari-dev] : will use our ambari development image, this should speed up testing *a lot*
 """
@@ -115,7 +115,9 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
 
 lD.testproxy()
 
-upped = lA.up_centos6(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
+itype = lA.chooseitype(itype)
+
+upped = lA.up_centos7(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
 print "submitted"
 
 iid = lA.iid_from_up_json(upped)[0]
@@ -133,23 +135,37 @@ while (ip is None and acount < 20):
     ip = lA.pub_ip(iid)
     acount = acount + 1
 
+# This needs to be much smarter here!!
+
+uname = 'centos'
+
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
-        remote = lD.remoteHost('root', ip, keyloc)
+        remote = lD.remoteHost(uname, ip, keyloc)
         lD.wait_until_up(remote, 20)
+        remote = lD.remote_cp_authkeys(remote, 'root')
         if "Tags" in security_config:
             resources = lA.find_all_child_resources(iid)
             lA.tag_resources(resources, security_config["Tags"])
         remote.register()
-        if not ambaridev:
+        if not ambaridev:  # or remote.detect_linux_version() in ["Centos7"]:
             lD.rename_remote_host(remote, machinename, 'kave.io')
+        else:  # or remote.detect_linux_version() in ["Centos7"]:
+            lD.rename_remote_host(remote, 'ambari', 'kave.io')
+        if not ambaridev:
             lD.confallssh(remote)
         lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_ip(iid))
+        # Give the machine ssh access into itself
+        lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
         if ambaridev:
             if "GIT" in security_config["AccessKeys"]:
                 remote.prep_git(security_config["AccessKeys"]["GIT"]["KeyFile"], force=True)
-            remote.run("echo 0 > /selinux/enforce")
+            if remote.detect_linux_version() in ["Centos6"]:
+                remote.run("echo 0 > /selinux/enforce")
+            elif remote.detect_linux_version() in ["Centos7"]:
+                remote.run("setenforce permissive")
+        remote.run("yum clean all")
         remote.describe()
     except KeyboardInterrupt:
         pass

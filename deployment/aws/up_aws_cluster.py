@@ -187,9 +187,10 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if count == 0:
         continue
-    up = lA.up_centos6(type=lA.chooseitype(instancegroup["InstanceType"]),
-                       secGroup=security_group, keys=amazon_keypair_name,
-                       count=count, subnet=subnet)
+    up = lA.up_os("Centos7",
+                  type=lA.chooseitype(instancegroup["InstanceType"]),
+                  secGroup=security_group, keys=amazon_keypair_name,
+                  count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iid_from_up_json(up)
 
 instance_to_remote = {}
@@ -218,8 +219,9 @@ for k, ig in instancegroups.iteritems():
             acount = acount + 1
         if ip is None:
             raise SystemError(iid + " no ip assigned after quite some time")
-        remote = lD.remoteHost("root", ip, amazon_keyfile)
+        remote = lD.remoteHost("centos", ip, amazon_keyfile)
         lD.wait_until_up(remote, 20)
+        remote = lD.remote_cp_authkeys(remote, 'root')
         if "Tags" in security_config:
             resources = lA.find_all_child_resources(iid)
             lA.tag_resources(resources, security_config["Tags"])
@@ -230,6 +232,7 @@ allremotes = ["ssh:root@" + remote.host for remote in instance_to_remote.values(
 allremotes = lD.multiremotes(list_of_hosts=allremotes, access_key=amazon_keyfile)
 print "test PDSH"
 print allremotes.run("echo yes")
+allremotes.run("yum clean all")
 
 print "===================================="
 print "configure SSH on all machines"
@@ -427,8 +430,12 @@ for instancegroup in cluster_config["InstanceGroups"]:
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"
 print "=============================================="
-allremotes.run("service iptables stop")
-allremotes.run("'/bin/echo 0 > /selinux/enforce'")
+
+if instance_to_remote.values()[0].detect_linux_version() in ["Centos6"]:
+    allremotes.run("'echo 0 >/selinux/enforce'")
+    allremotes.run("service iptables stop")
+elif instance_to_remote.values()[0].detect_linux_version() in ["Centos7"]:
+    allremotes.run("setenforce permissive")
 
 if "Tags" in security_config and vpcid:
     print "=============================================="

@@ -196,7 +196,9 @@ except RuntimeError:
     ambari.run("yum -y install epel-release")
     ambari.run("yum -y install pdsh curl")
 
-ambari.run("service iptables stop")
+# modify iptables, only in case of Centos6
+if ambari.detect_linux_version() in ["Centos6"]:
+    ambari.run("service iptables stop")
 
 admin = ambari.run("hostname")
 
@@ -269,14 +271,18 @@ except RuntimeError:
         whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
 
 try:
-    whole_cluster.cp(liblocation + "/../remotescripts/set_ambari_node.py", "set_ambari_node.py")
+    whole_cluster.run("echo $HOSTNAME")
 except RuntimeError:
     whole_cluster.register()
-    whole_cluster.cp(liblocation + "/../remotescripts/set_ambari_node.py", "set_ambari_node.py")
 
 # turn off se linux across the cluster ...
-whole_cluster.run("'echo 0 >/selinux/enforce'")
-whole_cluster.run("python set_ambari_node.py " + admin)
+if ambari.detect_linux_version() in ["Centos6"]:
+    whole_cluster.run("'echo 0 >/selinux/enforce'")
+elif ambari.detect_linux_version() in ["Centos7"]:
+    whole_cluster.run("setenforce permissive")
+
+# set the ambari node address with a sed/regex
+whole_cluster.run(" sed -i 's/hostname=.*/hostname=" + admin + "/' /etc/ambari-agent/conf/ambari-agent.ini")
 try:
     whole_cluster.run("ambari-agent restart")
 except RuntimeError:

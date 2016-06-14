@@ -98,7 +98,7 @@ def chooseamiid(os, region):
     return ""
 
 
-def up_centos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
+def up_centos7(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
     region = "default"
     amiid = ""
     if subnet is not None:
@@ -109,11 +109,11 @@ def up_centos6(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
             amiid = os.environ["AMIAMBDEV"]
         else:
             raise ValueError(
-                "To use the dev option, you must have set AMIAMBDEV environment variable to the ami of a centos6 "
+                "To use the dev option, you must have set AMIAMBDEV environment variable to the ami of a centos "
                 "image with ambari pre-installed with your keys and in your region. See the script that generates "
                 "the dev image for that.")
     else:
-        amiid = chooseamiid("Centos6", region)
+        amiid = chooseamiid("Centos7", region)
     return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
 
 
@@ -427,6 +427,15 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     if len(iids) != len(mounts):
         raise ValueError("length of iids must be the same as len mounts")
     # print items
+    # print mounts
+    # for m in mounts:
+    #     for mi in m:
+    #         for k, v in mi.iteritems():
+    #             print k, v
+    #             if type(v) is str:
+    #                 print [ord(ki) for ki in k], [ord(vi) for vi in v]
+    #             else:
+    #                 print [ord(ki) for ki in k]
     itemPool = Queue.Queue()
     for iid, mounts in zip(iids, mounts):
         # print iid, mounts

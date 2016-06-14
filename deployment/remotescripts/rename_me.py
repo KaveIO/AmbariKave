@@ -26,13 +26,36 @@ import sys
 import os
 import commands
 
+
+def which(program):
+    import os
+
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 newname = sys.argv[1]
 domain = "localdomain"
 if len(sys.argv) > 2:
     domain = sys.argv[2]
 
-if os.path.exists("/etc/sysconfig/network"):
-    # CENTOS
+if which('hostnamectl'):
+    # Centos7
+    os.system('hostnamectl set-hostname ' + newname + "." + domain + ' ')
+elif os.path.exists("/etc/sysconfig/network"):
+    # CENTOS 6
     f = open("/etc/sysconfig/network")
     l = f.readlines()
     f.close()
@@ -54,7 +77,11 @@ if os.path.exists("/etc/sysconfig/network"):
     f.close()
 elif os.path.exists('/etc/hostname'):
     # UBUNTU
-    os.system('echo ' + newname + ' > /etc/hostname ')
+    os.system('echo ' + newname + "." + domain + ' > /etc/hostname ')
+
+# AWS cloud init function will rename the machine on restarts.
+if os.path.exists('/etc/cloud/cloud.cfg'):
+    os.system("echo 'preserve_hostname : true' > /etc/cloud/cloud.cfg ")
 
 if domain == "localdomain":
     # support machine with no domain name / DNS ...

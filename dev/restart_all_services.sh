@@ -38,15 +38,26 @@ if ! type pdsh >/dev/null 2>/dev/null ; then
 fi
 
 pdsh_version=`pdsh -V | head -n 1 | awk '{print $1}' | awk -F '-' '{print $2}'`
+pdsh_groups=`pdsh -h 2>&1 | tail -n 10 | grep groupname`
 
 if [[  ${pdsh_version} < "2.27" ]]; then
-	echo "pdsh version >= 2.27 needed for this script, you have"
-	pdsh -V
-	exit 1
+        echo "pdsh version >= 2.27 needed for this script, you have"
+        pdsh -V
+        exit 1
+fi
+
+if [[  ${pdsh_groups} == *"-g groupname"* ]]; then
+        true
+else
+        pdsh -h
+        echo "No pdsh groups detected, install newer version or install pdsh-mod-dshgroup"
+        exit 1
 fi
 
 if [ ! -e ~/.dsh/group/$1 ]; then
 	echo "no dsh group called "$1" found, did you type the cluster name in wrongly?"
+	echo "deploy_from_blueprint makes groups named after the cluster, if you didn't use that this won't work either"
+	echo "you can also make the groups yourself, with all ambari nodes"
 	exit 1
 fi
 

@@ -29,7 +29,7 @@ class Twiki(ApacheScript):
 
         super(Twiki, self).install(env)
         env.set_params(params)
-        kc.copy_cache_or_repo('TWiki-6.0.0.zip')
+        kc.copy_cache_or_repo('TWiki-6.0.0.zip', arch='noarch')
         Execute("mkdir -p " + params.install_dir)
         Execute("unzip -o -q TWiki-6.0.0.zip -d " + params.install_dir)
         Execute("mkdir -p " + params.install_dir + 'authtest')

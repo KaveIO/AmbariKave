@@ -32,16 +32,70 @@ from grp import getgrnam
 #  this password is intended to be widely known and is used here as an extension of the URL
 #
 __repo_url__ = "http://repos:kaverepos@repos.kave.io"
-__version__ = "2.0-Beta"
+__version__ = "2.1-Beta-Pre"
 __main_dir__ = "AmbariKave"
-__arch__ = "Centos6"
 __mirror_list_file__ = "/etc/kave/mirror"
 
 
-def repo_url(filename, repo=__repo_url__, arch=__arch__, dir=__main_dir__, ver=__version__):
+def mycmd(cmd):
+    proc = sub.Popen(cmd, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
+    stdout, stderr = proc.communicate()
+    status = proc.returncode
+    return status, stdout, stderr
+
+
+try:
+    # when unit testing, res might not be importable, so replace execute with mycmd
+    import resource_management as res
+except ImportError:
+    class Object(object):
+        pass
+
+    res = Object()
+    res.Execute = mycmd
+
+    class Script(object):
+        pass
+
+    res.Script = Script
+
+
+def detect_linux_version():
+    """
+    Which flavour of linux is running?
+    """
+    # first look into the redhat release
+    def find_return(output):
+        if "centos" in output.lower() and "release 6" in output.lower():
+            return "Centos6"
+        elif "centos" in output.lower() and "release 7" in output.lower():
+            return "Centos7"
+        elif "Ubuntu" in output:
+            return "Ubuntu"
+        elif "el6" in output:
+            return "Centos6"
+        elif "el7" in output:
+            return "Centos7"
+        return None
+
+    # try commands first...
+    for cmd in ["cat /etc/redhat-release", "lsb_release -a", "uname -r"]:
+        try:
+            output = mycmd(cmd)[1]
+            v = find_return(output)
+            if v:
+                return v
+        except RuntimeError:
+            pass
+    raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
+
+
+def repo_url(filename, repo=__repo_url__, arch=None, dir=__main_dir__, ver=__version__):
     """
     Construct the repository address for our code
     """
+    if arch is None:
+        arch = detect_linux_version()
     if repo[-1] != '/':
         repo = repo + '/'
     return repo + arch.lower() + "/" + dir + "/" + ver + "/" + filename
@@ -92,29 +146,6 @@ def trueorfalse(astring):
     raise TypeError("Cannot guess boolean value equivalent for " + str(astring))
 
 
-def mycmd(cmd):
-    proc = sub.Popen(cmd, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
-    stdout, stderr = proc.communicate()
-    status = proc.returncode
-    return status, stdout, stderr
-
-
-try:
-    # when unit testing, res might not be importable, so replace execute with mycmd
-    import resource_management as res
-except ImportError:
-    class Object(object):
-        pass
-
-    res = Object()
-    res.Execute = mycmd
-
-    class Script(object):
-        pass
-
-    res.Script = Script
-
-
 def copymethods(source, destination):
     """
     Construct the command to run, wget if the file is remote, cp if the file is local
@@ -161,7 +192,7 @@ def copy_or_cache(sources, filename, cache_dir=None):
     return
 
 
-def copy_cache_or_repo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__, ver=__version__, alternates=None):
+def copy_cache_or_repo(filename, cache_dir=None, arch=None, dir=__main_dir__, ver=__version__, alternates=None):
     """
     Combines all the little functions above into a simple piece of code to copy stuff of the internet from our repo
     or from the local cache
@@ -176,8 +207,8 @@ def copy_cache_or_repo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__
     # default goes last
     sources = []
     for mirror in mirrors():
-        sources.append(repo_url(filename, arch=arch.lower(), repo=mirror, dir=dir, ver=ver))
-    sources.append(repo_url(filename, arch=arch.lower(), dir=dir, ver=ver))
+        sources.append(repo_url(filename, arch=arch, repo=mirror, dir=dir, ver=ver))
+    sources.append(repo_url(filename, arch=arch, dir=dir, ver=ver))
     if type(alternates) is list:
         sources = sources + alternates
     if type(alternates) is str:
@@ -185,12 +216,12 @@ def copy_cache_or_repo(filename, cache_dir=None, arch=__arch__, dir=__main_dir__
     return copy_or_cache(sources=sources, filename=filename, cache_dir=cache_dir)
 
 
-def chown_r(dir, user):
+def chown_r(adir, user):
     """
     recursive chown wrapper, chown all lower files
     """
-    os.chown(dir, getpwnam(user).pw_uid, getgrnam(user).gr_gid)
-    for root, dirs, files in os.walk(dir):
+    os.chown(adir, getpwnam(user).pw_uid, getgrnam(user).gr_gid)
+    for root, dirs, files in os.walk(adir):
         for momo in dirs:
             os.chown(os.path.join(root, momo), getpwnam(user).pw_uid, getgrnam(user).gr_gid)
         for momo in files:
@@ -268,9 +299,16 @@ class ApacheScript(res.Script):
     def start(self, env):
         print "start apache"
         self.configure(env)
-        # Execute('service httpd start')
-        # wait 3 seconds before calling start
+
         import time
+        if detect_linux_version() in ["Centos7"]:
+            # wait 3 seconds before calling start
+            time.sleep(3)
+            try:
+                res.Execute("service httpd start")
+            except:
+                res.Execute("apachectl graceful")
+
         time.sleep(3)
         res.Execute("apachectl graceful")
         time.sleep(3)

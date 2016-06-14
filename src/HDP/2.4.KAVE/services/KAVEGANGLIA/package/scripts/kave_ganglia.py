@@ -21,17 +21,20 @@ from resource_management import *
 import kavecommon as kc
 
 
-class KaveGanglia(Script):
-    gmetad_config_path = "/etc/ganglia/getmad.conf"
+class KaveGanglia(kc.ApacheScript):
+    gmetad_config_path = "/etc/ganglia/gmetad.conf"
     gmetad_init_path = "/etc/init.d/gmetad"
     ganglia_config_path = "/etc/httpd/conf.d/ganglia.conf"
 
     def install(self, env):
         import params
+        Package('httpd')
 
+        super(KaveGanglia, self).install(env)
         env.set_params(params)
         self.install_packages(env)
         Package('ganglia-gmetad')
+        Package('rrdtool')
         self.configure(env)
 
     def configure(self, env):
@@ -52,16 +55,23 @@ class KaveGanglia(Script):
              mode=0755
              )
         Execute('chkconfig gmetad on')
+        if os.path.exists("/var/lib/ganglia/rrds"):
+            Execute('chown -R nobody:nobody /var/lib/ganglia/rrds')
+
+        super(KaveGanglia, self).configure(env)
 
     def start(self, env):
         self.configure(env)
         Execute("service gmetad start")
+        super(KaveGanglia, self).start(env)
 
     def stop(self, env):
         Execute("service gmetad stop")
+        super(KaveGanglia, self).stop(env)
 
     def status(self, env):
-        print Execute("service gmetad status")
+        super(KaveGanglia, self).status(env)
+        Execute("service gmetad status")
 
 
 if __name__ == "__main__":

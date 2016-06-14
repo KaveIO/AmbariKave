@@ -51,6 +51,8 @@ class KaveGangliaSlave(Script):
              mode=0755
              )
         Execute('chkconfig gmond on')
+        if os.path.exists("/var/lib/ganglia/rrds"):
+            Execute('chown -R nobody:nobody /var/lib/ganglia/rrds')
 
     def start(self, env):
         self.configure(env)

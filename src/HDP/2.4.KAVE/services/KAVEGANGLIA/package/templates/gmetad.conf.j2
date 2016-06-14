@@ -42,9 +42,9 @@
 # data_source "another source" 1.3.4.7:8655  1.3.4.8
 
 #data_source "my cluster" localhost
-{% for host in gangliaslave %}
-data_source "my_cluster" {{host}}:{{kaveganglia_port}}
-{% endfor %}
+
+data_source "{{kaveganglia_clustername}}" {% for host in gangliaslave %} {{host}}:{{kaveganglia_port}} {% endfor %}
+
 
 #
 # Round-Robin Archives

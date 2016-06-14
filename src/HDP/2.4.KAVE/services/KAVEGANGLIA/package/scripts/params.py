@@ -27,7 +27,22 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
-kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'unspecified')
-kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'gridname')
+kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE')
+kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE')
 kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
-gangliaslave = default('/clusterHostInfo/kave_ganglia_monitor', ['unknown'])
+gangliaslave = default('/clusterHostInfo/kave_ganglia_monitor_hosts', ['unknown'])
+
+www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
+PORT = default('configurations/kaveganglia/PORT', '80')
+servername = default('configurations/kaveganglia/servername', hostname)
+if servername == "hostname":
+    servername = hostname
+
+template_000_default = default('configurations/kaveganglia/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")

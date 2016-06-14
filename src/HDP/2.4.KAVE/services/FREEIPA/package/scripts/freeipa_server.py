@@ -72,14 +72,15 @@ class FreeipaServer(Script):
 
         # Crude check to avoid reinstalling during debugging
         if not os.path.exists(self.admin_password_file):
-            # This is a time-consuming command, better to log the output
-            Execute(install_command, logoutput=True)
 
             # patch for long domain names!
             if True: #params.long_domain_patch:
                 Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
                         "| xargs sed -i 's/Certificate Authority/CA/g'")
 
+            # This is a time-consuming command, better to log the output
+            Execute(install_command, logoutput=True)
+            # write password file
             File("/root/admin-password",
                  content=Template("admin-password.j2", admin_password=admin_password),
                  mode=0600

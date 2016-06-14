@@ -44,10 +44,13 @@ class FreeipaServer(Script):
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
         import subprocess as subp
-        _hostname = subp.check_output(["hostname", "-f"]).strip()
+        p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
+        _hostname = p0.communicate()[0].strip()
+        if p0.returncode:
+            raise OSError("Failed to determine hostname!")
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
-            % (params.realm, params.directory_password, admin_password, hostname)
+            % (params.realm, params.directory_password, admin_password, _hostname)
 
         tos = kc.detect_linux_version()
         # ipa-server install command. Currently --selfsign is mandatory because

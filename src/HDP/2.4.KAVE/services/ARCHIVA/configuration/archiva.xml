@@ -14,16 +14,16 @@
         <value>/opt/</value>
         <description>
             Install Location for Archiva.
-            I will make a subdirectory called install_dirname in this location.
+            I will make a subdirectory called install_subdir in this location.
             must be at least 4 characters and contain two '/'
         </description>
     </property>
     <property>
-        <name>install_dirname</name>
+        <name>install_subdir</name>
         <value>archiva</value>
         <description>
             Install Location for Archiva.
-            I will make a subdirectory called this in the install_top_dir location.
+            I will make a subdirectory called this in the install_topdir location.
         </description>
     </property>
 </configuration>

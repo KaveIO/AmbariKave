@@ -29,10 +29,12 @@ Bugfixes in services:
 * epel repo seems not very stable recently, yum clean all seems to solve most issues
 * FreeIPA:
     - says install was successful in the client even when it failed actually
-    - FreeIPA now supports domain names up to 61 characters
+    - FreeIPA now supports domain names up to 61 characters (experimental patch)
     - resolv.conf overwriting now only occurs on successful client install
 * KaveLanding:
     - KaveLanding now supports modified ambari password correctly
+* Archiva:
+	- Re-installation is now possible with limited cleanup, small changes in properties
 
 Bugfixes in installer:
 * No longer breaks with local directory in /etc/kave/mirror file

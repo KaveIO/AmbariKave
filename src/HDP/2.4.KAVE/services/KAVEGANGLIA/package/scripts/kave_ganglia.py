@@ -47,11 +47,11 @@ class KaveGanglia(kc.ApacheScript):
              mode=0755
              )
         File(self.gmetad_config_path,
-             content=Template("gmetad.conf.j2"),
+             content=InlineTemplate(params.kaveganglia_gmetad_conf),
              mode=0755
              )
         File(self.gmetad_init_path,
-             content=InlineTemplate(params.kaveganglia_gmetad_conf),
+             content=Template("gmetad.j2"),
              mode=0755
              )
         Execute('chkconfig gmetad on')

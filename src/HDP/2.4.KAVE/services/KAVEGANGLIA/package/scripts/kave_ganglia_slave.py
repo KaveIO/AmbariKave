@@ -43,7 +43,7 @@ class KaveGangliaSlave(Script):
              mode=0755
              )
         File(self.gmond_config_path,
-             content=Template("gmond.conf.j2"),
+             content=InlineTemplate(params.kaveganglia_gmond_conf),
              mode=0755
              )
         File(self.gmond_init_path,

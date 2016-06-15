@@ -71,12 +71,12 @@ tcp_accept_channel {
 
 /* Channel to receive sFlow datagrams */
 #udp_recv_channel {
-#  port = 6343
+#  port = {{kaveganglia_udp_port}}
 #}
 
 /* Optional sFlow settings */
 #sflow {
-# udp_port = 6343
+# udp_port = {{kaveganglia_udp_port}}
 # accept_vm_metrics = yes
 # accept_jvm_metrics = yes
 # multiple_jvm_instances = no

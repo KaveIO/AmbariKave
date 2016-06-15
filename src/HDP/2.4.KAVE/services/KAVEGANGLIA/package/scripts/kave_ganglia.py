@@ -43,7 +43,7 @@ class KaveGanglia(kc.ApacheScript):
 
         env.set_params(params)
         File(self.ganglia_config_path,
-             content=Template("ganglia.conf.j2"),
+             content=InlineTemplate(params.kaveganglia_conf),
              mode=0755
              )
         File(self.gmetad_config_path,
@@ -51,7 +51,7 @@ class KaveGanglia(kc.ApacheScript):
              mode=0755
              )
         File(self.gmetad_init_path,
-             content=Template("gmetad.j2"),
+             content=InlineTemplate(params.kaveganglia_gmetad_conf),
              mode=0755
              )
         Execute('chkconfig gmetad on')

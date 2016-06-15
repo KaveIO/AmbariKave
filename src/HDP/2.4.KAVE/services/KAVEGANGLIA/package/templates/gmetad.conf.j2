@@ -105,7 +105,7 @@ gridname "{{kaveganglia_gridname}}"
 # User gmetad will setuid to (defaults to "nobody")
 # default: "nobody"
 
-setuid_username nobody
+setuid_username {{kaveganglia_gmetad_uid}}
 
 #
 #-------------------------------------------------------------------------------
@@ -116,13 +116,13 @@ setuid_username nobody
 #-------------------------------------------------------------------------------
 # The port gmetad will answer requests for XML
 # default: 8651
-# xml_port 8651
+# xml_port {{kaveganglia_xml_port}}
 #
 #-------------------------------------------------------------------------------
 # The port gmetad will answer queries for XML. This facility allows
 # simple subtree and summation views of the XML tree.
 # default: 8652
-# interactive_port 8652
+# interactive_port {{kaveganglia_interactive_port}}
 #
 #-------------------------------------------------------------------------------
 # The number of threads answering XML requests
@@ -164,7 +164,7 @@ case_sensitive_hostnames 0
 #
 # The port and protocol on which Graphite is listening
 # default: 2003
-# carbon_port 2003
+# carbon_port {{kaveganglia_carbon_port}}
 #
 # default: tcp
 # carbon_protocol udp
@@ -233,7 +233,7 @@ case_sensitive_hostnames 0
 #
 # The port and protocol on which Riemann is listening
 # default: 5555
-# riemann_port 5555
+# riemann_port {{kaveganglia_riemann_port}}
 #
 # default: udp
 # riemann_protocol tcp

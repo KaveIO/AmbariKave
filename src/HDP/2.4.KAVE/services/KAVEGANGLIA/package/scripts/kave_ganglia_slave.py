@@ -39,7 +39,7 @@ class KaveGangliaSlave(Script):
 
         env.set_params(params)
         File(self.ganglia_config_path,
-             content=Template("ganglia.conf.j2"),
+             content=InlineTemplate(params.kaveganglia_conf),
              mode=0755
              )
         File(self.gmond_config_path,

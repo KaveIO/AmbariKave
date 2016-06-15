@@ -38,7 +38,7 @@ class Archiva(Script):
             Execute('rm -rf %s' % (params.install_topdir + params.install_subdir))
         Execute('mv apache-archiva-2.2.0 %s' % (params.install_topdir + params.install_subdir))
         if os.path.exists(self.package):
-            Execute('rm -f ' % self.package)
+            Execute('rm -f ' + self.package)
         if os.path.exists('/etc/init.d/archiva'):
             Execute('rm -f /etc/init.d/archiva')
         Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % (params.install_topdir + params.install_subdir))

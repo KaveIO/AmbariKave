@@ -49,7 +49,8 @@ class Hue(Script):
             Execute('chmod -R 755 ' + edir)
             File(edir + '/hue.ini', content=InlineTemplate(params.hue_ini), mode=0600)
             File(edir + '/hue_httpd.conf', content=InlineTemplate(params.hue_httpd_conf), mode=0644)
-            kc.chown_r(edir, 'hue')
+            kc.chown_r(edir, params.server_user)
+        Execute("sed -i 's/USER=\w*/USER=%s/' /etc/init.d/hue " % params.server_user)
 
     def start(self, env):
         self.configure(env)

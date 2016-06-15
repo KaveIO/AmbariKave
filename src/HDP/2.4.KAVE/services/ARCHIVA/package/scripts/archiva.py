@@ -34,12 +34,14 @@ class Archiva(Script):
         Execute('mkdir -p %s ' % params.install_topdir)
         kc.copy_cache_or_repo(self.package, arch="noarch")
         Execute('unzip -q %s' % (self.package))
+        if os.path.exists(params.install_topdir + params.install_subdir):
+            Execute('rm -rf %s' % (params.install_topdir + params.install_subdir))
         Execute('mv apache-archiva-2.2.0 %s' % (params.install_topdir + params.install_subdir))
         if os.path.exists(self.package):
-            Execute('rm -r ' % self.package)
+            Execute('rm -f ' % self.package)
         if os.path.exists('/etc/init.d/archiva'):
             Execute('rm -f /etc/init.d/archiva')
-        Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % params.install_directory)
+        Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % (params.install_topdir + params.install_subdir))
 
         self.configure(env)
 

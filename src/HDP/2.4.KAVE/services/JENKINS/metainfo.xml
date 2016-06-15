@@ -25,8 +25,8 @@
                     <packages>
                         <package><name>wget</name></package>
                         <package><name>git</name></package>
-                        <package><name>java-1.7.0-openjdk</name></package>
-                        <package><name>java-1.7.0-openjdk-devel</name></package>
+                        <package><name>java-1.8.0-openjdk</name></package>
+                        <package><name>java-1.8.0-openjdk-devel</name></package>
                     </packages>
                 </osSpecific>
             </osSpecifics>

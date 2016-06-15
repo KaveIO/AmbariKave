@@ -30,11 +30,11 @@ kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username'
 kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE')
 kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE')
 kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
-kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_port', '8651')
-kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_port', '8652')
-kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_port', '2003')
-kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_port', '5555')
-kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_port', '6343')
+kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_xml_port', '8651')
+kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_interactive_port', '8652')
+kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_carbon_port', '2003')
+kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riemann_port', '5555')
+kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
 gangliaslave = default('/clusterHostInfo/kave_ganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
 
@@ -53,7 +53,9 @@ ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
 """)
 
-kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """
+kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
 #
 # Ganglia monitoring system php web frontend
 #
@@ -69,7 +71,9 @@ Alias /ganglia /usr/share/ganglia
   # Allow from .example.com
 </Location>""")
 
-kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """
+kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
 # This is an example of a Ganglia Meta Daemon configuration file
 #                http://ganglia.sourceforge.net/
 #
@@ -318,7 +322,9 @@ case_sensitive_hostnames 0
 # riemann_attributes "customer=Acme Corp,environment=PROD"
 """)
 
-kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """
+kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
 /* This configuration is as close to 2.5.x default behavior as possible
    The values closely match ./gmond/metric.h definitions in 2.5.x */
 globals {

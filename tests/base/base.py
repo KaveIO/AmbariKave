@@ -370,18 +370,18 @@ class LDTest(unittest.TestCase):
                                                                                 "to run this automated test")
         return lD
 
-    def deploy_dev(self, itype="m4.large"):
+    def deploy_dev(self, instancetype="m4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: m4.large
+        instancetype -> None: m4.large
         """
         import kavedeploy as lD
         import kaveaws as lA
-        itype = lA.chooseitype(itype)
+        instancetype = lA.chooseinstancetype(instancetype)
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.run_quiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
-                              + self.service + " " + itype + " --ambari-dev --not-strict")
+                              + self.service + " " + instancetype + " --ambari-dev --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -427,18 +427,18 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return ambari
 
-    def deploy_os(self, osval, itype="m4.large"):
+    def deploy_os(self, osval, instancetype="m4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: m4.large
+        instancetype -> None: m4.large
         """
         import kavedeploy as lD
         import kaveaws as lA
-        itype = lA.chooseitype(itype)
+        instancetype = lA.chooseinstancetype(instancetype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.run_quiet(deploy_dir + "/aws/deploy_known_instance.py "
                               + osval + " Test-" + osval + "-" + self.service + " "
-                              + itype + " --not-strict")
+                              + instancetype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -521,20 +521,20 @@ class LDTest(unittest.TestCase):
                     "curl --netrc "
                     + " http://localhost:8080/api/v1/clusters/"
                     + clustername + "/requests/" + str(requestid))
-            except RuntimeError:
+            except lD.ShellExecuteError:
                 time.sleep(3)
                 try:
                     stdout = ambari.run(
                         "curl --netrc "
                         + " http://localhost:8080/api/v1/clusters/"
                         + clustername + "/requests/" + str(requestid))
-                except RuntimeError as e:
+                except lD.ShellExecuteError as e:
                     try:
                         stdout2 = ambari.run("ambari-server status")
                         if "not running" in stdout2:
                             state = "ABORTED"
                             break
-                    except RuntimeError:
+                    except lD.ShellExecuteError:
                         state = "ABORTED"
                         break
 

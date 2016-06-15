@@ -53,7 +53,7 @@ class TestKaveToolbox(base.LDTest):
                                  + stdout + "\n-----------------\n"
                                  + ' '.join(
                                      ambari.sshcmd()))
-            except RuntimeError:
+            except lD.ShellExecuteError:
                 pass
             rounds = rounds + 1
             time.sleep(60)
@@ -71,7 +71,7 @@ class TestKaveToolbox(base.LDTest):
             ambari.run("which vncserver")
             ambari.run("which emacs")
             ambari.run("which firefox")
-        except RuntimeError:
+        except lD.ShellExecuteError:
             self.assertTrue(False, "Could not find vncserver/emacs/firefox installed as workstation components")
         env = ambari.run("cat /opt/KaveToolbox/pro/scripts/KaveEnv.sh")
         self.assertTrue("#!/bin/bash" in env,

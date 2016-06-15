@@ -134,7 +134,7 @@ if "Subnet" in security_config.keys():
 # Check that pdsh is locally installed
 try:
     lD.run_quiet('which pdsh')
-except RuntimeError:
+except lD.ShellExecuteError:
     raise SystemError('pdsh is not installed, please install pdsh first. Pdsh is useful to speed up large deployments.')
 
 dnsiid = None
@@ -187,8 +187,8 @@ for instancegroup in cluster_config["InstanceGroups"]:
         autoname = False
     if count == 0:
         continue
-    up = lA.up_default(type=lA.chooseitype(instancegroup["InstanceType"]),
-                       secGroup=security_group, keys=amazon_keypair_name,
+    up = lA.up_default(type=lA.chooseinstancetype(instancegroup["InstanceType"]),
+                       security_group=security_group, keys=amazon_keypair_name,
                        count=count, subnet=subnet)
     instancegroups[instancegroup["Name"]] = lA.iid_from_up_json(up)
 
@@ -219,8 +219,8 @@ for k, ig in instancegroups.iteritems():
         if ip is None:
             raise SystemError(iid + " no ip assigned after quite some time")
 
-        uname = lA.default_usernamedict[lA.default_os]
-        remote = lD.remoteHost(uname, ip, amazon_keyfile)
+        remoteuser = lA.default_usernamedict[lA.default_os]
+        remote = lD.remoteHost(remoteuser, ip, amazon_keyfile)
 
         lD.wait_until_up(remote, 20)
         remote = lD.remote_cp_authkeys(remote, 'root')

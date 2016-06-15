@@ -17,6 +17,7 @@
 ##############################################################################
 import kavecommon as kc
 from resource_management import *
+import os
 
 
 class Archiva(Script):
@@ -30,13 +31,14 @@ class Archiva(Script):
         env.set_params(params)
         self.install_packages(env)
 
-        Execute('mkdir %s ' % params.install_directory)
+        Execute('mkdir -p %s ' % params.install_topdir)
         kc.copy_cache_or_repo(self.package, arch="noarch")
-        Execute('mv %s %s ' % (self.package, params.install_directory))
-        Execute('unzip -q %s/%s -d %s' % (params.install_directory, self.package, params.install_directory))
-        Execute('mv %s/apache-archiva*/* %s' % (params.install_directory, params.install_directory))
-        Execute('rm -rf  %s/apache-archiva*' % (params.install_directory))
-        Execute('rm -rf  /opt/%s' % self.package)
+        Execute('unzip -q %s' % (self.package))
+        Execute('mv apache-archiva-2.2.0 %s' % (params.install_topdir + params.install_subdir))
+        if os.path.exists(self.package):
+            Execute('rm -r ' % self.package)
+        if os.path.exists('/etc/init.d/archiva'):
+            Execute('rm -f /etc/init.d/archiva')
         Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % params.install_directory)
 
         self.configure(env)
@@ -60,11 +62,11 @@ class Archiva(Script):
 
         env.set_params(params)
 
-        File(params.install_directory + "/conf/jetty.xml",
+        File(params.install_topdir + params.install_subdir + "/conf/jetty.xml",
              content=Template("jetty.xml.j2"),
              mode=0600
              )
-        File(params.install_directory + "/conf/security.properties",
+        File(params.install_topdir + params.install_subdir + "/conf/security.properties",
              content=Template("security.properties.j2"),
              mode=0600
              )

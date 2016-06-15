@@ -43,11 +43,14 @@ class FreeipaServer(Script):
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
-        import subprocess as subp
-        _hostname = check_output(["hostname", "-f"]).strip()
+        import subprocess
+        p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
+        _hostname = p0.communicate()[0].strip()
+        if p0.returncode:
+            raise OSError("Failed to determine hostname!")
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
-            % (params.realm, params.directory_password, admin_password, hostname)
+            % (params.realm, params.directory_password, admin_password, _hostname)
 
         tos = kc.detect_linux_version()
         # ipa-server install command. Currently --selfsign is mandatory because
@@ -67,11 +70,17 @@ class FreeipaServer(Script):
             else:
                 install_command += ' --no-forwarders'
 
-        # Crude check to avoid reinstalling during debuging
+        # Crude check to avoid reinstalling during debugging
         if not os.path.exists(self.admin_password_file):
+
+            # patch for long domain names!
+            if params.long_domain_patch:
+                Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
+                        "| xargs sed -i 's/Certificate Authority/CA/g'")
+
             # This is a time-consuming command, better to log the output
             Execute(install_command, logoutput=True)
-
+            # write password file
             File("/root/admin-password",
                  content=Template("admin-password.j2", admin_password=admin_password),
                  mode=0600

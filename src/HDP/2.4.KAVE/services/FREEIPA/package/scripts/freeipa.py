@@ -99,9 +99,12 @@ class RobotAdmin():
 
         if os.path.isfile(self.password_file):
 
-            hostname = check_output(["hostname", "-f"]).strip()
+            p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
+            _hostname = p0.communicate()[0].strip()
+            if p0.returncode:
+                raise OSError("Failed to determine hostname!")
             options = ['--enable-dns-updates', '--ssh-trust-dns', '--domain', domain,
-                       '--hostname', hostname] if install_with_dns else ['--hostname', hostname]
+                       '--hostname', _hostname] if install_with_dns else ['--hostname', _hostname]
 
             # Install the ipa-client software, This requires the robot-admin password.
             p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)

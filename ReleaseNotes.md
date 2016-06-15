@@ -6,17 +6,52 @@ Contains a list of the released versions with a summary of the main changes in e
 # Beta Releases
 
 # v2.1-Beta
+- June 2016
 
-Minor release with significant bugfixes, two new services and explorations of new OS
+Minor release with significant bugfixes, new services and explorations of centos7
 
-Other notes:
+New services:
+* We have added a new implementation of Ganglia to our stack, separate from the old
+  HDP implementation. This is optional and can be used in the interim period while
+  Ambari Metrics grows in maturity.
 
-We have begun to test KAVE on the Centos7 operating system. In version 2.1 Centos6 is still
-the only supported version, but several of the basic services already deploy on Centos7
-In the near future we intend to supply a version which also supports Centos7. At the moment
-there are major issues in FreeIPA, SonarQube and HUE.
+Minor improvements:
+* Update to Ambari 2.2.2, bringing Grafana and other minor fixes
+* Further code style fixes and additional unit tests
+* Improvements in deployment libraries for stability
+
+Minor improvements in services:
+* Move forward to Java 1.8 consistently across all services
+* HUE allow configuration of service username
+* Move up to KaveToolbox v 2.1-Beta.Pre (described elsewhere)
+
+Bugfixes in services:
+* epel repo seems not very stable recently, yum clean all seems to solve most issues
+* FreeIPA:
+    - says install was successful in the client even when it failed actually
+    - FreeIPA now supports domain names up to 61 characters
+    - resolv.conf overwriting now only occurs on successful client install
+* KaveLanding:
+    - KaveLanding now supports modified ambari password correctly
+
+Bugfixes in installer:
+* No longer breaks with local directory in /etc/kave/mirror file
+* New methods to check pdsh version compatibility
+* Checkout/wget into temporary directory for cleanliness
+
+Centos7:
+* We have begun to test KAVE on the Centos7 operating system.
+  In version 2.1 Centos6 is still the only supported os,
+  but several of the basic services already deploy on Centos7.
+  In the near future we intend to supply a version which also
+  supports Centos7.
+* We have already fixed several issues in
+  the installer, Apache, deployment library, Sonar, FreeIPA
+* At the moment there are major issues in
+  FreeIPA, SonarQube and HUE specific to Centos7.
 
 # v2.0-Beta
+- May 2016
 
 * MAJOR release to migrate to the latest Ambari version 2.2.1
 * KAVE stack now on top of HDP 2.4 (2.4.KAVE)
@@ -92,6 +127,7 @@ Notes about the new ambari/HDP version:
   the installer must install and create specific databases before following the install wizard
 
 # v1.4-Beta
+- Jan 2016
 
 * Bugfix release in preparation to migration to Ambari 2.X
 * Over 50 independent fixes
@@ -147,6 +183,7 @@ Modifications to tests and deployment:
 * Fix creating Centos7 clusters to avoid needing a tty terminal
 
 # v1.3-Beta
+- Sept 2015
 
 * Bugfix release in preparation for migration to Ambari 2.X
 * Over 50 independent fixes
@@ -222,6 +259,7 @@ Bugfixes:
 * Start / Stop / Restart methods reviewed especially for backgrounded - services
 
 # v1.2-Beta
+- June 2015
 
 * Bugfix release of AmbariKave with over 40 independent fixes
 * Thanks to the beta testing program for providing so much feedback
@@ -256,6 +294,7 @@ Bugfixes:
 
 
 # v1.1-Beta
+- May 2015
 
 * First version of the AmbariKave installer for public beta release(open source release)
 * Stack 2.2.KAVE derived from HDP 2.2

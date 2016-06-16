@@ -31,8 +31,8 @@
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "KAVE_GANGLIA_SERVER"     },
-        { "name" : "KAVE_GANGLIA_MONITOR"     }
+        { "name" : "KAVEGANGLIA_SERVER"    },
+        { "name" : "KAVEGANGLIA_MONITOR"   }
       ],
       "cardinality" : "1"
     },
@@ -44,7 +44,7 @@
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       },
-        { "name" : "KAVE_GANGLIA_MONITOR"       }
+        { "name" : "KAVEGANGLIA_MONITOR"       }
 
       ],
       "cardinality" : "1+"
@@ -56,7 +56,7 @@
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "FREEIPA_CLIENT"        },
-        { "name" : "KAVE_GANGLIA_MONITOR"        }
+        { "name" : "KAVEGANGLIA_MONITOR"        }
       ],
       "cardinality" : "1+"
     }

@@ -621,13 +621,13 @@ class LDTest(unittest.TestCase):
                         "wrong keyfile seen in (" + connectcmd + ")")
         return lD.remoteHost("root", ip, keyfile), iid
 
-    def wait_for_ambari(self, ambari, check_inst=None):
+    def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
         import kavedeploy as lD
         try:
-            lD.wait_for_ambari(ambari, 20, check_inst=check_inst)
+            lD.wait_for_ambari(ambari, rounds, check_inst=check_inst)
         except IOError:
             self.assertTrue(False, "ambari server not contactable after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
         except SystemError:

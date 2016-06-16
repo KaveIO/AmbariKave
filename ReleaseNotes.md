@@ -23,7 +23,7 @@ Minor improvements:
 Minor improvements in services:
 * Move forward to Java 1.8 consistently across all services
 * HUE allow configuration of service username
-* Move up to KaveToolbox v 2.1-Beta.Pre (described elsewhere)
+* Move up to KaveToolbox v 2.1-Beta (described elsewhere)
 
 Bugfixes in services:
 * epel repo seems not very stable recently, yum clean all seems to solve most issues

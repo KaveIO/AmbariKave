@@ -28,6 +28,11 @@
         <description>Where is the node manager server? </description>
     </property>
     <property>
+        <name>server_user</name>
+        <value>hue</value>
+        <description>The username under which to run the HUE service</description>
+    </property>
+    <property>
         <name>enable_pam_auth</name>
         <value>True</value>
         <description>Use PAM  (Pluggable Authentication Modules) for hue to find users and authenticate them.
@@ -92,7 +97,7 @@
   use_cherrypy_server=true
 
   # Webserver runs as this user
-  server_user=hue
+  server_user={{server_user}}
   server_group=hadoop
 
   # If set to false, runcpserver will not actually start the web server.

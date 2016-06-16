@@ -32,7 +32,7 @@ class TestKaveToolboxRelease(test_kavetoolbox_head.TestKaveToolbox):
     duplication in this test.
     """
     service = "KaveToolbox-Release"
-    version = "2.1-Beta-Pre"
+    version = "2.1-Beta"
 
     def deploy_ktb(self, ambari):
         if self.ostype.lower().startswith("centos"):

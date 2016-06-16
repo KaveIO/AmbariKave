@@ -21,7 +21,7 @@ import unittest
 
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
-    version = "2.1-Beta-Pre"
+    version = "2.1-Beta"
 
     def runTest(self):
         """

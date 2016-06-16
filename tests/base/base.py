@@ -717,13 +717,18 @@ class LDTest(unittest.TestCase):
                         except KeyError:
                             required_configs[cfg_name.split('/')[-1].split('.')[0]] = [name]
         missing = []
-        # print supplied_configs
         for k, v in required_configs.iteritems():
             for req in v:
                 try:
                     supplied_configs[k][req]
                 except KeyError:
                     missing.append((k, req))
+        if len(missing):
+            print "Blueprint:", bp, jbp["Blueprints"]["blueprint_name"]
+            print "Services:", all_services
+            print "Required:", required_configs
+            print "Supplied:", supplied_configs
+            print "Missing:", missing
         self.assertFalse(len(missing),
                          bp + " missing required configurations in default group! \n\t"
                          + '\n\t'.join([str(x) for x in set(missing)]))

@@ -1,5 +1,5 @@
 {
-    "blueprint" : "freeipa",
+    "blueprint" : "kaveganglia",
     "default_password" : "admin",
     "configurations" : [
     ],

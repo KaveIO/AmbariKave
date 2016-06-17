@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -53,15 +53,12 @@ class SonarQube(Script):
             Execute('tar -xvzf JPam-Linux_amd64-1.1.tgz')
             Execute('cp JPam-1.1/JPam-1.1.jar ' + params.sonarqube_install_directory + '/current/lib/common/')
             for javapath in params.jvmpath.split(':'):
-                # print "this is javaPath"+javapath
                 if not len(javapath):
                     continue
                 # Does the top directory exist and is it a directory?
                 if os.path.isdir(os.path.realpath(os.sep.join(javapath.split(os.sep)[:-1]))):
                     for dir in glob.glob(javapath):
-                        # dir = os.path.realpath(dir)
                         if os.path.isdir(dir):
-                            # print os.listdir(dir)
                             Execute('mkdir -p ' + dir + '/lib/amd64')
                             Execute('chmod -R a+r ' + dir)
                             Execute('cp JPam-1.1/libjpam.so ' + dir + '/lib/amd64/')

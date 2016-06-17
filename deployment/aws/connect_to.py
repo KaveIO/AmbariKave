@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ iidtoip = {}
 nametoip = {}
 ips = []
 
-print "Name,      iid,     SecGroup(s),   itype,   publicIP, status"
+print "Name,      iid,     security_group(s),   instancetype,   publicIP, status"
 json = lA.desc_instance()
 for reservation in json["Reservations"]:
     for instance in reservation["Instances"]:

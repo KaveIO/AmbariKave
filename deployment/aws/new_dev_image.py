@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ security_config = json.loads(jsondat.read())
 jsondat.close()
 lA.checksecjson(security_config, requirekeys=["AWS"])
 
-secGroup = security_config["SecurityGroup"]
+security_group = security_config["SecurityGroup"]
 keypair = security_config["AccessKeys"]["AWS"]["KeyName"]
 keyloc = security_config["AccessKeys"]["AWS"]["KeyFile"]
 git = False
@@ -124,22 +124,23 @@ if "Subnet" in security_config:
 
 lA.testaws()
 
-itype = lA.chooseitype("c4.large")
+instancetype = lA.chooseinstancetype("m4.large")
 
 if iid is None:
-    print "upping new", itype
+    print "upping new", instancetype
     if lD.detect_proxy() and lD.proxy_blocks_22:
         raise SystemError(
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
-    upped = lA.up_os("Centos7", itype, secGroup, keypair, subnet=subnet)
+
+    upped = lA.up_default(instancetype, security_group, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iid_from_up_json(upped)[0]
     import time
 
     time.sleep(5)
-    lA.name_instance(iid, "new-dev-image")
+    lA.name_resource(iid, "new-dev-image")
     ip = lA.pub_ip(iid)
     acount = 0
     while (ip is None and acount < 20):
@@ -147,8 +148,9 @@ if iid is None:
         lD.mysleep(1)
         ip = lA.pub_ip(iid)
         acount = acount + 1
-    uname = 'centos'
-    remote = lD.remoteHost(uname, ip, keyloc)
+
+    remoteuser = lA.default_usernamedict[lA.default_os]
+    remote = lD.remoteHost(remoteuser, ip, keyloc)
     print "waiting until contactable"
     lD.wait_until_up(remote, 20)
     remote = lD.remote_cp_authkeys(remote, 'root')
@@ -165,8 +167,13 @@ if iid is None:
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     # This is not needed for Centos7
-    # remote.run("service iptables stop")
-    # remote.run("chkconfig iptables off")
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.run("service iptables stop")
+        remote.run("chkconfig iptables off")
+        remote.run("echo 0 >/selinux/enforce")
+    else:
+        remote.run("setenforce permissive")
+
     lD.confallssh(remote)
     vols = []
     vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))
@@ -180,6 +187,7 @@ if iid is None:
             iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc))
     elif tos in ["Centos6"]:
         vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc))
+    remote.describe()
     if "Tags" in security_config:
         lA.tag_resources(vols, security_config["Tags"])
     print "OK, iid " + iid + " now lives at IP " + ip
@@ -199,7 +207,7 @@ if not skip_ambari:
     print "Installing ambari " + version + " from git"
     lD.deploy_our_soft(remote, version=version, git=git, gitenv=gitenv)
     print "Awaiting ambari installation ..."
-    lD.wait_for_ambari(remote)
+    lD.wait_for_ambari(remote, check_inst=['inst.stderr', 'inst.stdout'])
 
 if not skip_blueprint:
     print "Deploying default blueprint"
@@ -225,6 +233,6 @@ if instance["State"]["Name"] is "running":
 ami = lA.createimage(iid, "AmbDev-" + keypair + "-" + time.strftime("%Y%m%d-%H"),
                      "Ambari dev image with keys for " + keypair + " keypair")
 time.sleep(5)
-lA.name_instance(ami, keypair)
+lA.name_resource(ami, keypair)
 print ami, "created and registered, might take a few minutes to be available,",
 print " don't forget to set your environment variable export AMIAMBDEV=" + ami

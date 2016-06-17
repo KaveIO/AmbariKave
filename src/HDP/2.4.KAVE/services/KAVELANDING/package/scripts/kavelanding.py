@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ class KaveLanding(ApacheScript):
         import params
         import kavecommon as kc
         super(KaveLanding, self).install(env)
+        Execute('yum clean all')
+        Package('python-pip')
         import os
         Execute('pip install requests')
         Execute('cp ' + os.path.dirname(__file__) + '/KAVE-logo-thin.png ' + params.www_folder + '/')
@@ -76,7 +78,7 @@ class KaveLanding(ApacheScript):
         ls.ambari_user = params.AMBARI_ADMIN
         ls.ambari_password = params.AMBARI_ADMIN_PASS
         cluster_service_host, cluster_host_service, cluster_service_link = ls.collect_config_data(
-            params.AMBARI_SHORT_HOST)
+            params.AMBARI_SHORT_HOST, user=params.AMBARI_ADMIN, passwd=params.AMBARI_ADMIN_PASS)
         bodyhtml = ls.pretty_print(cluster_service_host, cluster_host_service, cluster_service_link, format="html")
         import json
         clinks = json.loads(params.customlinks)

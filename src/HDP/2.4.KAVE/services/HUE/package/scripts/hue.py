@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -47,9 +47,10 @@ class Hue(Script):
         for edir in edit_dirs:
             edir = os.path.realpath(edir)
             Execute('chmod -R 755 ' + edir)
-            File(edir + '/hue.ini', content=InlineTemplate(params.hue_ini), mode=0600)
+            File(edir + '/hue.ini', content=InlineTemplate(params.hue_ini), mode=0644)
             File(edir + '/hue_httpd.conf', content=InlineTemplate(params.hue_httpd_conf), mode=0644)
-            kc.chown_r(edir, 'hue')
+            kc.chown_r(edir, params.server_user)
+        Execute("sed -i 's/USER=\w*/USER=%s/' /etc/init.d/hue " % params.server_user)
 
     def start(self, env):
         self.configure(env)

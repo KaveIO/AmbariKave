@@ -2,7 +2,7 @@
   "InstanceGroups" : [
   { "Name" : "ambari",
     "Count" : -1,
-    "InstanceType" : "c4.large",
+    "InstanceType" : "m4.large",
     "AccessType" : "admin",
     "ExtraDisks" : [ {"Mount": "/opt",     "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/hadoop",  "Size" : 30, "Attach" : "/dev/sdc" },

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -26,10 +26,12 @@ import testpythonimport
 import verifyxml
 import checkpep8
 import pep8functions
+import jsonbpchecks
 import base
 
 mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, pyfilenames, verifyxml]
+        deploylib, kclib, servicesh, scan, license, pyfilenames,
+        jsonbpchecks, verifyxml]
 
 if __name__ == "__main__":
     base.parallel(mods)

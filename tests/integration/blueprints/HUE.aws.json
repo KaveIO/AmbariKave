@@ -9,7 +9,7 @@
     				 {"Mount": "/hadoop",  "Size" : 30,  "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sde" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdf" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdg" } ]
   }
   ]

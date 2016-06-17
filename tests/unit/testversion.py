@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class TestVersions(unittest.TestCase):
     """
     re = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     ignore = ["ReleaseNotes.md"]
-    checkAgainst = "2.1-Beta-Pre"
+    checkAgainst = "2.1-Beta"
 
     def findversion(self, fullpath):
         found = []

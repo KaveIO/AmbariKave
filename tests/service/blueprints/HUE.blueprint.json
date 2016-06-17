@@ -5,6 +5,11 @@
         "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    },
     { "freeipa" : { "directory_password": "testtestdirpass1234", "ldap_bind_password": "testtestdirpass1234",
                    "initial_users_and_groups" : "{\"Users\" : [{\"username\":\"bob\",\"email\":\"bob@bob.bob\",\"firstname\":\"Robert\",\"lastname\":\"Jones\"}], \"Groups\": {\"admins\":[\"bob\"]} }",
                    "initial_user_passwords" : "{\"bob\": \"mynameisbobandIamanadminandthisisnotmypass\"}"
@@ -18,6 +23,7 @@
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "METRICS_GRAFANA"     },
         { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "HUE_SERVER"          },
         { "name" : "FREEIPA_SERVER"      },

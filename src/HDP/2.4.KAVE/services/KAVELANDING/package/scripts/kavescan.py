@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -77,7 +77,9 @@ default_ambari_password = "admin"
 # Simple addition, subtraction and multiplication is supported, when separated with a space from the parameter
 #  ["apache/APACHE_PORT +1000"] would return the result of adding 1000 to the apache port if set
 service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
+                             "KAVEGANGLIA_SERVER": {"ganglia": ["80/ganglia"]},
                              "NAGIOS_SERVER": {"alerts": ["80/nagios"]},
+                             "METRICS_GRAFANA": {"grafana": [3000, 'ams-grafana-ini/port']},
                              "AMBARI_SERVER": {"admin": [8080]},
                              "JENKINS_MASTER": {"jenkins": [8080, "jenkins/JENKINS_PORT"]},
                              "JBOSS_APP_SERVER": {"jboss": [8080, "jboss/http_port"]},
@@ -227,7 +229,7 @@ def collect_config_data(ambari="localhost", user=None, passwd=None, ):
     cluster_host_service = {}
     cluster_service_link = {}
 
-    clusters = apiquery("clusters", host=ambari)
+    clusters = apiquery("clusters", host=ambari, user=user, passwd=passwd)
     clusterlist = [str(c["Clusters"]["cluster_name"]) for c in clusters]
     # print clusterlist
 
@@ -313,7 +315,7 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
         masters_with_links = [service for service in cluster_service_host[cluster] if
                               ("SERVER" in service or "MASTER" in service
                                or "NAMENODE" in service or "MANAGER" in service
-                               or "COLLECTOR" in service)
+                               or "COLLECTOR" in service or "GRAFANA" in service)
                               and (service in cluster_service_link[cluster])]
         masters_with_links.sort()
         masters_without_links = [service for service in cluster_service_host[cluster] if
@@ -355,6 +357,8 @@ def pretty_print(cluster_service_host, cluster_host_service, cluster_service_lin
         # then print masters without links
         for service in masters_without_links:
             sprint = service
+            if "COLLECTOR" in service:
+                sprint = ' '.join(service.split("_"))
             if "_" in service:
                 sprint = ' '.join(service.split("_")[:-1])
             sprint = sprint.upper()[0] + sprint.lower()[1:]

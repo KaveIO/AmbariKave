@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 top_dir = default("configurations/kavetoolbox/top_dir", "/opt/")
-releaseversion = default('configurations/kavetoolbox/releaseversion', "2.1-Beta-Pre")
+releaseversion = default('configurations/kavetoolbox/releaseversion', "2.1-Beta")
 alternative_download = default('configurations/kavetoolbox/alternative_download', "none")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)

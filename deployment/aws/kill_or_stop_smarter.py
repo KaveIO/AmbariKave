@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -160,13 +160,13 @@ if yn_ids in yes:
     for iid in i_older_than_one_day:
         try:
             lA.killinstance(iid, "stop")
-        except RuntimeError:
+        except lD.ShellExecuteError:
             failed.append(iid)
     time.sleep(5)
     for iid in i_older_than_one_week:
         try:
             lA.killinstance(iid)
-        except RuntimeError:
+        except lD.ShellExecuteError:
             failed.append(iid)
     time.sleep(5)
 
@@ -192,7 +192,7 @@ if yn_vls in yes:
     for volID in vol_to_kill:
         try:
             lA.killvolume(volID)
-        except RuntimeError:
+        except lD.ShellExecuteError:
             failed.append(volID)
 
 if yn_ids in yes:
@@ -224,7 +224,7 @@ nametoip = {}
 ips = []
 
 print "Interactive mode, yes no for each remaining machine"
-print "Name,      iid,     SecGroup(s),   itype,   publicIP, status"
+print "Name,      iid,     security_group(s),   instancetype,   publicIP, status"
 for reservation in instances["Reservations"]:
     for instance in reservation["Instances"]:
         iid = instance["InstanceId"]

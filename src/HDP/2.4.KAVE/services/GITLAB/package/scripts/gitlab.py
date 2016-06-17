@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ class Gitlab(Script):
         # intelligently choose architecture
         import kavecommon as kc
         el = {"centos6": "el6", "centos7": "el7"}
-        self.package = self.package % el[kc.detect_linux_version()]
+        self.package = self.package % el[kc.detect_linux_version().lower()]
         self.install_packages(env)
         env.set_params(params)
 

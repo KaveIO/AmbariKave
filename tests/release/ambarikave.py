@@ -53,7 +53,7 @@ class TestAmbariKaveRelease(base.LDTest):
                    + "centos6/AmbariKave/" + self.version + "/ambarikave-installer-centos6-" + self.version + ".sh")
         ambari.run("nohup bash ambarikave-installer-centos6-" + self.version
                    + ".sh > inst.stdout 2> inst.stderr < /dev/null & ")
-        self.wait_for_ambari(ambari, rounds=5, check_inst=["inst.stdout", "inst.stderr"])
+        self.wait_for_ambari(ambari, rounds=15, check_inst=["inst.stdout", "inst.stderr"])
         return self.check(ambari)
 
 

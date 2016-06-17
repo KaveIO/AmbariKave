@@ -644,7 +644,7 @@ class LDTest(unittest.TestCase):
         l = f.read()
         f.close()
         interp = None
-        self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
+        self.assertTrue(len(l) > 1, "json file " + ason + " is empty, a fragment or corrupted")
         try:
             interp = json.loads(l)
         except Exception as e:
@@ -745,7 +745,7 @@ class LDTest(unittest.TestCase):
         a = os.path.exists(aws)
         b = os.path.exists(blueprint)
         c = os.path.exists(cluster)
-        if not a or not b or not c:
+        if (not a) or (not b) or (not c):
             raise ValueError(
                 "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
                     b) + " .cluster " + str(c))

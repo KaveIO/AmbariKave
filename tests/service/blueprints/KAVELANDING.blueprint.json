@@ -13,7 +13,7 @@
     {
       "kavelanding" : {
         "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin",
-      	"customlinks": "{\"Google\":\"http://google.com/\" }"
+        "customlinks": "{\"Google\":\"http://google.com/\" }"
       }
     },
     {

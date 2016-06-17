@@ -31,7 +31,6 @@ class TestAmbariKaveRelease(base.LDTest):
         import os
 
         lD = self.pre_check()
-        deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.ostype = "Centos6"
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype in ["Centos6"]:
@@ -43,9 +42,13 @@ class TestAmbariKaveRelease(base.LDTest):
             # now the machine will be re-renamed with the public dns
         ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
         ambari.run("service iptables stop")
+        if self.ostype in ["Centos6"]:
+            ambari.run("echo 0 > /selinux/enforce")
+        elif self.ostype in ["Centos7"]:
+            ambari.run("setenforce permissive")
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("rm -rf inst.*")
-        ambari.run("/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
+        ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
         ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"
                    + "centos6/AmbariKave/" + self.version + "/ambarikave-installer-centos6-" + self.version + ".sh")
         ambari.run("nohup bash ambarikave-installer-centos6-" + self.version

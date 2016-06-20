@@ -26,12 +26,13 @@ import testpythonimport
 import verifyxml
 import checkpep8
 import pep8functions
+import pep8variables
 import jsonbpchecks
 import base
 
 mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, pyfilenames,
-        jsonbpchecks, verifyxml]
+        deploylib, kclib, servicesh, scan, license,
+        pyfilenames, pep8variables, jsonbpchecks, verifyxml]
 
 if __name__ == "__main__":
     base.parallel(mods)

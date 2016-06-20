@@ -232,7 +232,7 @@ def parallel(mods, modargs=[]):
     """
     # loop over threads, see the class for more details
     # create list of packages as a queue
-    itemPool = Queue.Queue()
+    item_pool = Queue.Queue()
     result = {}
     items = []
     if not len(modargs):
@@ -266,11 +266,11 @@ def parallel(mods, modargs=[]):
     # print items
     for item in items:
         result[item] = {}
-        itemPool.put(item)
+        item_pool.put(item)
     lock = thread.allocate_lock()
     thethreads = []
     for _i in range(20):
-        t = RunFileInSubProcess(itemPool, lock, result)
+        t = RunFileInSubProcess(item_pool, lock, result)
         thethreads.append(t)
         t.start()
     # setup a timeout to prevent really infinite loops!
@@ -291,22 +291,22 @@ def parallel(mods, modargs=[]):
     if len(errs):
         raise RuntimeError("Exceptions encountered while running tests as threads, as: \n" + '\n'.join(errs))
     # print result
-    FAILED = len([f for f in result if result[f]["status"] != 0])
-    TIMES = []
-    TESTS = []
+    failed = len([f for f in result if result[f]["status"] != 0])
+    times = []
+    tests = []
     for key, val in result.iteritems():
         timing = [l for l in val["stderr"].split("\n") if l.startswith("Ran") and " in " in l][0].strip()
         if len(timing):
-            TIMES.append(float(timing.split(" ")[-1].replace("s", "")))
-            TESTS.append(int(timing.split(" ")[1]))
+            times.append(float(timing.split(" ")[-1].replace("s", "")))
+            tests.append(int(timing.split(" ")[1]))
     print "======================================================================"
-    print "Ran", sum(TESTS), "tests in", sum(TIMES).__str__() + "s", "from", len(result), "module/args"
+    print "Ran", sum(tests), "tests in", sum(times).__str__() + "s", "from", len(result), "module/args"
     print
-    if FAILED == 0 and len(nd) == 0:
+    if failed == 0 and len(nd) == 0:
         print "OK"
         sys.exit(0)
-    if FAILED:
-        print "FAILED (modules=" + str(FAILED) + ")"
+    if failed:
+        print "failed (modules=" + str(failed) + ")"
     if len(nd):
         print "TIMEOUT (modules=" + str(len(nd)) + ")"
     sys.exit(1)
@@ -707,11 +707,11 @@ class LDTest(unittest.TestCase):
                     if property.tag != 'property':
                         continue
                     name = property.find('name').text
-                    isRequired = (
+                    is_required = (
                         'require-input' in property.attrib and
                         kc.trueorfalse(property.attrib['require-input'])
                     )
-                    if isRequired:
+                    if is_required:
                         try:
                             required_configs[cfg_name.split('/')[-1].split('.')[0]].append(name)
                         except KeyError:

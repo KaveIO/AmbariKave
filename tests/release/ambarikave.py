@@ -31,7 +31,8 @@ class TestAmbariKaveRelease(base.LDTest):
         import os
 
         lD = self.pre_check()
-        self.ostype = "Centos6"
+        import kaveaws as lA
+        self.ostype = lA.default_os
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype in ["Centos6"]:
             # work around for problematic default DNS settings :S

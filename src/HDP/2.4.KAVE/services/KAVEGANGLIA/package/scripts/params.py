@@ -374,7 +374,7 @@ udp_send_channel {
                        # this, the metrics may appear to come from any
                        # interface and the DNS names associated with
                        # those IPs will be used to create the RRDs.
-  #mcast_join = 192.168.1.40
+  #mcast_join = 239.2.11.71
   port = {{kaveganglia_port}}
   ttl = 1
 }
@@ -386,6 +386,8 @@ udp_recv_channel {
   # Size of the UDP buffer. If you are handling lots of metrics you really
   # should bump it up to e.g. 10MB or even higher.
   # buffer = 10485760
+  mcast_join = 239.2.11.71
+  bind = 239.2.11.71
 }
 
 /* You can specify as many tcp_accept_channels as you like to share

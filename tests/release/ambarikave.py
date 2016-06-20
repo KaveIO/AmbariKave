@@ -21,7 +21,7 @@ import unittest
 
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
-    version = "2.1-Beta"
+    version = "2.2-Beta-Pre"
     checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE']
 
     def runTest(self):

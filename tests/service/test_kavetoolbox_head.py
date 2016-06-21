@@ -101,13 +101,9 @@ class TestKaveToolbox(base.LDTest):
         import sys
 
         lD = self.pre_check()
-        ambari, iid = (None, None)
-        if self.ostype == "Centos6":
-            ambari, iid = self.deploy_dev()
-        else:
-            ambari, iid = self.deploy_os(self.ostype)
-            if self.ostype.startswith("Ubuntu"):
-                ambari.run('apt-get update')
+        ambari, iid = self.deploy_os(self.ostype)
+        if self.ostype.startswith("Ubuntu"):
+            ambari.run('apt-get update')
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)

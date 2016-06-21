@@ -25,12 +25,15 @@ class TestKaveToolbox(base.LDTest):
     checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
                  '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
     ostype = "Centos6"
+    workstation = True
 
     def deploy_ktb(self, ambari):
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        stdout = lD.run_quiet(
-            deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict")
+        cmd = deploy_dir + "/add_toolbox.py " + ambari.host + " $AWSSECCONF --ip --workstation --not-strict"
+        if not self.workstation:
+            cmd = cmd.replace('--workstation', '--node')
+        stdout = lD.run_quiet(cmd)
         self.assertTrue("installing toolbox in background process (check before bringing down the machine)" in stdout,
                         "Failed to install KaveToolbox from git, check: " + ' '.join(ambari.sshcmd()))
         return True
@@ -67,12 +70,13 @@ class TestKaveToolbox(base.LDTest):
         self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/pro/bin" in stdout,
                         "Environment sourcing fails to find installed packages")
         # check other features
-        try:
-            ambari.run("which vncserver")
-            ambari.run("which emacs")
-            ambari.run("which firefox")
-        except lD.ShellExecuteError:
-            self.assertTrue(False, "Could not find vncserver/emacs/firefox installed as workstation components")
+        if self.workstation:
+            try:
+                ambari.run("which vncserver")
+                ambari.run("which emacs")
+                ambari.run("which firefox")
+            except lD.ShellExecuteError:
+                self.assertTrue(False, "Could not find vncserver/emacs/firefox installed as workstation components")
         env = ambari.run("cat /opt/KaveToolbox/pro/scripts/KaveEnv.sh")
         self.assertTrue("#!/bin/bash" in env,
                         "Environment file not created correctly\n" + env + "\n-----------------\n" + ' '.join(
@@ -85,10 +89,11 @@ class TestKaveToolbox(base.LDTest):
                         "Environment file not created correctly, no KaveToolbox part\n" + env +
                         "\n-----------------\n" + ' '.join(
                             ambari.sshcmd()))
-        self.assertTrue("/opt/eclipse/pro" in env,
-                        "Environment file not created correctly, no eclipse part\n"
-                        + env + "\n-----------------\n"
-                        + ' '.join(ambari.sshcmd()))
+        if self.workstation:
+            self.assertTrue("/opt/eclipse/pro" in env,
+                            "Environment file not created correctly, no eclipse part\n"
+                            + env + "\n-----------------\n"
+                            + ' '.join(ambari.sshcmd()))
         return True
 
     def runTest(self):

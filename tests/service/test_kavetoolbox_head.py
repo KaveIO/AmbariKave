@@ -40,6 +40,7 @@ class TestKaveToolbox(base.LDTest):
 
     def wait_for_ktb(self, ambari):
         import time
+        import kavedeploy as lD
         time.sleep(15)
         rounds = 1
         flag = False
@@ -65,6 +66,7 @@ class TestKaveToolbox(base.LDTest):
 
     def check(self, ambari):
         super(TestKaveToolbox, self).check(ambari)
+        import kavedeploy as lD
         # check the installed directories
         stdout = ambari.run("bash -c \"source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; which python; which root;\"")
         self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/pro/bin" in stdout,

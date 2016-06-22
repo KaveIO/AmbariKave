@@ -39,7 +39,7 @@ class PackageRootFromKTB(test_kavetoolbox_head.TestKaveToolbox):
         ambari.cp(os.path.dirname(__file__) + '/_compile_root_custom.py', '/etc/kave/CustomInstall.py')
         return super(PackageRootFromKTB, self).deploy_ktb(ambari)
 
-    def check(self,ambari):
+    def check(self, ambari):
         super(PackageRootFromKTB, self).check(ambari)
         # Abuse the check method to package up the now working root installation
         ambari.run('mkdir -p /tmp/rootcompile')

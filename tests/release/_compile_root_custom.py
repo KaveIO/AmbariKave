@@ -18,7 +18,7 @@
 """
 Used by the ktb_package_root_version test script to compile root for release
 """
-#-----------------
+# -----------------
 import kavedefaults as cnf
 # compile ROOT
-cnf.root.options["Strategy"]="Compile"
+cnf.root.options["Strategy"] = "Compile"

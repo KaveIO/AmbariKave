@@ -37,6 +37,8 @@ kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riema
 kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
 gangliaslave = default('/clusterHostInfo/kave_ganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
+kaveganglia_host = default('configurations/kaveganglia/kaveganglia_host', 'ambari.kave.io')
+kaveganglia_bind = default('configurations/kaveganglia/kaveganglia_bind', '0.0.0.0')
 
 www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
 PORT = default('configurations/kaveganglia/PORT', '80')
@@ -376,6 +378,7 @@ udp_send_channel {
                        # those IPs will be used to create the RRDs.
   #mcast_join = 239.2.11.71
   port = {{kaveganglia_port}}
+  host = {{kaveganglia_host}}
   ttl = 1
 }
 
@@ -386,8 +389,8 @@ udp_recv_channel {
   # Size of the UDP buffer. If you are handling lots of metrics you really
   # should bump it up to e.g. 10MB or even higher.
   # buffer = 10485760
-  mcast_join = 239.2.11.71
-  bind = 239.2.11.71
+  #mcast_join = 239.2.11.71
+  bind = {{kaveganglia_bind}}
 }
 
 /* You can specify as many tcp_accept_channels as you like to share

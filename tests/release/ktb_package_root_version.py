@@ -48,7 +48,7 @@ class PackageRootFromKTB(test_kavetoolbox_head.TestKaveToolbox):
         ambari.run('cp -r /opt/root/%s /tmp/rootcompile/root' % _version)
         _os = self.ostype.lower()
         if _os.startswith('ubuntu'):
-            os = 'ubuntu'
+            _os = 'ubuntu'
         ambari.run('bash -c "cd /tmp/rootcompile; tar czf root_%s_%s.tar.gz root;"' % (_version, _os))
         ambari.pull('root_%s_%s.tar.gz' % (_version, _os), '/tmp/rootcompile/root_%s_%s.tar.gz' % (_version, _os))
         self.assertTrue(os.path.exists('root_%s_%s.tar.gz' % (_version, _os)), "failed to copy tarfile")

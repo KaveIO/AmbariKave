@@ -55,10 +55,18 @@ class KaveGangliaSlave(Script):
             Execute('chown -R nobody:nobody /var/lib/ganglia/rrds')
 
     def start(self, env):
+        import params
         self.configure(env)
-        Execute('service ipa stop')
-        Execute("service gmond start")
-        Execute('service ipa start')
+
+        if params.ipa_host == hostname:
+            if Execute('service ipa status'):
+                Execute('service ipa stop')
+                Execute('service gmond start')
+                Execute('service ipa start')
+            else:
+                Execute('service gmond start')
+        else:
+            Execute("service gmond start")
 
     def stop(self, env):
         Execute("service gmond stop")

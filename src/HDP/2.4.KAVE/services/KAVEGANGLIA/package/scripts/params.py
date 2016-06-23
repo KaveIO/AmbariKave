@@ -41,6 +41,8 @@ kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_
 
 kaveganglia_host = default("/clusterHostInfo/kaveganglia_server_hosts", [False])[0]
 
+ipa_host = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
+
 kaveganglia_host_address = socket.gethostbyname(kaveganglia_host)
 if kaveganglia_host == hostname:
     kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', kaveganglia_host_address)

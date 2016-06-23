@@ -146,7 +146,6 @@ Alias /ganglia /usr/share/ganglia
 
 data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hosts %} {{host}}:{{kaveganglia_port}} {% endfor %}
 
-
 #
 # Round-Robin Archives
 # You can specify custom Round-Robin archives here (defaults are listed below)
@@ -425,6 +424,7 @@ tcp_accept_channel {
   port = {{kaveganglia_port}}
   # If you want to gzip XML output
   gzip_output = no
+  bind = {{kaveganglia_udp_bind}}
 }
 
 /* Channel to receive sFlow datagrams */

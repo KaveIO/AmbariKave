@@ -21,7 +21,7 @@ import pep8
 
 LINES_SKIP = 17
 
-ignoreList = ["JBOSS/package/scripts/params.py"]
+ignoreList = ["JBOSS/package/scripts/params.py", "KAVEGANGLIA/package/scripts/params.py"]
 
 
 class PEP8(pep8.StyleGuide):

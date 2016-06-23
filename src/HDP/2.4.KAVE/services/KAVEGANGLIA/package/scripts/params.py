@@ -38,19 +38,16 @@ kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riema
 kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
 kaveganglia_monitor_hosts = default('/clusterHostInfo/kaveganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
-kaveganglia_host = default('configurations/kaveganglia/kaveganglia_host', 'ambari.kave.io')
-kaveganglia_bind = default('configurations/kaveganglia/kaveganglia_bind', '0.0.0.0')
 
-kaveganglia_host = default("/clusterHostInfo/kaveganglia_host", [False])[0]
+kaveganglia_host = default("/clusterHostInfo/kaveganglia_server_hosts", [False])[0]
 
 kaveganglia_host_address = socket.gethostbyname(kaveganglia_host)
-if kaveganglia_host == "ambari.kave.io":
+if kaveganglia_host == hostname:
     kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', kaveganglia_host_address)
 else:
     kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', '0.0.0.0')
 
-if kaveganglia_host == "ambari.kave.io":
-    kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0')
+kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0')
 
 www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
 PORT = default('configurations/kaveganglia/PORT', '80')
@@ -133,7 +130,7 @@ kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad
 
 #data_source "my cluster" localhost
 
-data_source "{{kaveganglia_clustername}}" {% for host in gangliaslave %} {{host}}:{{kaveganglia_port}} {% endfor %}
+data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hosts %} {{host}}:{{kaveganglia_port}} {% endfor %}
 
 
 #
@@ -411,6 +408,7 @@ tcp_accept_channel {
   port = {{kaveganglia_port}}
   # If you want to gzip XML output
   gzip_output = no
+  bind = {{kaveganglia_tcp_bind}}
 }
 
 /* Channel to receive sFlow datagrams */

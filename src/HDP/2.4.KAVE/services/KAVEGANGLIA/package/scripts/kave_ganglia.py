@@ -62,7 +62,9 @@ class KaveGanglia(kc.ApacheScript):
 
     def start(self, env):
         self.configure(env)
+        Execute('service ipa stop')
         Execute("service gmetad start")
+        Execute('service ipa start')
         super(KaveGanglia, self).start(env)
 
     def stop(self, env):

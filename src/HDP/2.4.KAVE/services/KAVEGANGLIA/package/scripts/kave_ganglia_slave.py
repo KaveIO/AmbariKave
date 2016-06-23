@@ -56,7 +56,9 @@ class KaveGangliaSlave(Script):
 
     def start(self, env):
         self.configure(env)
+        Execute('service ipa stop')
         Execute("service gmond start")
+        Execute('service ipa start')
 
     def stop(self, env):
         Execute("service gmond stop")

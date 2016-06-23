@@ -38,15 +38,15 @@ class Jboss(Script):
         Execute('mv %s/jb*/* %s' % (params.installation_dir, params.installation_dir))
         Execute('rm -rf %s/jb*.Final' % params.installation_dir)
         try:
-            grp.getgrnam('jboss')
+            grp.getgrnam(params.service_user)
         except KeyError:
-            Execute('groupadd jboss')
+            Execute('groupadd ' + params.service_user)
         try:
-            pwd.getpwnam('jboss')
+            pwd.getpwnam(params.service_user)
         except KeyError:
-            Execute('useradd -s /bin/bash -g jboss jboss')
+            Execute('useradd -s /bin/bash -g %s %s' % (params.service_user, params.service_user))
 
-        Execute('chown -Rf jboss:jboss %s' % params.installation_dir)
+        Execute('chown -Rf %s:%s %s' % (params.service_user, params.service_user, params.installation_dir))
 
         File('/etc/init.d/jboss',
              content=Template("jboss.j2"),

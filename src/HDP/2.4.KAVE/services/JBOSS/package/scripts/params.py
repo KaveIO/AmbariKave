@@ -20,6 +20,7 @@ from resource_management import *
 config = Script.get_config()
 installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as/')
 config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/')
+config_dir = default('configurations/jboss/service_user', 'jboss')
 
 jboss_xmlconf_filename = default('configurations/jboss/jboss_xmlconf_filename', 'standalone.xml')
 jboss_management_filename = default('configurations/jboss/jboss_management_filename', 'mgmt-users.properties')

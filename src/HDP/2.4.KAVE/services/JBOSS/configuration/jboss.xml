@@ -40,6 +40,13 @@
        <property-type>PASSWORD</property-type>
     </property>
     <property>
+        <name>service_user</name>
+        <value>jboss</value>
+        <description>
+            the user under which jboss will run.
+        </description>
+    </property>
+    <property>
         <name>ip_address</name>
         <value>0.0.0.0</value>
         <description>

@@ -154,7 +154,11 @@ cat << EOF >> $BUILD_DIR/$RELEASE_INSTALLER
 
 if [ ! -f $RELEASE_PACKAGE ]; then
 	#echo \${checkout} \${repos_server}
-	\${checkout} \${repos_server}noarch/AmbariKave/$TAG/$RELEASE_PACKAGE
+	if [ \${checkout} == "cp" ]; then
+		\${checkout} \${repos_server}noarch/AmbariKave/$TAG/$RELEASE_PACKAGE $RELEASE_PACKAGE
+	else
+		\${checkout} \${repos_server}noarch/AmbariKave/$TAG/$RELEASE_PACKAGE -O $RELEASE_PACKAGE
+	fi
 fi
 tar -xzf $RELEASE_PACKAGE -C /var/lib/
 

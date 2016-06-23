@@ -109,7 +109,7 @@ security_config = json.loads(jsondat.read())
 jsondat.close()
 lA.checksecjson(security_config, requirekeys=["AWS"])
 
-secGroup = security_config["SecurityGroup"]
+security_group = security_config["SecurityGroup"]
 keypair = security_config["AccessKeys"]["AWS"]["KeyName"]
 keyloc = security_config["AccessKeys"]["AWS"]["KeyFile"]
 git = False
@@ -124,17 +124,17 @@ if "Subnet" in security_config:
 
 lA.testaws()
 
-itype = lA.chooseitype("c4.large")
+instancetype = lA.chooseinstancetype("m4.large")
 
 if iid is None:
-    print "upping new", itype
+    print "upping new", instancetype
     if lD.detect_proxy() and lD.proxy_blocks_22:
         raise SystemError(
             "This proxy blocks port 22, that means you can't ssh to your machines to do the initial configuration. To "
             "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
     lD.testproxy()
 
-    upped = lA.up_default(itype, secGroup, keypair, subnet=subnet)
+    upped = lA.up_default(instancetype, security_group, keypair, subnet=subnet)
     print "submitted"
     iid = lA.iid_from_up_json(upped)[0]
     import time
@@ -149,8 +149,8 @@ if iid is None:
         ip = lA.pub_ip(iid)
         acount = acount + 1
 
-    uname = lA.default_usernamedict[lA.default_os]
-    remote = lD.remoteHost(uname, ip, keyloc)
+    remoteuser = lA.default_usernamedict[lA.default_os]
+    remote = lD.remoteHost(remoteuser, ip, keyloc)
     print "waiting until contactable"
     lD.wait_until_up(remote, 20)
     remote = lD.remote_cp_authkeys(remote, 'root')
@@ -207,7 +207,7 @@ if not skip_ambari:
     print "Installing ambari " + version + " from git"
     lD.deploy_our_soft(remote, version=version, git=git, gitenv=gitenv)
     print "Awaiting ambari installation ..."
-    lD.wait_for_ambari(remote)
+    lD.wait_for_ambari(remote, check_inst=['inst.stderr', 'inst.stdout'])
 
 if not skip_blueprint:
     print "Deploying default blueprint"

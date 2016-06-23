@@ -18,5 +18,19 @@
 from resource_management import *
 
 config = Script.get_config()
-install_directory = default('configurations/archiva/install_directory', '/opt/archiva')
+
+install_topdir = default('configurations/archiva/install_topdir', '/opt/')
+
+if len(install_topdir) < 4 or install_topdir.count('/') < 2 or not install_topdir.startswith('/'):
+    raise ValueError('archiva/install_topdir must be a valid directory full path,'
+                     ' with a length of at least 4 and two /')
+
+if not install_topdir.endswith('/'):
+    install_topdir = install_topdir + '/'
+
+install_subdir = default('configurations/archiva/install_subdir', 'archiva')
+
+if not len(install_subdir) or install_subdir.count('/'):
+    raise ValueError('archiva/install_subdir must be a simple string, with no "/"')
+
 archiva_jetty_port = default('configurations/archiva/archiva_jetty_port', '5050')

@@ -11,6 +11,17 @@
         </description>
     </property>
     <property>
+        <name>long_domain_patch</name>
+        <value>False</value>
+        <description>
+            When the length of the Domain is longer than 42 characters, FreeIPA fails to handle this
+            correctly in current versions, due to additional " Certificate Authority" added to the domain.
+            Certification standards permit CA up to 64 characters, and so this additional naming increases
+            the length beyond the standard. We have a small patch which is activated by this flag.
+            With this patch we can handle domains up to 61 characters. This patch is experimental.
+        </description>
+    </property>
+    <property>
         <name>forwarders</name>
         <value>8.8.8.8</value>
         <description>

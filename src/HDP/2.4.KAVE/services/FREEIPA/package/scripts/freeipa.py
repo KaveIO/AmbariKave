@@ -99,15 +99,22 @@ class RobotAdmin():
 
         if os.path.isfile(self.password_file):
 
-            options = ['--enable-dns-updates', '--ssh-trust-dns', '--domain', domain] if install_with_dns else []
+            p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
+            _hostname = p0.communicate()[0].strip()
+            if p0.returncode:
+                raise OSError("Failed to determine hostname!")
+            options = ['--enable-dns-updates', '--ssh-trust-dns', '--domain', domain,
+                       '--hostname', _hostname] if install_with_dns else ['--hostname', _hostname]
 
             # Install the ipa-client software, This requires the robot-admin password.
             p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)
             p2 = subprocess.Popen(['ipa-client-install', '--mkhomedir',
                                    '--principal', self.login, '-W', '--server', server, '-U'] + options,
-                                  stdin=p1.stdout)
+                                  stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p1.stdout.close()
-            p2.communicate()
+            stdout, stderr = p2.communicate()
+            if p2.returncode:
+                raise OSError("Failed to install FreeIPA client!\n\t" + stdout + '\n\t' + stderr)
         else:
             raise Exception('No robot-admin password could be found in %s ' % self.password_file)
 
@@ -261,7 +268,7 @@ class FreeIPACommon(object):
         subprocess.call(['ipa', 'config-mod', '--defaultshell=' + shell])
 
     def set_user_email(self, user, email):
-        subprocess.call(['ipa', 'user-mod', '--email="' + email + '"', user])
+        subprocess.call(['ipa', 'user-mod', '--email', email, user])
 
 
 class FreeIPA(FreeIPACommon):

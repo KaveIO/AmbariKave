@@ -32,11 +32,11 @@ else
 fi
 
 yum install -y wget curl
-wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.2.1.0/ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.2.2.0/ambari.repo -O ambari.repo
 cp ambari.repo /etc/yum.repos.d/
 # conflicts with HDP utils and pre-installed pdsh version on centos6, need HDP repo file
 if [ "$os" == "centos6" ]; then
-	wget http://public-repo-1.hortonworks.com/HDP/${os}/2.x/updates/2.4.0.0/hdp.repo
+	wget http://public-repo-1.hortonworks.com/HDP/${os}/2.x/updates/2.4.0.0/hdp.repo -O hdp.repo
 	cp hdp.repo /etc/yum.repos.d/HDP.repo
 fi
 
@@ -45,6 +45,8 @@ ambari-server setup -s
 
 # install requests library for python
 yum install -y epel-release
+# necessary step to update epel and HDP cached repos
+yum clean all
 yum install -y pdsh python-pip
 pip install requests
 

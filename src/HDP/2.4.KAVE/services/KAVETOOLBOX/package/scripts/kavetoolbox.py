@@ -29,7 +29,7 @@ class KaveToolbox(Script):
     def install(self, env):
         import params
         import kavecommon as kc
-
+        Execute('yum clean all')
         self.install_packages(env)
         env.set_params(params)
         # no need to install if already installed ... does not work behind firewall after restart

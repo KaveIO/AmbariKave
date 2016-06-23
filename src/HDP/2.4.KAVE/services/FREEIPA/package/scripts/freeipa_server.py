@@ -43,10 +43,14 @@ class FreeipaServer(Script):
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
-
+        import subprocess
+        p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
+        _hostname = p0.communicate()[0].strip()
+        if p0.returncode:
+            raise OSError("Failed to determine hostname!")
         install_command = 'ipa-server-install -U  --realm="%s" \
-            --ds-password="%s" --admin-password="%s"' \
-            % (params.realm, params.directory_password, admin_password)
+            --ds-password="%s" --admin-password="%s" --hostname="%s"' \
+            % (params.realm, params.directory_password, admin_password, _hostname)
 
         tos = kc.detect_linux_version()
         # ipa-server install command. Currently --selfsign is mandatory because
@@ -66,11 +70,17 @@ class FreeipaServer(Script):
             else:
                 install_command += ' --no-forwarders'
 
-        # Crude check to avoid reinstalling during debuging
+        # Crude check to avoid reinstalling during debugging
         if not os.path.exists(self.admin_password_file):
+
+            # patch for long domain names!
+            if params.long_domain_patch:
+                Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
+                        "| xargs sed -i 's/Certificate Authority/CA/g'")
+
             # This is a time-consuming command, better to log the output
             Execute(install_command, logoutput=True)
-
+            # write password file
             File("/root/admin-password",
                  content=Template("admin-password.j2", admin_password=admin_password),
                  mode=0600
@@ -178,7 +188,7 @@ class FreeipaServer(Script):
                  mode=0600
                  )
             import kavecommon as kc
-            _stat, _stdout, _stderr = kc.mycmd(
+            _stat, _stdout, _stderr = kc.shell_call_wrapper(
                 'ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'
                 % (params.directory_password, params.ldap_bind_user))
             # is this user already added?

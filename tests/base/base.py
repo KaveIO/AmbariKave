@@ -32,7 +32,16 @@ import glob
 import threading
 import thread
 import Queue
+import json
 import subprocess as sub
+import xml
+import xml.parsers.expat
+import kavecommon as kc
+
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
 
 
 def d2j(adict):
@@ -361,18 +370,18 @@ class LDTest(unittest.TestCase):
                                                                                 "to run this automated test")
         return lD
 
-    def deploy_dev(self, itype="c4.large"):
+    def deploy_dev(self, instancetype="m4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c4.large
+        instancetype -> None: m4.large
         """
         import kavedeploy as lD
         import kaveaws as lA
-        itype = lA.chooseitype(itype)
+        instancetype = lA.chooseinstancetype(instancetype)
 
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.run_quiet(deploy_dir + "/aws/deploy_one_centos_instance.py Test-"
-                              + self.service + " " + itype + " --ambari-dev --not-strict")
+                              + self.service + " " + instancetype + " --ambari-dev --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -418,18 +427,18 @@ class LDTest(unittest.TestCase):
         time.sleep(5)
         return ambari
 
-    def deploy_os(self, osval, itype="c4.large"):
+    def deploy_os(self, osval, instancetype="m4.large"):
         """
         Up one centos machine with the scripts and return an lD.remoteHost to that machine
-        itype -> None: c4.large
+        instancetype -> None: m4.large
         """
         import kavedeploy as lD
         import kaveaws as lA
-        itype = lA.chooseitype(itype)
+        instancetype = lA.chooseinstancetype(instancetype)
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         stdout = lD.run_quiet(deploy_dir + "/aws/deploy_known_instance.py "
                               + osval + " Test-" + osval + "-" + self.service + " "
-                              + itype + " --not-strict")
+                              + instancetype + " --not-strict")
         self.assertTrue(stdout.split("\n")[-1].startswith("OK, iid "))
         iid = stdout.split("\n")[-1].strip()[len("OK, iid "):].split(" ")[0]
         ip = stdout.split("\n")[-1].strip().split(" ")[-1]
@@ -512,20 +521,20 @@ class LDTest(unittest.TestCase):
                     "curl --netrc "
                     + " http://localhost:8080/api/v1/clusters/"
                     + clustername + "/requests/" + str(requestid))
-            except RuntimeError:
+            except lD.ShellExecuteError:
                 time.sleep(3)
                 try:
                     stdout = ambari.run(
                         "curl --netrc "
                         + " http://localhost:8080/api/v1/clusters/"
                         + clustername + "/requests/" + str(requestid))
-                except RuntimeError as e:
+                except lD.ShellExecuteError as e:
                     try:
                         stdout2 = ambari.run("ambari-server status")
                         if "not running" in stdout2:
                             state = "ABORTED"
                             break
-                    except RuntimeError:
+                    except lD.ShellExecuteError:
                         state = "ABORTED"
                         break
 
@@ -612,49 +621,43 @@ class LDTest(unittest.TestCase):
                         "wrong keyfile seen in (" + connectcmd + ")")
         return lD.remoteHost("root", ip, keyfile), iid
 
-    def wait_for_ambari(self, ambari, check_inst=None):
+    def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
         import kavedeploy as lD
         try:
-            lD.wait_for_ambari(ambari, 20, check_inst=check_inst)
+            lD.wait_for_ambari(ambari, rounds, check_inst=check_inst)
         except IOError:
             self.assertTrue(False, "ambari server not contactable after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
         except SystemError:
             self.assertTrue(False, "ambari server failed to start (" + ' '.join(ambari.sshcmd()) + ")")
         return True
 
-    def verify_blueprint(self, aws, blueprint, cluster):
+    def check_json(self, ason):
         """
         Check that these files are complete and self-consistent
-        Check fist that the files exist and are json complete
-        Then check that the cluster used the blueprint, that all groups and hosts in the cluster
-         appear in the blueprint and aws file.
+        Check first that the files exist and are json complete
         """
-        import json
-        a = os.path.exists(aws)
-        b = os.path.exists(blueprint)
-        c = os.path.exists(cluster)
-        if not a or not b or not c:
-            raise ValueError(
-                "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
-                    b) + " .cluster " + str(c))
-        # check the files can be opened, and then check that the cluster contains the machines from the aws file
-        jsons = []
-        for ason in [aws, blueprint, cluster]:
-            f = open(ason)
-            l = f.read()
-            f.close()
-            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
-            try:
-                interp = json.loads(l)
-                jsons.append(interp)
-            except Exception as e:
-                print e
-                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
-        # check that the aws creates the correct drive names, no duplicates or mounting to 'a'
-        jaws = jsons[0]
+        self.assertTrue(os.path.exists(ason), "json file does not exist " + ason)
+        f = open(ason)
+        l = f.read()
+        f.close()
+        interp = None
+        self.assertTrue(len(l) > 1, "json file " + ason + " is empty, a fragment or corrupted")
+        try:
+            interp = json.loads(l)
+        except Exception as e:
+            print e
+            self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+        return interp
+
+    def verify_awsjson(self, jaws, aws):
+        """
+        Check that a given x.aws.json file is OK
+        jaws = the json dictionary
+        check that the aws creates the correct drive names, no duplicates or mounting to 'a'
+        """
         mount_to_sda = [group for group in jaws["InstanceGroups"]
                         if "ExtraDisks" in group
                         and '/dev/sda' in [d["Attach"] for d in group["ExtraDisks"]]
@@ -671,6 +674,92 @@ class LDTest(unittest.TestCase):
                          + aws + " \n " + str(mount_to_sda))
         self.assertFalse(len(duplicates), "At least one group mounts to the same device/location twice:\n in "
                          + aws + " \n " + str(duplicates))
+        return True
+
+    def verify_bpjson(self, jbp, bp):
+        """
+        Check that a given x.blueprint.json file is OK
+        jbp = the json dictionary
+        check that the jbp has the needed config params
+        """
+
+        self.assertTrue("host_groups" in jbp, bp + " blueprint misses host_groups!")
+        self.assertTrue("Blueprints" in jbp, bp + " blueprint misses Blueprints directive!")
+        all_services = []
+        for hostgroup in jbp["host_groups"]:
+            all_services = all_services + [component["name"] for component in hostgroup["components"]]
+        supplied_configs = {}
+        if "configurations" in jbp:
+            for aconf in jbp["configurations"]:
+                for k, v in aconf.iteritems():
+                    supplied_configs[k] = v
+        # find the parameters which must be forced for these services
+        required_configs = {}
+        known_services = find_services()
+        for service in all_services:
+            for sname, dir in known_services:
+                if service.split('_')[0] not in sname:
+                    continue
+                cfg_name = glob.glob(dir + '/configuration/*.xml')[0]
+                # Load XML and parse
+                tree = ET.ElementTree(file=cfg_name)
+                for property in tree.getroot():
+                    if property.tag != 'property':
+                        continue
+                    name = property.find('name').text
+                    isRequired = (
+                        'require-input' in property.attrib and
+                        kc.trueorfalse(property.attrib['require-input'])
+                    )
+                    if isRequired:
+                        try:
+                            required_configs[cfg_name.split('/')[-1].split('.')[0]].append(name)
+                        except KeyError:
+                            required_configs[cfg_name.split('/')[-1].split('.')[0]] = [name]
+        missing = []
+        for k, v in required_configs.iteritems():
+            for req in v:
+                try:
+                    supplied_configs[k][req]
+                except KeyError:
+                    missing.append((k, req))
+        if len(missing):
+            print "Blueprint:", bp, jbp["Blueprints"]["blueprint_name"]
+            print "Services:", all_services
+            print "Required:", required_configs
+            print "Supplied:", supplied_configs
+            print "Missing:", missing
+        self.assertFalse(len(missing),
+                         bp + " missing required configurations in default group! \n\t"
+                         + '\n\t'.join([str(x) for x in set(missing)]))
+        return True
+
+    def verify_blueprint(self, aws, blueprint, cluster):
+        """
+        Check that these files are complete and self-consistent
+        Check first that the files exist and are json complete
+        Then check that the cluster used the blueprint, that all groups and hosts in the cluster
+         appear in the blueprint and aws file.
+        """
+        import json
+        a = os.path.exists(aws)
+        b = os.path.exists(blueprint)
+        c = os.path.exists(cluster)
+        if (not a) or (not b) or (not c):
+            raise ValueError(
+                "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
+                    b) + " .cluster " + str(c))
+        # check the files can be opened, and then check that the cluster contains the machines from the aws file
+        jsons = []
+        for ason in [aws, blueprint, cluster]:
+            jsons.append(self.check_json(ason))
+        # check that the aws creates the correct drive names, no duplicates or mounting to 'a'
+        jaws = jsons[0]
+        self.verify_awsjson(jaws, aws)
+
+        # check that the blueprint contains all necessary parameters
+        jbp = jsons[1]
+        self.verify_bpjson(jbp, blueprint)
 
         # Find what is needed for the cluster
         need_hosts = []

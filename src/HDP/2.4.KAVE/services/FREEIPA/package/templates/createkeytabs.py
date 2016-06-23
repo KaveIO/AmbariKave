@@ -80,8 +80,8 @@ def popen(cmd, exit=True, shell=None):
     output, err = proc.communicate()
     status = proc.returncode
     if status and exit:
-        raise RuntimeError("Problem running: \n" + str(cmd) + "\n got:\n\t"
-                           + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
+        raise lD.ShellExecuteError("Problem running: \n" + str(cmd) + "\n got:\n\t"
+                                   + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
     elif status:
         print >> sys.__stderr__, ("ERROR: " + "Problem running: \n" + str(cmd) + "\n got:\n\t"
                                   + str(status) + "\n from stdout: \n" + output + " stderr: \n" + err)
@@ -261,19 +261,19 @@ def local_users_and_groups(keytabs, user_princ, group_princ):
                     continue
                 try:
                     remote.run("grep " + user + " /etc/passwd > /dev/null")
-                except RuntimeError:
+                except lD.ShellExecuteError:
                     # Try a simple useradd first.
                     # Fails if either the user already exists, or the user is already the name of a group
                     try:
                         remote.run("useradd " + user)
-                    except RuntimeError:
+                    except lD.ShellExecuteError:
                         # In case the user is already the name of a group, try again with -g
                         try:
                             group = user
                             if keytab["keytab file group"]:
                                 group = keytab["keytab file group"]
                             remote.run("useradd " + user + " -g " + group)
-                        except RuntimeError:
+                        except lD.ShellExecuteError:
                             # Finally, assume that the user exists
                             print "Failed to add a user, but it might still already exist, checking groups"
 
@@ -353,7 +353,7 @@ def search_failed_keytabs(keytabs):
             identity = keytab["principal name"].split('@')[0]
             remote.run("su " + keytab["keytab file owner"] + " bash -c '/usr/bin/kinit -kt "
                        + keytab["keytab file path"] + " " + identity + "; kdestroy;'")
-        except RuntimeError as e:
+        except lD.ShellExecuteError as e:
             failed.append((keytab, e))
     return failed
 

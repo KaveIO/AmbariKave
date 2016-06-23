@@ -69,6 +69,13 @@ def detect_proxy():
     return ('http_proxy' in os.environ) and len(os.environ['http_proxy'])
 
 
+class ShellExecuteError(RuntimeError):
+    """
+    Runtime errors when calling commands in this module
+    """
+    pass
+
+
 def which(program):
     import os
 
@@ -91,7 +98,7 @@ def which(program):
 
 def run_quiet(cmd, exit=True, shell=True):
     """
-    Run a command, if this command fails raise a RuntimeError.
+    Run a command, if this command fails raise a ShellExecuteError.
     Do not print the output of the command while it is running
     cmd: the command to run
     """
@@ -112,7 +119,7 @@ def run_quiet(cmd, exit=True, shell=True):
     output, err = proc.communicate()
     status = proc.returncode
     if status and exit:
-        raise RuntimeError("Problem running: \n" + cmdstr + "\n got:\n\t" + str(
+        raise ShellExecuteError("Problem running: \n" + cmdstr + "\n got:\n\t" + str(
             status) + "\n from stdout: \n" + output + " stderr: \n" + err)
     elif status:
         print >> sys.__stderr__, "ERROR: " + "Problem running: \n" + cmdstr + "\n got:\n\t" + str(
@@ -300,7 +307,7 @@ class remoteHost(object):
                 v = find_return(output)
                 if v:
                     return v
-            except RuntimeError:
+            except ShellExecuteError:
                 pass
         # then try running uname
         output = self.run("uname -r")
@@ -334,7 +341,7 @@ class remoteHost(object):
                     self.run("yum -y install git ")
                 else:
                     self.run("apt-get -y install git")
-            except RuntimeError:
+            except ShellExecuteError:
                 # back off and retry once, ABK-207
                 import time
 
@@ -530,7 +537,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     try:
         remote.run("service iptables stop")
         remote.run("chkconfig iptables off")
-    except RuntimeError:
+    except ShellExecuteError:
         pass
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
@@ -567,7 +574,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "2.1-Beta-Pre"
+        version = "2.1-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -633,7 +640,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             # modify iptables, only in case of Centos6
             if ambari.detect_linux_version() in ["Centos6"]:
                 ambari.run("service iptables stop")
-        except RuntimeError:
+        except ShellExecuteError:
             pass
         # check file pointed to for failures
         try:
@@ -644,14 +651,14 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
                         raise SystemError("Failure in ambari server start server detected!")
-        except RuntimeError:
+        except ShellExecuteError:
             pass
 
         try:
             stdout = ambari.run("curl --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
-        except RuntimeError:
+        except ShellExecuteError:
             pass
         time.sleep(60)
         rounds = rounds + 1
@@ -677,7 +684,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
         # If this fails, wait a second and try again, then really fail
         try:
             stdout = ambari.run(cmd)
-        except RuntimeError:
+        except ShellExecuteError:
             time.sleep(3)
             stdout = ambari.run(cmd)
         if '"request_status" : "FAILED"' in stdout:
@@ -712,7 +719,7 @@ def confremotessh(remote, port=443):
     # restart services
     try:
         remote.run("service sshd restart")
-    except RuntimeError:
+    except ShellExecuteError:
         remote.run("service ssh restart")
     import time
     time.sleep(2)
@@ -722,7 +729,7 @@ def confremotessh(remote, port=443):
         time.sleep(1)
     try:
         remote.run("service sshd restart")
-    except RuntimeError:
+    except ShellExecuteError:
         remote.run("service ssh restart")
 
 
@@ -738,7 +745,7 @@ def confallssh(remote, restart=True):
     if restart:
         try:
             remote.run("service sshd restart")
-        except RuntimeError:
+        except ShellExecuteError:
             remote.run("service ssh restart")
         import time
         time.sleep(2)
@@ -750,7 +757,7 @@ def wait_until_up(remote, max_wait):
     """
     try:
         return remote.check(firsttime=True)
-    except RuntimeError, ValueError:
+    except ShellExecuteError, ValueError:
         pass
     up = False
     for i in range(max_wait):
@@ -758,7 +765,7 @@ def wait_until_up(remote, max_wait):
             mysleep(10 - (i > 0) * 7)
             up = remote.check(firsttime=True)
             break
-        except RuntimeError, ValueError:
+        except ShellExecuteError, ValueError:
             print "not ready yet, sleep again"
             pass
     if not up:
@@ -774,11 +781,14 @@ def remote_cp_authkeys(remote, user2='root'):
     remote.check()
     if remote.user == user2:
         return remote
-    hdir = '/home/' + user2
-    if user2 == 'root':
+    hdir = '/home/' + remote.user
+    if remote.user == 'root':
         hdir = '/root'
-    remote.run('sudo -u ' + user2 + " cp /home/" + remote.user + "/.ssh/authorized_keys "
-               + hdir + "/.ssh/", extrasshopts=['-t', '-t'])
+    hdir2 = '/home/' + user2
+    if user2 == 'root':
+        hdir2 = '/root'
+    remote.run('sudo -u ' + user2 + " cp " + hdir + "/.ssh/authorized_keys "
+               + hdir2 + "/.ssh/", extrasshopts=['-t', '-t'])
     remote2 = remoteHost(user2, remote.host, remote.access_key)
     return remote2
 
@@ -821,20 +831,27 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
     # append to authorized_keys
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
     destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
-    # ensure no prompt because of the silly not recognised host yhingy
+    # ensure no prompt because of the silly not recognised host thingy
 
     def scan_and_store_key(remote, host_to_scan):
+        """
+        Uses ssh-keyscan to detemine key of host, and then without fail
+        replaces entries for this host in the known_hosts file
+        """
         remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
         remote.run("ssh-keygen -R " + host_to_scan)
         remote.run("ssh-keyscan -H " + host_to_scan + " >> .ssh/known_hosts")
         if host_to_scan != host_to_scan.lower():
             scan_and_store_key(remote, host_to_scan.lower())
+
     scan_and_store_key(source, dest_internal_ip)
     if preservehostname:
         scan_and_store_key(source, destination.run("hostname -s"))
         scan_and_store_key(source, destination.run("hostname"))
     # test access by trying a double-hopping ssh
     output = source.run("ssh " + destination.user + "@" + dest_internal_ip + " echo Hello friend from \\$HOSTNAME")
+    # will fail if the machine has the work HOST in the name, or could give false positive
+    # if the local machine has the word friend in the name
     if "friend" not in output or "HOST" in output:
         raise SystemError("Setting up keyless access failed!")
     if preservehostname:
@@ -868,20 +885,20 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
         dom = add_remote.run("hostname -d")
         if len(dom):
             extra_domains.append(dom)
-    except RuntimeError:
+    except ShellExecuteError:
         pass
     try:
         dom = add_remote.run("hostname")
         if "." in dom:
             dom = '.'.join(dom.split('.')[1:])
             extra_domains.append(dom)
-    except RuntimeError:
+    except ShellExecuteError:
         pass
     unique_domains = []
     for dom in extra_domains:
         if dom not in unique_domains:
             unique_domains.append(dom)
-    no_dots = []
+
     all_domains = [hostname + "." + dom for dom in unique_domains] + [hostname]
     no_dots = [n for n in all_domains if '.' not in n]
     fq = [f for f in all_domains if '.' in f and 'localdomain' not in f]

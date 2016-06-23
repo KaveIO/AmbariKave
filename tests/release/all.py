@@ -15,23 +15,16 @@
 #   limitations under the License.
 #
 ##############################################################################
-import deploylib
-import kclib
-import servicesh
-import scan
-import license
-import pyfilenames
-import testversion
-import testpythonimport
-import verifyxml
-import checkpep8
-import pep8functions
-import jsonbpchecks
 import base
+import ambarikave
+import kavetoolbox
 
-mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, pyfilenames,
-        jsonbpchecks, verifyxml]
+mods = [ambarikave, kavetoolbox]
+
+
+modargs = {kavetoolbox: ['Centos6', 'Centos7', 'Ubuntu14'],
+           ambarikave: []
+           }
 
 if __name__ == "__main__":
-    base.parallel(mods)
+    base.parallel(mods, modargs)

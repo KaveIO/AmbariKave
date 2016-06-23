@@ -103,3 +103,16 @@ searchpath = default('configurations/freeipa/searchpath',
                      '/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*')
 # folderpath="/jre/lib/security:/lib/security"
 folderpath = default('configurations/freeipa/folderpath', '/jre/lib/security:/lib/security')
+
+long_domain_patch = default("configurations/freeipa/long_domain_patch", False)
+long_domain_patch = kc.trueorfalse(long_domain_patch)
+
+if len(domain) > 61:
+    raise SystemError("Apologies, but FreeIPA cannot support domain names longer than 61 characters")
+elif len(domain) >= 42 and not long_domain_patch:
+    raise SystemError("Apologies, but FreeIPA cannot support domain of 42+ characters out-of-the-box "
+                      + "if you want to try our experimental patch,"
+                      + " please set the long_domain_patch parameter to true")
+elif len(domain) < 20 and long_domain_patch:
+    raise ValueError("This domain is less than 20 characters, and so the long_domain_patch "
+                     + "is unecessary and potentially harmful.")

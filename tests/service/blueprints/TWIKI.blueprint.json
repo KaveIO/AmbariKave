@@ -5,6 +5,11 @@
         "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    },
     { "twiki" : { "ldap_bind_password": "testtestdirpass1234"} }
   ],
   "host_groups" : [
@@ -14,6 +19,7 @@
       "components" : [
         { "name" : "AMBARI_SERVER"     },
         { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_GRAFANA"   },
         { "name" : "ZOOKEEPER_SERVER"  },
         { "name" : "TWIKI_SERVER"      },
         { "name" : "METRICS_MONITOR"   },

@@ -77,7 +77,7 @@ def parse_opts():
         raise AttributeError("You supplied too many arguments")
     macname = sys.argv[1]
     secf = ""
-    insttype = "c4.large"
+    insttype = "m4.large"
     if len(sys.argv) > 2 and os.path.exists(sys.argv[2]):
         secf = sys.argv[2]
         if len(sys.argv) > 3:
@@ -92,13 +92,13 @@ def parse_opts():
     return macname, secf, insttype
 
 
-machinename, secf, itype = parse_opts()
+machinename, secf, instancetype = parse_opts()
 jsondat = open(secf)
 security_config = json.loads(jsondat.read())
 jsondat.close()
 lA.checksecjson(security_config, requirekeys=["AWS"])
 
-secGroup = security_config["SecurityGroup"]
+security_group = security_config["SecurityGroup"]
 keypair = security_config["AccessKeys"]["AWS"]["KeyName"]
 keyloc = security_config["AccessKeys"]["AWS"]["KeyFile"]
 subnet = None
@@ -115,9 +115,9 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
 
 lD.testproxy()
 
-itype = lA.chooseitype(itype)
+instancetype = lA.chooseinstancetype(instancetype)
 
-upped = lA.up_default(itype, secGroup, keypair, subnet=subnet, ambaridev=ambaridev)
+upped = lA.up_default(instancetype, security_group, keypair, subnet=subnet, ambaridev=ambaridev)
 print "submitted"
 
 iid = lA.iid_from_up_json(upped)[0]
@@ -135,12 +135,12 @@ while (ip is None and acount < 20):
     ip = lA.pub_ip(iid)
     acount = acount + 1
 
-uname = lA.default_usernamedict[lA.default_os]
+remoteuser = lA.default_usernamedict[lA.default_os]
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
-        remote = lD.remoteHost(uname, ip, keyloc)
+        remote = lD.remoteHost(remoteuser, ip, keyloc)
         lD.wait_until_up(remote, 20)
         remote = lD.remote_cp_authkeys(remote, 'root')
         if "Tags" in security_config:

@@ -3,7 +3,8 @@
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
-<path>/AmbariKave/deployment/lib</path>
-<path>/AmbariKave/src/shared</path>
+<path>/ambarikave/deployment/lib</path>
+<path>/ambarikave/src/shared</path>
+<path>/ambarikave/tests/base</path>
 </pydev_pathproperty>
 </pydev_project>

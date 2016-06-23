@@ -4,15 +4,26 @@
       "ams-site" : {
         "timeline.metrics.service.operation.mode" : "embedded"
       }
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    },
+    {
+      "jenkins" : {
+        "JENKINS_PORT" : 8888, "JENKINS_ADMIN_PASSWORD" : "ThisIsALongAndAnnoyingPasswordDontUseIt"
+      }
     }
   ],
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ { "jenkins" : { "JENKINS_PORT" : 8888, "JENKINS_ADMIN_PASSWORD" : "ThisIsALongAndAnnoyingPasswordDontUseIt" } } ],
+      "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "METRICS_GRAFANA"     },
         { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "JENKINS_MASTER"      },
         { "name" : "METRICS_MONITOR"     },

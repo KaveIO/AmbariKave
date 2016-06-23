@@ -86,7 +86,7 @@ class StormGenericSD(StormGeneric):
     def ctlcmd(self, cmd, bg=False):
         stat, stdout, stderr = (0, "", "")
         if not bg:
-            stat, stdout, stderr = kc.mycmd('supervisorctl ' + cmd + ' storm-' + self.PROG)
+            stat, stdout, stderr = kc.shell_call_wrapper('supervisorctl ' + cmd + ' storm-' + self.PROG)
             if stat or "error" in stdout.lower() or "error" in stderr.lower() or "failed" in stdout.lower() or \
                     "failed" in stderr.lower() or 'refused' in stdout or 'refused' in stderr:
                 self.fail_with_error(cmd + ' ' + self.PROG + ' Failed!' + stdout + stderr)
@@ -115,6 +115,7 @@ class StormGenericSD(StormGeneric):
                  )
         Execute('mkdir -p %s' % params.childlogdir)
         Package('epel-release')
+        Execute('yum clean all')
         Package('python-meld3')
         Package('python-pip')
         Execute('pip install supervisor')
@@ -131,7 +132,7 @@ class StormGenericSD(StormGeneric):
         Tests indicated 5s is enough of a wait for this
         """
         self.configure(env)
-        stat, stdout, stderr = kc.mycmd("service supervisord status")
+        stat, stdout, stderr = kc.shell_call_wrapper("service supervisord status")
         if "running" not in stdout:
             Execute('service supervisord start')
         self.ctlcmd('start', bg=True)

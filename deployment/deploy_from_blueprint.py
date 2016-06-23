@@ -192,8 +192,9 @@ ambari = lD.remoteHost("root", thehost, access_key)
 try:
     ambari.run("which pdsh")
     ambari.run("which curl")
-except RuntimeError:
+except lD.ShellExecuteError:
     ambari.run("yum -y install epel-release")
+    ambari.run("yum clean all")
     ambari.run("yum -y install pdsh curl")
 
 # modify iptables, only in case of Centos6
@@ -207,7 +208,7 @@ whole_cluster = lD.multiremotes(hosts, jump=ambari)
 # Check if all nodes in the cluster are contactable
 try:
     whole_cluster.check(firsttime=True)
-except RuntimeError:
+except lD.ShellExecuteError:
     print "Could not access machines with passwordless ssh, the ambari node must have passwordless ssh access to the " \
           "rest, fix and try again"
     raise
@@ -226,8 +227,8 @@ if min(cltime) < (ambtime - 5):
 
 try:
     if "no ambari-agent" in whole_cluster.run("which ambari-agent"):
-        raise RuntimeError()
-except RuntimeError:
+        raise lD.ShellExecuteError()
+except lD.ShellExecuteError:
     whole_cluster.register()
     whole_cluster.run("yum -y install epel-release")
     # TODO: instead copy this file _from_ the ambari node *to* the others directly
@@ -266,13 +267,13 @@ except RuntimeError:
     try:
         # try and retry
         whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
-    except RuntimeError:
+    except lD.ShellExecuteError:
         time.sleep(5)
         whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
 
 try:
     whole_cluster.run("echo $HOSTNAME")
-except RuntimeError:
+except lD.ShellExecuteError:
     whole_cluster.register()
 
 # turn off se linux across the cluster ...
@@ -285,7 +286,7 @@ elif ambari.detect_linux_version() in ["Centos7"]:
 whole_cluster.run(" sed -i 's/hostname=.*/hostname=" + admin + "/' /etc/ambari-agent/conf/ambari-agent.ini")
 try:
     whole_cluster.run("ambari-agent restart")
-except RuntimeError:
+except lD.ShellExecuteError:
     time.sleep(2)
     whole_cluster.run("ambari-agent stop")
     time.sleep(2)
@@ -350,7 +351,7 @@ def add_hosts_to_pdsh_group(group, hosts):
     path = "~/.dsh/group/" + group
     try:
         exists = ambari.run('cat ' + path)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         exists = []
     for host in hosts:
         if host in exists:

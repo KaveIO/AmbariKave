@@ -80,7 +80,7 @@ iidtoip = {}
 nametoip = {}
 ips = []
 
-print "Name,      iid,     SecGroup(s),   itype,   publicIP, status"
+print "Name,      iid,     security_group(s),   instancetype,   publicIP, status"
 json = lA.desc_instance()
 for reservation in json["Reservations"]:
     for instance in reservation["Instances"]:

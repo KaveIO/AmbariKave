@@ -102,7 +102,7 @@ def chooseamiid(os, region):
     return ""
 
 
-def up_default(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
+def up_default(type, security_group, keys, count=1, subnet=None, ambaridev=False):
     region = "default"
     amiid = ""
     if subnet is not None:
@@ -118,19 +118,19 @@ def up_default(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
                 "the dev image for that.")
     else:
         amiid = chooseamiid(default_os, region)
-    return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+    return upamiid(amiid, type=type, security_group=security_group, keys=keys, count=count, subnet=subnet)
 
 
-def up_os(os, type, secGroup, keys, count=1, subnet=None):
+def up_os(os, type, security_group, keys, count=1, subnet=None):
     region = "default"
     amiid = ""
     if subnet is not None:
         region = detect_region()
     amiid = chooseamiid(os, region)
-    return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+    return upamiid(amiid, type=type, security_group=security_group, keys=keys, count=count, subnet=subnet)
 
 
-def chooseitype(instancetype):
+def chooseinstancetype(instancetype):
     """
     Send in one instance type, read the locally configured aws region and return something that works here
     """
@@ -138,7 +138,7 @@ def chooseitype(instancetype):
     # ap region has different strange behaviour for new generation instances, default centos image not hvm
     regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
-                                       "c4.2xlarge": "c3.2xlarge"},
+                                       "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
                       "eu-west": {"m1.medium": "t2.small"}}
     try:
         return regioninstdict[region][instancetype]
@@ -146,13 +146,13 @@ def chooseitype(instancetype):
         return instancetype
 
 
-def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
+def upamiid(amiid, type, security_group, keys, count=1, subnet=None):
     cmd = " ec2 run-instances --image-id " + amiid + " --count " + str(
         count) + " --instance-type " + type + " --key-name " + keys
     if subnet is not None:
-        cmd = cmd + " --subnet " + subnet + " --security-group-ids " + secGroup
+        cmd = cmd + " --subnet " + subnet + " --security-group-ids " + security_group
     else:
-        cmd = cmd + " --security-groups " + secGroup
+        cmd = cmd + " --security-groups " + security_group
     return runawstojson(cmd)
 
 
@@ -238,7 +238,7 @@ def find_all_child_resources(resource):
 def killinstance(iid, state="terminate"):
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
             i["Reservations"][0]["Instances"]):
@@ -267,7 +267,7 @@ def createimage(iid, aname, description):
 def pub_ip(iid):
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
             i["Reservations"][0]["Instances"]):
@@ -281,7 +281,7 @@ def pub_ip(iid):
 def priv_ip(iid):
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
             i["Reservations"][0]["Instances"]):
@@ -309,7 +309,7 @@ def add_new_ebs_vol(iid, conf, access_key):
     """
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     # get a reference to this instance
     ip = pub_ip(iid)
@@ -361,7 +361,7 @@ def add_new_ebs_vol(iid, conf, access_key):
     remote.run("chmod a+x fdiskwrap.sh")
     try:
         remote.run("./fdiskwrap.sh " + conf["Fdisk"])
-    except RuntimeError:
+    except lD.ShellExecuteError:
         time.sleep(30)
         remote.run("./fdiskwrap.sh " + conf["Fdisk"])
     remote.run("mkfs.ext4 -b 4096 " + conf["Fdisk"] + "1 ")
@@ -373,7 +373,7 @@ def add_new_ebs_vol(iid, conf, access_key):
         "Mount"] + "/ ; fi'")
     res = remote.run("df -hP")
     if conf["Mount"] not in res:
-        raise RuntimeError("Could not mount the requested disk, resulted in " + res)
+        raise lD.ShellExecuteError("Could not mount the requested disk, resulted in " + res)
     return volID
 
 
@@ -478,9 +478,9 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     for t in thethreads:
         errs = errs + t.errors
     if len(errs):
-        raise RuntimeError("Problems creating volumes, as: \n" + '\n'.join(errs))
+        raise lD.ShellExecuteError("Problems creating volumes, as: \n" + '\n'.join(errs))
     if len(nd):
-        raise RuntimeError("Timeout in running create volumes as threads")
+        raise lD.ShellExecuteError("Timeout in running create volumes as threads")
 
 
 def waitforstate(iid, state="running"):

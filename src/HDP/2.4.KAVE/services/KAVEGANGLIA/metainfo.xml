@@ -3,12 +3,12 @@
     <schemaVersion>2.0</schemaVersion>
     <services>
         <service>
-            <name>KAVE_GANGLIA</name>
+            <name>KAVEGANGLIA</name>
             <comment>Ganglia, Cluster monitoring tools</comment>
             <displayName>KaveGanglia</displayName>
             <components>
                     <component>
-                    <name>KAVE_GANGLIA_SERVER</name>
+                    <name>KAVEGANGLIA_SERVER</name>
                     <displayName>Kave Ganglia Web Server</displayName>
                     <category>MASTER</category>
                     <commandScript>
@@ -18,7 +18,7 @@
                     </commandScript>
                 </component>
 	            <component>
-	                <name>KAVE_GANGLIA_MONITOR</name>
+	                <name>KAVEGANGLIA_MONITOR</name>
 	                <displayName>Kave Ganglia Monitor</displayName>
 	                <category>SLAVE</category>
 	                <cardinality>1+</cardinality>

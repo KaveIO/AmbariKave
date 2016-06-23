@@ -74,7 +74,7 @@ def parse_opts():
     osval = sys.argv[1]
     macname = sys.argv[2]
     secf = ""
-    insttype = "c4.large"
+    insttype = "m4.large"
     if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
         secf = sys.argv[3]
         if len(sys.argv) > 4:
@@ -89,13 +89,13 @@ def parse_opts():
     return osval, macname, secf, insttype
 
 
-osval, machinename, secf, itype = parse_opts()
+osval, machinename, secf, instancetype = parse_opts()
 jsondat = open(secf)
 security_config = json.loads(jsondat.read())
 jsondat.close()
 lA.checksecjson(security_config, requirekeys=["AWS"])
 
-secGroup = security_config["SecurityGroup"]
+security_group = security_config["SecurityGroup"]
 keypair = security_config["AccessKeys"]["AWS"]["KeyName"]
 keyloc = security_config["AccessKeys"]["AWS"]["KeyFile"]
 subnet = None
@@ -111,9 +111,9 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
         "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
 
 lD.testproxy()
-itype = lA.chooseitype(itype)
+instancetype = lA.chooseinstancetype(instancetype)
 
-upped = lA.up_os(osval, itype, secGroup, keypair, subnet=subnet)
+upped = lA.up_os(osval, instancetype, security_group, keypair, subnet=subnet)
 print "submitted"
 
 iid = lA.iid_from_up_json(upped)[0]
@@ -132,14 +132,14 @@ while (ip is None and acount < 20):
     acount = acount + 1
 
 if osval == "Centos6":
-    uname = 'root'
+    remoteuser = 'root'
 else:
-    uname = ''.join([i for i in osval if not i.isdigit()]).lower()
+    remoteuser = ''.join([i for i in osval if not i.isdigit()]).lower()
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
     try:
-        remote = lD.remoteHost(uname, ip, keyloc)
+        remote = lD.remoteHost(remoteuser, ip, keyloc)
         lD.wait_until_up(remote, 20)
         if "Tags" in security_config:
             resources = lA.find_all_child_resources(iid)

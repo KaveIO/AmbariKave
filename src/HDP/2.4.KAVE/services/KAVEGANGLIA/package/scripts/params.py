@@ -44,13 +44,13 @@ kaveganglia_bind = default('configurations/kaveganglia/kaveganglia_bind', '0.0.0
 kaveganglia_host = default("/clusterHostInfo/kaveganglia_host", [False])[0]
 
 kaveganglia_host_address = socket.gethostbyname(kaveganglia_host)
-if kaveganglia_host =="ambari.kave.io":
-    kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_bind', kaveganglia_host_address)
+if kaveganglia_host == "ambari.kave.io":
+    kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', kaveganglia_host_address)
 else:
-    kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_bind','0.0.0.0')
+    kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', '0.0.0.0')
 
-if kaveganglia_host =="ambari.kave.io":
-    kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_bind', '0.0.0.0')
+if kaveganglia_host == "ambari.kave.io":
+    kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0')
 
 www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
 PORT = default('configurations/kaveganglia/PORT', '80')

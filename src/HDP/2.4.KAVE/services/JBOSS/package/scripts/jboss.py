@@ -48,6 +48,10 @@ class Jboss(Script):
 
         Execute('chown -Rf %s:%s %s' % (params.service_user, params.service_user, params.installation_dir))
 
+        import glob
+        if not len(glob.glob(params.JAVA_HOME)):
+            raise ValueError("Could not find JAVA_HOME in location : " + params.JAVA_HOME)
+
         File('/etc/init.d/jboss',
              content=Template("jboss.j2"),
              mode=0755

@@ -28,8 +28,10 @@ jboss_conf_file = installation_dir + config_dir + jboss_xmlconf_filename
 mgmt_users_file = installation_dir + config_dir + jboss_management_filename
 
 
-
-
+JAVA_HOME = default('configurations/jboss/JAVA_HOME', "/usr/lib/jvm/java-1.7*-openjdk*/jre")
+import glob
+if not len(glob.glob(JAVA_HOME)):
+    raise ValueError("Could not find JAVA_HOME in location : " + JAVA_HOME)
 
 management_user = 'admin'
 management_password = default('configurations/jboss/management_password', "NOTAPASSWORD")

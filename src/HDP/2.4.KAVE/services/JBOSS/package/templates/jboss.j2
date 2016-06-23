@@ -12,8 +12,8 @@
 . /etc/init.d/functions
 
 # Load Java configuration.
-[ -r /etc/java/java.conf ] && . /etc/java/java.conf
-export JAVA_HOME
+# [ -r /etc/java/java.conf ] && . /etc/java/java.conf
+export JAVA_HOME=`ls -dt {{JAVA_HOME}} | head -n 1`
 
 JBOSS_USER={{service_user}}
 export JBOSS_USER

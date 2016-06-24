@@ -59,7 +59,7 @@ class KaveGangliaSlave(Script):
         from subprocess import Popen, PIPE
         self.configure(env)
 
-        if params.ipa_host == hostname:
+        if params.ipa_host == params.hostname:
             process = Popen(['service', 'ipa', 'status'], stdout=PIPE, stderr=PIPE)
             stdout, stderr = process.communicate()
             status = stdout[-8:-1].lower()

@@ -61,19 +61,26 @@ class KaveGanglia(kc.ApacheScript):
         super(KaveGanglia, self).configure(env)
 
     def start(self, env):
+        import params
+        from subprocess import Popen, PIPE
+
         self.configure(env)
 
         if params.ipa_host == hostname:
-            if Execute('service ipa status'):
+            process = Popen(['service', 'ipa', 'status'], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = process.communicate()
+            status = stdout[-8:-1].lower()
+            if status == 'running':
                 Execute('service ipa stop')
                 Execute('service gmetad start')
+                super(KaveGanglia, self).start(env)
                 Execute('service ipa start')
             else:
                 Execute('service gmetad start')
+                super(KaveGanglia, self).start(env)
         else:
             Execute("service gmetad start")
-
-        super(KaveGanglia, self).start(env)
+            super(KaveGanglia, self).start(env)
 
     def stop(self, env):
         Execute("service gmetad stop")

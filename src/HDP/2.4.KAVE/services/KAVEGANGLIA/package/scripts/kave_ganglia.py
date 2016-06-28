@@ -71,7 +71,11 @@ class KaveGanglia(kc.ApacheScript):
             stdout, stderr = process.communicate()
             if len(stdout)>7 and stdout[-8:-1].lower() == 'running':
                 Execute('service ipa stop')
-                Execute('service gmetad start')
+                try:
+                    Execute('service gmetad start')
+                except:
+                    Execute('service ipa start')
+                    raise
                 super(KaveGanglia, self).start(env)
                 Execute('service ipa start')
             else:

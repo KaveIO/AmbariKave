@@ -64,7 +64,11 @@ class KaveGangliaSlave(Script):
             stdout, stderr = process.communicate()
             if len(stdout)>7 and stdout[-8:-1].lower() == 'running':
                 Execute('service ipa stop')
-                Execute('service gmond start')
+                try:
+                    Execute('service gmond start')
+                except:
+                    Execute('service ipa start')
+                    raise
                 Execute('service ipa start')
             else:
                 Execute('service gmond start')

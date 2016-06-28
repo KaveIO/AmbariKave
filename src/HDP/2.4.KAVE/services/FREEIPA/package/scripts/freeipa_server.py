@@ -45,7 +45,7 @@ class FreeipaServer(Script):
                    " or install FreeIPA on a different node of your cluster. "
                    "\n\t (fd, family, type, laddr, raddr, status, pid) \n\t %s "
                    "\n\t [user, call, status] \n\t %s"
-                   % (number, check.__str__(), [p.username(), p.cmdline(), p.status()].__str__())
+                   % (number, check.__str__())
                    )
             # add process info if accessible
             if check[-1] is not None:

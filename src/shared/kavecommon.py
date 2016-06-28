@@ -258,7 +258,7 @@ def check_port(number):
     for portstat in psutil.net_connections():
         # Return system-wide connections as a list of
         # (fd, family, type, laddr, raddr, status, pid) namedtuples.
-        if int(number) == int(portstat[3][2]):
+        if int(number) == int(portstat[3][-1]):
             return portstat
     return None
 

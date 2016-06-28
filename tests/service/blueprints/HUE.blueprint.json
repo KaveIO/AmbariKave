@@ -23,7 +23,6 @@
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "METRICS_COLLECTOR"   },
-        { "name" : "METRICS_GRAFANA"     },
         { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "HUE_SERVER"          },
         { "name" : "FREEIPA_SERVER"      },

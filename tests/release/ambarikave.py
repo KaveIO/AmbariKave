@@ -21,7 +21,8 @@ import unittest
 
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
-    version = "2.1-Beta-Pre"
+    version = "2.2-Beta-Pre"
+    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE']
 
     def runTest(self):
         """
@@ -30,19 +31,31 @@ class TestAmbariKaveRelease(base.LDTest):
         import os
 
         lD = self.pre_check()
-        deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        self.ostype = "Centos6"
+        import kaveaws as lA
+        self.ostype = lA.default_os
         ambari, iid = self.deploy_os(self.ostype)
+        if self.ostype in ["Centos6"]:
+            # work around for problematic default DNS settings :S
+            ambari.run("yum -y install bind-utils")
+            out = ambari.run("host " + ambari.host)
+            ambari.run('python rename_me.py ' + out.split()[-1].split('.')[0] + ' '
+                       + '.'.join(out.split()[-1].split('.')[1:-1]))
+            # now the machine will be re-renamed with the public dns
         ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
-        ambari.run("service iptables stop")
+        if self.ostype in ["Centos6"]:
+            ambari.run("service iptables stop")
+            ambari.run("echo 0 > /selinux/enforce")
+        elif self.ostype in ["Centos7"]:
+            ambari.run("setenforce permissive")
         ambari.run("mkdir -p /etc/kave/")
-        ambari.run("/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
+        ambari.run("rm -rf inst.*")
+        ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
         ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"
                    + "centos6/AmbariKave/" + self.version + "/ambarikave-installer-centos6-" + self.version + ".sh")
         ambari.run("nohup bash ambarikave-installer-centos6-" + self.version
                    + ".sh > inst.stdout 2> inst.stderr < /dev/null & ")
-        self.wait_for_ambari(ambari)
-        return True
+        self.wait_for_ambari(ambari, rounds=15, check_inst=["inst.stdout", "inst.stderr"])
+        return self.check(ambari)
 
 
 if __name__ == "__main__":

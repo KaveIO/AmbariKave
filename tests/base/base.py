@@ -232,7 +232,7 @@ def parallel(mods, modargs=[]):
     """
     # loop over threads, see the class for more details
     # create list of packages as a queue
-    itemPool = Queue.Queue()
+    item_pool = Queue.Queue()
     result = {}
     items = []
     if not len(modargs):
@@ -266,11 +266,11 @@ def parallel(mods, modargs=[]):
     # print items
     for item in items:
         result[item] = {}
-        itemPool.put(item)
+        item_pool.put(item)
     lock = thread.allocate_lock()
     thethreads = []
     for _i in range(20):
-        t = RunFileInSubProcess(itemPool, lock, result)
+        t = RunFileInSubProcess(item_pool, lock, result)
         thethreads.append(t)
         t.start()
     # setup a timeout to prevent really infinite loops!
@@ -291,22 +291,22 @@ def parallel(mods, modargs=[]):
     if len(errs):
         raise RuntimeError("Exceptions encountered while running tests as threads, as: \n" + '\n'.join(errs))
     # print result
-    FAILED = len([f for f in result if result[f]["status"] != 0])
-    TIMES = []
-    TESTS = []
+    failed = len([f for f in result if result[f]["status"] != 0])
+    times = []
+    tests = []
     for key, val in result.iteritems():
         timing = [l for l in val["stderr"].split("\n") if l.startswith("Ran") and " in " in l][0].strip()
         if len(timing):
-            TIMES.append(float(timing.split(" ")[-1].replace("s", "")))
-            TESTS.append(int(timing.split(" ")[1]))
+            times.append(float(timing.split(" ")[-1].replace("s", "")))
+            tests.append(int(timing.split(" ")[1]))
     print "======================================================================"
-    print "Ran", sum(TESTS), "tests in", sum(TIMES).__str__() + "s", "from", len(result), "module/args"
+    print "Ran", sum(tests), "tests in", sum(times).__str__() + "s", "from", len(result), "module/args"
     print
-    if FAILED == 0 and len(nd) == 0:
+    if failed == 0 and len(nd) == 0:
         print "OK"
         sys.exit(0)
-    if FAILED:
-        print "FAILED (modules=" + str(FAILED) + ")"
+    if failed:
+        print "failed (modules=" + str(failed) + ")"
     if len(nd):
         print "TIMEOUT (modules=" + str(len(nd)) + ")"
     sys.exit(1)
@@ -621,13 +621,13 @@ class LDTest(unittest.TestCase):
                         "wrong keyfile seen in (" + connectcmd + ")")
         return lD.remoteHost("root", ip, keyfile), iid
 
-    def wait_for_ambari(self, ambari, check_inst=None):
+    def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
         """
         import kavedeploy as lD
         try:
-            lD.wait_for_ambari(ambari, 20, check_inst=check_inst)
+            lD.wait_for_ambari(ambari, rounds, check_inst=check_inst)
         except IOError:
             self.assertTrue(False, "ambari server not contactable after 20 minutes (" + ' '.join(ambari.sshcmd()) + ")")
         except SystemError:
@@ -644,7 +644,7 @@ class LDTest(unittest.TestCase):
         l = f.read()
         f.close()
         interp = None
-        self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
+        self.assertTrue(len(l) > 1, "json file " + ason + " is empty, a fragment or corrupted")
         try:
             interp = json.loads(l)
         except Exception as e:
@@ -707,23 +707,28 @@ class LDTest(unittest.TestCase):
                     if property.tag != 'property':
                         continue
                     name = property.find('name').text
-                    isRequired = (
+                    is_required = (
                         'require-input' in property.attrib and
                         kc.trueorfalse(property.attrib['require-input'])
                     )
-                    if isRequired:
+                    if is_required:
                         try:
                             required_configs[cfg_name.split('/')[-1].split('.')[0]].append(name)
                         except KeyError:
                             required_configs[cfg_name.split('/')[-1].split('.')[0]] = [name]
         missing = []
-        # print supplied_configs
         for k, v in required_configs.iteritems():
             for req in v:
                 try:
                     supplied_configs[k][req]
                 except KeyError:
                     missing.append((k, req))
+        if len(missing):
+            print "Blueprint:", bp, jbp["Blueprints"]["blueprint_name"]
+            print "Services:", all_services
+            print "Required:", required_configs
+            print "Supplied:", supplied_configs
+            print "Missing:", missing
         self.assertFalse(len(missing),
                          bp + " missing required configurations in default group! \n\t"
                          + '\n\t'.join([str(x) for x in set(missing)]))
@@ -740,7 +745,7 @@ class LDTest(unittest.TestCase):
         a = os.path.exists(aws)
         b = os.path.exists(blueprint)
         c = os.path.exists(cluster)
-        if not a or not b or not c:
+        if (not a) or (not b) or (not c):
             raise ValueError(
                 "Incomplete description for creating " + self.service + " .aws " + str(a) + " .blueprint " + str(
                     b) + " .cluster " + str(c))

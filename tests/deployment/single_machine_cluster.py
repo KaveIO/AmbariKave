@@ -38,7 +38,7 @@ class SingleMachineCluster(base.LDTest):
                         "failed to generate cluster, \n" + stdout)
         ambari, iid = self.remote_from_cluster_stdout(stdout)
         ambari.register()
-        self.wait_for_ambari(ambari, ["inst.stdout", "inst.stderr"])
+        self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
 
 
 def suite(verbose=False, branch="__local__"):

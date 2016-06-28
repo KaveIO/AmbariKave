@@ -27,12 +27,13 @@ import test_kavetoolbox_head
 
 class TestKaveToolboxRelease(test_kavetoolbox_head.TestKaveToolbox):
     """
-    Simple test class to check if the released version of KTB installer works
-    derived class from the existing service test, thereby saving a looot of code
+    Simple test class to check if the released version of KTB installer works.
+    Derived class from the existing service test, thereby saving a looot of code
     duplication in this test.
+    Centos6/7 and Ubuntu can all be tested.
     """
     service = "KaveToolbox-Release"
-    version = "2.1-Beta-Pre"
+    version = "2.2-Beta-Pre"
 
     def deploy_ktb(self, ambari):
         if self.ostype.lower().startswith("centos"):

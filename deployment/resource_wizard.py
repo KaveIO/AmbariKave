@@ -112,9 +112,9 @@ if data > 10:
 if multinode:
     amb_cores = 2
     amb_nodes = 1
-    amb_ram = 4
+    amb_ram = 6
     resultdf.loc[len(resultdf)] = ['ambari', amb_nodes * multinode + 1 *
-                                   (ds == 0), amb_cores * multinode, amb_ram * multinode, 0, 30]
+                                   (ds == 0), amb_cores * multinode, amb_ram * multinode, 0, 40]
 elif ds == 0:
     resultdf.loc[len(resultdf)] = ['os', 1, 1, 2, 0, 20]
 
@@ -218,7 +218,7 @@ if storm:
 # dev
 dev_cores = 2
 dev_nodes = 1
-dev_ram = 4
+dev_ram = 8
 dev_disk = 100
 
 if dev:

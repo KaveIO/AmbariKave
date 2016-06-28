@@ -274,12 +274,12 @@ print "Configure machine names"
 print "=============================================="
 sys.stdout.flush()
 for instance, remote in instance_to_remote.iteritems():
-    domainName = 'kave.io'
+    domain_name = 'kave.io'
     if "Domain" in cluster_config:
-        domainName = cluster_config["Domain"]["Name"]
+        domain_name = cluster_config["Domain"]["Name"]
     # print "configuring", remote.host, "->", instance_to_name[instance]
-    lD.rename_remote_host(remote, instance_to_name[instance].lower(), domainName)
-    if domainName == "kave.io":
+    lD.rename_remote_host(remote, instance_to_name[instance].lower(), domain_name)
+    if domain_name == "kave.io":
         allremotes.run("mkdir -p /etc/kave/")
         allremotes.run("'/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror'")
 
@@ -287,9 +287,9 @@ if dnsiid is not None:
     print "============================================"
     print "add to reverse lookup on DNS"
     print "============================================"
-    domainName = 'kave.io'
+    domain_name = 'kave.io'
     if "Domain" in cluster_config:
-        domainName = cluster_config["Domain"]["Name"]
+        domain_name = cluster_config["Domain"]["Name"]
     ip = lA.pub_ip(dnsiid)
     priv_ip = lA.priv_ip(dnsiid)
     # print ip, priv_ip
@@ -322,7 +322,7 @@ ns     IN      A       %PRIVATE%
 
 ; Define hostname -> IP pairs which you wish to resolve
 repos IN A %REPOS%
-""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", priv_ip).replace("%DATE%", date).replace("%REPOS%", repos)
+""".replace("%DOMAIN%", domain_name).replace("%PRIVATE%", priv_ip).replace("%DATE%", date).replace("%REPOS%", repos)
     reverse = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
         %DATE%  ;Serial
@@ -339,24 +339,27 @@ ns     IN      A       %PRIVATE%
 
 ; Define hostname -> IP pairs which you wish to resolve
 %PRIVATE%.in-addr.arpa. IN PTR ns.%DOMAIN%.
-""".replace("%DOMAIN%", domainName).replace("%PRIVATE%", '.'.join(reversed(priv_ip.split('.')))).replace("%DATE%", date)
+""".replace("%DOMAIN%",
+            domain_name).replace("%PRIVATE%",
+                                 '.'.join(reversed(priv_ip.split('.')))).replace("%DATE%",
+                                                                                 date)
     forward = forward + '\n' + '\n'.join([n + " IN A " + ip for n, ip in nameandpriv_ip])
     reverse = reverse + '\n' + '\n'.join(
-        ['.'.join(reversed(ip.split('.'))) + ".in-addr.arpa. IN PTR " + n + "." + domainName + "." for n, ip in
+        ['.'.join(reversed(ip.split('.'))) + ".in-addr.arpa. IN PTR " + n + "." + domain_name + "." for n, ip in
          nameandpriv_ip])
     # write into temp local file and then copy it
-    ff = open("/tmp/forward" + domainName + dnsiid, 'w')
+    ff = open("/tmp/forward" + domain_name + dnsiid, 'w')
     ff.write(forward)
     ff.close()
-    rf = open("/tmp/reverse" + domainName + dnsiid, 'w')
+    rf = open("/tmp/reverse" + domain_name + dnsiid, 'w')
     rf.write(reverse)
     rf.close()
     # print forward
     # print reverse
-    dnsserv.cp("/tmp/forward" + domainName + dnsiid, "/var/named/forward." + domainName)
-    dnsserv.cp("/tmp/reverse" + domainName + dnsiid, "/var/named/reverse." + domainName)
-    lD.run_quiet("rm -rf /tmp/reverse" + domainName + dnsiid)
-    lD.run_quiet("rm -rf /tmp/forward" + domainName + dnsiid)
+    dnsserv.cp("/tmp/forward" + domain_name + dnsiid, "/var/named/forward." + domain_name)
+    dnsserv.cp("/tmp/reverse" + domain_name + dnsiid, "/var/named/reverse." + domain_name)
+    lD.run_quiet("rm -rf /tmp/reverse" + domain_name + dnsiid)
+    lD.run_quiet("rm -rf /tmp/forward" + domain_name + dnsiid)
     dnsserv.run("service named restart")
 
 print "=============================================="

@@ -207,7 +207,7 @@ if not skip_ambari:
     print "Installing ambari " + version + " from git"
     lD.deploy_our_soft(remote, version=version, git=git, gitenv=gitenv)
     print "Awaiting ambari installation ..."
-    lD.wait_for_ambari(remote)
+    lD.wait_for_ambari(remote, check_inst=['inst.stderr', 'inst.stdout'])
 
 if not skip_blueprint:
     print "Deploying default blueprint"

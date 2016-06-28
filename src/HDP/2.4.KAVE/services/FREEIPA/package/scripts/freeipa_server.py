@@ -35,7 +35,7 @@ class FreeipaServer(Script):
         check = kc.check_port(number)
         if check is not None:
             import psutil
-            p = psutil.process(check[-1])
+            p = psutil.Process(check[-1])
             raise OSError("The port number %s is already in use on this machine. You must reconfigure FreeIPA ports"
                           " or install FreeIPA on a different node of your cluster. "
                           "\n\t (fd, family, type, laddr, raddr, status, pid) \n\t %s "

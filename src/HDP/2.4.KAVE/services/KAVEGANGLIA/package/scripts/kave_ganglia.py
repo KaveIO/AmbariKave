@@ -69,8 +69,7 @@ class KaveGanglia(kc.ApacheScript):
         if params.ipa_host == params.hostname:
             process = Popen(['service', 'ipa', 'status'], stdout=PIPE, stderr=PIPE)
             stdout, stderr = process.communicate()
-            status = stdout[-8:-1].lower()
-            if status == 'running':
+            if len(stdout)>7 and stdout[-8:-1].lower() == 'running':
                 Execute('service ipa stop')
                 Execute('service gmetad start')
                 super(KaveGanglia, self).start(env)

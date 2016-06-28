@@ -250,6 +250,7 @@ def chmod_up(lowest, mode, seen=[]):
         return
     return chmod_up(os.sep.join(lowest.split(os.sep)[:-1]), mode, seen=seen)
 
+
 def check_port(number):
     """
     Check if a port is in use and return details about what is using the port
@@ -260,6 +261,7 @@ def check_port(number):
         if int(number) == int(portstat[3][2]):
             return portstat
     return None
+
 
 class ApacheScript(res.Script):
     """

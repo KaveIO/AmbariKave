@@ -58,7 +58,7 @@ class FreeipaServer(Script):
         # Check that all known FreeIPA ports are available
         needed_ports = [88, 123, 389, 464, 636]
         if tos.lower() in ["centos7"]:
-             needed_ports = [params.pki_secure_port, params.pki.insecure_port] + needed_ports
+            needed_ports = [params.pki_secure_port, params.pki.insecure_port] + needed_ports
         for port in needed_ports:
             self.checkport(port)
 
@@ -73,7 +73,6 @@ class FreeipaServer(Script):
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
             % (params.realm, params.directory_password, admin_password, _hostname)
-
 
         # ipa-server install command. Currently --selfsign is mandatory because
         # of some anoying centos6.5 problems. The underling installer uses an

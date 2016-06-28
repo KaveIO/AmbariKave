@@ -18,7 +18,6 @@
 import freeipa
 import os
 import datetime
-import kavecommon as kc
 
 from resource_management import *
 
@@ -32,6 +31,7 @@ class FreeipaServer(Script):
         """
         Certain ports must be free
         """
+        import kavecommon as kc
         check = kc.check_port(number)
         if check is not None:
             raise OSError("The port number %s is already in use on this machine. You must reconfigure FreeIPA ports"
@@ -58,6 +58,7 @@ class FreeipaServer(Script):
         Package('python-pip')
         Execute('pip install psutil')
 
+        import kavecommon as kc
         tos = kc.detect_linux_version()
         # Check that all known FreeIPA ports are available
         needed_ports = [88, 123, 389, 464, 636]

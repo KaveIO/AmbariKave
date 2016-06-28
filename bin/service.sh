@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -169,6 +169,7 @@ function buildConfiguration {
 function runList {
   echo "Known services:"
   echo "	GITLAB"
+  echo "	KAVEGANGLIA"
   echo "	FREEIPA"
   echo "	KAVETOOLBOX"
   echo "	KAVELANDING"
@@ -271,6 +272,11 @@ elif [ $service = "MAIL" ]; then
   component="POSTFIX_SERVER"
 elif [ $service = "GANGLIA" ]; then
   component="GANGLIA_SERVER"
+elif [ $service = "KAVEGANGLIA" ]; then
+  component="KAVEGANGLIA_SERVER"
+elif [ $service = "KAVEGANGLIA_MONITOR" ]; then
+  component="KAVEGANGLIA_MONITOR"
+  service="KAVEGANGLIA"
 elif [ $service = "GANGLIA_MONITOR" ]; then
   component="GANGLIA_MONITOR"
 elif [ $service = "ARCHIVA" ]; then

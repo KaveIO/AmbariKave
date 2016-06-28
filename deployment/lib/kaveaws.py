@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -33,6 +33,10 @@ import re
 import threading
 import thread
 import Queue
+
+# Centos6 has the username root, Centos7 has the username 'centos'
+default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
+default_os = "Centos7"
 
 
 def testaws():
@@ -98,7 +102,7 @@ def chooseamiid(os, region):
     return ""
 
 
-def up_centos7(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
+def up_default(type, security_group, keys, count=1, subnet=None, ambaridev=False):
     region = "default"
     amiid = ""
     if subnet is not None:
@@ -113,20 +117,20 @@ def up_centos7(type, secGroup, keys, count=1, subnet=None, ambaridev=False):
                 "image with ambari pre-installed with your keys and in your region. See the script that generates "
                 "the dev image for that.")
     else:
-        amiid = chooseamiid("Centos7", region)
-    return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+        amiid = chooseamiid(default_os, region)
+    return upamiid(amiid, type=type, security_group=security_group, keys=keys, count=count, subnet=subnet)
 
 
-def up_os(os, type, secGroup, keys, count=1, subnet=None):
+def up_os(os, type, security_group, keys, count=1, subnet=None):
     region = "default"
     amiid = ""
     if subnet is not None:
         region = detect_region()
     amiid = chooseamiid(os, region)
-    return upamiid(amiid, type=type, secGroup=secGroup, keys=keys, count=count, subnet=subnet)
+    return upamiid(amiid, type=type, security_group=security_group, keys=keys, count=count, subnet=subnet)
 
 
-def chooseitype(instancetype):
+def chooseinstancetype(instancetype):
     """
     Send in one instance type, read the locally configured aws region and return something that works here
     """
@@ -134,7 +138,7 @@ def chooseitype(instancetype):
     # ap region has different strange behaviour for new generation instances, default centos image not hvm
     regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
-                                       "c4.2xlarge": "c3.2xlarge"},
+                                       "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
                       "eu-west": {"m1.medium": "t2.small"}}
     try:
         return regioninstdict[region][instancetype]
@@ -142,13 +146,13 @@ def chooseitype(instancetype):
         return instancetype
 
 
-def upamiid(amiid, type, secGroup, keys, count=1, subnet=None):
+def upamiid(amiid, type, security_group, keys, count=1, subnet=None):
     cmd = " ec2 run-instances --image-id " + amiid + " --count " + str(
         count) + " --instance-type " + type + " --key-name " + keys
     if subnet is not None:
-        cmd = cmd + " --subnet " + subnet + " --security-group-ids " + secGroup
+        cmd = cmd + " --subnet " + subnet + " --security-group-ids " + security_group
     else:
-        cmd = cmd + " --security-groups " + secGroup
+        cmd = cmd + " --security-groups " + security_group
     return runawstojson(cmd)
 
 
@@ -156,8 +160,24 @@ def iid_from_up_json(upjsons):
     return [inst["InstanceId"] for inst in upjsons["Instances"]]
 
 
-def name_instance(iid, name):
-    return runawstojson("ec2 create-tags --tags Key=Name,Value=" + name + " --resources " + iid)
+def name_resource(resource, name):
+    return tag_resource(resource, 'Name', name)
+
+
+def tag_resource(resource, tkey, tvalue):
+    """
+    Add one tag to one resource
+    """
+    return runawstojson("ec2 create-tags --tags Key=" + tkey + ",Value=" + tvalue + " --resources " + resource)
+
+
+def tag_resources(resources, tags):
+    """
+    Add many tags to several resources
+    tags is a dict, resources is a list
+    """
+    taglist = ["Key=" + k + ",Value=" + v for k, v in tags.iteritems()]
+    return runawstojson("ec2 create-tags --tags " + ' '.join(taglist) + " --resources " + ' '.join(resources))
 
 
 def desc_instance(iid=None):
@@ -167,10 +187,58 @@ def desc_instance(iid=None):
         return runawstojson("ec2 describe-instances")
 
 
+def volumeids_from_instance(iid):
+    resp = runawstojson("ec2 describe-volumes --filter  Name=attachment.instance-id,Values=" + iid)
+    return [v["VolumeId"] for v in resp["Volumes"]]
+
+
+def instances_from_sn_or_sg(sn_or_sg):
+    """
+    Take a subnet or a security group, and return all the unique instances
+    """
+    resp1 = runawstojson("ec2 describe-instances --filter  Name=subnet-id,Values=" + sn_or_sg)
+    resp2 = runawstojson("ec2 describe-instances --filter  Name=group-id,Values=" + sn_or_sg)
+    rets = []
+    for jj in [resp1, resp2]:
+        for res in jj["Reservations"]:
+            rets = rets + [r["InstanceId"] for r in res["Instances"]]
+    return list(set(rets))
+
+
+def subnets_from_vpcid(id):
+    resp = runawstojson("ec2 describe-subnets --filter  Name=vpc-id,Values=" + id)
+    return [v["SubnetId"] for v in resp["Subnets"]]
+
+
+def sgroups_from_vpcid(id):
+    resp = runawstojson("ec2 describe-security-groups --filter  Name=vpc-id,Values=" + id)
+    return [v["GroupId"] for v in resp["SecurityGroups"]]
+
+
+def find_all_child_resources(resource):
+    """
+    Return a list of all child resources to a given resource
+    Includes the resource itself
+
+    if the resource is a vpc, it will cascade to all subgroups/subnets/machines/volumes
+    if the resource is a subgroup or subnet it will cascade to all machines/volumes
+    if the resource is an instance, it will cascade to all volumes
+    """
+    resources = [resource] + subnets_from_vpcid(resource) + sgroups_from_vpcid(resource)
+    machines = []
+    for iresource in resources:
+        machines = machines + instances_from_sn_or_sg(iresource)
+    resources = resources + machines
+    volumes = []
+    for iresource in ([resource] + machines):
+        volumes = volumes + volumeids_from_instance(iresource)
+    return list(set(resources + volumes))
+
+
 def killinstance(iid, state="terminate"):
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
             i["Reservations"][0]["Instances"]):
@@ -180,12 +248,12 @@ def killinstance(iid, state="terminate"):
     return runawstojson('ec2 ' + state + '-instances --instance-ids ' + iid)
 
 
-def killvolume(volID):
-    descvol = runawstojson("ec2 describe-volumes --volume " + volID)
+def killvolume(vol_id):
+    descvol = runawstojson("ec2 describe-volumes --volume " + vol_id)
     # print descvol
     if descvol['Volumes'][0]["State"] != "available":
-        raise ValueError("Volume not available to be killed " + volID)
-    return runawstojson("ec2 delete-volume --volume " + volID)
+        raise ValueError("Volume not available to be killed " + vol_id)
+    return runawstojson("ec2 delete-volume --volume " + vol_id)
 
 
 def createimage(iid, aname, description):
@@ -199,7 +267,7 @@ def createimage(iid, aname, description):
 def pub_ip(iid):
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
             i["Reservations"][0]["Instances"]):
@@ -213,7 +281,7 @@ def pub_ip(iid):
 def priv_ip(iid):
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     if "Reservations" not in i or not len(i["Reservations"]) or "Instances" not in i["Reservations"][0] or not len(
             i["Reservations"][0]["Instances"]):
@@ -241,7 +309,7 @@ def add_new_ebs_vol(iid, conf, access_key):
     """
     try:
         i = desc_instance(iid)
-    except RuntimeError:
+    except lD.ShellExecuteError:
         raise ValueError(iid + " is not one of your instance IDs")
     # get a reference to this instance
     ip = pub_ip(iid)
@@ -266,24 +334,24 @@ def add_new_ebs_vol(iid, conf, access_key):
         if tag["Key"] == "Name":
             instnam = tag["Value"]
     # print voljson
-    volID = voljson["VolumeId"]
-    name_instance(volID, instnam + conf["Mount"].replace("/", "_"))
+    vol_id = voljson["VolumeId"]
+    name_resource(vol_id, instnam + conf["Mount"].replace("/", "_"))
     time.sleep(5)
     count = 0
     while count < 10:
-        descvol = runawstojson("ec2 describe-volumes --volume " + volID)
+        descvol = runawstojson("ec2 describe-volumes --volume " + vol_id)
         # print descvol
         if descvol['Volumes'][0]["State"] == "available":
             break
         time.sleep(5)
         count = count + 1
     resjson = runawstojson(
-        "ec2 attach-volume --volume-id " + volID + " --instance-id " + iid + " --device " + conf["Attach"])
+        "ec2 attach-volume --volume-id " + vol_id + " --instance-id " + iid + " --device " + conf["Attach"])
     # print resjson
     time.sleep(5)
     count = 0
     while count < 10:
-        descvol = runawstojson("ec2 describe-volumes --volume " + volID)
+        descvol = runawstojson("ec2 describe-volumes --volume " + vol_id)
         # print descvol
         if descvol['Volumes'][0]['Attachments'][0]["State"] == "attached":
             break
@@ -293,7 +361,7 @@ def add_new_ebs_vol(iid, conf, access_key):
     remote.run("chmod a+x fdiskwrap.sh")
     try:
         remote.run("./fdiskwrap.sh " + conf["Fdisk"])
-    except RuntimeError:
+    except lD.ShellExecuteError:
         time.sleep(30)
         remote.run("./fdiskwrap.sh " + conf["Fdisk"])
     remote.run("mkfs.ext4 -b 4096 " + conf["Fdisk"] + "1 ")
@@ -305,8 +373,8 @@ def add_new_ebs_vol(iid, conf, access_key):
         "Mount"] + "/ ; fi'")
     res = remote.run("df -hP")
     if conf["Mount"] not in res:
-        raise RuntimeError("Could not mount the requested disk, resulted in " + res)
-    return True
+        raise lD.ShellExecuteError("Could not mount the requested disk, resulted in " + res)
+    return vol_id
 
 
 class _add_ebs_volumesThread(threading.Thread):
@@ -379,7 +447,7 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     #                 print [ord(ki) for ki in k], [ord(vi) for vi in v]
     #             else:
     #                 print [ord(ki) for ki in k]
-    itemPool = Queue.Queue()
+    item_pool = Queue.Queue()
     for iid, mounts in zip(iids, mounts):
         # print iid, mounts
         # sys.__stdout__.flush()
@@ -387,11 +455,11 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
             raise TypeError("Mounts must be a _list_ of mounts...")
         if type(iid) is list:
             raise TypeError("At this point, iid should be a string!...")
-        itemPool.put((iid, mounts))
+        item_pool.put((iid, mounts))
     lock = thread.allocate_lock()
     thethreads = []
     for _i in range(nthreads):
-        t = _add_ebs_volumesThread(itemPool, lock, access_key)
+        t = _add_ebs_volumesThread(item_pool, lock, access_key)
         thethreads.append(t)
         t.start()
     # setup a timeout to prevent really infinite loops!
@@ -410,9 +478,9 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     for t in thethreads:
         errs = errs + t.errors
     if len(errs):
-        raise RuntimeError("Problems creating volumes, as: \n" + '\n'.join(errs))
+        raise lD.ShellExecuteError("Problems creating volumes, as: \n" + '\n'.join(errs))
     if len(nd):
-        raise RuntimeError("Timeout in running create volumes as threads")
+        raise lD.ShellExecuteError("Timeout in running create volumes as threads")
 
 
 def waitforstate(iid, state="running"):

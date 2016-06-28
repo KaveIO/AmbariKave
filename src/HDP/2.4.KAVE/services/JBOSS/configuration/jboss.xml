@@ -40,6 +40,13 @@
        <property-type>PASSWORD</property-type>
     </property>
     <property>
+        <name>service_user</name>
+        <value>jboss</value>
+        <description>
+            the user under which jboss will run.
+        </description>
+    </property>
+    <property>
         <name>ip_address</name>
         <value>0.0.0.0</value>
         <description>
@@ -53,6 +60,13 @@
         <description>
             Management ip address JBoss will bind to. 0.0.0.0 implies any ip
             address which. This is not recommended for the management services.
+        </description>
+    </property>
+    <property>
+        <name>JAVA_HOME</name>
+        <value>/usr/lib/jvm/java-1.7*-openjdk*/jre</value>
+        <description>
+			Where to look for java to set JAVA_HOME. Needs to be a java 1.7 version.
         </description>
     </property>
     <property>

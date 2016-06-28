@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ hostname = config["hostname"]
 
 enable_pam_auth = default('configurations/hue/enable_pam_auth', 'True')
 enable_pam_auth = kc.trueorfalse(enable_pam_auth)
+
+server_user = default('configurations/hue/server_user', 'hue')
 
 # Copied from knox configuration!!
 namenode_hosts = default("/clusterHostInfo/namenode_host", None)
@@ -223,7 +225,7 @@ hue_ini = default('configurations/hue/hue_ini', """# Created automatically with 
   use_cherrypy_server=true
 
   # Webserver runs as this user
-  server_user=hue
+  server_user={{server_user}}
   server_group=hadoop
 
   # If set to false, runcpserver will not actually start the web server.

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -162,23 +162,23 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
                     if property.tag != 'property':
                         continue
                     name = property.find('name').text
-                    isRequired = (
+                    is_required = (
                         'require-input' in property.attrib and
                         kc.trueorfalse(property.attrib['require-input'])
                     )
-                    hasDefault = False
+                    has_default = False
                     for child in property:
                         if child.tag != 'value':
                             continue
                         if child.text is not None and len(child.text.strip()):
-                            hasDefault = True
-                            if not isRequired:
+                            has_default = True
+                            if not is_required:
                                 try:
                                     defaults[f][name] = child.text.strip()
                                 except KeyError:
                                     defaults[f] = {name: child.text.strip()}
                             break
-                    if not hasDefault and not isRequired:
+                    if not has_default and not is_required:
                         failingxmlfiles[f] = name
 
         self.assertEqual(len(failingxmlfiles), 0,

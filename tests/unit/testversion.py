@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class TestVersions(unittest.TestCase):
     """
     re = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     ignore = ["ReleaseNotes.md"]
-    checkAgainst = "2.1-Beta-Pre"
+    check_against = "2.2-Beta-Pre"
 
     def findversion(self, fullpath):
         found = []
@@ -63,16 +63,16 @@ class TestVersions(unittest.TestCase):
         foundn = [i[-1][0] for i in found]
         self.assertTrue(len(set(foundn)) == 1, "Mis-matching version numbers found! \n\t" +
                         '\n\t'.join([str(i) for i in found]))
-        foundp = [i for i in foundn if i != self.checkAgainst]
+        foundp = [i for i in foundn if i != self.check_against]
         self.assertFalse(len(set(foundp)), "Versions match, but are not what was expected: "
-                         + self.checkAgainst + " \n\t"
+                         + self.check_against + " \n\t"
                          + '\n\t'.join([str(i) for i in found]))
 
 if __name__ == "__main__":
     test = TestVersions()
     import sys
     if len(sys.argv) > 1:
-        test.checkAgainst = sys.argv[-1]
+        test.check_against = sys.argv[-1]
     suite = unittest.TestSuite()
     suite.addTest(test)
     base.run(suite)

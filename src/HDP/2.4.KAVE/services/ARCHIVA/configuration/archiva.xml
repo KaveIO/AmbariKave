@@ -10,10 +10,20 @@
         </description>
     </property>
     <property>
-        <name>install_directory</name>
-        <value>/opt/archiva</value>
+        <name>install_topdir</name>
+        <value>/opt/</value>
         <description>
-            Install Location for Archiva
+            Install Location for Archiva.
+            I will make a subdirectory called install_subdir in this location.
+            must be at least 4 characters and contain two '/'
+        </description>
+    </property>
+    <property>
+        <name>install_subdir</name>
+        <value>archiva</value>
+        <description>
+            Install Location for Archiva.
+            I will make a subdirectory called this in the install_topdir location.
         </description>
     </property>
 </configuration>

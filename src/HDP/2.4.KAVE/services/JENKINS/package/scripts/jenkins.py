@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -58,14 +58,14 @@ class Jenkins(Script):
         Execute('chkconfig jenkins on')
         self.start(env)
         # using curl to create username password for jenkinsl
-        curlCommand = ('curl -d "username=' + params.JENKINS_ADMIN
-                       + '&password1=' + params.JENKINS_ADMIN_PASSWORD
-                       + '&email=' + params.JENKINS_ADMIN_EMAIL + '&password2='
-                       + params.JENKINS_ADMIN_PASSWORD + '&fullname='
-                       + params.JENKINS_ADMIN + '&Submit=Sign%20up" "http://'
-                       + params.hostname + ':' + str(params.JENKINS_PORT) + '/securityRealm/createAccount"')
+        curl_command = ('curl -d "username=' + params.JENKINS_ADMIN
+                        + '&password1=' + params.JENKINS_ADMIN_PASSWORD
+                        + '&email=' + params.JENKINS_ADMIN_EMAIL + '&password2='
+                        + params.JENKINS_ADMIN_PASSWORD + '&fullname='
+                        + params.JENKINS_ADMIN + '&Submit=Sign%20up" "http://'
+                        + params.hostname + ':' + str(params.JENKINS_PORT) + '/securityRealm/createAccount"')
         try:
-            Execute(curlCommand)
+            Execute(curl_command)
         except Fail as ex:
             print "the curl command met with failure the first time,,,trying in another 60 secs"
             print ex

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -38,15 +38,19 @@ class Jboss(Script):
         Execute('mv %s/jb*/* %s' % (params.installation_dir, params.installation_dir))
         Execute('rm -rf %s/jb*.Final' % params.installation_dir)
         try:
-            grp.getgrnam('jboss')
+            grp.getgrnam(params.service_user)
         except KeyError:
-            Execute('groupadd jboss')
+            Execute('groupadd ' + params.service_user)
         try:
-            pwd.getpwnam('jboss')
+            pwd.getpwnam(params.service_user)
         except KeyError:
-            Execute('useradd -s /bin/bash -g jboss jboss')
+            Execute('useradd -s /bin/bash -g %s %s' % (params.service_user, params.service_user))
 
-        Execute('chown -Rf jboss:jboss %s' % params.installation_dir)
+        Execute('chown -Rf %s:%s %s' % (params.service_user, params.service_user, params.installation_dir))
+
+        import glob
+        if not len(glob.glob(params.JAVA_HOME)):
+            raise ValueError("Could not find JAVA_HOME in location : " + params.JAVA_HOME)
 
         File('/etc/init.d/jboss',
              content=Template("jboss.j2"),

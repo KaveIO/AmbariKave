@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class TestCluster(base.LDTest):
         stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
         ambari, iid = self.remote_from_cluster_stdout(stdout)
         ambari.register()
-        self.wait_for_ambari(ambari, ["inst.stdout", "inst.stderr"])
+        self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
         self.pull(ambari)
         self.wait_for_ambari(ambari)
         self.deploy_blueprint(ambari, pref + ".blueprint.json", pref + ".cluster.json")

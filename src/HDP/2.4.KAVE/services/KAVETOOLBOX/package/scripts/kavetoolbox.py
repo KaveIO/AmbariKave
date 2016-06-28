@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class KaveToolbox(Script):
     def install(self, env):
         import params
         import kavecommon as kc
-
+        Execute('yum clean all')
         self.install_packages(env)
         env.set_params(params)
         # no need to install if already installed ... does not work behind firewall after restart

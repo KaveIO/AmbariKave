@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -118,6 +118,7 @@ if __name__ == "__main__":
     if "GIT" in security_config["AccessKeys"]:
         git = True
         gitenv = security_config["AccessKeys"]["GIT"]
-    lD.deploy_our_soft(remote, pack="kavetoolbox", git=git, gitenv=gitenv)
+    lD.deploy_our_soft(remote, pack="kavetoolbox", git=git,
+                       gitenv=gitenv, options='--' + dest_type)
     # if dest_type == "workstation":
     #    lD.confremotessh(remote)

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG N.V. (unless otherwise stated)
+# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -63,7 +63,8 @@ __kavelanding_plain__ = """Welcome to your KAVE
 |--* Servers
 |  |--* Ambari <a href='http://ambari:8080'>admin</a>
 |  |--* Jenkins <a href='http://ambari:8888'>jenkins</a>
-|  |--* Metrics (['ambari.kave.io'])
+|  |--* Metrics <a href='http://ambari:3000'>grafana</a>
+|  |--* Metrics collector (['ambari.kave.io'])
 |  |--* Zookeeper (['ambari.kave.io'])
 |
 |--* Clients
@@ -77,7 +78,8 @@ __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 <b>Servers</b><p><ul>
   <li>Ambari <a href='http://ambari:8080'>admin</a></li>
   <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
-  <li>Metrics (['ambari.kave.io'])</li>
+  <li>Metrics <a href='http://ambari:3000'>grafana</a></li>
+  <li>Metrics collector (['ambari.kave.io'])</li>
   <li>Zookeeper (['ambari.kave.io'])</li>
 </ul><p><b>Clients</b><p><ul>
   <li>ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']</li>

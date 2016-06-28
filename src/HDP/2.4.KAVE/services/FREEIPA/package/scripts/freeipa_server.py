@@ -53,6 +53,10 @@ class FreeipaServer(Script):
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:
             raise OSError("Failed to determine hostname!")
+        Package('epel-release')
+        Execute('yum clean all')
+        Package('python-pip')
+        Execute('pip install psutil')
 
         tos = kc.detect_linux_version()
         # Check that all known FreeIPA ports are available

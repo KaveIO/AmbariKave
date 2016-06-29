@@ -68,7 +68,7 @@ def detect_region():
 __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtual, 6.5 release media
                                     "eu-west": "ami-30ff5c47",  # good, centos 6 "with updates"
                                     "ap-northeast": "ami-25436924",
-                                    "ap-southeast": "aami-0aaf8858"
+                                    "ap-southeast": "ami-0aaf8858"
                                     },
                         "Centos7": {"default": "ami-e4ff5c93",
                                     "eu-west": "ami-e4ff5c93",
@@ -136,7 +136,7 @@ def chooseinstancetype(instancetype):
     """
     region = "-".join(detect_region().split("-")[0:2])
     # ap region has different strange behaviour for new generation instances, default centos image not hvm
-    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
+    regioninstdict = {"ap-northeast": {"t2.small": "m3.medium", "t2.medium": "m3.medium",
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
                                        "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
                       "eu-west": {"m1.medium": "t2.small"}}

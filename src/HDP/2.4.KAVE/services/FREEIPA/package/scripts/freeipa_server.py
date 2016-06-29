@@ -69,6 +69,7 @@ class FreeipaServer(Script):
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:
             raise OSError("Failed to determine hostname!")
+        Package('gcc')
         Package('epel-release')
         Execute('yum clean all')
         Package('python-pip')

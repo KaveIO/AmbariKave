@@ -62,7 +62,7 @@ class KaveGangliaSlave(Script):
         if params.ipa_host == params.hostname:
             process = Popen(['service', 'ipa', 'status'], stdout=PIPE, stderr=PIPE)
             stdout, stderr = process.communicate()
-            if len(stdout)>7 and stdout[-8:-1].lower() == 'running':
+            if len(stdout) > 7 and stdout[-8:-1].lower() == 'running':
                 Execute('service ipa stop')
                 try:
                     Execute('service gmond start')

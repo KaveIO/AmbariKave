@@ -25,6 +25,9 @@ class SonarQubeRunner(Script):
     installer_cache_path = '/tmp/'
     package = 'sonar-runner-dist-2.4.zip'
 
+    def status(self, env):
+        raise ClientComponentHasNoStatus()
+
     def install(self, env):
         import params
 

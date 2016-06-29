@@ -25,6 +25,9 @@ class MongoClient(MongoBase):
     client_config_path = "/etc/mongoclient.conf"
     mongo_packages = ['mongodb-org-shell', 'mongodb-org-tools']
 
+    def status(self, env):
+        raise ClientComponentHasNoStatus()
+
     def install(self, env):
         import params
         env.set_params(params)

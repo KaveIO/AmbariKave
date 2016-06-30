@@ -55,8 +55,25 @@ class KaveGangliaSlave(Script):
             Execute('chown -R nobody:nobody /var/lib/ganglia/rrds')
 
     def start(self, env):
+        import params
+        from subprocess import Popen, PIPE
         self.configure(env)
-        Execute("service gmond start")
+
+        if params.ipa_host == params.hostname:
+            process = Popen(['service', 'ipa', 'status'], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = process.communicate()
+            if len(stdout) > 7 and stdout[-8:-1].lower() == 'running':
+                Execute('service ipa stop')
+                try:
+                    Execute('service gmond start')
+                except:
+                    Execute('service ipa start')
+                    raise
+                Execute('service ipa start')
+            else:
+                Execute('service gmond start')
+        else:
+            Execute("service gmond start")
 
     def stop(self, env):
         Execute("service gmond stop")

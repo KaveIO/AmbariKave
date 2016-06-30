@@ -26,6 +26,9 @@ class KaveToolbox(Script):
     sttmpdir = "/tmp/kavetoolbox_install/dump"
     kind = "node"
 
+    def status(self, env):
+        raise ClientComponentHasNoStatus()
+
     def install(self, env):
         import params
         import kavecommon as kc

@@ -20,6 +20,7 @@ from resource_management.core.system import System
 import os
 import random
 import string
+import socket
 import kavecommon as kc
 
 config = Script.get_config()
@@ -35,8 +36,20 @@ kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_i
 kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_carbon_port', '2003')
 kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riemann_port', '5555')
 kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
-gangliaslave = default('/clusterHostInfo/kave_ganglia_monitor_hosts', ['unknown'])
+kaveganglia_monitor_hosts = default('/clusterHostInfo/kaveganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
+
+kaveganglia_host = default("/clusterHostInfo/kaveganglia_server_hosts", [False])[0]
+
+ipa_host = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
+
+kaveganglia_host_address = socket.gethostbyname(kaveganglia_host)
+if kaveganglia_host == hostname:
+    kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', kaveganglia_host_address)
+else:
+    kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', '0.0.0.0')
+
+kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0')
 
 www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
 PORT = default('configurations/kaveganglia/PORT', '80')
@@ -119,7 +132,7 @@ kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad
 
 #data_source "my cluster" localhost
 
-data_source "{{kaveganglia_clustername}}" {% for host in gangliaslave %} {{host}}:{{kaveganglia_port}} {% endfor %}
+data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hosts %} {{host}}:{{kaveganglia_port}} {% endfor %}
 
 
 #
@@ -374,8 +387,9 @@ udp_send_channel {
                        # this, the metrics may appear to come from any
                        # interface and the DNS names associated with
                        # those IPs will be used to create the RRDs.
-  #mcast_join = 192.168.1.40
+  #mcast_join = 239.2.11.71
   port = {{kaveganglia_port}}
+  host = {{kaveganglia_host_address}}
   ttl = 1
 }
 
@@ -386,6 +400,8 @@ udp_recv_channel {
   # Size of the UDP buffer. If you are handling lots of metrics you really
   # should bump it up to e.g. 10MB or even higher.
   # buffer = 10485760
+  #mcast_join = 239.2.11.71
+  bind = {{kaveganglia_udp_bind}}
 }
 
 /* You can specify as many tcp_accept_channels as you like to share
@@ -394,6 +410,7 @@ tcp_accept_channel {
   port = {{kaveganglia_port}}
   # If you want to gzip XML output
   gzip_output = no
+  bind = {{kaveganglia_tcp_bind}}
 }
 
 /* Channel to receive sFlow datagrams */

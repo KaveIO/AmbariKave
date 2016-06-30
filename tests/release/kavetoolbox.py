@@ -33,7 +33,7 @@ class TestKaveToolboxRelease(test_kavetoolbox_head.TestKaveToolbox):
     Centos6/7 and Ubuntu can all be tested.
     """
     service = "KaveToolbox-Release"
-    version = "2.1-Beta"
+    version = "2.2-Beta-Pre"
 
     def deploy_ktb(self, ambari):
         if self.ostype.lower().startswith("centos"):

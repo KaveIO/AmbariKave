@@ -118,6 +118,7 @@ if __name__ == "__main__":
     if "GIT" in security_config["AccessKeys"]:
         git = True
         gitenv = security_config["AccessKeys"]["GIT"]
-    lD.deploy_our_soft(remote, pack="kavetoolbox", git=git, gitenv=gitenv)
+    lD.deploy_our_soft(remote, pack="kavetoolbox", git=git,
+                       gitenv=gitenv, options='--' + dest_type)
     # if dest_type == "workstation":
     #    lD.confremotessh(remote)

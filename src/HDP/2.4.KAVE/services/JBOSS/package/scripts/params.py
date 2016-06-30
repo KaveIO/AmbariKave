@@ -18,8 +18,16 @@
 from resource_management import *
 
 config = Script.get_config()
+
 installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as/')
+if not len(installation_dir)>3 or '/' not in installation_dir:
+    raise ValueError("You have set a directory incorrectly! " + installation_dir)
+
 config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/')
+if not len(config_dir)>3 or '/' not in config_dir:
+    raise ValueError("You have set a directory incorrectly! " + config_dir)
+
+service_user = default('configurations/jboss/service_user', 'jboss')
 
 jboss_xmlconf_filename = default('configurations/jboss/jboss_xmlconf_filename', 'standalone.xml')
 jboss_management_filename = default('configurations/jboss/jboss_management_filename', 'mgmt-users.properties')
@@ -27,8 +35,7 @@ jboss_conf_file = installation_dir + config_dir + jboss_xmlconf_filename
 mgmt_users_file = installation_dir + config_dir + jboss_management_filename
 
 
-
-
+JAVA_HOME = default('configurations/jboss/JAVA_HOME', "/usr/lib/jvm/java-1.7*-openjdk*/jre")
 
 management_user = 'admin'
 management_password = default('configurations/jboss/management_password', "NOTAPASSWORD")

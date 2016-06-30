@@ -30,7 +30,6 @@
         { "name" : "AMBARI_SERVER"       },
         { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "METRICS_COLLECTOR"   },
-        { "name" : "METRICS_GRAFANA"     },
         { "name" : "KAVELANDING"         },
         { "name" : "JENKINS_MASTER"      },
         { "name" : "METRICS_MONITOR"     },

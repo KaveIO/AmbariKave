@@ -19,7 +19,6 @@
         { "name" : "AMBARI_SERVER"       },
         { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "METRICS_COLLECTOR"   },
-        { "name" : "METRICS_GRAFANA"     },
         { "name" : "JBOSS_APP_SERVER"    },
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    }

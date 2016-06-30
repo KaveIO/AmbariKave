@@ -15,25 +15,13 @@
 #   limitations under the License.
 #
 ##############################################################################
-import deploylib
-import kclib
-import servicesh
-import scan
-import license
-import pyfilenames
-import testversion
-import testpythonimport
-import verifyxml
-import checkpep8
-import pep8functions
-import pep8variables
-import jsonbpchecks
-import repoimports
 import base
+import ktb_package_root_version
 
-mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, repoimports,
-        pyfilenames, pep8variables, jsonbpchecks, verifyxml]
+mods = [ktb_package_root_version]
+
+
+modargs = {ktb_package_root_version: ['Centos6', 'Centos7', 'Ubuntu14']}
 
 if __name__ == "__main__":
-    base.parallel(mods)
+    base.parallel(mods, modargs)

@@ -15,25 +15,10 @@
 #   limitations under the License.
 #
 ##############################################################################
-import deploylib
-import kclib
-import servicesh
-import scan
-import license
-import pyfilenames
-import testversion
-import testpythonimport
-import verifyxml
-import checkpep8
-import pep8functions
-import pep8variables
-import jsonbpchecks
-import repoimports
-import base
-
-mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, repoimports,
-        pyfilenames, pep8variables, jsonbpchecks, verifyxml]
-
-if __name__ == "__main__":
-    base.parallel(mods)
+"""
+Used by the ktb_package_root_version test script to compile root for release
+"""
+# -----------------
+import kavedefaults as cnf
+# compile ROOT
+cnf.root.options["Strategy"] = "Compile"

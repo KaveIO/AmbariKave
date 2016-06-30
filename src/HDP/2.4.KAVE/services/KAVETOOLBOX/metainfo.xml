@@ -8,7 +8,7 @@
             <comment>The KPMG standard analytics tools. Install as master on all gateway machines, install client on all worker nodes.
             A suite of analysis tools, and user experience features, including python R and ROOT.
             Needs at least 4GB of free space in /opt, with an additional 3GB in /tmp for unpacking during the install</comment>
-            <version>2.1-Beta</version>
+            <version>2.2-Beta-Pre</version>
             <components>
                 <component>
                     <name>KAVETOOLBOXGATE</name>

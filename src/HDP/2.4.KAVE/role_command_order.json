@@ -4,6 +4,7 @@
   "general_deps" : {
     "_comment" : "dependencies for all cases",
     "FREEIPA_CLIENT-INSTALL": ["FREEIPA_SERVER-INSTALL"],
+    "KAVE_GANGLIA_MONITOR-START": ["KAVE_GANGLIA_SERVER-START"],
     "SPARK_THRIFTSERVER-START" : ["HIVE_SERVER-START"]
   }
 }

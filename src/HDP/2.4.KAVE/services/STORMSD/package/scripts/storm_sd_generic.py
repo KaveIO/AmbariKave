@@ -68,6 +68,9 @@ class StormGeneric(Script):
     def configure(self, env):
         return self.configure_storm(env)
 
+    def status(self, env):
+        raise ClientComponentHasNoStatus()
+
     def configure_storm(self, env):
         import params
         env.set_params(params)

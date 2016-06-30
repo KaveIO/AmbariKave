@@ -30,23 +30,7 @@ class FreeipaClient(Script):
     ipa_client_install_lock_file = '/root/ipa_client_install_lock_file'
 
     def status(self, env):
-        if not os.path.exists(self.ipa_client_install_lock_file):
-            raise ComponentIsNotRunning()
-
-    def start(self, env):
-        """
-        Since Ambari 2.1, it appears as if this client needs a start and stop method
-        implemented. Start for a client is simple install, if this has already been called
-        it's no problem, because the lock file will prevent re-install
-        """
-        return self.install(env)
-
-    def stop(self, env):
-        """
-        Since Ambari 2.1, it appears as if this client needs a start and stop method
-        implemented. Stop is very easy to implement, i.e. do nothing.
-        """
-        return True
+        raise ClientComponentHasNoStatus()
 
     def write_resolvconf(self, env):
         """

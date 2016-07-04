@@ -35,7 +35,7 @@ sed_escapes = ['/\\().*[]|']
 sed_replaces = {'8080':  '%s', '8443':  '%s',}
 
 dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
-              "/etc/pki-tomcat", "/usr/lib/python2.6", "/usr/lib/python2.7"]
+              "/etc/pki-tomcat", "/usr/lib/python*/site-packages/ipa*", "/usr/lib/python*/site-packages/pki*"]
 
 # os : fullpath file : original_line : replace_line
 test_file_match_list = {"centos7" : {}}
@@ -48,37 +48,38 @@ def find_all_matches(search, insecure='8080', secure='8443'):
     the ignore_files or ignore_matches
     """
     found = []
-    for sdir in search:
-        print sdir
-        if not os.path.exists(sdir):
-            print "nodir", sdir
-            continue
+    for adir in search:
+        for sdir in glob.glob(adir):
+            print sdir
+            if not os.path.exists(sdir):
+                print "nodir", sdir
+                continue
 
-        for root, dirs, files in os.walk(sdir):
-            for afile in files:
-                if afile in ignore_files:
-                    #print "ignoring", afile
-                    continue
-                if '.' in afile and afile.split('.')[-1] in skip_endings:
-                    continue
-                if not os.path.isfile(root + '/' + afile):
-                    print "nofile", afile
-                    continue
-                if not os.access(root + '/' + afile, os.R_OK):
-                    #print "unreadable", afile
-                    continue
-                try:
-                    #print "trying", afile
-                    with open(root + '/' + afile) as fp:
-                        for i, line in enumerate(fp):
-                            if insecure in line or secure in line:
-                                if line in ignore_matches:
-                                    continue
-                                if afile in ignore_file_matches and line in ignore_file_matches[afile]:
-                                    continue
-                                found.append((root + '/' + afile, i + 1, line))
-                except IOError, UnicodeDecodeError:
-                    continue
+            for root, dirs, files in os.walk(sdir):
+                for afile in files:
+                    if afile in ignore_files:
+                        #print "ignoring", afile
+                        continue
+                    if '.' in afile and afile.split('.')[-1] in skip_endings:
+                        continue
+                    if not os.path.isfile(root + '/' + afile):
+                        print "nofile", afile
+                        continue
+                    if not os.access(root + '/' + afile, os.R_OK):
+                        #print "unreadable", afile
+                        continue
+                    try:
+                        #print "trying", afile
+                        with open(root + '/' + afile) as fp:
+                            for i, line in enumerate(fp):
+                                if insecure in line or secure in line:
+                                    if line in ignore_matches:
+                                        continue
+                                    if afile in ignore_file_matches and line in ignore_file_matches[afile]:
+                                        continue
+                                    found.append((root + '/' + afile, i + 1, line))
+                    except IOError, UnicodeDecodeError:
+                        continue
     return found
 
 def sed_from_matches(matches):
@@ -93,6 +94,7 @@ def sed_from_matches(matches):
         search = iret
         for searchk , searchv in sed_searches.iteritems():
             search = search.replace(searchk,searchv)
+        search = '\\s*'.join(search.split())
         replace = iret
         for replacek , replacev in sed_replaces.iteritems():
             replace = replace.replace(searchk,searchv)

@@ -58,7 +58,7 @@ class Mysql(Script):
     def status(self, env):
         import status_params
 
-        Execute('pgrep -l "^%s$"' % status_params.daemon_name)
+        Execute('pgrep -l "^%s$"' % status_params.status_daemon_name)
 
 
 if __name__ == "__main__":

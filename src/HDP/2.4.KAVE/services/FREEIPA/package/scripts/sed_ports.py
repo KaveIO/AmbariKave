@@ -172,28 +172,30 @@ def check_original_from_json(regexdict):
     for afile, lines in  regexdict.iteritems():
         if os.path.exists(afile+'.bak'):
                 afile = afile+'.bak'
+        orig_lines = []
         with open(afile) as fp:
-            orig_lines=afile.readlines()
-            for linenum, original, search, replace, expected in lines:
-                if len(orig_lines)<linenum:
-                    raise ValueError("File not long enough! " + afile + " linenum " + linenum)
-                if orig_lines[int(linenum) -1] != original:
-                    raise ValueError("Expected line to replace not found! "
-                                     + afile + " linenum " + linenum
-                                     + " " + original)
+            orig_lines=fp.readlines()
+        for linenum, original, search, replace, expected in lines:
+            if len(orig_lines)<linenum:
+                raise ValueError("File not long enough! " + afile + " linenum " + linenum)
+            if orig_lines[int(linenum) -1] != original:
+                raise ValueError("Expected line to replace not found! "
+                                 + afile + " linenum " + linenum
+                                 + " " + original)
 
 
 def check_changed_from_json(regexdict):
     for afile, lines in  regexdict.iteritems():
+        changed_lines = []
         with open(afile) as fp:
-            changed_lines=afile.readlines()
-            for linenum, original, search, replace, expected in lines:
-                if len(changed_lines)<linenum:
-                    raise ValueError("File not long enough! " + afile + " linenum " + linenum)
-                if changed_lines[int(linenum) -1] != expected:
-                    raise ValueError("Expected line not replaced! "
-                                     + afile + " linenum " + linenum
-                                     + " " + expected)
+            changed_lines=fp.readlines()
+        for linenum, original, search, replace, expected in lines:
+            if len(changed_lines)<linenum:
+                raise ValueError("File not long enough! " + afile + " linenum " + linenum)
+            if changed_lines[int(linenum) -1] != expected:
+                raise ValueError("Expected line not replaced! "
+                                 + afile + " linenum " + linenum
+                                 + " " + expected)
 
 
 # Need function that detects if two json dicts are equal

@@ -61,6 +61,8 @@ def find_all_matches(search, insecure='8080', secure='8443'):
             if sdir in ignore_dirs:
                 continue
             for root, dirs, files in os.walk(sdir):
+                if root in ignore_dirs:
+                    continue
                 for afile in files:
                     if afile in ignore_files:
                         #print "ignoring", afile

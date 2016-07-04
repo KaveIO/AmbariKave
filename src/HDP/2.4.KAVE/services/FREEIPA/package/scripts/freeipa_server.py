@@ -78,7 +78,7 @@ class FreeipaServer(Script):
         import kavecommon as kc
         tos = kc.detect_linux_version()
         # Check that all known FreeIPA ports are available
-        needed_ports = [88, 123, 389, 464, 636]
+        needed_ports = [88, 123, 389, 464, 636, 8009]
         if tos.lower() in ["centos7"]:
             needed_ports = [params.pki_secure_port, params.pki_insecure_port] + needed_ports
         for port in needed_ports:

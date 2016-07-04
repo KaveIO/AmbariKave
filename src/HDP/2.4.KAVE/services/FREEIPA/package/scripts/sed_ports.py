@@ -98,6 +98,7 @@ def sed_from_matches(matches):
         replace = iret + ''
         for replacek , replacev in sed_replaces.iteritems():
             replace = replace.replace(replacek,replacev)
+        replace = replace.replace("\n","")
         ret.append((search,replace))
     return ret
 

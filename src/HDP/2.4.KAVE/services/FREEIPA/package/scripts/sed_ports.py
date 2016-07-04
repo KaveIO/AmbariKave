@@ -29,7 +29,7 @@ ipa_hostname = 'ambari.kave.io'
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
                 'big5freq.py', 'cacert.pem', 'unistring.py']
 ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
-skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak', 'bkp', 'ipabkp']
+skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak', 'bkp', 'ipabkp', 'rebak']
 ignore_matches = ["#ServerName www.example.com:8443"]
 
 comment_in_manually = ["#CONNECTOR_PORT", "# pki_https_port", "# pki_http_port", "#CONNECTOR_PORT"]
@@ -162,16 +162,16 @@ def create_match_dictionary(saveas=None):
 def apply_regex_from_json(regexdict):
     for afile, lines in  regexdict.iteritems():
         for linenum, original, search, replace, expected in lines:
-            if not os.path.exists(afile+'.bak'):
-                process = subprocess.Popen(['cp','-f', afile, afile+'.bak'])
+            if not os.path.exists(afile+'.rebak'):
+                process = subprocess.Popen(['cp','-f', afile, afile+'.rebak'])
             command = ['sed', '-i','s/' + search + '/' + replace + '/', afile]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output = process.communicate()
 
 def check_original_from_json(regexdict):
     for afile, lines in  regexdict.iteritems():
-        if os.path.exists(afile+'.bak'):
-                afile = afile+'.bak'
+        if os.path.exists(afile+'.rebak'):
+                afile = afile+'.rebak'
         orig_lines = []
         with open(afile) as fp:
             orig_lines=fp.readlines()

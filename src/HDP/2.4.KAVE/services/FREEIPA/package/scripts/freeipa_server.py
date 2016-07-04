@@ -44,7 +44,6 @@ class FreeipaServer(Script):
             err = ("The port number %s is already in use on this machine. You must reconfigure FreeIPA ports"
                    " or install FreeIPA on a different node of your cluster. "
                    "\n\t (fd, family, type, laddr, raddr, status, pid) \n\t %s "
-                   "\n\t [user, call, status] \n\t %s"
                    % (number, check.__str__())
                    )
             # add process info if accessible

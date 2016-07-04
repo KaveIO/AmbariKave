@@ -30,13 +30,23 @@ ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
                 'big5freq.py', 'cacert.pem', 'unistring.py']
 ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
 skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak', 'bkp', 'ipabkp']
-ignore_matches = []
+ignore_matches = ["#ServerName www.example.com:8443"]
+
+comment_in_manually = ["#CONNECTOR_PORT", "# pki_https_port", "# pki_http_port", "#CONNECTOR_PORT"]
+
 ignore_file_matches = {}
 match_files = []
-sed_searches = {'8080':  '[0-9][0-9][0-9][0-9]',
-                '8443':  '[0-9][0-9][0-9][0-9]'}
+
+
+start_insecure = '8080'
+start_secure = '8443'
+pki_insecure_port = '8081'
+pki_secure_port = '8444'
+
+sed_searches = {start_insecure:  '[0-9][0-9][0-9][0-9]',
+                start_secure:  '[0-9][0-9][0-9][0-9]'}
 sed_escapes = '\\/().*[]|'
-sed_replaces = {'8080':  '%s', '8443':  '%s',}
+sed_replaces = {start_insecure:  pki_insecure_port, start_secure:  pki_secure_port}
 
 dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
               "/etc/pki-tomcat", "/usr/lib/python*/site-packages/ipa*", "/usr/lib/python*/site-packages/pki*"]
@@ -46,7 +56,9 @@ test_file_match_list = {"centos7" : {}}
 
 # %TODO: something with the comment lines! To find them with the grep
 
-def find_all_matches(search, insecure='8080', secure='8443'):
+
+
+def find_all_matches(search):
     """
     Iterate through a search path, find all strings matching 8080 or 8443
     return the files/line-numbers/line-content so long as they dont'appear in
@@ -79,7 +91,8 @@ def find_all_matches(search, insecure='8080', secure='8443'):
                         #print "trying", afile
                         with open(root + '/' + afile) as fp:
                             for i, line in enumerate(fp):
-                                if insecure in line or secure in line:
+                                line = line.replace('\n','')
+                                if start_insecure in line or start_secure in line:
                                     if line in ignore_matches:
                                         continue
                                     if afile in ignore_file_matches and line in ignore_file_matches[afile]:
@@ -113,15 +126,31 @@ def sed_from_matches(matches):
         for replacek , replacev in sed_replaces.iteritems():
             replace = replace.replace(replacek,replacev)
         replace = replace.replace("\n","")
+        if line.strip().startswith('#'):
+            for fc in comment_in_manually:
+                if line.strip().startswith(fc):
+                    replace = replace.replace("# ","").replace("#","")
         ret.append((search,replace))
     return ret
 
 
 
 matches = find_all_matches(dir_search)
-print '\n\t'.join([m.__str__() for m in matches])
-seds = sed_from_matches([m[-1] for m in matches])
-print '\n\t'.join([s.__str__() for s in seds])
+#print '\n\t'.join([m.__str__() for m in matches])
+#seds = sed_from_matches([m[-1] for m in matches])
+#print '\n\t'.join([s.__str__() for s in seds])
+c7_dict = {}
+for filename, linenum, line in matches:
+    search, replace = sed_from_matches([line])
+    expected = line.replace(start_secure, pki_secure_port)
+    expected = expected.replace(start_insecure, pki_insecure_port)
+    try:
+        c7_dict[filename].append((linenum, line, search, replace, expected))
+    except KeyError:
+        c7_dict[filename] = [(linenum, line, search, replace, expected)]
+    print filename, c7_dict[filename][-1]
+
+#print c7_dict
 
 import sys
 sys.exit()

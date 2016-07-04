@@ -97,7 +97,7 @@ def sed_from_matches(matches):
         search = '\\s*'.join(search.split())
         replace = iret + ''
         for replacek , replacev in sed_replaces.iteritems():
-            replace = replace.replace(searchk,searchv)
+            replace = replace.replace(replacek,replacev)
         ret.append((search,replace))
     return ret
 

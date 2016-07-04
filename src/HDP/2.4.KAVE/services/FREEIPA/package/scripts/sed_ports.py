@@ -173,7 +173,7 @@ def check_original_from_json(regexdict):
         if os.path.exists(afile+'.bak'):
                 afile = afile+'.bak'
         with open(afile) as fp:
-            orig_lines=file.readlines()
+            orig_lines=afile.readlines()
             for linenum, original, search, replace, expected in lines:
                 if len(orig_lines)<linenum:
                     raise ValueError("File not long enough! " + afile + " linenum " + linenum)
@@ -186,7 +186,7 @@ def check_original_from_json(regexdict):
 def check_changed_from_json(regexdict):
     for afile, lines in  regexdict.iteritems():
         with open(afile) as fp:
-            changed_lines=file.readlines()
+            changed_lines=afile.readlines()
             for linenum, original, search, replace, expected in lines:
                 if len(changed_lines)<linenum:
                     raise ValueError("File not long enough! " + afile + " linenum " + linenum)

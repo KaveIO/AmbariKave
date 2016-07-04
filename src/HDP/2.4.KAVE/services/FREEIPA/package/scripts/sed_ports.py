@@ -164,13 +164,38 @@ def apply_regex_from_json(regexdict):
         for linenum, original, search, replace, expected in lines:
             if not os.path.exists(afile+'.bak'):
                 process = subprocess.Popen(['cp','-f', afile, afile+'.bak'])
-            command = ['sed', '-i','s/' + search + '/' + replace, afile]
-            print command
+            command = ['sed', '-i','s/' + search + '/' + replace + '/', afile]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output = process.communicate()
 
-# Need function that detects if the line is where I expected it to be!
-# Need function that checks if the outcome was as expected
+def check_original_from_json(regexdict):
+    for afile, lines in  regexdict.iteritems():
+        if os.path.exists(afile+'.bak'):
+                afile = afile+'.bak'
+        with open(afile) as fp:
+            orig_lines=file.readlines()
+            for linenum, original, search, replace, expected in lines:
+                if len(orig_lines)<linenum:
+                    raise ValueError("File not long enough! " + afile + " linenum " + linenum)
+                if orig_lines[int(linenum) -1] != original:
+                    raise ValueError("Expected line to replace not found! "
+                                     + afile + " linenum " + linenum
+                                     + " " + original)
+
+
+def check_changed_from_json(regexdict):
+    for afile, lines in  regexdict.iteritems():
+        with open(afile) as fp:
+            changed_lines=file.readlines()
+            for linenum, original, search, replace, expected in lines:
+                if len(changed_lines)<linenum:
+                    raise ValueError("File not long enough! " + afile + " linenum " + linenum)
+                if changed_lines[int(linenum) -1] != expected:
+                    raise ValueError("Expected line not replaced! "
+                                     + afile + " linenum " + linenum
+                                     + " " + expected)
+
+
 # Need function that detects if two json dicts are equal
 # need dynamic port in the JSON file, something like {{pki_... port}}, like a template...
 
@@ -181,6 +206,8 @@ loaded = {}
 with open(os.path.dirname(__file__) + '/centos7_server.json') as fp:
     loaded = json.loads(fp.read())
 apply_regex_from_json(loaded)
+check_original_from_json(loaded)
+check_changed_from_json(loaded)
 import sys
 
 sys.exit()

@@ -159,8 +159,28 @@ def create_match_dictionary(saveas=None):
             json.dump(c7_dict, fp)
     return c7_dict
 
+def apply_regex_from_json(regexdict):
+    for afile, lines in  regexdict:
+        for linenum, original, search, replace, expected in lines:
+            if not os.path.exists(afile+'.bak'):
+                process = subprocess.Popen(['cp','-f', afile, afile+'.bak'])
+            command = ['sed', '-i','s/' + search + '/' + replace, afile]
+            print command
+            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output = process.communicate()
+
+# Need function that detects if the line is where I expected it to be!
+# Need function that checks if the outcome was as expected
+# Need function that detects if two json dicts are equal
+# need dynamic port in the JSON file, something like {{pki_... port}}, like a template...
+
 #print c7_dict
 print create_match_dictionary("test_match.json")
+import json
+loaded = {}
+with open(os.path.dirname(__file__) + 'centos7_server.py') as fp:
+    loaded = json.load(fp)
+apply_regex_from_json(fp)
 import sys
 
 sys.exit()

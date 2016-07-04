@@ -177,10 +177,10 @@ def check_original_from_json(regexdict):
             orig_lines=fp.readlines()
         for linenum, original, search, replace, expected in lines:
             if len(orig_lines)<linenum:
-                raise ValueError("File not long enough! " + afile + " linenum " + linenum)
-            if orig_lines[int(linenum) -1] != original:
+                raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
+            if orig_lines[int(linenum) -1].replace('\n','') != original:
                 raise ValueError("Expected line to replace not found! "
-                                 + afile + " linenum " + linenum
+                                 + afile + " linenum " + str(linenum)
                                  + " " + original)
 
 
@@ -191,10 +191,10 @@ def check_changed_from_json(regexdict):
             changed_lines=fp.readlines()
         for linenum, original, search, replace, expected in lines:
             if len(changed_lines)<linenum:
-                raise ValueError("File not long enough! " + afile + " linenum " + linenum)
-            if changed_lines[int(linenum) -1] != expected:
+                raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
+            if changed_lines[int(linenum) -1].replace('\n','') != expected:
                 raise ValueError("Expected line not replaced! "
-                                 + afile + " linenum " + linenum
+                                 + afile + " linenum " + str(linenum)
                                  + " " + expected)
 
 

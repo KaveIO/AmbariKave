@@ -88,14 +88,14 @@ def sed_from_matches(matches):
     """
     ret = []
     for line in matches:
-        iret = line
+        iret = line + ''
         for sesc in sed_escapes:
             iret = iret.replace(sesc,'\\'+sesc)
-        search = iret
+        search = iret + ''
         for searchk , searchv in sed_searches.iteritems():
             search = search.replace(searchk,searchv)
         search = '\\s*'.join(search.split())
-        replace = iret
+        replace = iret + ''
         for replacek , replacev in sed_replaces.iteritems():
             replace = replace.replace(searchk,searchv)
         ret.append((search,replace))

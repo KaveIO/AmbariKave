@@ -29,7 +29,7 @@ ipa_hostname = 'ambari.kave.io'
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
                 'big5freq.py', 'cacert.pem', 'unistring.py']
 ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
-skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak']
+skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak', 'bkp', 'ipabkp']
 ignore_matches = []
 ignore_file_matches = {}
 match_files = []

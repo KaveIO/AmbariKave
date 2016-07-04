@@ -101,8 +101,8 @@ def sed_from_matches(matches):
         search = iret + ''
         for searchk , searchv in sed_searches.iteritems():
             search = search.replace(searchk,searchv)
-        addl == (len(search.lstrip()) != len(search) )
-        addr == (len(search.rstrip()) != len(search) )
+        addl = (len(search.lstrip()) != len(search) )
+        addr = (len(search.rstrip()) != len(search) )
         search = '\s*'.join(search.split())
         if addl:
             search = '\s*' + search

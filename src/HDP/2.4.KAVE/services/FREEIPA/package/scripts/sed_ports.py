@@ -58,7 +58,7 @@ def find_all_matches(search, insecure='8080', secure='8443'):
             print sdir
             if not os.path.exists(sdir):
                 continue
-            if adir in ignore_dirs:
+            if sdir in ignore_dirs:
                 continue
             for root, dirs, files in os.walk(sdir):
                 for afile in files:

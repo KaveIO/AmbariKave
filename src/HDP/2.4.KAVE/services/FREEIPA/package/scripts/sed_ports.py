@@ -133,26 +133,26 @@ def sed_from_matches(matches):
         ret.append((search,replace))
     return ret
 
-
-
-matches = find_all_matches(dir_search)
-#print '\n\t'.join([m.__str__() for m in matches])
-#seds = sed_from_matches([m[-1] for m in matches])
-#print '\n\t'.join([s.__str__() for s in seds])
-c7_dict = {}
-for filename, linenum, line in matches:
-    search, replace = sed_from_matches([line])[0]
-    expected = line.replace(start_secure, pki_secure_port)
-    expected = expected.replace(start_insecure, pki_insecure_port)
-    try:
-        c7_dict[filename].append((linenum, line, search, replace, expected))
-    except KeyError:
-        c7_dict[filename] = [(linenum, line, search, replace, expected)]
-    print filename, c7_dict[filename][-1]
+def create_match_dictionary(saveas=None):
+    c7_dict = {}
+    for filename, linenum, line in find_all_matches(dir_search):
+        search, replace = sed_from_matches([line])[0]
+        expected = line.replace(start_secure, pki_secure_port)
+        expected = expected.replace(start_insecure, pki_insecure_port)
+        try:
+            c7_dict[filename].append((linenum, line, search, replace, expected))
+        except KeyError:
+            c7_dict[filename] = [(linenum, line, search, replace, expected)]
+    if saveas is not None:
+        import json
+        with open(saveas,'w') as fp:
+            json.dump(c7_dict, fp)
+    return c7_dict
 
 #print c7_dict
-
+print create_match_dictionary("test_match.json")
 import sys
+
 sys.exit()
 
 secure_port ='8445'

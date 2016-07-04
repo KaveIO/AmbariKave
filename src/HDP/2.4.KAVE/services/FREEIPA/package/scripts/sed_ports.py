@@ -160,7 +160,7 @@ def create_match_dictionary(saveas=None):
     return c7_dict
 
 def apply_regex_from_json(regexdict):
-    for afile, lines in  regexdict:
+    for afile, lines in  regexdict.iteritems():
         for linenum, original, search, replace, expected in lines:
             if not os.path.exists(afile+'.bak'):
                 process = subprocess.Popen(['cp','-f', afile, afile+'.bak'])

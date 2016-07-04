@@ -53,7 +53,7 @@ class FreeipaServer(Script):
                 err = err + ("\n\t [user, call, status] \n\t %s"
                              % ([p.username(), p.cmdline(), p.status()].__str__())
                              )
-                if p.cmdline()[0].split('/')[-1] in expected_services:
+                if p.cmdline()[0].split('/')[-1] in self.expected_services:
                     err = ''
             if len(err):
                 raise OSError(err)

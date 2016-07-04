@@ -179,7 +179,7 @@ print create_match_dictionary("test_match.json")
 import json
 loaded = {}
 with open(os.path.dirname(__file__) + '/centos7_server.json') as fp:
-    loaded = json.load(fp)
+    loaded = json.loads(fp.read())
 apply_regex_from_json(fp)
 import sys
 

@@ -141,7 +141,7 @@ matches = find_all_matches(dir_search)
 #print '\n\t'.join([s.__str__() for s in seds])
 c7_dict = {}
 for filename, linenum, line in matches:
-    search, replace = sed_from_matches([line])
+    search, replace = sed_from_matches([line])[0]
     expected = line.replace(start_secure, pki_secure_port)
     expected = expected.replace(start_insecure, pki_insecure_port)
     try:

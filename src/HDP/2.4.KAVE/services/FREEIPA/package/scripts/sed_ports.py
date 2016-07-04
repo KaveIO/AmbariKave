@@ -104,7 +104,7 @@ def sed_from_matches(matches):
 matches = find_all_matches(dir_search)
 print '\n\t'.join([m.__str__() for m in matches])
 seds = sed_from_matches([m[-1] for m in matches])
-print '\n\t'.join(seds)
+print '\n\t'.join([s.__str__() for s in seds])
 
 import sys
 sys.exit()

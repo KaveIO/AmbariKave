@@ -23,7 +23,9 @@ import  os
 import glob
 import subprocess
 
-ignore_files = ['cacerts']
+ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
+                'big5freq.py', 'cacert.pem', 'unistring.py']
+skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo']
 ignore_matches = []
 ignore_file_matches = {}
 match_files = []
@@ -56,6 +58,8 @@ def find_all_matches(search, insecure='8080', secure='8443'):
             for afile in files:
                 if afile in ignore_files:
                     #print "ignoring", afile
+                    continue
+                if '.' in afile and afile.split('.')[-1] in skip_endings:
                     continue
                 if not os.path.isfile(root + '/' + afile):
                     print "nofile", afile

@@ -46,6 +46,7 @@ pki_secure_port = '8444'
 sed_searches = {start_insecure:  '[0-9][0-9][0-9][0-9]',
                 start_secure:  '[0-9][0-9][0-9][0-9]'}
 sed_escapes = '\\/().*[]|'
+print sed_escapes
 sed_replaces = {start_insecure:  pki_insecure_port, start_secure:  pki_secure_port}
 
 dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
@@ -102,6 +103,13 @@ def find_all_matches(search):
                         continue
     return found
 
+def commentstrip(line):
+    if line.strip().startswith('#'):
+        for fc in comment_in_manually:
+            if line.strip().startswith(fc):
+                line = line.replace("# ","").replace("#","")
+    return line
+
 def sed_from_matches(matches):
     """
     Take a list of strings, and return a list of strings with all the sed replaces
@@ -110,7 +118,9 @@ def sed_from_matches(matches):
     for line in matches:
         iret = line + ''
         for sesc in sed_escapes:
+            print 'replacing ', sesc
             iret = iret.replace(sesc,'\\'+sesc)
+            print iret
         search = iret + ''
         for searchk , searchv in sed_searches.iteritems():
             search = search.replace(searchk,searchv)
@@ -126,12 +136,11 @@ def sed_from_matches(matches):
         for replacek , replacev in sed_replaces.iteritems():
             replace = replace.replace(replacek,replacev)
         replace = replace.replace("\n","")
-        if line.strip().startswith('#'):
-            for fc in comment_in_manually:
-                if line.strip().startswith(fc):
-                    replace = replace.replace("# ","").replace("#","")
+        replace = commentstrip(replace)
         ret.append((search,replace))
     return ret
+
+print sed_from_matches(['   http://test.test  '])[0][0]
 
 def create_match_dictionary(saveas=None):
     c7_dict = {}
@@ -139,6 +148,7 @@ def create_match_dictionary(saveas=None):
         search, replace = sed_from_matches([line])[0]
         expected = line.replace(start_secure, pki_secure_port)
         expected = expected.replace(start_insecure, pki_insecure_port)
+        expected = commentstrip(expected)
         try:
             c7_dict[filename].append((linenum, line, search, replace, expected))
         except KeyError:

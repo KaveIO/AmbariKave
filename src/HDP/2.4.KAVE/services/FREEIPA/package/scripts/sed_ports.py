@@ -23,9 +23,13 @@ import  os
 import glob
 import subprocess
 
+# % TODO: Pick this up from a parameter!
+ipa_hostname = 'ambari.kave.io'
+
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
                 'big5freq.py', 'cacert.pem', 'unistring.py']
-skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo']
+ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
+skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak']
 ignore_matches = []
 ignore_file_matches = {}
 match_files = []
@@ -40,6 +44,7 @@ dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
 # os : fullpath file : original_line : replace_line
 test_file_match_list = {"centos7" : {}}
 
+# %TODO: something with the comment lines! To find them with the grep
 
 def find_all_matches(search, insecure='8080', secure='8443'):
     """
@@ -52,9 +57,9 @@ def find_all_matches(search, insecure='8080', secure='8443'):
         for sdir in glob.glob(adir):
             print sdir
             if not os.path.exists(sdir):
-                print "nodir", sdir
                 continue
-
+            if adir in ignore_dirs:
+                continue
             for root, dirs, files in os.walk(sdir):
                 for afile in files:
                     if afile in ignore_files:

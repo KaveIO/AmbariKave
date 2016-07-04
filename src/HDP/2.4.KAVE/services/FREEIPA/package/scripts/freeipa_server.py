@@ -27,6 +27,7 @@ class FreeipaServer(Script):
     admin_password_file = '/root/admin-password'
     packages = ['ipa-server', 'bind', 'bind-dyndb-ldap']
     expected_services = ['chronyd', 'ntpd', 'ns-slapd']
+
     def checkport(self, number):
         """
         Certain ports must be free

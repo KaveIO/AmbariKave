@@ -17,51 +17,63 @@
 ##############################################################################
 """
 This wonderful script is going to help me create and test 100 different regular expressions
+Usage:
+    --apply json_filename
+    --create json_filename
+    --test json_filename
+
+--apply, perform all SED as given in this json file
+--create, create a new json file with a new list of regex
+--test, check that a given json file contains the correct seds
+        for this machine and that the result of applying these seds worked
+
 """
 import re
-import  os
+import os
 import glob
 import subprocess
 
-# % TODO: Pick this up from a parameter!
-ipa_hostname = 'ambari.kave.io'
+# ###############################################################################
+# Global steering parameters
+# These parameters are only required in the creation and testing of a json file
+# they are not used during the application of the sed
+#
 
+# Which file names to completely ignore on finding the regex
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
                 'big5freq.py', 'cacert.pem', 'unistring.py']
+# Which file directories to completely ignore on finding the regex
 ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
+# Which file extentions to completely ignore on finding the regex
 skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak', 'bkp', 'ipabkp', 'rebak']
+# Which lines to completely ignore on finding the regex
 ignore_matches = ["#ServerName www.example.com:8443"]
-
+# Which file extentions to completely ignore on finding the regex
 comment_in_manually = ["#CONNECTOR_PORT", "# pki_https_port", "# pki_http_port", "#CONNECTOR_PORT"]
 
 ignore_file_matches = {}
-match_files = []
-
 
 start_insecure = '8080'
 start_secure = '8443'
 pki_insecure_port = '8081'
 pki_secure_port = '8444'
 
-sed_searches = {start_insecure:  '[0-9][0-9][0-9][0-9]',
-                start_secure:  '[0-9][0-9][0-9][0-9]'}
+sed_searches = {start_insecure: '[0-9][0-9][0-9][0-9]',
+                start_secure: '[0-9][0-9][0-9][0-9]'}
 sed_escapes = '\\/().*[]|'
-print sed_escapes
-sed_replaces = {start_insecure:  '{{pki_insecure_port}}', start_secure:  '{{pki_secure_port}}'}
+sed_replaces = {start_insecure: '{{pki_insecure_port}}', start_secure: '{{pki_secure_port}}'}
+non_dynamic_replaces = {'{{pki_insecure_port}}': pki_insecure_port, '{{pki_secure_port}}': pki_secure_port}
 
-dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
+dir_search = ["/etc/sysconfig", "/etc/tomcat", "/etc/pki",  # "/etc/httpd", #HTTPD should __not__ be modified!
               "/etc/pki-tomcat", "/usr/lib/python*/site-packages/ipa*", "/usr/lib/python*/site-packages/pki*"]
 
-# os : fullpath file : original_line : replace_line
-test_file_match_list = {"centos7" : {}}
-
-# %TODO: something with the comment lines! To find them with the grep
-
+# ###############################################################################
+# Functional definitions
 
 
 def find_all_matches(search):
     """
-    Iterate through a search path, find all strings matching 8080 or 8443
+    Iterate through a search path, find all strings matching start_insecure or start_secure
     return the files/line-numbers/line-content so long as they dont'appear in
     the ignore_files or ignore_matches
     """
@@ -78,7 +90,7 @@ def find_all_matches(search):
                     continue
                 for afile in files:
                     if afile in ignore_files:
-                        #print "ignoring", afile
+                        # print "ignoring", afile
                         continue
                     if '.' in afile and afile.split('.')[-1] in skip_endings:
                         continue
@@ -86,13 +98,13 @@ def find_all_matches(search):
                         print "nofile", afile
                         continue
                     if not os.access(root + '/' + afile, os.R_OK):
-                        #print "unreadable", afile
+                        # print "unreadable", afile
                         continue
                     try:
-                        #print "trying", afile
+                        # print "trying", afile
                         with open(root + '/' + afile) as fp:
                             for i, line in enumerate(fp):
-                                line = line.replace('\n','')
+                                line = line.replace('\n', '')
                                 if start_insecure in line or start_secure in line:
                                     if line in ignore_matches:
                                         continue
@@ -103,12 +115,18 @@ def find_all_matches(search):
                         continue
     return found
 
+
 def commentstrip(line):
+    '''
+    Some comments in files I need to manually comment in myself
+    This small function is reused several times
+    '''
     if line.strip().startswith('#'):
         for fc in comment_in_manually:
             if line.strip().startswith(fc):
-                line = line.replace("# ","").replace("#","")
+                line = line.replace("# ", "").replace("#", "")
     return line
+
 
 def sed_from_matches(matches):
     """
@@ -119,30 +137,37 @@ def sed_from_matches(matches):
         iret = line + ''
         for sesc in sed_escapes:
             print 'replacing ', sesc
-            iret = iret.replace(sesc,'\\'+sesc)
+            iret = iret.replace(sesc, '\\' + sesc)
             print iret
         search = iret + ''
-        for searchk , searchv in sed_searches.iteritems():
-            search = search.replace(searchk,searchv)
-        search = search.replace("\n","")
-        addl = (len(search.lstrip()) != len(search) )
-        addr = (len(search.rstrip()) != len(search) )
+        for searchk, searchv in sed_searches.iteritems():
+            search = search.replace(searchk, searchv)
+        search = search.replace("\n", "")
+        addl = (len(search.lstrip()) != len(search))
+        addr = (len(search.rstrip()) != len(search))
         search = '\s*'.join(search.split())
         if addl:
             search = '\s*' + search
         if addr:
             search = search + '\s*'
         replace = iret + ''
-        for replacek , replacev in sed_replaces.iteritems():
-            replace = replace.replace(replacek,replacev)
-        replace = replace.replace("\n","")
+        for replacek, replacev in sed_replaces.iteritems():
+            replace = replace.replace(replacek, replacev)
+        replace = replace.replace("\n", "")
         replace = commentstrip(replace)
-        ret.append((search,replace))
+        ret.append((search, replace))
+        # duplicate to also allow changes after the comment is replaced
+        search = commentstrip(search)
+        ret.append((search, replace))
     return ret
 
-print sed_from_matches(['   http://test.test  '])[0][0]
 
 def create_match_dictionary(saveas=None):
+    """
+    Combines all above functions, reads the local filesystem for matches,
+    then returns a a complex dictionary
+    filename: [(line_number, original, search, replace, expected)]
+    """
     c7_dict = {}
     for filename, linenum, line in find_all_matches(dir_search):
         search, replace = sed_from_matches([line])[0]
@@ -155,194 +180,136 @@ def create_match_dictionary(saveas=None):
             c7_dict[filename] = [(linenum, line, search, replace, expected)]
     if saveas is not None:
         import json
-        with open(saveas,'w') as fp:
+        with open(saveas, 'w') as fp:
             json.dump(c7_dict, fp)
     return c7_dict
 
+
 def apply_regex_from_json(regexdict):
-    for afile, lines in  regexdict.iteritems():
+    """
+    When supplied with a dictionary, will sed every file for the regex list provided
+    filename: [(line_number, original, search, replace, expected)]
+    runs:
+    sed -i 's/search/replace/' filename
+    """
+    for afile, lines in regexdict.iteritems():
         for linenum, original, search, replace, expected in lines:
-            if not os.path.exists(afile+'.rebak'):
-                process = subprocess.Popen(['cp','-f', afile, afile+'.rebak'])
-            command = ['sed', '-i','s/' + search + '/' + replace + '/', afile]
+            if not os.path.exists(afile + '.rebak'):
+                process = subprocess.Popen(['cp', '-f', afile, afile + '.rebak'])
+            # run the replaces in case this is not done dynamically by ambari
+            for r, v in non_dynamic_replaces.iteritems():
+                replace = replace.replace(r, k)
+            command = ['sed', '-i', 's/' + search + '/' + replace + '/', afile]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output = process.communicate()
 
+
 def check_original_from_json(regexdict):
-    for afile, lines in  regexdict.iteritems():
-        if os.path.exists(afile+'.rebak'):
-                afile = afile+'.rebak'
+    """
+    When supplied with a dictionary will check that the original os-installed files provided
+     do have the lines written in the right places
+    filename: [(line_number, original, search, replace, expected)]
+    """
+    for afile, lines in regexdict.iteritems():
+        if os.path.exists(afile + '.rebak'):
+            afile = afile + '.rebak'
         orig_lines = []
+        if not os.path.exists(afile):
+            raise NameError('The file I should be editing/checking does not exist! ' + afile)
         with open(afile) as fp:
-            orig_lines=fp.readlines()
+            orig_lines = fp.readlines()
         for linenum, original, search, replace, expected in lines:
-            if len(orig_lines)<linenum:
+            if len(orig_lines) < linenum:
                 raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
-            if orig_lines[int(linenum) -1].replace('\n','') != original:
-                raise ValueError("Expected line to replace not found! "
-                                 + afile + " linenum " + str(linenum)
-                                 + " " + original)
+            if orig_lines[int(linenum) - 1].replace('\n', '') != original:
+                if original.startswith("#"):
+                    # ignore commented-out lines, not important
+                    continue
+                # Don't worry about manually commented-in lines
+                flag = False
+                for comment_removal in comment_in_manually:
+                    if original.startswith(commentstrip(comment_removal)):
+                        flag = True
+                if not flag:
+                    raise ValueError("Expected line to replace not found! "
+                                     + afile + " linenum " + str(linenum)
+                                     + " " + original)
 
 
 def check_changed_from_json(regexdict):
-    for afile, lines in  regexdict.iteritems():
+    """
+    When supplied with a dictionary will check that the overwritten sed-ed files
+     do have the expected lines written in the right places
+    filename: [(line_number, original, search, replace, expected)]
+    """
+    for afile, lines in regexdict.iteritems():
         changed_lines = []
         with open(afile) as fp:
-            changed_lines=fp.readlines()
+            changed_lines = fp.readlines()
         for linenum, original, search, replace, expected in lines:
-            if len(changed_lines)<linenum:
+            if len(changed_lines) < linenum:
                 raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
-            if changed_lines[int(linenum) -1].replace('\n','') != expected:
+            if changed_lines[int(linenum) - 1].replace('\n', '') != expected:
                 raise ValueError("Expected line not replaced! "
                                  + afile + " linenum " + str(linenum)
                                  + " " + expected)
 
 
-# Need function that detects if two json dicts are equal
-# need dynamic port in the JSON file, something like {{pki_... port}}, like a template...
+def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
+    """
+    Check if additional regexs need to be added to the json file
+    Provided with two dictionaries will compare what should have been there
+    raises a Value Error if anything is missing.
+    """
+    missing_files = [f for f in check_this_default_dict if f not in against_this_dynamic_dict]
+    new_files = [f for f in against_this_dynamic_dict if f not in check_this_default_dict]
+    missing_lines = [[f] + list(v) for f, v in check_this_default_dict.iteritems()
+                     if f in against_this_dynamic_dict and v[0] not in
+                     [v[0] for k, v in against_this_dynamic_dict[f].iteritems()]]
+    new_lines = [[f] + list(v) for f, v in against_this_dynamic_dict.iteritems()
+                 if f in check_this_default_dict and v[0] not in
+                 [v[0] for k, v in check_this_default_dict[f].iteritems()]]
 
-#print c7_dict
-print create_match_dictionary("test_match.json")
-import json
-loaded = {}
-with open(os.path.dirname(__file__) + '/centos7_server.json') as fp:
-    loaded = json.loads(fp.read())
-apply_regex_from_json(loaded)
-check_original_from_json(loaded)
-check_changed_from_json(loaded)
-import sys
+    if len(missing_files + new_files + missing_lines + new_lines):
+        print "Missing files: ", missing_files
+        print "Missing lines: ", missing_lines
+        print "New files: ", new_files
+        print "New lines: ", new_lines
+        raise ValueError("New regexs need to be added to this json file")
 
-sys.exit()
+# ###############################################################################
+# Main program
 
-secure_port ='8445'
-insecure_port ='8081'
-
-sed_port_replaces = \
-         {
-         "/root/test_regex/test_regularexpression/services_base.py":
-                         [
-                         "s/\s*'pki-tomcatd@pki-tomcat.service'\s*:\s*\[[0-9][0-9][0-9][0-9]\,\s*[0-9][0-9][0-9][0-9]\]/    'pki-tomcatd@pki-tomcat.service': [%s, %s]/" % (
-                         insecure_port, secure_port),
-                         "s/\s*'pki-tomcat'\s*:\s*\[[0-9][0-9][0-9][0-9]\,\s*[0-9][0-9][0-9][0-9]\]/    'pki-tomcat': [%s, %s]/" % (
-                         insecure_port, secure_port),
-                         "s/\s*'pki-tomcatd'\s*:\s*\[[0-9][0-9][0-9][0-9]\,\s*[0-9][0-9][0-9][0-9]\]/    'pki-tomcatd': [%s, %s]/" % (
-                         insecure_port, secure_port)],
-
-
-         "/etc/sysconfig/pki/tomcat/pki-tomcat/pki-tomcat" :
-                        ["s/\s*PKI_UNSECURE_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/PKI_UNSECURE_PORT=%s/" %insecure_port],
-
-         "/etc/sysconfig/pki-tomcat" :
-                        ["s/\s*#\s*Connector\s*port\s*is\s*[0-9][0-9][0-9][0-9]/# Connector port is %s/" %insecure_port],
-
-
-         "/etc/pki/pki-tomcat/tomcat.conf" :
-                        ["s/\s*#\s*Connector\s*port\s*is\s*[0-9][0-9][0-9][0-9]/# Connector port is %s/" %insecure_port],
-         "/etc/sysconfig/tomcat" :
-                        ["s/\s*#\s*Connector\s*port\s*is\s*[0-9][0-9][0-9][0-9]/# Connector port is %s/" %insecure_port],
-
-             "/root/test_regex/test_regularexpression/server.xml" :
-                        ["s/\s*<Connector\s*port=\s*\"[0-9][0-9][0-9][0-9]\"\s*protocol\s*=\"HTTP\/1\.1\"/<Connector port=\"%s\" protocol=\"HTTP\/1\.1\"/" %insecure_port,
-                         "s/\s*Define\s*a\s*non-SSL\s*HTTP\/\s*1\.1\s*Connector\s*on\s*port\s*[0-9][0-9][0-9][0-9]/Define a non-SSL HTTP\/1\.1 Connector on port %s/" %insecure_port,
-                   "s/\s*redirectPort\s*=\"[0-9][0-9][0-9][0-9]\"\s*\/>/               redirectPort=\"%s\" \/>" %secure_port,
-                   "s/\s*<Connector port=\"[0-9][0-9][0-9][0-9]\"\s*protocol\s*=\"AJP\/1\.3\"\s*redirectPort=\"[0-9][0-9][0-9][0-9]\"\s*\/>/    <Connector port=\"8009\" protocol=\"AJP\/1\.3\" redirectPort=\"%s\" \/>" %secure_port,
-
-                         "s/\s*port=\s*\"[0-9][0-9][0-9][0-9]\"\s*protocol\s*=\"HTTP\/1\.1\"/               port=\"%s\"\s*protocol\s*=\"HTTP\/1\.1\"/" %insecure_port],
-
-
-         "/root/test_regex/test_regularexpression/default.cfg" :
-                    ["s/\s*#\s*pki_https_port\s*=[0-9][0-9][0-9][0-9]$/  pki_https_port=%s/" %secure_port,
-               "s/\s*#\s*pki_http_port\s*=[0-9][0-9][0-9][0-9]$/  pki_http_port=%s/" %insecure_port,
-               "s/\s*pki_security_domain_https_port\s*=\s*'[0-9][0-9][0-9][0-9]'$/pki_security_domain_https_port=%s/g" %secure_port],
-
-         "/root/test_regex/test_regularexpression/services.py" :
-                         ["s/\s*port\s*=\s*[0-9][0-9][0-9][0-9]\/                port = %s/" %secure_port],
-
-
-         "/root/test_regex/test_regularexpression/CS.cfg.ipabkp" :
-                         ["s/\s*http.port\s*=\s*[0-9][0-9][0-9][0-9]$/http.port=%s/" %insecure_port,
-                          "s/\s*pkicreate.unsecure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.unsecure_port=%s/" %insecure_port,
-                          "s/\s*service.unsecurePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.unsecurePort=%s/" %insecure_port,
-                          "s/\s*https.port\s*=\s*[0-9][0-9][0-9][0-9]$/https.port=%s/" %secure_port,
-                          "s/\s*pkicreate.admin_secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.admin_secure_port=%s/" %secure_port,
-                          "s/\s*pkicreate.agent_secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.agent_secure_port=%s/" %secure_port,
-                          "s/\s*pkicreate.ee_secure_client_auth_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.ee_secure_client_auth_port=%s/" %secure_port,
-                          "s/\s*pkicreate.ee_secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.ee_secure_port=%s/" %secure_port,
-                          "s/\s*pkicreate.secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.secure_port=%s/" %secure_port,
-                          "s/\s*service.clientauth_securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.clientauth_securePort=%s/" %secure_port,
-                          "s/\s*service.clientauth_securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.clientauth_securePort=%s/" %secure_port,
-                          "s/\s*service.non_clientauth_securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.non_clientauth_securePort=%s/" %secure_port,
-                          "s/\s*service.securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.securePort=%s/" %secure_port,
-                          "s/\s*ca.Policy.rule.AuthInfoAccessExt.ad0\_location\s*=\s*http:\/\/\s*ambari.kave.io\s*\:\s*[0-9][0-9][0-9][0-9]/ca.Policy.rule.AuthInfoAccessExt.ad0_location_location=http:\/\/ambari.kave.io:%s/" %insecure_port],
-
-
-         "/root/test_regex/test_regularexpression/CS.cfg" :
-                         ["s/\s*http.port\s*=\s*[0-9][0-9][0-9][0-9]$/http.port=%s/" %insecure_port,
-                          "s/\s*pkicreate.unsecure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.unsecure_port=%s/" %insecure_port,
-                          "s/\s*service.unsecurePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.unsecurePort=%s/" %insecure_port,
-                          "s/\s*https.port\s*=\s*[0-9][0-9][0-9][0-9]$/https.port=%s/" %secure_port,
-                          "s/\s*pkicreate.admin_secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.admin_secure_port=%s/" %secure_port,
-                          "s/\s*pkicreate.agent_secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.agent_secure_port=%s/" %secure_port,
-                          "s/\s*pkicreate.ee_secure_client_auth_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.ee_secure_client_auth_port=%s/" %secure_port,
-                          "s/\s*pkicreate.ee_secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.ee_secure_port=%s/" %secure_port,
-                          "s/\s*pkicreate.secure_port\s*=\s*[0-9][0-9][0-9][0-9]$/pkicreate.secure_port=%s/" %secure_port,
-                          "s/\s*service.clientauth_securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.clientauth_securePort=%s/" %secure_port,
-                          "s/\s*service.clientauth_securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.clientauth_securePort=%s/" %secure_port,
-                          "s/\s*service.non_clientauth_securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.non_clientauth_securePort=%s/" %secure_port,
-                          "s/\s*service.securePort\s*=\s*[0-9][0-9][0-9][0-9]$/service.securePort=%s/" %secure_port,
-                          "s/\s*ca.Policy.rule.AuthInfoAccessExt.ad0\_location\s*=\s*http:\/\/\s*ambari.kave.io\s*\:\s*[0-9][0-9][0-9][0-9]/ca.Policy.rule.AuthInfoAccessExt.ad0_location_location=http:\/\/ambari.kave.io:%s/" %insecure_port],
-
-         "/root/test_regex/test_regularexpression/cainstance.py" :
-
-                         ["s/\s*Check\s*that\s*dogtag\s*port\s*([0-9][0-9][0-9][0-9])/    Check that dogtag port (%s)/" %secure_port,
-                          "s/\s*return\s*not\s*ipautil.host\_\port\_\s*open(None\,\s*[0-9][0-9][0-9][0-9])/    return not ipautil.host_port_open(None, %s)/" %secure_port,
-                          "s/\s*api.Backend.ra\_\s*certprofile.override\_\port\s*=\s*[0-9][0-9][0-9][0-9]$/    api.Backend.ra_certprofile.override_port = %s/" %secure_port
-                         ],
-          "/root/test_regex/test_regularexpression/setupAgent.py" :
-                         ["s/\s*server_port\s*=\s*[0-9][0-9][0-9][0-9]$/  server_port = %s/" %insecure_port],
-         "/root/test_regex/test_regularexpression/httpinstance.py" :
-                        ["s/\s*if\s*installutils.update_\s*file(paths.HTTPD_NSS_CONF,\s*'[0-9][0-9][0-9][0-9]',/        if   installutils.update_file(paths.HTTPD_NSS_CONF, \'%s\',/" %secure_port],
-
-         "/root/test_regex/test_regularexpression/dogtag.py" :
-                        ["s/\s*UNSECURE_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/    UNSECURE_PORT = %s/" %insecure_port,
-                        "s/\s*EE_SECURE_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/    EE_SECURE_PORT = %s/" %secure_port,
-                        "s/\s*AGENT_SECURE_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/    AGENT_SECURE_PORT = %s/" %secure_port],
-
-         "/root/test_regex/test_regularexpression/serverConfiguration.py" :
-                        ["s/\s*CLIENT_API_PORT\s*=\s*\"[0-9][0-9][0-9][0-9]\"$/CLIENT_API_PORT = \"%s\"/" %insecure_port,
-                        "s/\s*DEFAULT_SSL_API_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/DEFAULT_SSL_API_PORT = %s/" %secure_port],
-
-         "/root/test_regex/test_regularexpression/pkiconfig.py" :
-                        ["s/\s*PKI_DEPLOYMENT_DEFAULT_TOMCAT_HTTP_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/PKI_DEPLOYMENT_DEFAULT_TOMCAT_HTTP_PORT = %s/" %insecure_port,
-                        "s/\s*PKI_DEPLOYMENT_DEFAULT_TOMCAT_HTTPS_PORT\s*=\s*[0-9][0-9][0-9][0-9]$/PKI_DEPLOYMENT_DEFAULT_TOMCAT_HTTPS_PORT = %s/" %secure_port],
-
-         "/root/test_regex/test_regularexpression/pkiparser.py" :
-                        ["s/\s*default_http_port\s*=\s*'[0-9][0-9][0-9][0-9]'$/        default_http_port =\'%s\'/" %insecure_port,
-                        "s/\s*default_https_port\s*=\s*'[0-9][0-9][0-9][0-9]'$/        default_https_port = \'%s\'/" %secure_port],
-         "/root/test_regex/test_regularexpression/pkiparser.py.orig" :
-                        ["s/\s*default_http_port\s*=\s*'[0-9][0-9][0-9][0-9]'$/        default_http_port =\'%s\'/" %insecure_port,
-                        "s/\s*default_https_port\s*=\s*'[0-9][0-9][0-9][0-9]'$/        default_https_port = \'%s\'/" %secure_port],
-         "/root/test_regex/test_regularexpression/client.py" :
-                        ["s/\s*def\s*\_\_init\_\_(self,\s*protocol\s*=\s*'http',\s*hostname\s*=\s*'localhost',\s*port\s*=\s*'[0-9][0-9][0-9][0-9]',/    def __init__(self, protocol='http', hostname='localhost', port=\'%s\',/" %insecure_port],
-
-         "/root/test_regex/test_regularexpression/cert.py" :
-                        ["s/\s*connection\s*=\s*client.PKIConnection('https',\s*'localhost',\s*'[0-9][0-9][0-9][0-9]',\s*'ca')/    connection = client.PKIConnection('https', 'localhost', \'%s\', 'ca')/" %secure_port],
-
-         "/root/test_regex/test_regularexpression/nssdb.py" :
-                        ["s/\s*keystroke\s*+=\s*'http:\/\/\s*server.example.com\s*\:\s*[0-9][0-9][0-9][0-9]/        keystroke += \'http:\/\/server.example.com:%s/" %insecure_port],
-
-         "/root/test_regex/test_regularexpression/profile.py" :
-                        ["s/\s*connection\s*=\s*client.PKIConnection('https',\s*'localhost',\s*'[0-9][0-9][0-9][0-9]',\s*'ca')/    connection = client.PKIConnection('https', 'localhost', \'%s\', 'ca')/" %secure_port
-                     ]}
-
-
-
-
-for f,s in sed_port_replaces.iteritems():
-    fs=glob.glob(f)
-    for fi in fs:
-        for si in s:
-            command = ['sed', '-i',si,fi]
-            print command
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            output = process.communicate()
+if __name__ == "__main__":
+    import sys
+    if '--help' in sys.argv:
+        print __doc__
+        sys.exit(0)
+    if len(sys.argv) < 3:
+        print __doc__
+        raise AttributeError("Please supply a mode and filename")
+    if sys.argv[-2] not in ['--apply', '--create', '--test']:
+        print __doc__
+        raise AttributeError("Please supply a mode and filename")
+    mode = sys.argv[-2]
+    filename = sys.argv[-1]
+    if mode == '--create':
+        create_match_dictionary(filename)
+    else:
+        if not os.path.exists(filename):
+            print __doc__
+            raise IOError('the file you supply must exist!')
+        loaded = {}
+        import json
+        with open(filename) as fp:
+            loaded = json.load(fp)
+        if not len(loaded):
+            print __doc__
+            raise IOError('Unable to interpret json file, file empty or corrupt')
+        if mode == '--apply':
+            apply_regex_from_json(loaded)
+        else:
+            check_original_from_json(loaded)
+            check_changed_from_json(loaded)
+            dynamic = create_match_dictionary()
+            check_for_line_changes(loaded, dynamic)

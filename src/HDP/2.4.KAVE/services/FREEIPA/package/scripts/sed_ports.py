@@ -47,7 +47,7 @@ sed_searches = {start_insecure:  '[0-9][0-9][0-9][0-9]',
                 start_secure:  '[0-9][0-9][0-9][0-9]'}
 sed_escapes = '\\/().*[]|'
 print sed_escapes
-sed_replaces = {start_insecure:  pki_insecure_port, start_secure:  pki_secure_port}
+sed_replaces = {start_insecure:  '{{pki_insecure_port}}', start_secure:  '{{pki_secure_port}}'}
 
 dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
               "/etc/pki-tomcat", "/usr/lib/python*/site-packages/ipa*", "/usr/lib/python*/site-packages/pki*"]

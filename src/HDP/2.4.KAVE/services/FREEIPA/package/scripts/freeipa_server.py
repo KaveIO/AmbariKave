@@ -26,7 +26,7 @@ class FreeipaServer(Script):
     admin_login = 'admin'
     admin_password_file = '/root/admin-password'
     packages = ['ipa-server', 'bind', 'bind-dyndb-ldap']
-
+    expected_services = ['chrony', 'ntpd', 'ns-slapd']
     def checkport(self, number):
         """
         Certain ports must be free
@@ -39,7 +39,7 @@ class FreeipaServer(Script):
                 import time
                 time.sleep(1)
                 check = kc.check_port(number)
-
+        err = ''
         if check is not None:
             err = ("The port number %s is already in use on this machine. You must reconfigure FreeIPA ports"
                    " or install FreeIPA on a different node of your cluster. "
@@ -53,7 +53,10 @@ class FreeipaServer(Script):
                 err = err + ("\n\t [user, call, status] \n\t %s"
                              % ([p.username(), p.cmdline(), p.status()].__str__())
                              )
-            raise OSError(err)
+                if p.cmdline()[0].split('/')[-1] in expected_services:
+                    err = ''
+            if len(err):
+                raise OSError(err)
 
     def install(self, env):
         import params
@@ -77,7 +80,7 @@ class FreeipaServer(Script):
         import kavecommon as kc
         tos = kc.detect_linux_version()
         # Check that all known FreeIPA ports are available
-        needed_ports = [88, 389, 464, 636, 8009]
+        needed_ports = [88, 123, 389, 464, 636]
         if tos.lower() in ["centos7"]:
             needed_ports = [params.pki_secure_port, params.pki_insecure_port] + needed_ports
         for port in needed_ports:

@@ -35,7 +35,7 @@ ignore_file_matches = {}
 match_files = []
 sed_searches = {'8080':  '[0-9][0-9][0-9][0-9]',
                 '8443':  '[0-9][0-9][0-9][0-9]'}
-sed_escapes = '\/().*[]|'
+sed_escapes = '\\/().*[]|'
 sed_replaces = {'8080':  '%s', '8443':  '%s',}
 
 dir_search = ["/etc/sysconfig", "/etc/httpd", "/etc/tomcat", "/etc/pki",
@@ -101,7 +101,13 @@ def sed_from_matches(matches):
         search = iret + ''
         for searchk , searchv in sed_searches.iteritems():
             search = search.replace(searchk,searchv)
+        addl == (len(search.lstrip()) != len(search) )
+        addr == (len(search.rstrip()) != len(search) )
         search = '\s*'.join(search.split())
+        if addl:
+            search = '\s*' + search
+        if addr:
+            search = search + '\s*'
         replace = iret + ''
         for replacek , replacev in sed_replaces.iteritems():
             replace = replace.replace(replacek,replacev)

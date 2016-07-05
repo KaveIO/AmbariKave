@@ -140,7 +140,7 @@ def sed_from_matches(matches):
         for sesc in sed_escapes:
             # print 'replacing ', sesc
             iret = iret.replace(sesc, '\\' + sesc)
-            print iret
+            # print iret
         search = iret + ''
         for searchk, searchv in sed_searches.iteritems():
             search = search.replace(searchk, searchv)
@@ -206,7 +206,7 @@ def apply_regex_from_json(regexdict):
             # run the replaces in case this is not done dynamically by ambari
             for r, v in non_dynamic_replaces.iteritems():
                 replace = replace.replace(r, v)
-            command = ['sed', '-i', 's/' + search + '/' + replace + '/', afile]
+            command = ['sed', '-i', '-r', 's/' + search + '/' + replace + '/', afile]
             if debug:
                 print command
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

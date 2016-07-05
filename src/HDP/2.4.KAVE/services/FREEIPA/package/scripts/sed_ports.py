@@ -95,8 +95,12 @@ def find_all_matches(search, from_backup=False):
                 continue
             if sdir in ignore_dirs:
                 continue
+            if len([i for i in ignore_dirs if sdir.startswith(i)]):
+                continue
             for root, dirs, files in os.walk(sdir):
                 if root in ignore_dirs:
+                    continue
+                if len([i for i in ignore_dirs if root.startswith(i)]):
                     continue
                 for afile in files:
                     if afile in ignore_files:

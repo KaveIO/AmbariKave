@@ -404,8 +404,10 @@ if __name__ == "__main__":
     filename = sys.argv[-1]
     if mode == '--create':
         create_match_dictionary(filename)
+        print "Create OK"
     elif mode == '--restore':
         restore_from_backup(dir_search)
+        print "Restore OK"
     else:
         if not os.path.exists(filename):
             print __doc__
@@ -419,9 +421,11 @@ if __name__ == "__main__":
             raise IOError('Unable to interpret json file, file empty or corrupt')
         if mode == '--apply':
             apply_regex_from_json(loaded)
+            print "Apply OK"
         else:
             check_sed_directly(loaded)
             check_original_from_json(loaded)
             check_changed_from_json(loaded)
             dynamic = create_match_dictionary(from_backup=True)
             check_for_line_changes(loaded, dynamic)
+            print "Check OK"

@@ -45,14 +45,16 @@ import subprocess
 debug = False
 # Which file names to completely ignore on finding the regex
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
-                'big5freq.py', 'cacert.pem', 'unistring.py', 'httpinstance.py']
+                'big5freq.py', 'cacert.pem', 'unistring.py', 'httpinstance.py',
+                'pki-tomcat']
 # httpinstance is used by FreeIPA to configure the httpd instance, nothing to do with nss
 # Which file directories to completely ignore on finding the regex
-ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
+ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives', '/etc/pki/pki-tomcat']
 # Which file extentions to completely ignore on finding the regex
 skip_endings = ['so', 'pyc', 'pem', 'cert', 'bin', 'exe', 'sh', 'pyo', 'bak', 'bkp', 'ipabkp', 'rebak']
 # Which lines to completely ignore on finding the regex
-ignore_matches = ["#ServerName www.example.com:8443"]
+ignore_matches = ["#ServerName www.example.com:8443", "         Define a non-SSL HTTP/1.1 Connector on port 8080",
+                  ]
 # Which file extentions to completely ignore on finding the regex
 comment_in_manually = ["#CONNECTOR_PORT", "# pki_https_port", "# pki_http_port", "#CONNECTOR_PORT"]
 

@@ -33,12 +33,15 @@ class FreeipaServer(Script):
         Certain ports must be free
         """
         import kavecommon as kc
+        import time
         check = kc.check_port(number)
+
         if check is not None:
-            import time
             if check[-2] == "TIME_WAIT":
                 time.sleep(30)
                 check = kc.check_port(number)
+
+        if check is not None:
             if check[-1] is None:
                 # this could be a temporary process
                 time.sleep(1)
@@ -94,6 +97,9 @@ class FreeipaServer(Script):
 
         for package in self.packages:
             Package(package)
+
+        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --create portchanges.json --debug')
+        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --apply portchanges.json --debug')
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"

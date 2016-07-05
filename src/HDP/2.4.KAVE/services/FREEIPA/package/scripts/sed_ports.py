@@ -327,12 +327,21 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
         print 'checking for new/changed regex'
     missing_files = [f for f in check_this_default_dict if f not in against_this_dynamic_dict]
     new_files = [f for f in against_this_dynamic_dict if f not in check_this_default_dict]
-    missing_lines = [[f] + list(v) for f, v in check_this_default_dict.iteritems()
-                     if f in against_this_dynamic_dict and v[0] not in
-                     [a[0] for a in against_this_dynamic_dict[f]]]
-    new_lines = [[f] + list(v) for f, v in against_this_dynamic_dict.iteritems()
-                 if f in check_this_default_dict and v[0] not in
-                 [a[0] for a in check_this_default_dict[f]]]
+    missing_lines = []
+    for f,v in check_this_default_dict.iteritems():
+        if f in against_this_dynamic_dict:
+            found_lines = [vi[0] for vi in against_this_dynamic_dict[f]]
+            for looking_for in v:
+                if looking_for[0] not in found_lines:
+                    missing_lines.append([f] + [looking_for])
+
+    new_lines = []
+    for f,v in against_this_dynamic_dict.iteritems():
+        if f in check_this_default_dict:
+            expected_lines = [vi[0] for vi in check_this_default_dict[f]]
+            for found_line in v:
+                if found_line[0] not in expected_lines:
+                    new_lines.append([f] + [found_line])
 
     if len(missing_files + new_files + missing_lines + new_lines):
         print "Missing files: ", missing_files

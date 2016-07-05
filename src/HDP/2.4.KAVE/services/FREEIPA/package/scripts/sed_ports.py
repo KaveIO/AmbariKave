@@ -157,8 +157,9 @@ def sed_from_matches(matches):
         replace = commentstrip(replace)
         ret.append((search, replace))
         # duplicate to also allow changes after the comment is replaced
-        search = commentstrip(search)
-        ret.append((search, replace))
+        searchc = commentstrip(search)
+        if searchc != search:
+            ret.append((searchc, replace))
     return ret
 
 

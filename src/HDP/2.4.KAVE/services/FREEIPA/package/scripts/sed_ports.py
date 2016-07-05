@@ -350,13 +350,15 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print __doc__
         raise AttributeError("Please supply a mode")
-    if sys.argv[-2] not in ['--apply', '--create', '--test', '--restore']:
+    if sys.argv[1] not in ['--apply', '--create', '--test', '--restore']:
         print __doc__
-        raise AttributeError("Please supply a mode and filename")
-    mode = sys.argv[-2]
+        raise AttributeError("Please supply a valid mode")
+    mode = sys.argv[1]
     filename = sys.argv[-1]
     if mode == '--create':
         create_match_dictionary(filename)
+    elif mode == '--restore':
+        restore_from_backup(dir_search)
     else:
         if not os.path.exists(filename):
             print __doc__
@@ -370,8 +372,6 @@ if __name__ == "__main__":
             raise IOError('Unable to interpret json file, file empty or corrupt')
         if mode == '--apply':
             apply_regex_from_json(loaded)
-        elif mode == '--restore':
-            restore_from_backup(dir_search)
         else:
             check_original_from_json(loaded)
             check_changed_from_json(loaded)

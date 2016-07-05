@@ -279,7 +279,7 @@ def check_sed_directly(regexdict):
             if debug:
                 print 'checking',  original, search, replace, expected
 
-        command = ['sed', '-i', '-r', 's/' + search + '/' + replace + '/']
+        command = ['sed', '-r', 's/' + search + '/' + replace + '/']
         process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = process.communicate(input = original+'\n')
         if output[0].replace('\n','') != expected:

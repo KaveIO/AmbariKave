@@ -21,11 +21,13 @@ Usage:
     --apply json_filename
     --create json_filename
     --test json_filename
+    --restore
 
---apply, perform all SED as given in this json file
+--apply, perform all SED as given in this json file, makes a .rebak copy of each file
 --create, create a new json file with a new list of regex
 --test, check that a given json file contains the correct seds
         for this machine and that the result of applying these seds worked
+--restore, find all .rebak files, and overwrite any recent changes with these
 --debug, print out some extra status information and commands
 
 """
@@ -305,6 +307,31 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
         print "New lines: ", new_lines
         raise ValueError("New regexs need to be added to this json file")
 
+def restore_from_backup(search):
+    """
+    Same search, but now find/restore any rebak files encountered
+    """
+    for adir in search:
+        for sdir in glob.glob(adir):
+            if debug:
+                print 'searching', sdir
+            if not os.path.exists(sdir):
+                continue
+            if sdir in ignore_dirs:
+                continue
+            for root, dirs, files in os.walk(sdir):
+                if root in ignore_dirs:
+                    continue
+                for afile in files:
+                    if afile.endswith('.rebak'):
+                        if debug:
+                            print 'restoring', afile
+                        process = subprocess.Popen(['mv', root + '/' + afile, root + '/' + afile[:-len('.rebak')]]
+                                                   , stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        output = process.communicate()
+                        if debug:
+                            print output
+
 # ###############################################################################
 # Main program
 
@@ -320,7 +347,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print __doc__
         raise AttributeError("Please supply a mode and filename")
-    if sys.argv[-2] not in ['--apply', '--create', '--test']:
+    if sys.argv[-2] not in ['--apply', '--create', '--test', '--restore']:
         print __doc__
         raise AttributeError("Please supply a mode and filename")
     mode = sys.argv[-2]
@@ -340,6 +367,8 @@ if __name__ == "__main__":
             raise IOError('Unable to interpret json file, file empty or corrupt')
         if mode == '--apply':
             apply_regex_from_json(loaded)
+        elif mode == '--restore':
+            restore_from_backup(dir_search)
         else:
             check_original_from_json(loaded)
             check_changed_from_json(loaded)

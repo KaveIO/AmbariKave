@@ -373,7 +373,7 @@ if __name__ == "__main__":
         print __doc__
         sys.exit(0)
     if '--debug' in sys.argv:
-        global debug
+        # global debug
         debug = True
         sys.argv = [s for s in sys.argv if s!='--debug']
     if len(sys.argv) < 3 and '--restore' not in sys.argv:

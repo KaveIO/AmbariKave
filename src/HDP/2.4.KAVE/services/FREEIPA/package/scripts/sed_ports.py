@@ -407,7 +407,7 @@ if __name__ == "__main__":
     filename = sys.argv[-1]
     if mode == '--create':
         create_match_dictionary(filename)
-        print "Create OK"
+        print "Test OK"
     elif mode == '--restore':
         restore_from_backup(dir_search)
         print "Restore OK"

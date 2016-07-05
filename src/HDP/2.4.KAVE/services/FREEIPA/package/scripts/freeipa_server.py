@@ -98,9 +98,15 @@ class FreeipaServer(Script):
         for package in self.packages:
             Package(package)
 
-        # TEST!
-        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --create portchanges.json --debug')
-        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --apply portchanges.json --debug')
+        # Always generate new portchanges file for automated tests
+        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --create portchanges_new.json --debug')
+
+        File("portchanges_static.json",
+             content=Template(tos.lower() + "_server.json.j2"),
+             mode=0600
+             )
+        # Always use static file
+        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --apply portchanges_static.json --debug')
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"

@@ -45,7 +45,8 @@ import subprocess
 debug = False
 # Which file names to completely ignore on finding the regex
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
-                'big5freq.py', 'cacert.pem', 'unistring.py']
+                'big5freq.py', 'cacert.pem', 'unistring.py', 'httpinstance.py']
+# httpinstance is used by FreeIPA to configure the httpd instance, nothing to do with nss
 # Which file directories to completely ignore on finding the regex
 ignore_dirs = ['/etc/pki/pki-tomcat/ca/archives']
 # Which file extentions to completely ignore on finding the regex

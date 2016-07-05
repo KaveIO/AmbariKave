@@ -219,7 +219,7 @@ def apply_regex_from_json(regexdict):
             # run the replaces in case this is not done dynamically by ambari
             for r, v in non_dynamic_replaces.iteritems():
                 replace = replace.replace(r, v)
-            command = ['sed', '-i', '-r', 's/' + search + '/' + replace + '/', afile]
+            command = ['sed', '-i', '-r', 's/^' + search + '/' + replace + '/', afile]
             if debug:
                 print command
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -275,7 +275,7 @@ def check_sed_directly(regexdict):
             if debug:
                 print 'checking',  original, search, replace, expected
 
-        command = ['sed', '-r', 's/' + search + '/' + replace + '/']
+        command = ['sed', '-r', 's/^' + search + '/' + replace + '/']
         process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = process.communicate(input = original+'\n')
         if output[0].replace('\n','') != expected:

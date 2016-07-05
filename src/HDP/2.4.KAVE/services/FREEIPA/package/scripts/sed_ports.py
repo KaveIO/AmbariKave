@@ -260,10 +260,6 @@ def check_original_from_json(regexdict):
                     raise ValueError("Expected line to replace not found! "
                                      + afile + " linenum " + str(linenum)
                                      + " " + original)
-            if debug:
-                print command
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            output = process.communicate()
 
 def check_sed_directly(regexdict):
     """

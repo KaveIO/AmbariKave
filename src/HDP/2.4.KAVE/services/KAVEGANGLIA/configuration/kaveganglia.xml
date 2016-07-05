@@ -424,7 +424,7 @@ tcp_accept_channel {
   port = {{kaveganglia_port}}
   # If you want to gzip XML output
   gzip_output = no
-  bind = {{kaveganglia_udp_bind}}
+  bind = {{kaveganglia_tcp_bind}}
 }
 
 /* Channel to receive sFlow datagrams */

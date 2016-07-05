@@ -195,7 +195,7 @@ def create_match_dictionary(saveas=None):
         if debug:
             print 'wrote', saveas
     if debug:
-        print 'found/created', i, 'seds from', len(c7_dict), files
+        print 'found/created', i, 'seds from', len(c7_dict), 'files'
     return c7_dict
 
 

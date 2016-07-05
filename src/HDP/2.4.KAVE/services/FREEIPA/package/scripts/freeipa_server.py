@@ -35,9 +35,12 @@ class FreeipaServer(Script):
         import kavecommon as kc
         check = kc.check_port(number)
         if check is not None:
+            import time
+            if check[-2] == "TIME_WAIT":
+                time.sleep(30)
+                check = kc.check_port(number)
             if check[-1] is None:
                 # this could be a temporary process
-                import time
                 time.sleep(1)
                 check = kc.check_port(number)
         err = ''

@@ -74,12 +74,14 @@ dir_search = ["/etc/sysconfig", "/etc/tomcat", "/etc/pki",  # "/etc/httpd", #HTT
 # ###############################################################################
 # Functional definitions
 
+# TODO: implement matching in originals instead ... for tests.
 
-def find_all_matches(search):
+def find_all_matches(search, from_backup=False):
     """
     Iterate through a search path, find all strings matching start_insecure or start_secure
     return the files/line-numbers/line-content so long as they dont'appear in
     the ignore_files or ignore_matches
+    from_backup=False : search in .rebak files if they exist
     """
     found = []
     for adir in search:
@@ -99,6 +101,8 @@ def find_all_matches(search):
                         continue
                     if '.' in afile and afile.split('.')[-1] in skip_endings:
                         continue
+                    if from_backup and os.path.exists(root + '/' + afile + '.rebak'):
+                        afile = afile + '.rebak'
                     if not os.path.isfile(root + '/' + afile):
                         # print "nofile", afile
                         continue
@@ -115,6 +119,8 @@ def find_all_matches(search):
                                         continue
                                     if afile in ignore_file_matches and line in ignore_file_matches[afile]:
                                         continue
+                                    if afile.endswith('.rebak'):
+                                        afile = afile[:-len('.rebak')]
                                     found.append((root + '/' + afile, i + 1, line))
                     except IOError, UnicodeDecodeError:
                         continue
@@ -170,17 +176,19 @@ def sed_from_matches(matches):
     return ret
 
 
-def create_match_dictionary(saveas=None):
+def create_match_dictionary(saveas=None, from_backup=False):
     """
     Combines all above functions, reads the local filesystem for matches,
     then returns a a complex dictionary
     filename: [(line_number, original, search, replace, expected)]
+    saveas=None: save as a json file
+    from_backup=False : search in .rebak files if they exist
     """
     c7_dict = {}
     if debug:
         print 'generate dictionary'
     i = 0
-    for filename, linenum, line in find_all_matches(dir_search):
+    for filename, linenum, line in find_all_matches(dir_search, from_backup=from_backup):
         i = i + 1
         search, replace = sed_from_matches([line])[0]
         expected = line.replace(start_secure, pki_secure_port)
@@ -228,17 +236,18 @@ def apply_regex_from_json(regexdict):
                 print output
 
 
-def check_original_from_json(regexdict):
+def check_original_from_json(regexdict, from_backup=True):
     """
     When supplied with a dictionary will check that the original os-installed files provided
      do have the lines written in the right places
     filename: [(line_number, original, search, replace, expected)]
+    from_backup=True : search in .rebak files if they exist
     """
     for afile, lines in regexdict.iteritems():
         if os.path.exists(afile + '.rebak'):
             afile = afile + '.rebak'
         orig_lines = []
-        if not os.path.exists(afile):
+        if from_backup and not os.path.exists(afile):
             raise NameError('The file I should be editing/checking does not exist! ' + afile)
         with open(afile) as fp:
             orig_lines = fp.readlines()
@@ -398,5 +407,5 @@ if __name__ == "__main__":
             check_sed_directly(loaded)
             check_original_from_json(loaded)
             check_changed_from_json(loaded)
-            dynamic = create_match_dictionary()
+            dynamic = create_match_dictionary(from_backup=True)
             check_for_line_changes(loaded, dynamic)

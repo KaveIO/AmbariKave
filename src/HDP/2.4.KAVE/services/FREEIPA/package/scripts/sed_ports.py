@@ -329,10 +329,10 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
     new_files = [f for f in against_this_dynamic_dict if f not in check_this_default_dict]
     missing_lines = [[f] + list(v) for f, v in check_this_default_dict.iteritems()
                      if f in against_this_dynamic_dict and v[0] not in
-                     [v[0] for k, v in against_this_dynamic_dict[f].iteritems()]]
+                     [a[0] for a in against_this_dynamic_dict[f]]]
     new_lines = [[f] + list(v) for f, v in against_this_dynamic_dict.iteritems()
                  if f in check_this_default_dict and v[0] not in
-                 [v[0] for k, v in check_this_default_dict[f].iteritems()]]
+                 [a[0] for a in check_this_default_dict[f]]]
 
     if len(missing_files + new_files + missing_lines + new_lines):
         print "Missing files: ", missing_files

@@ -98,6 +98,7 @@ class FreeipaServer(Script):
         for package in self.packages:
             Package(package)
 
+        # TEST!
         Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --create portchanges.json --debug')
         Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --apply portchanges.json --debug')
 

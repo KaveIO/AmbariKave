@@ -344,9 +344,12 @@ if __name__ == "__main__":
         global debug
         debug = True
         sys.argv = [s for s in sys.argv if s!='--debug']
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 3 and '--restore' not in sys.argv:
         print __doc__
         raise AttributeError("Please supply a mode and filename")
+    if len(sys.argv) < 2:
+        print __doc__
+        raise AttributeError("Please supply a mode")
     if sys.argv[-2] not in ['--apply', '--create', '--test', '--restore']:
         print __doc__
         raise AttributeError("Please supply a mode and filename")

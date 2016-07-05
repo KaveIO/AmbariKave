@@ -82,7 +82,8 @@ def find_all_matches(search):
     found = []
     for adir in search:
         for sdir in glob.glob(adir):
-            print sdir
+            if debug:
+                print 'searching', sdir
             if not os.path.exists(sdir):
                 continue
             if sdir in ignore_dirs:
@@ -115,6 +116,8 @@ def find_all_matches(search):
                                     found.append((root + '/' + afile, i + 1, line))
                     except IOError, UnicodeDecodeError:
                         continue
+            if debug and len(found):
+                print 'so far I have found', len(found)
     return found
 
 
@@ -174,7 +177,9 @@ def create_match_dictionary(saveas=None):
     c7_dict = {}
     if debug:
         print 'generate dictionary'
+    i = 0
     for filename, linenum, line in find_all_matches(dir_search):
+        i = i + 1
         search, replace = sed_from_matches([line])[0]
         expected = line.replace(start_secure, pki_secure_port)
         expected = expected.replace(start_insecure, pki_insecure_port)
@@ -189,6 +194,8 @@ def create_match_dictionary(saveas=None):
             json.dump(c7_dict, fp)
         if debug:
             print 'wrote', saveas
+    if debug:
+        print 'found/created', i, 'seds from', len(c7_dict), files
     return c7_dict
 
 
@@ -199,7 +206,11 @@ def apply_regex_from_json(regexdict):
     runs:
     sed -i 's/search/replace/' filename
     """
+    if debug:
+        print "modifying", len(regexdict), 'files'
     for afile, lines in regexdict.iteritems():
+        if debug:
+            print len(lines), "lines in", afile
         for linenum, original, search, replace, expected in lines:
             if not os.path.exists(afile + '.rebak'):
                 process = subprocess.Popen(['cp', '-f', afile, afile + '.rebak'])

@@ -79,6 +79,7 @@ dir_search = ["/etc/sysconfig", "/etc/tomcat", "/etc/pki",  # "/etc/httpd", #HTT
 
 # TODO: implement matching in originals instead ... for tests.
 
+
 def find_all_matches(search, from_backup=False):
     """
     Iterate through a search path, find all strings matching start_insecure or start_secure
@@ -95,12 +96,12 @@ def find_all_matches(search, from_backup=False):
                 continue
             if sdir in ignore_dirs:
                 continue
-            if len([i for i in ignore_dirs if sdir.startswith(i)]):
+            if len([i for i in ignore_dirs if sdir.startswith(i + '/')]):
                 continue
             for root, dirs, files in os.walk(sdir):
                 if root in ignore_dirs:
                     continue
-                if len([i for i in ignore_dirs if root.startswith(i)]):
+                if len([i for i in ignore_dirs if root.startswith(i + '/')]):
                     continue
                 for afile in files:
                     if afile in ignore_files:
@@ -260,7 +261,7 @@ def check_original_from_json(regexdict, from_backup=True):
             orig_lines = fp.readlines()
         for linenum, original, search, replace, expected in lines:
             if debug:
-                print 'checking',  afile, linenum, original
+                print 'checking', afile, linenum, original
             if len(orig_lines) < linenum:
                 raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
             if orig_lines[int(linenum) - 1].replace('\n', '') != original:
@@ -277,6 +278,7 @@ def check_original_from_json(regexdict, from_backup=True):
                                      + afile + " linenum " + str(linenum)
                                      + " " + original)
 
+
 def check_sed_directly(regexdict):
     """
     When supplied with a dictionary will check that the original os-installed files provided
@@ -289,13 +291,13 @@ def check_sed_directly(regexdict):
             for r, v in non_dynamic_replaces.iteritems():
                 replace = replace.replace(r, v)
             if debug:
-                print 'checking',  original, search, replace, expected
+                print 'checking', original, search, replace, expected
 
         command = ['sed', '-r', 's/^' + search + '/' + replace + '/']
         process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = process.communicate(input = original+'\n')
-        if output[0].replace('\n','') != expected:
-            print 'checking',  original, search, replace, expected
+        output = process.communicate(input=original + '\n')
+        if output[0].replace('\n', '') != expected:
+            print 'checking', original, search, replace, expected
             print 'failed, resulted in ', output
             raise ValueError("This regular expression does not work " + search)
 
@@ -312,7 +314,7 @@ def check_changed_from_json(regexdict):
             changed_lines = fp.readlines()
         for linenum, original, search, replace, expected in lines:
             if debug:
-                print 'checking',  afile, linenum, expected
+                print 'checking', afile, linenum, expected
             if len(changed_lines) < linenum:
                 raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
             if changed_lines[int(linenum) - 1].replace('\n', '') != expected:
@@ -332,7 +334,7 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
     missing_files = [f for f in check_this_default_dict if f not in against_this_dynamic_dict]
     new_files = [f for f in against_this_dynamic_dict if f not in check_this_default_dict]
     missing_lines = []
-    for f,v in check_this_default_dict.iteritems():
+    for f, v in check_this_default_dict.iteritems():
         if f in against_this_dynamic_dict:
             found_lines = [vi[0] for vi in against_this_dynamic_dict[f]]
             for looking_for in v:
@@ -340,7 +342,7 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
                     missing_lines.append([f] + [looking_for])
 
     new_lines = []
-    for f,v in against_this_dynamic_dict.iteritems():
+    for f, v in against_this_dynamic_dict.iteritems():
         if f in check_this_default_dict:
             expected_lines = [vi[0] for vi in check_this_default_dict[f]]
             for found_line in v:
@@ -353,6 +355,7 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
         print "New files: ", new_files
         print "New lines: ", new_lines
         raise ValueError("New regexs need to be added to this json file")
+
 
 def restore_from_backup(search):
     """
@@ -373,8 +376,8 @@ def restore_from_backup(search):
                     if afile.endswith('.rebak'):
                         if debug:
                             print 'restoring', afile
-                        process = subprocess.Popen(['mv', root + '/' + afile, root + '/' + afile[:-len('.rebak')]]
-                                                   , stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        process = subprocess.Popen(['mv', root + '/' + afile, root + '/' + afile[:-len('.rebak')]],
+                                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         output = process.communicate()
                         if debug:
                             print output
@@ -390,7 +393,7 @@ if __name__ == "__main__":
     if '--debug' in sys.argv:
         # global debug
         debug = True
-        sys.argv = [s for s in sys.argv if s!='--debug']
+        sys.argv = [s for s in sys.argv if s != '--debug']
     if len(sys.argv) < 3 and '--restore' not in sys.argv:
         print __doc__
         raise AttributeError("Please supply a mode and filename")

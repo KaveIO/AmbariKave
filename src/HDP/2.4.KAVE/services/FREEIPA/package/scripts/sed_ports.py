@@ -95,7 +95,7 @@ def find_all_matches(search):
                     if '.' in afile and afile.split('.')[-1] in skip_endings:
                         continue
                     if not os.path.isfile(root + '/' + afile):
-                        print "nofile", afile
+                        # print "nofile", afile
                         continue
                     if not os.access(root + '/' + afile, os.R_OK):
                         # print "unreadable", afile
@@ -136,7 +136,7 @@ def sed_from_matches(matches):
     for line in matches:
         iret = line + ''
         for sesc in sed_escapes:
-            print 'replacing ', sesc
+            # print 'replacing ', sesc
             iret = iret.replace(sesc, '\\' + sesc)
             print iret
         search = iret + ''
@@ -199,7 +199,7 @@ def apply_regex_from_json(regexdict):
                 process = subprocess.Popen(['cp', '-f', afile, afile + '.rebak'])
             # run the replaces in case this is not done dynamically by ambari
             for r, v in non_dynamic_replaces.iteritems():
-                replace = replace.replace(r, k)
+                replace = replace.replace(r, v)
             command = ['sed', '-i', 's/' + search + '/' + replace + '/', afile]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output = process.communicate()

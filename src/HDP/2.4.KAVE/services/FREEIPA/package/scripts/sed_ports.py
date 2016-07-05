@@ -64,7 +64,7 @@ pki_secure_port = '8444'
 
 sed_searches = {start_insecure: '[0-9][0-9][0-9][0-9]',
                 start_secure: '[0-9][0-9][0-9][0-9]'}
-sed_escapes = '\\/().*[]|'
+sed_escapes = '\\/().*[]|+'
 sed_replaces = {start_insecure: '{{pki_insecure_port}}', start_secure: '{{pki_secure_port}}'}
 non_dynamic_replaces = {'{{pki_insecure_port}}': pki_insecure_port, '{{pki_secure_port}}': pki_secure_port}
 
@@ -260,6 +260,32 @@ def check_original_from_json(regexdict):
                     raise ValueError("Expected line to replace not found! "
                                      + afile + " linenum " + str(linenum)
                                      + " " + original)
+            if debug:
+                print command
+            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output = process.communicate()
+
+def check_sed_directly(regexdict):
+    """
+    When supplied with a dictionary will check that the original os-installed files provided
+     do have the lines written in the right places
+    filename: [(line_number, original, search, replace, expected)]
+    """
+    for afile, lines in regexdict.iteritems():
+        for linenum, original, search, replace, expected in lines:
+            # run the replaces in case this is not done dynamically by ambari
+            for r, v in non_dynamic_replaces.iteritems():
+                replace = replace.replace(r, v)
+            if debug:
+                print 'checking',  original, search, replace, expected
+
+        command = ['sed', '-i', '-r', 's/' + search + '/' + replace + '/']
+        process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = process.communicate(input = original+'\n')
+        if output[0].replace('\n','') != expected:
+            print 'checking',  original, search, replace, expected
+            print 'failed, resulted in ', output
+            raise ValueError("This regular expression does not work " + search)
 
 
 def check_changed_from_json(regexdict):
@@ -373,6 +399,7 @@ if __name__ == "__main__":
         if mode == '--apply':
             apply_regex_from_json(loaded)
         else:
+            check_sed_directly(loaded)
             check_original_from_json(loaded)
             check_changed_from_json(loaded)
             dynamic = create_match_dictionary()

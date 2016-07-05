@@ -26,6 +26,7 @@ Usage:
 --create, create a new json file with a new list of regex
 --test, check that a given json file contains the correct seds
         for this machine and that the result of applying these seds worked
+--debug, print out some extra status information and commands
 
 """
 import re
@@ -39,6 +40,7 @@ import subprocess
 # they are not used during the application of the sed
 #
 
+debug = False
 # Which file names to completely ignore on finding the regex
 ignore_files = ['cacerts', 'jisfreq.py', 'euctwfreq.py',
                 'big5freq.py', 'cacert.pem', 'unistring.py']
@@ -170,6 +172,8 @@ def create_match_dictionary(saveas=None):
     filename: [(line_number, original, search, replace, expected)]
     """
     c7_dict = {}
+    if debug:
+        print 'generate dictionary'
     for filename, linenum, line in find_all_matches(dir_search):
         search, replace = sed_from_matches([line])[0]
         expected = line.replace(start_secure, pki_secure_port)
@@ -183,6 +187,8 @@ def create_match_dictionary(saveas=None):
         import json
         with open(saveas, 'w') as fp:
             json.dump(c7_dict, fp)
+        if debug:
+            print 'wrote', saveas
     return c7_dict
 
 
@@ -201,8 +207,12 @@ def apply_regex_from_json(regexdict):
             for r, v in non_dynamic_replaces.iteritems():
                 replace = replace.replace(r, v)
             command = ['sed', '-i', 's/' + search + '/' + replace + '/', afile]
+            if debug:
+                print command
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output = process.communicate()
+            if debug:
+                print output
 
 
 def check_original_from_json(regexdict):
@@ -220,6 +230,8 @@ def check_original_from_json(regexdict):
         with open(afile) as fp:
             orig_lines = fp.readlines()
         for linenum, original, search, replace, expected in lines:
+            if debug:
+                print 'checking',  afile, linenum, original
             if len(orig_lines) < linenum:
                 raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
             if orig_lines[int(linenum) - 1].replace('\n', '') != original:
@@ -248,6 +260,8 @@ def check_changed_from_json(regexdict):
         with open(afile) as fp:
             changed_lines = fp.readlines()
         for linenum, original, search, replace, expected in lines:
+            if debug:
+                print 'checking',  afile, linenum, expected
             if len(changed_lines) < linenum:
                 raise ValueError("File not long enough! " + afile + " linenum " + str(linenum))
             if changed_lines[int(linenum) - 1].replace('\n', '') != expected:
@@ -262,6 +276,8 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
     Provided with two dictionaries will compare what should have been there
     raises a Value Error if anything is missing.
     """
+    if debug:
+        print 'checking for new/changed regex'
     missing_files = [f for f in check_this_default_dict if f not in against_this_dynamic_dict]
     new_files = [f for f in against_this_dynamic_dict if f not in check_this_default_dict]
     missing_lines = [[f] + list(v) for f, v in check_this_default_dict.iteritems()
@@ -286,6 +302,10 @@ if __name__ == "__main__":
     if '--help' in sys.argv:
         print __doc__
         sys.exit(0)
+    if '--debug' in sys.argv:
+        global debug
+        debug = True
+        sys.argv = [s for s in sys.argv if s!='--debug']
     if len(sys.argv) < 3:
         print __doc__
         raise AttributeError("Please supply a mode and filename")

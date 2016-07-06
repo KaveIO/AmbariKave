@@ -114,6 +114,7 @@ class TestServiceFreeIPA(TestServiceBlueprint):
 
     def check(self, ambari):
         super(TestServiceFreeIPA, self).check(ambari)
+        # Check kerberos
         import subprocess as sub
         import os
         pwd = ambari.run("cat admin-password")
@@ -126,6 +127,13 @@ class TestServiceFreeIPA(TestServiceBlueprint):
                          )
         ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ambari.run("./createkeytabs.py ./kerberostest.csv")
+        # check port number patching still applies correctly
+        ambari.run("python "
+                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                   " --test /etc/kave/portchanges_static.json --debug")
+        ambari.run("python "
+                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                   " --test /etc/kave/portchanges_new.json --debug")
 
 if __name__ == "__main__":
     import sys

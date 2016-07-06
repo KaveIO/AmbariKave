@@ -50,7 +50,6 @@ class TestIpaPortSed(unittest.TestCase):
         but do not need any environment parameters or access to aws
         """
         loc = glob.glob(os.path.dirname(__file__) + '/../../src/*/*/services/FREEIPA/package/scripts/sed_ports.py')[0]
-        print loc
         self.assertTrue(os.path.exists(loc), "Could not find sed_ports script")
         sed_ports = imp.load_source('sed_ports', loc)
         for cl in sed_ports.comment_in_manually:
@@ -107,6 +106,16 @@ class TestIpaPortSed(unittest.TestCase):
             self.assertFalse(True, 'Required ValueError was not raised')
         except ValueError:
             pass
+        # test the seds in the .json.j2 files
+        templates = glob.glob(os.path.dirname(loc) + '/../templates/*.json.j2')
+        for temp in templates:
+            import json
+            tjson = {}
+            with open(temp) as tp:
+                tjson = json.load(tp)
+            self.assertTrue(len(tjson))
+            self.assertTrue(sed_ports.check_sed_directly(tjson))
+            self.assertTrue(sed_ports.check_for_line_changes(tjson, tjson))
 
 
 def suite():

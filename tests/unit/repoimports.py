@@ -68,7 +68,7 @@ class TestRepoImports(unittest.TestCase):
         are importable in python, this is a basic sanity check
         """
         found = []
-        for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
+        for root, dirs, files in os.walk(os.path.dirname(__file__) + '/../../src'):
             if '.git' in root:
                 continue
             for f in files:

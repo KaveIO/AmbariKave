@@ -91,15 +91,18 @@ class TestRepoImports(unittest.TestCase):
         sys.stdout.flush()
         for details in found:
             fn, ln, arch, package = details
-            if 'kavetoolbox' in package:
-                url = kc.repo_url(package, arch=arch, dir='KaveToolbox')
-            else:
-                url = kc.repo_url(package, arch=arch)
+            urls = []
+
+            for mirror in mirrors():
+                if 'kavetoolbox' in package:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox'))
+                else:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror))
             print url
             try:
                 print 'trying', url
                 sys.stdout.flush()
-                kc.failover_source([url])
+                kc.failover_source(url)
             except IOError:
                 failed.append(details)
         self.assertFalse(len(failed), "Some requested downloads do not exist!\n\t" +

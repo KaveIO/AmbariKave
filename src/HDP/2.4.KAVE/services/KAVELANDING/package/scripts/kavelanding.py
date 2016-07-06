@@ -32,6 +32,7 @@ class KaveLanding(ApacheScript):
         import kavecommon as kc
         super(KaveLanding, self).install(env)
         Execute('yum clean all')
+        Package('python-devel')
         Package('python-pip')
         import os
         Execute('pip install requests')

@@ -57,6 +57,9 @@ install_with_dns = default('configurations/freeipa/install_with_dns', True)
 install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 
+pki_insecure_port = default('configurations/freeipa/pki_insecure_port', '8081')
+pki_secure_port = default('configurations/freeipa/pki_secure_port', '8444')
+
 # Only except IPv4 for now
 forwarders = default('configurations/freeipa/forwarders', '8.8.8.8').split(',')
 forwarders = [forwarder.strip() for forwarder in forwarders]

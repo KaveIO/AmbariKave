@@ -15,27 +15,12 @@
 #   limitations under the License.
 #
 ##############################################################################
-import deploylib
-import kclib
-import servicesh
-import scan
-import license
-import pyfilenames
-import testversion
-import ipaportsed
-import testpythonimport
-import verifyxml
-import checkpep8
-import pep8functions
-import pep8variables
-import jsonbpchecks
-import repoimports
-import base
-
-mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, repoimports,
-        pyfilenames, pep8variables, jsonbpchecks, verifyxml,
-        ipaportsed]
-
-if __name__ == "__main__":
-    base.parallel(mods)
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080
+matchline, contains 8080

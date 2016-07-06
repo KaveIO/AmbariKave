@@ -26,33 +26,101 @@ class FreeipaServer(Script):
     admin_login = 'admin'
     admin_password_file = '/root/admin-password'
     packages = ['ipa-server', 'bind', 'bind-dyndb-ldap']
+    expected_services = ['chronyd', 'ntpd', 'ns-slapd']
+
+    def checkport(self, number):
+        """
+        Certain ports must be free
+        """
+        import kavecommon as kc
+        import time
+        check = kc.check_port(number)
+
+        if check is not None:
+            if check[-2] == "TIME_WAIT":
+                time.sleep(30)
+                check = kc.check_port(number)
+
+        if check is not None:
+            if check[-1] is None:
+                # this could be a temporary process
+                time.sleep(1)
+                check = kc.check_port(number)
+        err = ''
+        if check is not None:
+            err = ("The port number %s is already in use on this machine. You must reconfigure FreeIPA ports"
+                   " or install FreeIPA on a different node of your cluster. "
+                   "\n\t (fd, family, type, laddr, raddr, status, pid) \n\t %s "
+                   % (number, check.__str__())
+                   )
+            # add process info if accessible
+            if check[-1] is not None:
+                import psutil
+                p = psutil.Process(check[-1])
+                err = err + ("\n\t [user, call, status] \n\t %s"
+                             % ([p.username(), p.cmdline(), p.status()].__str__())
+                             )
+                if p.cmdline()[0].split('/')[-1] in self.expected_services:
+                    err = ''
+            if len(err):
+                raise OSError(err)
 
     def install(self, env):
         import params
-        import kavecommon as kc
-        self.install_packages(env)
         env.set_params(params)
 
         if params.amb_server != params.hostname:
             raise Exception('The FreeIPA server installation has a hard requirement to be installed'
                             ' on the ambari server. ambari_server: %s freeipa_server %s'
                             % (params.amb_server, params.hostname))
-
-        for package in self.packages:
-            Package(package)
-
-        admin_password = freeipa.generate_random_password()
-        Logger.sensitive_strings[admin_password] = "[PROTECTED]"
         import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:
             raise OSError("Failed to determine hostname!")
+        Package('gcc')
+        Package('epel-release')
+        Execute('yum clean all')
+        Package('python-devel')
+        Package('python-pip')
+        Execute('pip install psutil')
+
+        import kavecommon as kc
+        tos = kc.detect_linux_version()
+        # Check that all known FreeIPA ports are available
+        needed_ports = [88, 123, 389, 464, 636]
+        if tos.lower() in ["centos7"]:
+            needed_ports = [params.pki_secure_port, params.pki_insecure_port] + needed_ports
+        for port in needed_ports:
+            self.checkport(port)
+
+        self.install_packages(env)
+
+        for package in self.packages:
+            Package(package)
+
+        # Always generate new portchanges file for automated tests
+        if not os.path.exists('/etc/kave'):
+            Execute('mkdir -p /etc/kave')
+        if not os.path.exists('/etc/kave/portchanges_new.json'):
+            Execute('python ' + os.path.dirname(__file__) +
+                    '/sed_ports.py --create /etc/kave/portchanges_new.json --debug')
+
+        File("/etc/kave/portchanges_static.json",
+             content=Template(tos.lower() + "_server.json.j2"),
+             mode=0600
+             )
+        # Always use static file
+        Execute('python ' + os.path.dirname(__file__)
+                + '/sed_ports.py --apply /etc/kave/portchanges_static.json --debug')
+
+        admin_password = freeipa.generate_random_password()
+        Logger.sensitive_strings[admin_password] = "[PROTECTED]"
+
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
             % (params.realm, params.directory_password, admin_password, _hostname)
 
-        tos = kc.detect_linux_version()
         # ipa-server install command. Currently --selfsign is mandatory because
         # of some anoying centos6.5 problems. The underling installer uses an
         # outdated method for the dogtag system which fails.
@@ -75,7 +143,7 @@ class FreeipaServer(Script):
 
             # patch for long domain names!
             if params.long_domain_patch:
-                Execute("grep -IlR 'Certificate Authority' /usr/lib/python2.6/site-packages/ipa* "
+                Execute("grep -IlR 'Certificate Authority' /usr/lib/python*/site-packages/ipa* "
                         "| xargs sed -i 's/Certificate Authority/CA/g'")
 
             # This is a time-consuming command, better to log the output

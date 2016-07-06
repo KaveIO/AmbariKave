@@ -63,6 +63,7 @@ class TestFreeIPACluster(TestCluster):
         import time
         import os
         import subprocess as sub
+        # Check kerberos
         if 'yes' not in ambari.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
         import subprocess as sub
@@ -76,6 +77,13 @@ class TestFreeIPACluster(TestCluster):
                          )
         ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ambari.run("./createkeytabs.py ./kerberostest.csv")
+        # check port number patching still applies correctly
+        ambari.run("python "
+                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                   " --test /etc/kave/portchanges_static.json --debug")
+        ambari.run("python "
+                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                   " --test /etc/kave/portchanges_new.json --debug")
 
 if __name__ == "__main__":
     import sys

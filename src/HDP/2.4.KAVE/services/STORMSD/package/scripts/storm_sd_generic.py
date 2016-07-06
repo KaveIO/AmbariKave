@@ -120,6 +120,7 @@ class StormGenericSD(StormGeneric):
         Package('epel-release')
         Execute('yum clean all')
         Package('python-meld3')
+        Package('python-devel')
         Package('python-pip')
         Execute('pip install supervisor')
 

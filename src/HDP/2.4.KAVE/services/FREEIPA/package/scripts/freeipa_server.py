@@ -81,6 +81,7 @@ class FreeipaServer(Script):
         Package('gcc')
         Package('epel-release')
         Execute('yum clean all')
+        Package('python-devel')
         Package('python-pip')
         Execute('pip install psutil')
 

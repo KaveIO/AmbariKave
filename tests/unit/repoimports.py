@@ -69,6 +69,7 @@ class TestRepoImports(unittest.TestCase):
         """
         found = []
         for root, dirs, files in os.walk(os.path.dirname(__file__) + '/../../src'):
+            print root
             if '.git' in root:
                 continue
             for f in files:
@@ -80,6 +81,7 @@ class TestRepoImports(unittest.TestCase):
         found = [i for i in found if i is not None
                  and len(i)
                  and i[-1] not in self.ignorepackages]
+        print found
         failed = []
         for details in found:
             fn, ln, arch, package = details

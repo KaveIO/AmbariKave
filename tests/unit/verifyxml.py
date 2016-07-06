@@ -43,7 +43,7 @@ class TestXMLCompleteness(unittest.TestCase):
         import os
         import string
         failingfiles = {}
-        for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
+        for root, dirs, files in os.walk(os.path.dirname(__file__) + '/../../src'):
             for f in [os.path.join(root, f) for f in files if f.endswith('.xml')]:
                 try:
                     parsefile(f)

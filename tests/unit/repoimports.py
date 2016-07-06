@@ -88,13 +88,17 @@ class TestRepoImports(unittest.TestCase):
         found = [i for i in found if i[-1] not in self.ignorepackages]
         print found
         failed = []
+        sys.stdout.flush()
         for details in found:
             fn, ln, arch, package = details
             if 'kavetoolbox' in package:
                 url = kc.repo_url(package, arch=arch, dir='KaveToolbox')
             else:
                 url = kc.repo_url(package, arch=arch)
+            print url
             try:
+                print 'trying', url
+                sys.stdout.flush()
                 kc.failover_source([url])
             except IOError:
                 failed.append(details)

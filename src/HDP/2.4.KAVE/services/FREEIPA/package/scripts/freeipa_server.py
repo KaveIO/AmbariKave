@@ -99,14 +99,16 @@ class FreeipaServer(Script):
             Package(package)
 
         # Always generate new portchanges file for automated tests
-        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --create portchanges_new.json --debug')
+        if not os.path.exists('/etc/kave'):
+            Execute('mkdir -p /etc/kave')
+        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --create /etc/kave/portchanges_new.json --debug')
 
-        File("portchanges_static.json",
+        File("/etc/kave/portchanges_static.json",
              content=Template(tos.lower() + "_server.json.j2"),
              mode=0600
              )
         # Always use static file
-        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --apply portchanges_static.json --debug')
+        Execute('python ' + os.path.dirname(__file__) + '/sed_ports.py --apply /etc/kave/portchanges_static.json --debug')
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"

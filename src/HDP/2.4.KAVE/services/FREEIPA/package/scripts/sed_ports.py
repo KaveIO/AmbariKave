@@ -277,6 +277,7 @@ def check_original_from_json(regexdict, from_backup=True):
                     raise ValueError("Expected line to replace not found! "
                                      + afile + " linenum " + str(linenum)
                                      + " " + original)
+    return True
 
 
 def check_sed_directly(regexdict):
@@ -300,6 +301,7 @@ def check_sed_directly(regexdict):
             print 'checking', original, search, replace, expected
             print 'failed, resulted in ', output
             raise ValueError("This regular expression does not work " + search)
+    return True
 
 
 def check_changed_from_json(regexdict):
@@ -321,6 +323,7 @@ def check_changed_from_json(regexdict):
                 raise ValueError("Expected line not replaced! "
                                  + afile + " linenum " + str(linenum)
                                  + " " + expected)
+    return True
 
 
 def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
@@ -355,6 +358,8 @@ def check_for_line_changes(check_this_default_dict, against_this_dynamic_dict):
         print "New files: ", new_files
         print "New lines: ", new_lines
         raise ValueError("New regexs need to be added to this json file")
+
+    return True
 
 
 def restore_from_backup(search):

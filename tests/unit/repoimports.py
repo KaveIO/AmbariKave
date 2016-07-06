@@ -81,9 +81,11 @@ class TestRepoImports(unittest.TestCase):
                 found = found + self.find_repolocations(os.path.join(root, f))
                 print 'iterating'
         print found
-        found = [i for i in found if i is not None
-                 and len(i)
-                 and i[-1] not in self.ignorepackages]
+        found = [i for i in found if i is not None]
+        print found
+        found = [i for i in found if len(i)]
+        print found
+        found = [i for i in found if i[-1] not in self.ignorepackages]
         print found
         failed = []
         for details in found:

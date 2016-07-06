@@ -53,7 +53,7 @@ def d2j(adict):
     return json.loads(replaced)
 
 
-def find_services(stack="HDP/2.4.KAVE/services"):
+def find_services(stack="KAVE/services"):
     """
     Nice little helper function which lists all our services.
     returns a list of [(service-name, directory)]

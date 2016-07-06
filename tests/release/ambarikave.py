@@ -22,7 +22,7 @@ import unittest
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
     version = "2.2-Beta-Pre"
-    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE.2.1']
+    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2']
 
     def runTest(self):
         """

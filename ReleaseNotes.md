@@ -56,7 +56,7 @@ Centos7:
 - May 2016
 
 * MAJOR release to migrate to the latest Ambari version 2.2.1
-* KAVE stack now on top of HDP 2.4 (2.4.KAVE.2.1)
+* KAVE stack now on top of HDP 2.4 (2.4.KAVE)
 * HOTFIX: gitlabs CVE-2016-4340 necessitated a quick hotfix on this version,
   updating gitlabs from 8.6.3 -> 8.7.1 (3rd May)
 

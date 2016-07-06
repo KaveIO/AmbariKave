@@ -77,7 +77,10 @@ class TestRepoImports(unittest.TestCase):
                     continue
                 if f in self.ignorefiles:
                     continue
+                print 'checking', f
                 found = found + self.find_repolocations(os.path.join(root, f))
+                print 'iterating'
+        print found
         found = [i for i in found if i is not None
                  and len(i)
                  and i[-1] not in self.ignorepackages]

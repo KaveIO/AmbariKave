@@ -31,6 +31,7 @@ import pep8variables
 import jsonbpchecks
 import repoimports
 import base
+import sys
 
 mods = [checkpep8, testpythonimport, testversion, pep8functions,
         deploylib, kclib, servicesh, scan, license, repoimports,

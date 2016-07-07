@@ -68,7 +68,7 @@ class TestRepoImports(unittest.TestCase):
         are importable in python, this is a basic sanity check
         """
         found = []
-        for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
+        for root, dirs, files in os.walk(os.path.dirname(__file__) + '/../../src/KAVE'):
             if '.git' in root:
                 continue
             for f in files:
@@ -81,14 +81,23 @@ class TestRepoImports(unittest.TestCase):
                  and len(i)
                  and i[-1] not in self.ignorepackages]
         failed = []
+        sys.stdout.flush()
         for details in found:
             fn, ln, arch, package = details
-            if 'kavetoolbox' in package:
-                url = kc.repo_url(package, arch=arch, dir='KaveToolbox')
-            else:
-                url = kc.repo_url(package, arch=arch)
+            urls = []
+            for mirror in kc.mirrors():
+                if 'kavetoolbox' in package:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox'))
+                else:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror))
+            if not len(urls):
+                if 'kavetoolbox' in package:
+                    urls.append(kc.repo_url(package, arch=arch, dir='KaveToolbox'))
+                else:
+                    urls.append(kc.repo_url(package, arch=arch))
             try:
-                kc.failover_source([url])
+                sys.stdout.flush()
+                kc.failover_source(urls)
             except IOError:
                 failed.append(details)
         self.assertFalse(len(failed), "Some requested downloads do not exist!\n\t" +

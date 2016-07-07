@@ -49,7 +49,7 @@ class TestIpaPortSed(unittest.TestCase):
         Tests which cehck the function of the deployment library,
         but do not need any environment parameters or access to aws
         """
-        loc = glob.glob(os.path.dirname(__file__) + '/../../src/*/*/services/FREEIPA/package/scripts/sed_ports.py')[0]
+        loc = glob.glob(os.path.dirname(__file__) + '/../../src/KAVE/services/FREEIPA/package/scripts/sed_ports.py')[0]
         self.assertTrue(os.path.exists(loc), "Could not find sed_ports script")
         sed_ports = imp.load_source('sed_ports', loc)
         for cl in sed_ports.comment_in_manually:

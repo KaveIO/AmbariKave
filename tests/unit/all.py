@@ -31,6 +31,7 @@ import pep8variables
 import jsonbpchecks
 import repoimports
 import base
+import sys
 
 mods = [checkpep8, testpythonimport, testversion, pep8functions,
         deploylib, kclib, servicesh, scan, license, repoimports,
@@ -38,4 +39,7 @@ mods = [checkpep8, testpythonimport, testversion, pep8functions,
         ipaportsed]
 
 if __name__ == "__main__":
+    # Repo imports does not work on jenkins, no idea why ... perhaps memory usage?
+    if '--jenkins' in sys.argv:
+        mods = [m for m in mods if m not in [repoimports]]
     base.parallel(mods)

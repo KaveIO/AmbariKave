@@ -55,11 +55,13 @@ RELEASE_PACKAGE="ambarikave-package-$TAG.tar.gz"
 echo "Building $RELEASE_PACKAGE"
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/
 cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
+mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/HDP
+cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2
 cp -r $SRC_DIR/common-services $BUILD_DIR/package/ambari-server/resources/common-services
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/README.md $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/package/ambari-server/
 
 # apply dist_kavecommon.py
-python $PROJECT_DIR/dev/dist_kavecommon.py $BUILD_DIR/package/ambari-server/resources/stacks/
+python $PROJECT_DIR/dev/dist_kavecommon.py $BUILD_DIR/package/ambari-server/resources/stacks/HDP
 
 # Tar autocollapses. If I'm not in the same path as I'm taring than my tarball
 # contains the full path.

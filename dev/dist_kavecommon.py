@@ -17,40 +17,25 @@
 #
 ##############################################################################
 """
-Copy everything from src/shared into each 2.X.KAVE/services directory
+Copy kavecommon from src/shared into each service directory
 """
 import os
+import glob
 import sys
 import shutil
 
-runfrom = os.path.realpath(os.path.dirname(__file__))
-# top source location
-topsource = runfrom + '/../src/HDP'
+destination = os.path.realpath(sys.argv[1])
+if not os.path.exists(destination):
+    raise IOError("Cannot distribute to somewhere that does not exist")
 
-# collect list of destinations
-topdestination = sys.argv[1]
-# print "topsource", topsource, "topdestination", topdestination
+servicedirs = []
+for i in range(4):
+    servicedirs = servicedirs + glob.glob(destination + ('/*' * i) + '/package/scripts')
 
-stacks = [os.path.join(topsource, o) + "/services" for o in os.listdir(topsource) if
-          os.path.isdir(os.path.join(topsource, o))]
-# print "stacks",stacks
-
-services = []
-for s in stacks:
-    services = services + [os.path.join(s, o) for o in os.listdir(s) if os.path.isdir(os.path.join(s, o))]
-
-service_subdirs = [s.replace(runfrom + '/../src', '') + "/package/scripts" for s in services]
-# print "service_subdirs",service_subdirs
-
-# collect list of files to copy ...
-topcopy = runfrom + '/../src/shared/kavecommon.py'
-
-# print topcopy
+servicedirs = list(set([s for s in servicedirs if len(s)]))
+topcopy = os.path.dirname(__file__) + '/../src/shared/kavecommon.py'
 
 # copy from all files to all destinations
-for s in service_subdirs:
-    thisdest = topdestination + os.sep + s
-    # print "running for",s,thisdest
-    if os.path.isdir(thisdest):
-        # print topcopy,"->",thisdest
-        shutil.copy(topcopy, thisdest)
+for s in servicedirs:
+    if os.path.isdir(s):
+        shutil.copy(topcopy, s)

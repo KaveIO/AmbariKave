@@ -79,6 +79,7 @@ Alias /ganglia /usr/share/ganglia
   Order deny,allow
   # Deny from all
   Allow from all
+  Require all granted
   Allow from 127.0.0.1
   Allow from ::1
   # Allow from .example.com

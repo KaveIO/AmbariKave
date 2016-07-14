@@ -40,7 +40,6 @@ class TestAmbariPackaging(base.LDTest):
             os.system('rm -rf /../build')
 
 
-
 if __name__ == "__main__":
     import sys
 

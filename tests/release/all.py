@@ -23,7 +23,7 @@ import kavetoolbox
 mods = [checkpackage, ambarikave, kavetoolbox]
 
 
-modargs = {checkpackage : [],
+modargs = {checkpackage: [],
            kavetoolbox: ['Centos6', 'Centos7', 'Ubuntu14'],
            ambarikave: []
            }

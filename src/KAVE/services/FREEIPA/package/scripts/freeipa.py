@@ -93,6 +93,7 @@ class RobotAdmin():
                     line = line.strip()
                     if line.startswith('hostname='):
                         ambhost = line.split('=')[-1]
+            # if on the same machine, then use the local method, else the remote method
             if (not len(ambhost)) or (ambhost == 'localhost'
                                       or ambhost.startswith(_hostname)
                                       or _hostname.startswith(_ambhost)):
@@ -174,10 +175,10 @@ class RobotAdmin():
 
     def _all_hosts_remote(self, remote_machine):
         print 'hosts from remote ambari'
-        password = ''
         ssh = ['ssh', 'root@' + remote_machine]
-        password = subprocess.Popen(ssh + ['cat ' + self.ambari_db_password_file],
-                                    stdout=subprocess.PIPE)
+        p = subprocess.Popen(ssh + ['cat ' + self.ambari_db_password_file],
+                             stdout=subprocess.PIPE)
+        password, _err = p.communicate()
         protect(password)
         if not len(password):
             raise ValueError('Error reading ambari database password from file')
@@ -189,7 +190,7 @@ class RobotAdmin():
                                     + ' \\"' + self.psql_query[-1] + '\\";'
                                     + '"'
                                     ], stdout=subprocess.PIPE)
-        output, err = p.communicate()
+        output, _err = p.communicate()
         hosts = filter(bool, output.split("\n"))
         if len(hosts):
             print "hosts found from ambari database scraping"

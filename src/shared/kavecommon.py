@@ -257,7 +257,7 @@ def check_port(number):
     """
     _status, stdout, _stderr = shell_call_wrapper("netstat -lpe | grep ':" + str(number) + "'")
     stdout = stdout.strip().split()
-    if len(stdout)<4:
+    if len(stdout) < 4:
         return None
     if stdout[3].endswith(':' + str(number)):
         return stdout
@@ -272,7 +272,6 @@ def check_port(number):
     return None
 
 
-
 def ps(number):
     """
     return ps details for this process
@@ -280,9 +279,9 @@ def ps(number):
     """
     _status, stdout, _stderr = shell_call_wrapper("ps -f " + str(number) + " | grep " + str(number))
     stdout = stdout.strip().split()
-    if len(stdout)<4:
+    if len(stdout) < 4:
         return None
-    if stdout[1]==str(number):
+    if stdout[1] == str(number):
         return stdout[0:8] + [stdout[8:]]
     return None
 

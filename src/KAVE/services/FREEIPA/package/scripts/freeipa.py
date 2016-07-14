@@ -182,7 +182,7 @@ class RobotAdmin():
 
         # Fetch the list of all hosts with a FREEIPA_CLIENT hostcomponent
         p = subprocess.Popen(ssh + ['bash -c "'
-                                    + 'export PGPASSWORD=`cat ' + self.ambari_db_password_file + '`;'
+                                    + 'export PGPASSWORD=`cat ' + self.ambari_db_password_file + '`; '
                                     + ' '.join(self.psql_query[:-1])
                                     + ' \\"' + self.psql_query[-1] + '\\";'
                                     + '"'

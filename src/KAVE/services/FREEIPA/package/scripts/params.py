@@ -67,7 +67,7 @@ forwarders = [forwarder for forwarder in forwarders if re.match('\\d+\\.\\d+\\.\
 
 client_init_wait = default('configurations/freeipa/client_init_wait', 600)
 
-all_hosts = None #default("/clusterHostInfo/all_hosts", None)
+all_hosts = None  # default("/clusterHostInfo/all_hosts", None)
 
 ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
 ldap_bind_services = ['twiki', 'gitlab', 'jenkins']

@@ -72,10 +72,10 @@ class FreeipaServer(Script):
         import params
         env.set_params(params)
 
-        #if params.amb_server != params.hostname:
-        #    raise Exception('The FreeIPA server installation has a hard requirement to be installed'
-        #                    ' on the ambari server. ambari_server: %s freeipa_server %s'
-        #                    % (params.amb_server, params.hostname))
+        # if params.amb_server != params.hostname:
+        #     raise Exception('The FreeIPA server installation has a hard requirement to be installed'
+        #                     ' on the ambari server. ambari_server: %s freeipa_server %s'
+        #                     % (params.amb_server, params.hostname))
         import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()

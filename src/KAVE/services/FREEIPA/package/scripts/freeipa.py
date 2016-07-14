@@ -93,7 +93,9 @@ class RobotAdmin():
                     line = line.strip()
                     if line.startswith('hostname='):
                         ambhost = line.split('=')[-1]
-            if ((not len(ambhost)) or ambhost == 'localhost' or ambhost.startswith(_hostname) or _hostname.startswith(_ambhost)):
+            if (not len(ambhost)) or (ambhost == 'localhost'
+                                      or ambhost.startswith(_hostname)
+                                      or _hostname.startswith(_ambhost)):
                 all_hosts = self._all_hosts_local()
             else:
                 all_hosts = self._all_hosts_remote(ambhost)

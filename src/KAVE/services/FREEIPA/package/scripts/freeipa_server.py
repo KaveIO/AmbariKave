@@ -72,24 +72,11 @@ class FreeipaServer(Script):
         import params
         env.set_params(params)
 
-        # if params.amb_server != params.hostname:
-        #     raise Exception('The FreeIPA server installation has a hard requirement to be installed'
-        #                     ' on the ambari server. ambari_server: %s freeipa_server %s'
-        #                     % (params.amb_server, params.hostname))
         import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:
             raise OSError("Failed to determine hostname!")
-        # All of these packages are necessary for a simple way to check that
-        # a given port on the local machine is available or not within python
-        # almost certainly this should be replaced with something less dependent on installation
-        # Package('gcc')
-        # Package('epel-release')
-        # Execute('yum clean all')
-        # Package('python-devel')
-        # Package('python-pip')
-        # Execute('pip install psutil')
 
         import kavecommon as kc
         tos = kc.detect_linux_version()

@@ -185,6 +185,9 @@ class RobotAdmin():
             raise ValueError('Error reading ambari database password from file')
 
         # Fetch the list of all hosts with a FREEIPA_CLIENT hostcomponent
+        # This command ssh-es to the remote machine
+        # Then exports the ambari password as an environement variable
+        # Then runs the same psql query, except for needing some cute quotes
         p = subprocess.Popen(ssh + ['bash -c "'
                                     + 'export PGPASSWORD=`cat ' + self.ambari_db_password_file + '`; '
                                     + ' '.join(self.psql_query[:-1])

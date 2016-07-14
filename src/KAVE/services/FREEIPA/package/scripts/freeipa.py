@@ -67,6 +67,10 @@ class RobotAdmin():
     password_file = '/root/%s-password' % login
     previously_distributed_file = '/root/%s-previously-distributed' % login
     ambari_db_password_file = '/etc/ambari-server/conf/password.dat'
+    psql_query = ['psql', 'ambari', 'ambari', '-q', '-A', '-t', '-c',
+                  'select hosts.host_name from hosts join hostcomponentstate '
+                  + 'on hostcomponentstate.host_id = hosts.host_id where '
+                  + 'component_name = \'FREEIPA_CLIENT\';']
 
     def get_login(self):
         return self.login
@@ -80,7 +84,19 @@ class RobotAdmin():
     def distribute_password(self, all_hosts=None):
         previously_distributed_hosts = self._previously_distributed_hosts()
         if all_hosts is None:
-            all_hosts = self._all_hosts()
+            p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
+            _hostname = p0.communicate()[0].strip()
+            # read ambari hostname from the ambari client config
+            ambhost = ''
+            with open('/etc/ambari-agent/conf/ambari-agent.ini') as fp:
+                for line in fp.readlines():
+                    line = line.strip()
+                    if line.startswith('hostname='):
+                        ambhost = line.split('=')[-1]
+            if ((not len(ambhost)) or ambhost == 'localhost' or ambhost.startswith(_hostname) or _hostname.startswith(_ambhost)):
+                all_hosts = self._all_hosts_local()
+            else:
+                all_hosts = self._all_hosts_remote(ambhost)
 
         new_hosts = [host for host in all_hosts if host not in previously_distributed_hosts]
 
@@ -131,26 +147,51 @@ class RobotAdmin():
             for host in hosts:
                 f.write(host + '\n')
 
-    def _all_hosts(self):
+    def _all_hosts_local(self):
+        print 'hosts from local ambari'
+        password = ''
         with open(self.ambari_db_password_file) as f:
             password = f.read()
             protect(password)
-            env = os.environ.copy()
-            env['PGPASSWORD'] = password
+        if not len(password):
+            raise ValueError('Error reading ambari database password from file')
+        protect(password)
+        env = os.environ.copy()
+        env['PGPASSWORD'] = password
 
-            # Fetch the list of all hosts with a FREEIPA_CLIENT hostcomponent
-            # this call is a big part of the reason why freeipa is bound hard to
-            # the ambari server.
-            p = subprocess.Popen(['psql', 'ambari', 'ambari', '-q', '-A', '-t',
-                                  '-c', 'select hosts.host_name from hosts join hostcomponentstate \
-                on hostcomponentstate.host_id = hosts.host_id where \
-                component_name = \'FREEIPA_CLIENT\';'], stdout=subprocess.PIPE,
-                                 env=env)
-            output, err = p.communicate()
-            hosts = filter(bool, output.split("\n"))
-            if len(hosts):
-                print "hosts found from ambari database scraping"
-            return hosts
+        # Fetch the list of all hosts with a FREEIPA_CLIENT hostcomponent
+        # this call is a big part of the reason why freeipa is bound hard to
+        # the ambari server.
+        p = subprocess.Popen(self.psql_query, stdout=subprocess.PIPE,
+                             env=env)
+        output, err = p.communicate()
+        hosts = filter(bool, output.split("\n"))
+        if len(hosts):
+            print "hosts found from ambari database scraping"
+        return hosts
+
+    def _all_hosts_remote(self, remote_machine):
+        print 'hosts from remote ambari'
+        password = ''
+        ssh = ['ssh', 'root@' + remote_machine]
+        password = subprocess.Popen(ssh + ['cat ' + self.ambari_db_password_file],
+                                    stdout=subprocess.PIPE)
+        protect(password)
+        if not len(password):
+            raise ValueError('Error reading ambari database password from file')
+
+        # Fetch the list of all hosts with a FREEIPA_CLIENT hostcomponent
+        p = subprocess.Popen(ssh + ['bash -c "'
+                                    + 'export PGPASSWORD=`cat ' + self.ambari_db_password_file + '`;'
+                                    + ' '.join(self.psql_query[:-1])
+                                    + ' \\"' + self.psql_query[-1] + '\\";'
+                                    + '"'
+                                    ], stdout=subprocess.PIPE)
+        output, err = p.communicate()
+        hosts = filter(bool, output.split("\n"))
+        if len(hosts):
+            print "hosts found from ambari database scraping"
+        return hosts
 
 
 class FreeIPACommon(object):

@@ -171,6 +171,7 @@ class RobotAdmin():
         hosts = filter(bool, output.split("\n"))
         if len(hosts):
             print "hosts found from ambari database scraping"
+            print hosts
         return hosts
 
     def _all_hosts_remote(self, remote_machine):
@@ -194,6 +195,7 @@ class RobotAdmin():
         hosts = filter(bool, output.split("\n"))
         if len(hosts):
             print "hosts found from ambari database scraping"
+            print hosts
         return hosts
 
 

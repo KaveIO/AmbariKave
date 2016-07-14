@@ -96,7 +96,7 @@ class RobotAdmin():
             # if on the same machine, then use the local method, else the remote method
             if (not len(ambhost)) or (ambhost == 'localhost'
                                       or ambhost.startswith(_hostname)
-                                      or _hostname.startswith(_ambhost)):
+                                      or _hostname.startswith(ambhost)):
                 all_hosts = self._all_hosts_local()
             else:
                 all_hosts = self._all_hosts_remote(ambhost)

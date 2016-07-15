@@ -86,6 +86,9 @@ class FreeipaClient(Script):
             # installs ipa-client software
             rm.client_install(params.ipa_server, params.domain, params.client_init_wait, params.install_with_dns)
 
+        # here we remove the robot-admin-password in case we are not running on the server
+        # Note the strange construction due to the enter/exit clauses of the get_freeipa method
+        # Although it may look like these lines do nothing, do not be fooled
         with rm.get_freeipa(not installed_on_server) as fi:
             pass
 

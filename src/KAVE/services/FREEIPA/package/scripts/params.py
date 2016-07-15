@@ -119,3 +119,5 @@ elif len(domain) >= 42 and not long_domain_patch:
 elif len(domain) < 20 and long_domain_patch:
     raise ValueError("This domain is less than 20 characters, and so the long_domain_patch "
                      + "is unecessary and potentially harmful.")
+
+admin_user_shell = default('configurations/freeipa/admin_user_shell', '/sbin/nologin')

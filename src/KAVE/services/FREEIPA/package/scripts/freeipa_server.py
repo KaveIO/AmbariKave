@@ -152,6 +152,8 @@ class FreeipaServer(Script):
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
             # set the default shell
             fi.set_default_shell(params.default_shell)
+            # Set the admin user shell
+            fi.set_user_shell(self.admin_login, params.admin_user_shell)
             # make base accounts
             self.create_base_accounts(env, fi)
 
@@ -235,13 +237,15 @@ class FreeipaServer(Script):
 
         rm = freeipa.RobotAdmin()
 
-        # Always create the hadoop group
-        fi.create_group('hadoop', 'the hadoop user group')
         fi.create_user_principal(
             rm.get_login(),
             groups=['admins'],
             password=freeipa.generate_random_password(),
             password_file=rm.get_password_file())
+
+        fi.set_user_shell(rm.get_login(), params.admin_user_shell)
+        # Always create the hadoop group
+        fi.create_group('hadoop', 'the hadoop user group')
 
         # Create ldap bind user
         expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52 * 10)).strftime('%Y%m%d%H%M%SZ')

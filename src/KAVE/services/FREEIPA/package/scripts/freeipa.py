@@ -319,6 +319,9 @@ class FreeIPACommon(object):
     def set_user_email(self, user, email):
         subprocess.call(['ipa', 'user-mod', '--email', email, user])
 
+    def set_user_shell(self, user, shell):
+        subprocess.call(['ipa', 'user-mod', '--shell', shell, user])
+
 
 class FreeIPA(FreeIPACommon):
     """

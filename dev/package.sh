@@ -33,6 +33,7 @@ set -e
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 BUILD_DIR=$PROJECT_DIR/build
 DEV_DIR=$PROJECT_DIR/dev
+TEST_DIR=$PROJECT_DIR/tests
 SRC_DIR=$PROJECT_DIR/src
 DPM_DIR=$PROJECT_DIR/deployment
 
@@ -77,6 +78,9 @@ DEPLOYMENT_TARBALL="ambarikave-deployment-$TAG.tar.gz"
 echo "Building $DEPLOYMENT_TARBALL"
 cp -r $DPM_DIR $BUILD_DIR/ambarikave-deployment
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/ambarikave-deployment
+cp $TEST_DIR/integration/blueprints/example*.json $BUILD_DIR/ambarikave-deployment/blueprints/
+cp $TEST_DIR/integration/blueprints/MONGODB*.json $BUILD_DIR/ambarikave-deployment/blueprints/
+cp $TEST_DIR/integration/blueprints/STORM*.json $BUILD_DIR/ambarikave-deployment/blueprints/
 #remove aws parts
 rm -rf $BUILD_DIR/ambarikave-deployment/aws
 rm -rf $BUILD_DIR/ambarikave-deployment/lib/kaveaws.py

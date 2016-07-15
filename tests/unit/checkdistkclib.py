@@ -45,8 +45,8 @@ class TestKaveCommonLib(unittest.TestCase):
 
     def findkavecommon(self, topdir):
         found = []
-        for path, dirs, files  in os.walk(topdir):
-            found = found + [path.replace(topdir,'') for f in files if f == 'kavecommon.py']
+        for path, dirs, files in os.walk(topdir):
+            found = found + [path.replace(topdir, '') for f in files if f == 'kavecommon.py']
         return found
 
     def runTest(self):
@@ -63,7 +63,7 @@ class TestKaveCommonLib(unittest.TestCase):
             os.system('rm -rf tmpdir')
         extra = [s for s in found if s not in self.gooddirs]
         missing = [s for s in self.gooddirs if s not in found]
-        if len(missing+extra):
+        if len(missing + extra):
             print found, extra, missing
         self.assertFalse(len(extra), 'extra')
         self.assertFalse(len(missing), '')

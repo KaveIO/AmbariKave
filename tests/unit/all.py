@@ -30,11 +30,12 @@ import pep8functions
 import pep8variables
 import jsonbpchecks
 import repoimports
+import testresourcewizard
 import base
 import sys
 
-mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, repoimports,
+mods = [testresourcewizard, checkpep8, testpythonimport, testversion,
+        pep8functions, deploylib, kclib, servicesh, scan, license, repoimports,
         pyfilenames, pep8variables, jsonbpchecks, verifyxml,
         ipaportsed]
 

@@ -266,7 +266,7 @@ class FreeIPACommon(object):
             with open(os.devnull, "w") as devnull:
                 subprocess.check_call(['ipa', 'user-show', user], stderr=devnull)
             return True
-        except (subprocess.CalledProcessError, IOError):
+        except (subprocess.CalledProcessError, IOError, OSError):
             pass
         return False
 
@@ -275,7 +275,7 @@ class FreeIPACommon(object):
             with open(os.devnull, "w") as devnull:
                 subprocess.check_call(['ipa', 'sudorule-show', sudorule], stderr=devnull)
             return True
-        except (subprocess.CalledProcessError, IOError):
+        except (subprocess.CalledProcessError, IOError, OSError):
             pass
         return False
 
@@ -284,7 +284,7 @@ class FreeIPACommon(object):
             with open(os.devnull, "w") as devnull:
                 subprocess.check_call(['ipa', 'service-show', service], stderr=devnull)
             return True
-        except (subprocess.CalledProcessError, IOError):
+        except (subprocess.CalledProcessError, IOError, OSError):
             pass
         return False
 
@@ -293,7 +293,7 @@ class FreeIPACommon(object):
             with open(os.devnull, "w") as devnull:
                 subprocess.check_call(['ipa', 'group-show', group], stderr=devnull)
             return True
-        except (subprocess.CalledProcessError, IOError):
+        except (subprocess.CalledProcessError, IOError, OSError):
             pass
         return False
 

@@ -34,3 +34,17 @@ if not len(install_subdir) or install_subdir.count('/'):
     raise ValueError('archiva/install_subdir must be a simple string, with no "/"')
 
 archiva_jetty_port = default('configurations/archiva/archiva_jetty_port', '5050')
+
+ARCHIVA_PORT = default("configurations/archiva/ARCHIVA_PORT", "5050")
+ARCHIVA_ADMIN = default("configurations/archiva/ARCHIVA_ADMIN", "admin")
+ARCHIVA_ADMIN_FULLNAME = default("configurations/archiva/ARCHIVA_ADMIN_FULLNAME", "administrator")
+ARCHIVA_ADMIN_EMAIL = default("configurations/archiva/ARCHIVA_ADMIN_EMAIL", "default")
+ARCHIVA_ADMIN_PASSWORD = default("configurations/archiva/ARCHIVA_ADMIN_PASSWORD", "admin123")
+
+if ARCHIVA_ADMIN_EMAIL == 'default':
+    ARCHIVA_ADMIN_EMAIL = ARCHIVA_ADMIN + '@' + '.'.join(hostname.split('.')[1:])
+
+archiva_admin_dict = {"username":params.ARCHIVA_ADMIN,"password":params.ARCHIVA_ADMIN_PASSWORD,
+                      "confirmPassword":params.ARCHIVA_ADMIN_PASSWORD,"fullName":params.ARCHIVA_ADMIN_FULLNAME,
+                      "email":params.ARCHIVA_ADMIN_EMAIL,"assignedRoles":[],"modified":true,"rememberme":false,"logged":false}
+

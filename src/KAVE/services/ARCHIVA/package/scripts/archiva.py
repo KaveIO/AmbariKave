@@ -45,6 +45,19 @@ class Archiva(Script):
 
         self.configure(env)
 
+        curl_command = ('curl -H Content-type: application/json -d' 
+                        + params.archiva_admin_dict
+                        + 'http://' + params.hostname + ':' + str(params.ARCHIVA_PORT) 
+                        + '/restServices/redbackServices/userService/createAdminUser')
+        try:
+            Execute(curl_command)
+        except Fail as ex:
+            print "the curl command met with failure the first time,,,trying in another 60 secs"
+            print ex
+            import time
+            time.sleep(60)
+            Execute(curl_command)
+
     def start(self, env):
         self.configure(env)
         Execute('service archiva start > /dev/null')

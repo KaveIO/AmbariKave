@@ -36,7 +36,7 @@ import Queue
 
 # Centos6 has the username root, Centos7 has the username 'centos'
 default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
-default_os = "Centos7"
+default_os = "Redhat7"
 
 
 def testaws():

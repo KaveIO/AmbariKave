@@ -46,7 +46,7 @@ class Archiva(Script):
         self.configure(env)
 
         curl_command = ('curl -H Content-type: application/json -d'
-                        + "' "+ str(params.archiva_admin_dict) + "' "
+                        + " '"+ str(params.archiva_admin_dict) + "' "
                         + 'http://' + params.hostname + ':' + str(params.ARCHIVA_PORT)
                         + '/restServices/redbackServices/userService/createAdminUser')
         try:

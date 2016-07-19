@@ -44,7 +44,7 @@ ARCHIVA_ADMIN_PASSWORD = default("configurations/archiva/ARCHIVA_ADMIN_PASSWORD"
 if ARCHIVA_ADMIN_EMAIL == 'default':
     ARCHIVA_ADMIN_EMAIL = ARCHIVA_ADMIN + '@' + '.'.join(hostname.split('.')[1:])
 
-archiva_admin_dict = {"username":params.ARCHIVA_ADMIN,"password":params.ARCHIVA_ADMIN_PASSWORD,
-                      "confirmPassword":params.ARCHIVA_ADMIN_PASSWORD,"fullName":params.ARCHIVA_ADMIN_FULLNAME,
-                      "email":params.ARCHIVA_ADMIN_EMAIL,"assignedRoles":[],"modified":true,"rememberme":false,"logged":false}
-
+archiva_admin_dict = {"username": ARCHIVA_ADMIN, "password": ARCHIVA_ADMIN_PASSWORD,
+                      "confirmPassword": ARCHIVA_ADMIN_PASSWORD, "fullName": ARCHIVA_ADMIN_FULLNAME,
+                      "email": ARCHIVA_ADMIN_EMAIL, "assignedRoles": [], "modified": 'true', "rememberme": 'false',
+                      "logged": 'false'}

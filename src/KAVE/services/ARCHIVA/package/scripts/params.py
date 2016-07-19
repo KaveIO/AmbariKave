@@ -19,6 +19,8 @@ from resource_management import *
 
 config = Script.get_config()
 
+hostname = config["hostname"]
+
 install_topdir = default('configurations/archiva/install_topdir', '/opt/')
 
 if len(install_topdir) < 4 or install_topdir.count('/') < 2 or not install_topdir.startswith('/'):

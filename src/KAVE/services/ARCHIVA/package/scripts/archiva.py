@@ -45,6 +45,10 @@ class Archiva(Script):
 
         self.configure(env)
 
+    def start(self, env):
+        self.configure(env)
+        Execute('service archiva start > /dev/null')
+
         curl_command = ('curl -H Content-type: application/json -d'
                         + " '"+ str(params.archiva_admin_dict) + "' "
                         + 'http://' + params.hostname + ':' + str(params.ARCHIVA_PORT)
@@ -57,10 +61,6 @@ class Archiva(Script):
             import time
             time.sleep(60)
             Execute(curl_command)
-
-    def start(self, env):
-        self.configure(env)
-        Execute('service archiva start > /dev/null')
 
     def stop(self, env):
         Execute('service archiva stop')

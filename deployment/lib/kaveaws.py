@@ -80,7 +80,7 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                      "ap-northeast": "ami-936d9d93",
                                      "ap-southeast": "ami-96f1c1c4"
                                      },
-                        "Redhat7": {"default": "ami-2051294a",
+                        "Redhat7":  {"default": "ami-2051294a",
                                      "eu-west": "ami-8b8c57f8",
                                      "ap-northeast": "ami-0dd8f963",
                                      "ap-southeast": "ami-cdbdd7a2"

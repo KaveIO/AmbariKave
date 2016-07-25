@@ -35,7 +35,7 @@ import thread
 import Queue
 
 # Centos6 has the username root, Centos7 has the username 'centos'
-default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
+default_usernamedict = {"Centos6": "root", "Centos7": 'centos', "Redhat7": 'ec2-user'}
 default_os = "Redhat7"
 
 

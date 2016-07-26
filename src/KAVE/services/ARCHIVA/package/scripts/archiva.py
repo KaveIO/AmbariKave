@@ -48,7 +48,7 @@ class Archiva(Script):
         archiva_dict = json.dumps(params.archiva_admin_dict)
         curl_command = ('curl -H Content-type: application/json -d'
                         + " '"+ archiva_dict + "' "
-                        + 'http://' + params.hostname + ':' + str(params.ARCHIVA_PORT)
+                        + 'http://' + 'localhost' + ':' + str(params.ARCHIVA_PORT)
                         + '/restServices/redbackServices/userService/createAdminUser')
         try:
             self.start(env)

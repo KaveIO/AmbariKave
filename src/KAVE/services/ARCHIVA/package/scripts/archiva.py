@@ -28,6 +28,7 @@ class Archiva(Script):
     def install(self, env):
         import params
         import time
+        import json
 
         env.set_params(params)
         self.install_packages(env)
@@ -44,8 +45,9 @@ class Archiva(Script):
             Execute('rm -f /etc/init.d/archiva')
         Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % (params.install_topdir + params.install_subdir))
 
+        archiva_dict = json.dumps(params.archiva_admin_dict)
         curl_command = ('curl -H Content-type: application/json -d'
-                        + " '"+ str(params.archiva_admin_dict) + "' "
+                        + " '"+ archiva_dict + "' "
                         + 'http://' + params.hostname + ':' + str(params.ARCHIVA_PORT)
                         + '/restServices/redbackServices/userService/createAdminUser')
         try:

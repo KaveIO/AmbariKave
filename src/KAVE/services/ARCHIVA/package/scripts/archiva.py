@@ -27,6 +27,7 @@ class Archiva(Script):
 
     def install(self, env):
         import params
+        import time
 
         env.set_params(params)
         self.install_packages(env)
@@ -48,11 +49,12 @@ class Archiva(Script):
                         + 'http://' + params.hostname + ':' + str(params.ARCHIVA_PORT)
                         + '/restServices/redbackServices/userService/createAdminUser')
         try:
+            self.start(env)
+            time.sleep(60)
             Execute(curl_command)
         except Fail as ex:
             print "the curl command met with failure the first time,,,trying in another 60 secs"
             print ex
-            import time
             time.sleep(60)
             Execute(curl_command)
 

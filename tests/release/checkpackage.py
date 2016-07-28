@@ -36,6 +36,8 @@ class TestAmbariPackaging(base.LDTest):
         self.assertTrue(len(glob.glob(builddir + '/package/ambari-server/resources/stacks/HDP/*KAVE*')))
         self.assertTrue(len(glob.glob(builddir + '/package/ambari-server/resources/stacks/HDP/*KAVE*'
                                       + '/services/*/package/scripts/kavecommon.py')))
+        self.assertTrue(os.path.exists(builddir + '/ambarikave-deployment/deploy_from_blueprint.py'))
+        self.assertTrue(len(glob.glob(builddir + '/ambarikave-deployment/blueprints/example*.json')))
         if os.path.exists(builddir):
             os.system('rm -rf /../build')
 

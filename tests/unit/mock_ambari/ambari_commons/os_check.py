@@ -22,3 +22,7 @@ class OSCheck(object):
     @staticmethod
     def is_ubuntu_family():
         return False
+
+    @staticmethod
+    def is_windows_family():
+        return False

@@ -15,9 +15,20 @@
 #   limitations under the License.
 #
 ##############################################################################
-"""Simple mock for tests where we use src packages.
-"""
-import mock
-from resource_management import default
-from resource_management import Script
-from resource_management import Execute
+
+import random
+import string
+
+def genrand():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(14))
+
+def default(a, b):
+    if a in ["hostname", 'hdfs-site', 'yarn-site']:
+        return 'mock.mock.mock'
+    elif a.endswith('_host'):
+        return 'mock.mock.mock'
+    elif a.endswith('_hosts'):
+        return ['mock.mock.mock']
+    elif 'pass' in a and not a.endswith('initial_user_passwords'):
+        return genrand()
+    return b

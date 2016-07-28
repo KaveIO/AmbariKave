@@ -23,7 +23,7 @@ import sys
 
 
 class TestPyImport(unittest.TestCase):
-    skip = ["stack_advisor.py"]
+    skip = ["stack_advisor.py", "params_linux.py"]
     first = ["storm_sd_generic.py", "mongo_base.py", "mysql_users.py", "mysql_utils.py"]
 
     def tryimporting(self, fullpath):

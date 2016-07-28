@@ -20,6 +20,7 @@ import unittest
 
 
 class TestCluster(base.LDTest):
+    mach_list = ["ambari"]
 
     def runTest(self):
         """
@@ -44,7 +45,14 @@ class TestCluster(base.LDTest):
         if self.clustername == 'prod':
             self.clustername = self.service
         stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        ambari, iid = self.remote_from_cluster_stdout(stdout)
+        self.mdict = {}
+        for mname in self.mach_list:
+            try:
+                remote, _iid = self.remote_from_cluster_stdout(stdout)
+                self.mdict[mname] = remote
+            except KeyError:
+                continue
+        ambari = self.mdict['ambari']
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
         self.pull(ambari)
@@ -57,33 +65,41 @@ class TestFreeIPACluster(TestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
+    mach_list = ["ambari", "ipa"]
 
-    def check(self, ambari):
-        super(TestFreeIPACluster, self).check(ambari)
+    def checkipaserver(self, ipaserver):
         import time
         import os
         import subprocess as sub
         # Check kerberos
-        if 'yes' not in ambari.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
+        if 'yes' not in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
         import subprocess as sub
-        pwd = ambari.run("cat admin-password")
-        proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
+        pwd = ipaserver.run("cat admin-password")
+        proc = sub.Popen(ipaserver.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
         output, err = proc.communicate(input=pwd + '\n')
         self.assertFalse(proc.returncode, "Failed to kinit admin on this node "
                          + ' '.join(ambari.sshcmd())
                          + output + " " + err
                          )
-        ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
-        ambari.run("./createkeytabs.py ./kerberostest.csv")
+        ipaserver.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
+        ipaserver.run("./createkeytabs.py ./kerberostest.csv")
         # check port number patching still applies correctly
-        ambari.run("python "
-                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
-                   " --test /etc/kave/portchanges_static.json --debug")
-        ambari.run("python "
-                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
-                   " --test /etc/kave/portchanges_new.json --debug")
+        ipaserver.run("python "
+                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                      " --test /etc/kave/portchanges_static.json --debug")
+        ipaserver.run("python "
+                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                      " --test /etc/kave/portchanges_new.json --debug")
+
+    def check(self, ambari):
+        super(TestFreeIPACluster, self).check(ambari)
+        if 'ipa' in self.mdict:
+            self.checkipaserver(self.mdict['ipa'])
+        else:
+            self.checkipaserver(ambari)
+
 
 if __name__ == "__main__":
     import sys
@@ -107,7 +123,7 @@ if __name__ == "__main__":
         raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
     test = TestCluster()
-    if service == "FREEIPA":
+    if service.startswith("FREEIPA"):
         test = TestFreeIPACluster()
     test.service = service
     test.debug = verbose

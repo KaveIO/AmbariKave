@@ -19,7 +19,7 @@
 # used in the dev install.sh command, and also catted into the packaged install script
 
 #abort at first failure
-yum info epel-release | grep installed
+yum info epel-release 2>/dev/null | grep installed
 epel_not_installed=$?
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations

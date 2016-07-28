@@ -23,13 +23,14 @@ set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
 os=`uname -r`
+flavor='centos'
 if [[ "$os" == *"el7"* ]]; then
 	os="centos7"
 	if [ -e "/etc/redhat-release" ]; then
 		release=`cat /etc/redhat-release`
 		if [[ "$release" == *" 7."* ]]; then
 			if [[ "$release" == "Red Hat"* ]]; then
-				os="redhat7"
+				flavor="redhat"
 			fi
 		fi
 	fi
@@ -52,7 +53,7 @@ yum install ambari-server -y
 ambari-server setup -s
 
 # install requests library for python
-if [[ "$os" == "centos"* ]]; then
+if [[ "$flavor" == "centos" ]]; then
 	yum install -y epel-release
 else
 	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm

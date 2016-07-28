@@ -19,6 +19,8 @@
 # used in the dev install.sh command, and also catted into the packaged install script
 
 #abort at first failure
+yum info epel-release | grep installed
+epel_not_installed=$?
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
@@ -56,8 +58,10 @@ ambari-server setup -s
 if [[ "$flavor" == "centos" ]]; then
 	yum install -y epel-release
 else
-	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	yum -y install epel-release-latest-7.noarch.rpm
+	if [[ $epel_not_installed -ne 0 ]]; then
+		wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+		yum -y install epel-release-latest-7.noarch.rpm
+	fi
 fi
 # necessary step to update epel and HDP cached repos
 yum clean all

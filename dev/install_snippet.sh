@@ -25,6 +25,14 @@ set -e
 os=`uname -r`
 if [[ "$os" == *"el7"* ]]; then
 	os="centos7"
+	if [ -e "/etc/redhat-release" ]; then
+		release=`cat /etc/redhat-release`
+		if [[ "$release" == *" 7."* ]]; then
+			if [[ "$release" == "Red Hat"* ]]; then
+				os="redhat7"
+			fi
+		fi
+	fi
 elif [[ "$os" == *"el6"* ]]; then
 	os="centos6"
 else
@@ -44,13 +52,18 @@ yum install ambari-server -y
 ambari-server setup -s
 
 # install requests library for python
-yum install -y epel-release
+if [[ "$os" == "centos"* ]]; then
+	yum install -y epel-release
+else
+	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	yum -y install epel-release-latest-7.noarch.rpm
+fi
 # necessary step to update epel and HDP cached repos
 yum clean all
 yum install -y pdsh python-devel python-pip
 pip install requests
 
-if [ "$os" == "centos7" ]; then
+if [[ "$os" == *"7" ]]; then
 	yum install -y pdsh-mod-dshgroup
 fi
 

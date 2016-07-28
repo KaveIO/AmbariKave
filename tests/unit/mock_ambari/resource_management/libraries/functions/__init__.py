@@ -15,9 +15,12 @@
 #   limitations under the License.
 #
 ##############################################################################
-"""Simple mock for tests where we use src packages.
-"""
-import mock
-from resource_management import default
-from resource_management import Script
-from resource_management import Execute
+from default import default
+
+
+def get_kinit_path(path=""):
+    return path
+
+
+def format(astr):
+    return astr

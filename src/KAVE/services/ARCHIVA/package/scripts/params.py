@@ -37,11 +37,11 @@ if not len(install_subdir) or install_subdir.count('/'):
 
 archiva_jetty_port = default('configurations/archiva/archiva_jetty_port', '5050')
 
-ARCHIVA_PORT = default("configurations/archiva/ARCHIVA_PORT", "5050")
 ARCHIVA_ADMIN = default("configurations/archiva/ARCHIVA_ADMIN", "admin")
 ARCHIVA_ADMIN_FULLNAME = default("configurations/archiva/ARCHIVA_ADMIN_FULLNAME", "administrator")
 ARCHIVA_ADMIN_EMAIL = default("configurations/archiva/ARCHIVA_ADMIN_EMAIL", "default")
-ARCHIVA_ADMIN_PASSWORD = default("configurations/archiva/ARCHIVA_ADMIN_PASSWORD", "admin123")
+ARCHIVA_ADMIN_PASSWORD = config["archiva"]["ARCHIVA_ADMIN_PASSWORD"]
+Logger.sensitive_strings[ARCHIVA_ADMIN_PASSWORD] = "[PROTECTED]"
 
 if ARCHIVA_ADMIN_EMAIL == 'default':
     ARCHIVA_ADMIN_EMAIL = ARCHIVA_ADMIN + '@' + '.'.join(hostname.split('.')[1:])

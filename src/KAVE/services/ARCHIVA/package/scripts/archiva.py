@@ -47,8 +47,8 @@ class Archiva(Script):
 
         archiva_dict = json.dumps(params.archiva_admin_dict)
         curl_command = ('curl -H Content-type:application/json -d'
-                        + " '"+ archiva_dict + "' "
-                        + 'http://' + 'localhost' + ':' + str(params.ARCHIVA_PORT)
+                        + " '" + archiva_dict + "' "
+                        + 'http://' + 'localhost' + ':' + str(params.archiva_jetty_port)
                         + '/restServices/redbackServices/userService/createAdminUser')
         self.start(env)
         for retry in range(3):
@@ -59,7 +59,6 @@ class Archiva(Script):
             except Fail as ex:
                 print "the curl command met with failure this time,,,trying in another 60 secs"
                 print ex
-
 
     def start(self, env):
         self.configure(env)

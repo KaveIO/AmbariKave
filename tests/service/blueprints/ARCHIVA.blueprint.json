@@ -4,6 +4,11 @@
       "ams-site" : {
         "timeline.metrics.service.operation.mode" : "embedded"
       }
+    },
+    {
+      "archiva" : {
+        "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85"
+      }
     }
   ],
   "host_groups" : [

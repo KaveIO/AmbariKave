@@ -19,6 +19,7 @@
 import random
 import string
 
+
 def genrand():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(14))
 

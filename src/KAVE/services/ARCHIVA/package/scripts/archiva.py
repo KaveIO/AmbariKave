@@ -46,20 +46,19 @@ class Archiva(Script):
         Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % (params.install_topdir + params.install_subdir))
 
         archiva_dict = json.dumps(params.archiva_admin_dict)
-        curl_command = ('curl -H Content-type: application/json -d'
+        curl_command = ('curl -H Content-type:application/json -d'
                         + " '"+ archiva_dict + "' "
                         + 'http://' + 'localhost' + ':' + str(params.ARCHIVA_PORT)
                         + '/restServices/redbackServices/userService/createAdminUser')
-
-        try:
-            self.start(env)
-            time.sleep(60)
-            Execute(curl_command)
-        except Fail as ex:
-            print "the curl command met with failure the first time,,,trying in another 60 secs"
-            print ex
-            time.sleep(60)
-            Execute(curl_command)
+        self.start(env)
+        for retry in range(3):
+            try:
+                time.sleep(60)
+                Execute(curl_command, logoutput=True)
+                break
+            except Fail as ex:
+                print "the curl command met with failure this time,,,trying in another 60 secs"
+                print ex
 
 
     def start(self, env):

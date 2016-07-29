@@ -65,6 +65,7 @@
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
+RequestHeader unset Proxy early
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
@@ -82,11 +83,13 @@ DocumentRoot "{{www_folder}}"
 #
 
 Alias /ganglia /usr/share/ganglia
+RequestHeader unset Proxy early
 
 &lt;Location /ganglia&gt;
   Order deny,allow
   # Deny from all
   Allow from all
+  Require all granted
   Allow from 127.0.0.1
   Allow from ::1
   # Allow from .example.com

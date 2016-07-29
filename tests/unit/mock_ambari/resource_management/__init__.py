@@ -22,6 +22,8 @@ import random
 import string
 import core
 from core import *
+from libraries import default
+from libraries import Script
 
 
 def genrand():
@@ -30,59 +32,6 @@ def genrand():
 
 class Excecute(object):
     pass
-
-
-class mockD(object):
-    """
-    A dictionary whose get item method actually sets items also, so that there is never a keyerror on getting.
-    """
-
-    def __init__(self):
-        self.adict = {}
-
-    def __getitem__(self, key):
-        try:
-            return self.adict[key]
-        except KeyError:
-            try:
-                if key in ["hostname", 'hdfs-site', 'yarn-site']:
-                    return 'mock.mock.mock'
-                elif key.endswith('_host'):
-                    return 'mock.mock.mock'
-                elif key.endswith('_hosts'):
-                    return ['mock.mock.mock']
-                elif 'pass' in key and not key.endswith('initial_user_passwords'):
-                    return genrand()
-            except AttributeError:
-                pass
-            self.__setitem__(key, mockD())
-            return self.adict[key]
-
-    def __setitem__(self, key, val):
-        self.adict[key] = val
-
-
-class Script(object):
-
-    @staticmethod
-    def get_config():
-        return mockD()
-
-    @staticmethod
-    def get_tmp_dir():
-        return '/tmp/nonono.mock.mock.mock'
-
-
-def default(a, b):
-    if a in ["hostname", 'hdfs-site', 'yarn-site']:
-        return 'mock.mock.mock'
-    elif a.endswith('_host'):
-        return 'mock.mock.mock'
-    elif a.endswith('_hosts'):
-        return ['mock.mock.mock']
-    elif 'pass' in a and not a.endswith('initial_user_passwords'):
-        return genrand()
-    return b
 
 
 class Logger(object):

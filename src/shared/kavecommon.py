@@ -253,13 +253,36 @@ def chmod_up(lowest, mode, seen=[]):
 def check_port(number):
     """
     Check if a port is in use and return details about what is using the port
+    Proto Recv-Q Send-Q, Local Address, Foreign Address, State, User, Inode, PID/Program name
     """
+    _status, stdout, _stderr = shell_call_wrapper("netstat -lpe | grep ':" + str(number) + "'")
+    stdout = stdout.strip().split()
+    if len(stdout) < 4:
+        return None
+    if stdout[3].endswith(':' + str(number)):
+        return stdout
+    return None
+    # old code with psutil
     import psutil
     for portstat in psutil.net_connections():
         # Return system-wide connections as a list of
         # (fd, family, type, laddr, raddr, status, pid) namedtuples.
         if int(number) == int(portstat[3][-1]):
             return portstat
+    return None
+
+
+def ps(number):
+    """
+    return ps details for this process
+    UID        PID  PPID  C STIME TTY      STAT   TIME CMD
+    """
+    _status, stdout, _stderr = shell_call_wrapper("ps -f " + str(number) + " | grep " + str(number))
+    stdout = stdout.strip().split()
+    if len(stdout) < 4:
+        return None
+    if stdout[1] == str(number):
+        return stdout[0:8] + [stdout[8:]]
     return None
 
 

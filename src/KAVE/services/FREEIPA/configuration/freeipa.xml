@@ -185,4 +185,13 @@ nameserver {{ipa_server_ip_address}}
 			Folder location for Java Cryptographic Extension jar files need to be placed
         </description>
     </property>
+    <property>
+        <name>admin_user_shell</name>
+        <value>/sbin/nologin</value>
+        <description>
+			For the two administrators we create, 'admin' and 'robot-admin' we don't want to create these as system-level shell
+			users, and so we set their shells to /sbin/nologin by default. To restore old behaviour modify this, or
+			kinit as an admin user and call ipa user-mod --shell on the command line.
+        </description>
+    </property>
 </configuration>

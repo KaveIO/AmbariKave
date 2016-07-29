@@ -35,14 +35,18 @@ class FreeipaServer(Script):
         import kavecommon as kc
         import time
         check = kc.check_port(number)
+        # Proto Recv-Q Send-Q, Local Address, Foreign Address, State, User, Inode, PID/Program name
 
         if check is not None:
-            if check[-2] == "TIME_WAIT":
+            if check[-4] == "TIME_WAIT":
                 time.sleep(30)
                 check = kc.check_port(number)
 
+        def noprog(check):
+            return (len(check) < 9 or check[-1] is None or '/' not in check[-1] or '?' in check[-1])
+
         if check is not None:
-            if check[-1] is None:
+            if noprog(check):
                 # this could be a temporary process
                 time.sleep(1)
                 check = kc.check_port(number)
@@ -50,17 +54,16 @@ class FreeipaServer(Script):
         if check is not None:
             err = ("The port number %s is already in use on this machine. You must reconfigure FreeIPA ports"
                    " or install FreeIPA on a different node of your cluster. "
-                   "\n\t (fd, family, type, laddr, raddr, status, pid) \n\t %s "
+                   "\n\t (protocol, rq, sq, laddr, raddr, status, user, inode, pid/prog) \n\t %s "
                    % (number, check.__str__())
                    )
             # add process info if accessible
-            if check[-1] is not None:
-                import psutil
-                p = psutil.Process(check[-1])
-                err = err + ("\n\t [user, call, status] \n\t %s"
-                             % ([p.username(), p.cmdline(), p.status()].__str__())
+            if not noprog(check):
+                p = kc.ps(check[-1].split('/')[0])
+                err = err + ("\n\t [UID, PID, PPID, C, STIME, TTY, STAT, TIME, CMD] \n\t %s"
+                             % (p.__str__())
                              )
-                if p.cmdline()[0].split('/')[-1] in self.expected_services:
+                if check[-1].split('/')[-1] in self.expected_services:
                     err = ''
             if len(err):
                 raise OSError(err)
@@ -69,21 +72,11 @@ class FreeipaServer(Script):
         import params
         env.set_params(params)
 
-        if params.amb_server != params.hostname:
-            raise Exception('The FreeIPA server installation has a hard requirement to be installed'
-                            ' on the ambari server. ambari_server: %s freeipa_server %s'
-                            % (params.amb_server, params.hostname))
         import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:
             raise OSError("Failed to determine hostname!")
-        Package('gcc')
-        Package('epel-release')
-        Execute('yum clean all')
-        Package('python-devel')
-        Package('python-pip')
-        Execute('pip install psutil')
 
         import kavecommon as kc
         tos = kc.detect_linux_version()
@@ -156,14 +149,15 @@ class FreeipaServer(Script):
         # Ensure service is started before trying to interact with it!
         Execute('service ipa start')
 
-        # set the default shell
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
+            # set the default shell
             fi.set_default_shell(params.default_shell)
+            # Set the admin user shell
+            fi.set_user_shell(self.admin_login, params.admin_user_shell)
+            # make base accounts
+            self.create_base_accounts(env, fi)
 
-        self.create_base_accounts(env)
-        # create initial users and groups
-        with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
-
+            # create initial users and groups
             if "Users" in params.initial_users_and_groups:
                 for user in params.initial_users_and_groups["Users"]:
                     if type(user) is str or type(user) is not dict:
@@ -235,36 +229,40 @@ class FreeipaServer(Script):
 
         Execute('service ipa status')
 
-    def create_base_accounts(self, env):
+    def create_base_accounts(self, env, fi):
+        """
+        fi: a FreeIPA object
+        """
         import params
 
         rm = freeipa.RobotAdmin()
 
-        with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
-            # Always create the hadoop group
-            fi.create_group('hadoop', 'the hadoop user group')
-            fi.create_user_principal(
-                rm.get_login(),
-                groups=['admins'],
-                password=freeipa.generate_random_password(),
-                password_file=rm.get_password_file())
+        fi.create_user_principal(
+            rm.get_login(),
+            groups=['admins'],
+            password=freeipa.generate_random_password(),
+            password_file=rm.get_password_file())
 
-            # Create ldap bind user
-            expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52 * 10)).strftime('%Y%m%d%H%M%SZ')
-            File("/tmp/bind_user.ldif",
-                 content=Template("bind_user.ldif.j2", expiry_date=expiry_date),
-                 mode=0600
-                 )
-            import kavecommon as kc
-            _stat, _stdout, _stderr = kc.shell_call_wrapper(
-                'ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'
-                % (params.directory_password, params.ldap_bind_user))
-            # is this user already added?
-            if "dn: uid=" + params.ldap_bind_user not in _stdout:
-                Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/bind_user.ldif'
-                        % params.directory_password)
-            for group in params.ldap_bind_services:
-                fi.create_group(group, group + ' user group', ['--nonposix'])
+        fi.set_user_shell(rm.get_login(), params.admin_user_shell)
+        # Always create the hadoop group
+        fi.create_group('hadoop', 'the hadoop user group')
+
+        # Create ldap bind user
+        expiry_date = (datetime.datetime.now() + datetime.timedelta(weeks=52 * 10)).strftime('%Y%m%d%H%M%SZ')
+        File("/tmp/bind_user.ldif",
+             content=Template("bind_user.ldif.j2", expiry_date=expiry_date),
+             mode=0600
+             )
+        import kavecommon as kc
+        _stat, _stdout, _stderr = kc.shell_call_wrapper(
+            'ldapsearch -x -D "cn=directory manager" -w %s "uid=%s"'
+            % (params.directory_password, params.ldap_bind_user))
+        # is this user already added?
+        if "dn: uid=" + params.ldap_bind_user not in _stdout:
+            Execute('ldapadd -x -D "cn=directory manager" -w %s -f /tmp/bind_user.ldif'
+                    % params.directory_password)
+        for group in params.ldap_bind_services:
+            fi.create_group(group, group + ' user group', ['--nonposix'])
 
     def reset_robot_admin_expire_date(self, env):
         import params

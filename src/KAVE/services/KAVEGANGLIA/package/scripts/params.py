@@ -61,6 +61,7 @@ template_000_default = default('configurations/kaveganglia/template_000_default'
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
+RequestHeader unset Proxy early
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
@@ -74,11 +75,13 @@ kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """# C
 #
 
 Alias /ganglia /usr/share/ganglia
+RequestHeader unset Proxy early
 
 <Location /ganglia>
   Order deny,allow
   # Deny from all
   Allow from all
+  Require all granted
   Allow from 127.0.0.1
   Allow from ::1
   # Allow from .example.com

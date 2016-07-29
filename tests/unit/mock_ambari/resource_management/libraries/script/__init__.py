@@ -15,9 +15,4 @@
 #   limitations under the License.
 #
 ##############################################################################
-"""Simple mock for tests where we use src packages.
-"""
-import mock
-from resource_management import default
-from resource_management import Script
-from resource_management import Execute
+from script import Script

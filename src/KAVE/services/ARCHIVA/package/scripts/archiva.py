@@ -50,6 +50,7 @@ class Archiva(Script):
                         + " '"+ archiva_dict + "' "
                         + 'http://' + 'localhost' + ':' + str(params.ARCHIVA_PORT)
                         + '/restServices/redbackServices/userService/createAdminUser')
+
         try:
             self.start(env)
             time.sleep(60)
@@ -60,9 +61,9 @@ class Archiva(Script):
             time.sleep(60)
             Execute(curl_command)
 
-        self.configure(env)
 
     def start(self, env):
+        self.configure(env)
         Execute('service archiva start > /dev/null')
 
     def stop(self, env):

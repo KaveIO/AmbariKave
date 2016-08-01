@@ -193,7 +193,7 @@ try:
     ambari.run("which pdsh")
     ambari.run("which curl")
 except lD.ShellExecuteError:
-    ambari.run("yum -y install epel-release")
+    #ambari.run("yum -y install epel-release")
     ambari.run("yum clean all")
     ambari.run("yum -y install pdsh curl")
 

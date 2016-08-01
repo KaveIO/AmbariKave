@@ -1,5 +1,5 @@
 {
-    "blueprint" : "exampleredhat",
+    "blueprint" : "exampleredhat7",
     "default_password" : "admin",
     "configurations" : [
     ],

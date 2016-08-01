@@ -266,10 +266,10 @@ except lD.ShellExecuteError:
         "; fi; rm -f /tmp/ambari.repo ;'\"")
     try:
         # try and retry
-        whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
+        whole_cluster.run("yum -y install  ambari-agent curl wget")
     except lD.ShellExecuteError:
         time.sleep(5)
-        whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
+        whole_cluster.run("yum -y install  ambari-agent curl wget")
 
 try:
     whole_cluster.run("echo $HOSTNAME")

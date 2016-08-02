@@ -9,6 +9,15 @@
             Port on which archiva web UI will be hosted
         </description>
     </property>
+    <property require-input = "true">
+        <name>ARCHIVA_ADMIN_PASSWORD</name>
+        <value></value>
+        <description>
+            The password of the administrator, only created during installation
+            This password, due to a bug in Archiva, is currently limited to max 8 characters
+            Please therefore use a very strong 8-character mix and do not expose as a public internet endpoint
+        </description>
+    </property>
     <property>
         <name>install_topdir</name>
         <value>/opt/</value>
@@ -24,6 +33,28 @@
         <description>
             Install Location for Archiva.
             I will make a subdirectory called this in the install_topdir location.
+        </description>
+    </property>
+    <property>
+        <name>ARCHIVA_ADMIN</name>
+        <value>admin</value>
+        <description>
+            The username of the administrator, only created during installation
+        </description>
+    </property>
+    <property>
+        <name>ARCHIVA_ADMIN_FULLNAME</name>
+        <value>administrator</value>
+        <description>
+            The username of the administrator, only created during installation
+        </description>
+    </property>
+    <property>
+        <name>ARCHIVA_ADMIN_EMAIL</name>
+        <value>default</value>
+        <description>
+            The email of the administrator, only created during installation
+            the value default will then construct username@hotstname
         </description>
     </property>
 </configuration>

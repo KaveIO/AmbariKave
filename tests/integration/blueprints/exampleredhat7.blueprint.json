@@ -155,6 +155,6 @@
   "Blueprints" : {
     "blueprint_name" : "exampleredhat7",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE.2.2"
+    "stack_version" : "2.4.KAVE"
   }
 }

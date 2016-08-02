@@ -192,7 +192,11 @@ ambari = lD.remoteHost("root", thehost, access_key)
 try:
     ambari.run("which pdsh")
     ambari.run("which curl")
+    ambari.run("yum info epel-release 2>/dev/null | grep installed")
+
 except lD.ShellExecuteError:
+    #ambari.run("wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm")
+    #ambari.run("yum -y install epel-release-latest-7.noarch.rpm")
     #ambari.run("yum -y install epel-release")
     ambari.run("yum clean all")
     ambari.run("yum -y install pdsh curl")
@@ -230,7 +234,9 @@ try:
         raise lD.ShellExecuteError()
 except lD.ShellExecuteError:
     whole_cluster.register()
-    whole_cluster.run("yum -y install epel-release")
+    #whole_cluster.run("wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm")
+    #whole_cluster.run("yum -y install epel-release-latest-7.noarch.rpm")
+    #whole_cluster.run("yum -y install epel-release")
     # TODO: instead copy this file _from_ the ambari node *to* the others directly
     # For the time being, copy to tmp, then redistribute if necessary
     copy_from = None

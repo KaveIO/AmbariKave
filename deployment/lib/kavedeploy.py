@@ -467,20 +467,61 @@ class multiremotes(object):
 
     def cp(self, localfile, remotefile):
         """
-        use scp, one at a time, unfortunately :S, either starting locally or starting on some remote jump server
+        Use pdcp if it exists, else use scp one-at-a-time
         """
         directory = os.path.isdir(os.path.realpath(os.path.expanduser(localfile)))
-        for host in self.hosts:
-            if self.jump is None:
-                remote = remoteHost("root", host, self.access_key)
-                remote.cp(localfile, remotefile)
-                return
+
+        # first detect if I am able to use pdcp or not
+
+        pdcp = False
+        if self.jump is None and which('pdcp'):
+            # local pdcp
+            pdcp = True
+
+        if self.jump is not None:
+            try:
+                # remote pdcp
+                self.jump.run('which pdcp')
+                pdcp = True
+            except ShellExecuteError:
+                pdcp = False
+
+        excmd = ""
+
+        if self.jump is not None:
+            self.jump.cp(localfile, remotefile)
+
+        diropt = ''
+
+        if directory:
+            diropt = ' -r '
+
+        if pdcp:
+            if detect_proxy():
+                propts = proxopts()
+                propts = " ".join(propts[:-1]) + '"' + propts[-1] + '"'
+                excmd = "export PDSH_SSH_ARGS_APPEND='" + propts + " " + ' '.join(
+                    strictopts()) + " -i " + self.access_key + "'; "
+            elif not self.strict:
+                excmd = "export PDSH_SSH_ARGS_APPEND=' " + ' '.join(strictopts()) + " -i " + self.access_key + " '; "
             else:
-                self.jump.cp(localfile, remotefile)
-                cmd = 'scp '
-                if directory:
-                    cmd = cmd + '-r '
-                self.jump.run(cmd + remotefile + " " + host + ":" + remotefile)
+                excmd = "export PDSH_SSH_ARGS_APPEND=' -i " + self.access_key + " '; "
+
+            if self.jump is None:
+                run_quiet(excmd + "pdcp -S -w " + diropt + ','.join(self.hosts)
+                          + " " + localfile + " " + remotefile, exit=exit)
+            else:
+                self.jump.run(excmd + "pdcp -S -w " + diropt + ','.join(self.hosts)
+                              + " " + localfile + " " + remotefile, exit=exit)
+        else:
+            for host in self.hosts:
+                if self.jump is None:
+                    remote = remoteHost("root", host, self.access_key)
+                    remote.cp(localfile, remotefile)
+                    return
+                else:
+                    if host != self.jump.user + '@' + self.jump.host:
+                        self.jump.run('scp ' + diropt + remotefile + " " + host + ":" + remotefile)
 
 
 # @TODO: Consolidate the two methods below!

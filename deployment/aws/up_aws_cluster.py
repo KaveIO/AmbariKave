@@ -232,9 +232,11 @@ for k, ig in instancegroups.iteritems():
 
 allremotes = ["ssh:root@" + remote.host for remote in instance_to_remote.values()]
 allremotes = lD.multiremotes(list_of_hosts=allremotes, access_key=amazon_keyfile)
-print "test PDSH"
+print "test local PDSH, install pdcp"
 print allremotes.run("echo yes")
+allremotes.run("yum install epel-release")
 allremotes.run("yum clean all")
+allremotes.run("yum install pdsh")
 
 print "===================================="
 print "configure SSH on all machines"
@@ -273,15 +275,17 @@ print "=============================================="
 print "Configure machine names"
 print "=============================================="
 sys.stdout.flush()
-for instance, remote in instance_to_remote.iteritems():
-    domain_name = 'kave.io'
-    if "Domain" in cluster_config:
-        domain_name = cluster_config["Domain"]["Name"]
+remotes_to_name = {remote:instance_to_name[instance].lower() for instance,remote in instance_to_remote.iteritems()}
+# for instance, remote in instance_to_remote.iteritems():
+domain_name = 'kave.io'
+if "Domain" in cluster_config:
+    domain_name = cluster_config["Domain"]["Name"]
     # print "configuring", remote.host, "->", instance_to_name[instance]
-    lD.rename_remote_host(remote, instance_to_name[instance].lower(), domain_name)
-    if domain_name == "kave.io":
-        allremotes.run("mkdir -p /etc/kave/")
-        allremotes.run("'/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror'")
+lD.rename_remote_hosts(remotes_to_name, domain_name)
+
+if domain_name == "kave.io":
+    allremotes.run("mkdir -p /etc/kave/")
+    allremotes.run("'/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror'")
 
 if dnsiid is not None:
     print "============================================"
@@ -371,40 +375,28 @@ else:
 print "=============================================="
 sys.stdout.flush()
 # write into etc/hosts file for all machines
-for instance, remote in instance_to_remote.iteritems():
-    for otherinstance, othername in instance_to_name.iteritems():
-        # if otherinstance==instance:
-        #    continue
-        lD.add_as_host(edit_remote=remote, add_remote=instance_to_remote[otherinstance],
-                       dest_internal_ip=lA.priv_ip(otherinstance))
-
-print "==================================="
-print "add any extra disk space (parallelized per instance)"
-print "==================================="
-sys.stdout.flush()
-adtoiids = []
-admounts = []
-for instancegroup in cluster_config["InstanceGroups"]:
-    if "ExtraDisks" in instancegroup:
-        for instance in instancegroups[instancegroup["Name"]]:
-            admounts.append(instancegroup["ExtraDisks"])
-            adtoiids.append(instance)
-lA.add_ebs_volumes(adtoiids, admounts, amazon_keyfile)
-#        #for conf in instancegroup["ExtraDisks"]:
-#        #    for instance in instancegroups[instancegroup["Name"]]:
-#        #        lA.add_new_ebs_vol(instance, conf, amazon_keyfile)
-
+for otherinstance, othername in instance_to_name.iteritems():
+    # if otherinstance==instance:
+    #    continue
+    lD.add_as_host(edit_remote=allremotes, add_remote=instance_to_remote[otherinstance],
+                   dest_internal_ip=lA.priv_ip(otherinstance))
 
 print "==================================="
 print "Configure any gateways (takes time due to yum install)"
 print "==================================="
 sys.stdout.flush()
+gateways = []
 for instancegroup in cluster_config["InstanceGroups"]:
     if instancegroup["AccessType"] == "gateway":
         # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
             # print "found instance"+instance
-            lD.confremotessh(instance_to_remote[instance])
+            gateways.append(instance_to_remote[instance])
+
+if len(gateways):
+    gateways = ["ssh:root@" + remote.host for remote in gateways]
+    gateways = lD.multiremotes(list_of_hosts=gateways, access_key=amazon_keyfile)
+    lD.confremotessh(gateways)
 
 print "=============================================="
 print "Configure the admin to have keys to the rest"
@@ -422,6 +414,32 @@ for instancegroup in cluster_config["InstanceGroups"]:
                                          lA.priv_ip(otherinstance), preservehostname=True)
 
 print "=============================================="
+print "Turn off SE linux and IPTables (yeah, I know)"
+print "=============================================="
+
+if instance_to_remote.values()[0].detect_linux_version() in ["Centos6"]:
+    allremotes.run("'echo 0 >/selinux/enforce'")
+    allremotes.run("service iptables stop")
+elif instance_to_remote.values()[0].detect_linux_version() in ["Centos7"]:
+    allremotes.run("setenforce permissive")
+
+print "==================================="
+print "add any extra disk space (parallelized per instance)"
+print "==================================="
+sys.stdout.flush()
+adtoiids = []
+admounts = []
+for instancegroup in cluster_config["InstanceGroups"]:
+    if "ExtraDisks" in instancegroup:
+        for instance in instancegroups[instancegroup["Name"]]:
+            admounts.append(instancegroup["ExtraDisks"])
+            adtoiids.append(instance)
+lA.add_ebs_volumes(adtoiids, admounts, amazon_keyfile)
+#        #for conf in instancegroup["ExtraDisks"]:
+#        #    for instance in instancegroups[instancegroup["Name"]]:
+#        #        lA.add_new_ebs_vol(instance, conf, amazon_keyfile)
+
+print "=============================================="
 print "Add ambari to admin node"
 print "=============================================="
 sys.stdout.flush()
@@ -431,16 +449,6 @@ for instancegroup in cluster_config["InstanceGroups"]:
         for instance in instancegroups[instancegroup["Name"]]:
             # lD.confremotessh(instance_to_remote[instance])
             lD.deploy_our_soft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave", version=version)
-
-print "=============================================="
-print "Turn off SE linux and IPTables (yeah, I know)"
-print "=============================================="
-
-if instance_to_remote.values()[0].detect_linux_version() in ["Centos6"]:
-    allremotes.run("'echo 0 >/selinux/enforce'")
-    allremotes.run("service iptables stop")
-elif instance_to_remote.values()[0].detect_linux_version() in ["Centos7"]:
-    allremotes.run("setenforce permissive")
 
 if "Tags" in security_config and vpcid:
     print "=============================================="

@@ -962,7 +962,7 @@ def rename_remote_hosts(remotes_to_name, newdomain=None):
     remotes = remotes_to_name.keys()
     mremotes = ["ssh:root@" + remote.host for remote in remotes]
     mremotes = multiremotes(list_of_hosts=mremotes, access_key=remotes[0].access_key)
-    mremotes.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
+    mremotes.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "rename_me.py")
     for remote, name in remotes_to_name.iteritems():
         rename_remote_host(remote, name, newdomain, skip_cp=True)
 
@@ -1000,6 +1000,9 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
     if dest_internal_ip is None:
         dest_internal_ip = add_remote.host
     # first remove this host if it is already defined ...
-    edit_remote.run("grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile ")
+    pre = ''
+    if edit_remote.hasattr('hosts'):
+        pre = '"'
+    edit_remote.run(pre + "grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
     edit_remote.run("mv -f tmpfile /etc/hosts")
-    edit_remote.run("echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts")
+    edit_remote.run(pre + "echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts " + pre)

@@ -954,6 +954,7 @@ def rename_remote_host(remote, new_name, newdomain=None, skip_cp=False):
         cmd = cmd + " " + newdomain
     remote.run(cmd)
 
+
 def rename_remote_hosts(remotes_to_name, newdomain=None):
     """
     rename several remote hosts to new_name.
@@ -1001,7 +1002,7 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
         dest_internal_ip = add_remote.host
     # first remove this host if it is already defined ...
     pre = ''
-    if edit_remote.hasattr('hosts'):
+    if hasattr(edit_remote, 'hosts'):
         pre = '"'
     edit_remote.run(pre + "grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
     edit_remote.run("mv -f tmpfile /etc/hosts")

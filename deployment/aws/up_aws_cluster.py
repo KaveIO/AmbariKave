@@ -275,7 +275,7 @@ print "=============================================="
 print "Configure machine names"
 print "=============================================="
 sys.stdout.flush()
-remotes_to_name = {remote:instance_to_name[instance].lower() for instance,remote in instance_to_remote.iteritems()}
+remotes_to_name = {remote: instance_to_name[instance].lower() for instance, remote in instance_to_remote.iteritems()}
 # for instance, remote in instance_to_remote.iteritems():
 domain_name = 'kave.io'
 if "Domain" in cluster_config:

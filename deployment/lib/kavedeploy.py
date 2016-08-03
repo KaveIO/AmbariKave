@@ -951,7 +951,7 @@ def rename_remote_host(remote, new_name, newdomain=None, skip_cp=False):
         remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
     cmd = "python rename_me.py " + new_name.lower()
     if newdomain is not None:
-        cmd = cmd + " " + newdomain
+        cmd = cmd + " " + newdomain.lower()
     remote.run(cmd)
 
 

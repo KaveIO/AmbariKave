@@ -255,11 +255,11 @@ for instancegroup in cluster_config["InstanceGroups"]:
     if count < 0:
         autoname = False
     if not autoname:
-        instance_to_name[instancegroups[instancegroup["Name"]][0]] = instancegroup["Name"]
+        instance_to_name[instancegroups[instancegroup["Name"]][0]] = instancegroup["Name"].lower()
         lA.name_resource(instancegroups[instancegroup["Name"]][0], cluster_name + '-' + instancegroup["Name"])
         continue
     for num, instance in enumerate(instancegroups[instancegroup["Name"]]):
-        instance_to_name[instance] = instancegroup["Name"] + ("-%03d" % (num + 1))
+        instance_to_name[instance] = (instancegroup["Name"] + ("-%03d" % (num + 1))).lower()
         lA.name_resource(instance, cluster_name + '-' + instancegroup["Name"] + ("-%03d" % (num + 1)))
 
 # Also name the attached volumes
@@ -279,7 +279,7 @@ remotes_to_name = {remote: instance_to_name[instance].lower() for instance, remo
 # for instance, remote in instance_to_remote.iteritems():
 domain_name = 'kave.io'
 if "Domain" in cluster_config:
-    domain_name = cluster_config["Domain"]["Name"]
+    domain_name = cluster_config["Domain"]["Name"].lower()
     # print "configuring", remote.host, "->", instance_to_name[instance]
 lD.rename_remote_hosts(remotes_to_name, domain_name)
 
@@ -291,9 +291,6 @@ if dnsiid is not None:
     print "============================================"
     print "add to reverse lookup on DNS"
     print "============================================"
-    domain_name = 'kave.io'
-    if "Domain" in cluster_config:
-        domain_name = cluster_config["Domain"]["Name"]
     ip = lA.pub_ip(dnsiid)
     priv_ip = lA.priv_ip(dnsiid)
     # print ip, priv_ip

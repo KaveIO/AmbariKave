@@ -458,7 +458,7 @@ class multiremotes(object):
         if not len(versions):
             raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
         if len(versions) == 1:
-            return versions[0]
+            return list(versions)[0]
         return versions
 
     def check(self, firsttime=False):

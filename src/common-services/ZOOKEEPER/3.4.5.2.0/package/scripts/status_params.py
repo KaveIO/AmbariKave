@@ -22,6 +22,7 @@ from resource_management.libraries.functions import format
 from resource_management.libraries.functions.default import default
 from resource_management.libraries.functions import get_kinit_path
 from resource_management.libraries.script.script import Script
+import os
 
 # a map of the Ambari role to the component name
 # for use with /usr/hdp/current/<component>

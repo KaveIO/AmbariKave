@@ -792,10 +792,13 @@ def confremotessh(remote, port=443):
         remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
         remote.run("python add_incoming_port.py " + str(port))
     # modify sshconfig
-    remote.run("echo >> /etc/ssh/sshd_config")
-    remote.run("echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config")
-    remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
-    remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
+    pre = ''
+    if hasattr(remote, 'hosts'):
+        pre = '"'
+    remote.run(pre + "echo >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"Port 22\" >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config" + pre)
     # restart services
     try:
         remote.run("service sshd restart")

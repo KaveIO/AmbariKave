@@ -536,8 +536,9 @@ class multiremotes(object):
             diropt = ' -r '
 
         if pdcp:
+            excmd = "export PDSH_SSH_ARGS_APPEND=' "
             if self.jump is None:
-                excmd = "export PDSH_SSH_ARGS_APPEND=' -i " + self.access_key
+                excmd = excmd + " -i " + self.access_key
 
             if detect_proxy():
                 propts = proxopts()

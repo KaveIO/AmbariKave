@@ -50,6 +50,7 @@ class MongoMaster(MongoBase):
                      mode=0644
                      )
                 # insert the document into the primary worker node to start replication
+                print 'wait for service start before adding replica config (300s)'
                 import time
                 time.sleep(300)
                 Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')

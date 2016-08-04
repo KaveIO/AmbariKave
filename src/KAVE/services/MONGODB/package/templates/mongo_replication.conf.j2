@@ -6,4 +6,8 @@ config =
 {% endfor %}
 
 rs.initiate(config)
+
+{% for host in mongo_arbiter_hosts %}
+rs.addArb("{{host}}")
+{% endfor %}
 exit

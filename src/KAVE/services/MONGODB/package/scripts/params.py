@@ -37,6 +37,9 @@ mongodb_baseurl = default('configurations/mongodb/mongodb_baseurl',
 mongo_hosts = default('/clusterHostInfo/mongodb_master_hosts', ['unknown'])
 mongo_host = mongo_hosts[0]
 
+mongo_arbiter_hosts = default('/clusterHostInfo/mongodb_arbiter_hosts', [])
+is_arbiter = (mongo_arbiter_hosts is not None) and (hostname in mongo_arbiter_hosts)
+
 # This is carried over from previous single mongod config, probably needs reworking
 if mongo_host == "unknown":
     if bind_ip not in ['0.0.0.0', '127.0.0.1']:
@@ -47,6 +50,8 @@ if mongo_host == hostname:
 if setname in ["None", "False"]:
     if len(mongo_hosts) < 2:
         setname = ""
+
+set_with_arbiters = (len(mongo_arbiter_hosts) > 0 and setname not in [None, False, "None", "False", ""])
 
 mongodb_conf = default('configurations/mongodb/mongodb_conf', """
 # mongod.conf
@@ -77,6 +82,10 @@ bind_ip={{bind_ip}}
 
 # Disables write-ahead journaling
 # nojournal=true
+{% if is_arbiter %}
+nojournal=true
+journal=false
+{% endif %}
 
 # Enables periodic logging of CPU utilization and I/O wait
 #cpu=true
@@ -118,6 +127,9 @@ httpinterface=true
 
 # Disable data file preallocation.
 #noprealloc=true
+{% if is_arbiter %}
+noprealloc=true
+{% endif %}
 
 # Specify .ns file size for new databases.
 # nssize=<size>

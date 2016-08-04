@@ -33,7 +33,9 @@
         <value>None</value>
         <description>
             Name of the replica set this mongod will be part of.
-	    If name is None, and this is the only member of the set, this mongod will run in standalone mode and not be added to the set.
+	    If name is None, and this is the only member of the set,
+	    this mongod will run in standalone mode and not be added to the set.
+	    setname is 100% necessary in the case a MONGODB_ARBITER must be configured
         </description>
     </property>
     <property>
@@ -60,89 +62,95 @@
     </property>
         <property>
         <name>mongodb_conf</name>
-        <value>
-        		# mongod.conf
+        <value># mongod.conf
 
-				#where to log
-				logpath={{logpath}}
+#where to log
+logpath={{logpath}}
 
-				logappend=true
+logappend=true
 
-				# fork and run in background
-				fork=true
+# fork and run in background
+fork=true
 
-				#which port to listen for client connections?
-				port={{tcp_port}}
-				#
-				# The web status page is always accessible at a port number that is 1000 greater than the port determined by port.
-				#
+#which port to listen for client connections?
+port={{tcp_port}}
+#
+# The web status page is always accessible at a port number that is 1000 greater than the port determined by port.
+#
 
-				#where to store the database?
-				dbpath={{db_path}}
+#where to store the database?
+dbpath={{db_path}}
 
-				# location of pidfile
-				pidfilepath=/var/run/mongodb/mongod.pid
+# location of pidfile
+pidfilepath=/var/run/mongodb/mongod.pid
 
-				# Listen to local interface only. Comment out to listen on all interfaces.
-				# bind_ip=127.0.0.1
-				bind_ip={{bind_ip}}
+# Listen to local interface only. Comment out to listen on all interfaces.
+# bind_ip=127.0.0.1
+bind_ip={{bind_ip}}
 
-				# Disables write-ahead journaling
-				# nojournal=true
+# Disables write-ahead journaling
+# nojournal=true
+{% if is_arbiter %}
+nojournal=true
+journal=false
+{% endif %}
 
-				# Enables periodic logging of CPU utilization and I/O wait
-				#cpu=true
+# Enables periodic logging of CPU utilization and I/O wait
+#cpu=true
 
-				# Turn on/off security.  Off is currently the default
-				#noauth=true
-				#auth=true
+# Turn on/off security.  Off is currently the default
+#noauth=true
+#auth=true
 
-				# Verbose logging output.
-				#verbose=true
+# Verbose logging output.
+#verbose=true
 
-				# Inspect all client data for validity on receipt (useful for
-				# developing drivers)
-				#objcheck=true
+# Inspect all client data for validity on receipt (useful for
+# developing drivers)
+#objcheck=true
 
-				# Enable db quota management
-				#quota=true
+# Enable db quota management
+#quota=true
 
-				# Set oplogging level where n is
-				#   0=off (default)
-				#   1=W
-				#   2=R
-				#   3=both
-				#   7=W+some reads
-				#diaglog=0
+# Set oplogging level where n is
+#   0=off (default)
+#   1=W
+#   2=R
+#   3=both
+#   7=W+some reads
+#diaglog=0
 
-				# Ignore query hints
-				#nohints=true
+# Ignore query hints
+#nohints=true
 
-				# Enable the HTTP interface (Defaults to port 28017).
-				httpinterface=true
+# Enable the HTTP interface (Defaults to port 28017).
+httpinterface=true
 
-				# Turns off server-side scripting.  This will result in greatly limited
-				# functionality
-				#noscripting=true
+# Turns off server-side scripting.  This will result in greatly limited
+# functionality
+#noscripting=true
 
-				# Turns off table scans.  Any query that would do a table scan fails.
-				#notablescan=true
+# Turns off table scans.  Any query that would do a table scan fails.
+#notablescan=true
 
-				# Disable data file preallocation.
-				#noprealloc=true
+# Disable data file preallocation.
+#noprealloc=true
+{% if is_arbiter %}
+noprealloc=true
+{% endif %}
 
-				# Specify .ns file size for new databases.
-				# nssize=&lt;size&gt;
+# Specify .ns file size for new databases.
+# nssize=&lt;size&gt;
 
-				# Replication Options
+# Replication Options
 
-				# in replicated mongo databases, specify the replica set name here
-				replSet={{setname}}
-				# maximum size in megabytes for replication operation log
-				#oplogSize=1024
-				# path to a key file storing authentication info for connections
-				# between replica set members
-				#keyFile=/path/to/keyfile
+# in replicated mongo databases, specify the replica set name here
+replSet={{setname}}
+# maximum size in megabytes for replication operation log
+#oplogSize=1024
+# path to a key file storing authentication info for connections
+# between replica set members
+#keyFile=/path/to/keyfile
         </value>
         <description>
             MongoDB configuration details.

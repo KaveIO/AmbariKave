@@ -529,6 +529,7 @@ class multiremotes(object):
 
         if self.jump is not None:
             self.jump.cp(localfile, remotefile)
+            localfile = remotefile
 
         diropt = ''
 

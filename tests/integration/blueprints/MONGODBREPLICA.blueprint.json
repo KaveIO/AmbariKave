@@ -50,6 +50,17 @@
         { "name" : "MONGODB_CLIENT"     }
       ],
       "cardinality" : "1+"
+    },
+    {
+      "name" : "arbiter",
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0" } } ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_ARBITER"    },
+        { "name" : "MONGODB_CLIENT"     }
+      ],
+      "cardinality" : "0+"
     }
   ],
   "Blueprints" : {

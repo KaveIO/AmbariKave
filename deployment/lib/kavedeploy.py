@@ -529,6 +529,7 @@ class multiremotes(object):
 
         if self.jump is not None:
             self.jump.cp(localfile, remotefile)
+            localfile = remotefile
 
         diropt = ''
 
@@ -536,15 +537,17 @@ class multiremotes(object):
             diropt = ' -r '
 
         if pdcp:
+            excmd = 'export PDSH_SSH_ARGS_APPEND=" '
+            if self.jump is None:
+                excmd = excmd + " -i " + self.access_key
+
             if detect_proxy():
                 propts = proxopts()
-                propts = " ".join(propts[:-1]) + '"' + propts[-1] + '"'
-                excmd = "export PDSH_SSH_ARGS_APPEND='" + propts + " " + ' '.join(
-                    strictopts()) + " -i " + self.access_key + "'; "
+                propts = " ".join(propts[:-1]) + '\\"' + propts[-1] + '\\"'
+                excmd = excmd + " " + propts + " " + ' '.join(strictopts())
             elif not self.strict:
-                excmd = "export PDSH_SSH_ARGS_APPEND=' " + ' '.join(strictopts()) + " -i " + self.access_key + " '; "
-            else:
-                excmd = "export PDSH_SSH_ARGS_APPEND=' -i " + self.access_key + " '; "
+                excmd = excmd + " " + ' '.join(strictopts())
+            excmd = excmd + '"; '
 
             if self.jump is None:
                 run_quiet(excmd + "pdcp -w " + diropt + ','.join(self.hosts)

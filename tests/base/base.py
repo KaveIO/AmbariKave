@@ -621,6 +621,36 @@ class LDTest(unittest.TestCase):
                         "wrong keyfile seen in (" + connectcmd + ")")
         return lD.remoteHost("root", ip, keyfile), iid
 
+    def multiremote_from_cluster_stdout(self, stdout, mname='ambari'):
+        """
+        take the output from the up_aws_cluster script and parse it
+        first check it was successful, then create a multiremote object
+        to contact all machines
+        Return multiremote, [iids]
+        """
+        import kavedeploy as lD
+        connectcmd = ""
+        adict = stdout.split("\n")[-2].replace("Complete, created:", "")
+        # try interpreting as json
+        adict = d2j(adict)
+        iids = [deets[0] for _name, deets in adict.iteritems()]
+        ips = [deets[1] for _name, deets in adict.iteritems()]
+        testm = adict.keys()[0]
+        connectcmd = ""
+        for line in range(len(stdout.split('\n'))):
+            if (testm + " connect remotely with") in stdout.split("\n")[line]:
+                connectcmd = stdout.split("\n")[line + 1].strip()
+        iid, ip = adict[testm]
+        self.assertTrue(ip in connectcmd, ip + " Wrong IP seen for connecting to " + testm + ' ' + connectcmd)
+        jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
+        import json
+        acconf = json.loads(jsondat.read())
+        jsondat.close()
+        keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
+        self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
+                        "wrong keyfile seen in (" + connectcmd + ")")
+        return lD.multiremotes(["ssh:root@" + str(ip) for ip in ips], access_key=keyfile), iids
+
     def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """
         Wait until ambari server is up and running, error if it doesn't appear!

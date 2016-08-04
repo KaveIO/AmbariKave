@@ -633,8 +633,8 @@ class LDTest(unittest.TestCase):
         adict = stdout.split("\n")[-2].replace("Complete, created:", "")
         # try interpreting as json
         adict = d2j(adict)
-        iids = [deets[0] for _name,deets in adict.iteritems()]
-        ips = [deets[1] for _name,deets in adict.iteritems()]
+        iids = [deets[0] for _name, deets in adict.iteritems()]
+        ips = [deets[1] for _name, deets in adict.iteritems()]
         testm = adict.keys()[0]
         connectcmd = ""
         for line in range(len(stdout.split('\n'))):
@@ -649,7 +649,7 @@ class LDTest(unittest.TestCase):
         keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
-        return lD.multiremotes(["ssh:root@"+str(ip) for ip in ips], access_key=keyfile), iids
+        return lD.multiremotes(["ssh:root@" + str(ip) for ip in ips], access_key=keyfile), iids
 
     def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """

@@ -63,7 +63,7 @@ class MicroCluster(base.LDTest):
                         + ' '.join(ahost.sshcmd()) + ")")
         # Check multiremote functionality
         allremotes, iids = self.multiremote_from_cluster_stdout(cstdout)
-        allremotes.cp(deploy_dir+'/remotescripts/add_incoming_port.py', 'testtest.py')
+        allremotes.cp(deploy_dir + '/remotescripts/add_incoming_port.py', 'testtest.py')
         self.assertTrue("testtest.py" in ahost.run("ls -l"), "pdcp failed to work properly")
 
 

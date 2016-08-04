@@ -41,11 +41,12 @@ class SingleMachineCluster(base.LDTest):
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
         # Check multiremote functionality
         allremotes, iids = self.multiremote_from_cluster_stdout(cstdout)
-        allremotes.cp(deploy_dir+'/remotescripts/add_incoming_port.py', 'testtest.py')
+        allremotes.cp(deploy_dir + '/remotescripts/add_incoming_port.py', 'testtest.py')
         self.assertTrue("testtest.py" in ambari.run("ls -l"), "pdcp failed to work properly")
         # Check multiremote functionality with jump intermediate
         allremotes.jump = ambari
-        allremotes.cp(deploy_dir+'/remotescripts/add_incoming_port.py', 'testtest3.py')
+        allremotes.hosts=['ssh:root@ambari']
+        allremotes.cp(deploy_dir + '/remotescripts/add_incoming_port.py', 'testtest3.py')
         self.assertTrue("testtest3.py" in ambari.run("ls -l"), "pdcp via jump failed to work properly")
         self.assertTrue("testtest3.py" in allremotes.run("ls -l"), "ls via jump failed to work properly")
 

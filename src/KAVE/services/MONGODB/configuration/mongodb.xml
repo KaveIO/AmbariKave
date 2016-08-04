@@ -92,7 +92,6 @@ bind_ip={{bind_ip}}
 # nojournal=true
 {% if is_arbiter %}
 nojournal=true
-journal=false
 {% endif %}
 
 # Enables periodic logging of CPU utilization and I/O wait

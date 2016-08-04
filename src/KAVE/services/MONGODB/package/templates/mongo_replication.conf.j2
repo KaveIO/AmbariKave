@@ -1,7 +1,7 @@
 config =
 {"_id" : "{{setname}}", "members" : [
 {% for host in mongo_hosts %}
-	{"_id" : {{loop.index0}}, "host" : "{{host}}"}{% if not loop.last %},
+	{"_id" : {{loop.index0}}, "host" : "{{host}}:{{tcp_port}}"}{% if not loop.last %},
 	{% else %}]}{% endif %}
 {% endfor %}
 
@@ -9,7 +9,7 @@ rs.initiate(config)
 
 {% if set_with_arbiters %}
 {% for host in mongo_arbiter_hosts %}
-rs.addArb("{{host}}")
+rs.addArb("{{host}}:{{tcp_port}}")
 {% endfor %}
 {% endif %}
 exit

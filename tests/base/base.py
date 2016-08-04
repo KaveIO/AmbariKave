@@ -649,7 +649,7 @@ class LDTest(unittest.TestCase):
         keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
         self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
                         "wrong keyfile seen in (" + connectcmd + ")")
-        return lD.multiremote(["ssh:root@"+ip for ip in ips], keyfile), iids
+        return lD.multiremotes(["ssh:root@"+str(ip) for ip in ips], access_key=keyfile), iids
 
     def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """

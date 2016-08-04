@@ -33,12 +33,21 @@ class SingleMachineCluster(base.LDTest):
         import kaveaws as lA
         region = lA.detect_region()
         clusterfile = "single.aws.json"
-        stdout = self.deploycluster(deploy_dir + "/clusters/" + clusterfile, cname="TestDeploy")
-        self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
-                        "failed to generate cluster, \n" + stdout)
-        ambari, iid = self.remote_from_cluster_stdout(stdout)
+        cstdout = self.deploycluster(deploy_dir + "/clusters/" + clusterfile, cname="TestDeploy")
+        self.assertTrue(cstdout.strip().split("\n")[-2].startswith("Complete, created:"),
+                        "failed to generate cluster, \n" + cstdout)
+        ambari, iid = self.remote_from_cluster_stdout(cstdout)
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
+        # Check multiremote functionality
+        allremotes, iids = self.multiremote_from_cluster_stdout(cstdout)
+        allremotes.cp(deploy_dir+'/remotescripts/add_incoming_port.py', 'testtest.py')
+        self.assertTrue("testtest.py" in ambari.run("ls -l"), "pdcp failed to work properly")
+        # Check multiremote functionality with jump intermediate
+        allremotes.jump = ambari
+        allremotes.cp(deploy_dir+'/remotescripts/add_incoming_port.py', 'testtest3.py')
+        self.assertTrue("testtest3.py" in ambari.run("ls -l"), "pdcp via jump failed to work properly")
+        self.assertTrue("testtest3.py" in allremotes.run("ls -l"), "ls via jump failed to work properly")
 
 
 def suite(verbose=False, branch="__local__"):

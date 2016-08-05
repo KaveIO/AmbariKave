@@ -62,7 +62,8 @@
     </property>
         <property>
         <name>mongodb_conf</name>
-        <value># mongod.conf
+        <value>
+# mongod.conf
 
 #where to log
 logpath={{logpath}}

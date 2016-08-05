@@ -25,51 +25,51 @@ class TestResourceWizard(unittest.TestCase):
     options_results_list = [([0.05, 4, 0, 0, 0, 0], """
 For <= 100 GB static input data, consider a single large VM
 ------------------- Guess Reasonable Specs --------------------------------
-       name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-0  gateways      1       8        32                0.1              310"""),
+        name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
+1   gateways      1       8        32                0.1              310"""),
                             ([0.3, 4, 0, 0, 0, 0], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-0     ambari      1       2         6                0.0               40
-1  datanodes      3       8        36                1.0               30
-2  namenodes      2       8        32                0.0               70
-3   gateways      1       8        32                0.1              330
-4      TOTAL      7      50       210                3.1              600
+1     ambari      1       2         6                0.0               40
+2  datanodes      3       8        36                1.0               30
+3  namenodes      2       8        32                0.0               70
+4   gateways      1       8        32                0.1              330
+       TOTAL      7      50       210                3.1              600
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----"""),
                             ([1, 1, 0, 0, 0, 0], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-0     ambari      1       2         6                0.0               40
-1  datanodes      3      16        72                3.0               30
-2  namenodes      2       8        32                0.0               70
-3   gateways      1       8        32                0.1              130
-4      TOTAL      7      74       318                9.1              400
+1     ambari      1       2         6                0.0               40
+2  datanodes      3      16        72                3.0               30
+3  namenodes      2       8        32                0.0               70
+4   gateways      1       8        32                0.1              130
+       TOTAL      7      74       318                9.1              400
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----"""),
                             ([1, 1, 1, 1, 1, 1, 1], """
 ------------------- Guess Reasonable Specs --------------------------------
-            name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-0         ambari      1       2         6                0.0               40
-1      datanodes      3      16        72                3.0               30
-2      namenodes      2       8        32                0.0               70
-3       gateways      1       8        32                0.1              130
-4          mongo      1       2         4                0.0              130
-5  storm-workers      1       4        16                0.0               30
-6   storm-nimbus      1       2         4                0.0               30
-7            dev      1       2         8                0.1              130
-8          jboss      1       2         4                0.0               20
-9          TOTAL     12      86       354                9.2              740
+        name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
+1     ambari      1       2         6                0.0               40
+2  datanodes      3      16        72                3.0               30
+3  namenodes      2       8        32                0.0               70
+4   gateways      1       8        32                0.1              130
+5      mongo      1       2         4                0.0              130
+6  storm-wrk      1       4        16                0.0               30
+7     nimbus      1       2         4                0.0               30
+8        dev      1       2         8                0.1              130
+9      jboss      1       2         4                0.0               20
+       TOTAL     12      86       354                9.2              740
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----"""),
                             ([8, 8, 0, 0, 0, 0], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-0     ambari      1       2         6                0.0               40
-1  datanodes      4      64       256               16.0               30
-2  namenodes      2      32       128                0.0               70
-3   gateways      1      12        48                0.1              500
-4      TOTAL      8     334      1334               64.1              800
+1     ambari      1       2         6                0.0               40
+2  datanodes      4      64       256               16.0               30
+3  namenodes      2      32       128                0.0               70
+4   gateways      1      12        48                0.1              500
+       TOTAL      8     334      1334               64.1              800
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----""")]
 
@@ -88,7 +88,8 @@ For <= 100 GB static input data, consider a single large VM
             expect = expect.strip()
             self.assertFalse(stat, stdout + '\n' + stderr)
             self.assertEquals(stdout, expect, " looking for \n\n " +
-                              expect + " \n-----\n found: \n\n" + stdout)
+                              expect + " \n-----\n from options: \n\n" + opt.__str__()
+                              + " \n-----\n found: \n\n" + stdout)
 
 
 def suite():

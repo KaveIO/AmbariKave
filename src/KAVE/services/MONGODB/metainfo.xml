@@ -8,7 +8,7 @@
             <comment>The intermediate database in your lambda stack</comment>
             <version>2.6</version>
             <components>
-                    <component>
+                <component>
                     <name>MONGODB_MASTER</name>
                     <displayName>MongoDB Master</displayName>
                     <category>MASTER</category>
@@ -17,8 +17,25 @@
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>
+                    <cardinality>1+</cardinality>
                 </component>
-                    <component>
+                <component>
+                    <name>MONGODB_ARBITER</name>
+                    <displayName>MongoDB Arbiter</displayName>
+                    <comment>
+                    Arbiters are mongod instances that are part of a replica set but do not hold data.
+                    Arbiters participate in elections in order to break ties.
+                    If a replica set has an even number of members, add an arbiter.
+                    Only add an arbiter if there is a replica set defined (setname)
+                    </comment>
+                    <category>SLAVE</category>
+                    <commandScript>
+                        <script>scripts/mongo_arbiter.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                </component>
+                <component>
                     <name>MONGODB_CLIENT</name>
                     <displayName>MongoDB Client</displayName>
                     <comment>Installs the client libraries and the mongok script for ease of use.</comment>

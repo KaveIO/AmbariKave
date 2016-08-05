@@ -16,6 +16,7 @@
 #
 ##############################################################################
 import os
+import sys
 
 from resource_management import *
 from mongo_base import MongoBase
@@ -43,13 +44,16 @@ class MongoMaster(MongoBase):
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
         import params
         if params.setname and params.setname not in ["None", "False"]:
-            if len(params.mongo_hosts) > 1:
-                # write the configuration document to a file
+            if len(params.mongo_hosts) > 1 and not params.is_arbiter:
+                # write the configuration document to a file,
+                # never run this from the arbiter! That will never work!
                 File('/tmp/replicaset_conf.js',
                      content=Template("mongo_replication.conf.j2"),
                      mode=0644
                      )
                 # insert the document into the primary worker node to start replication
+                print 'wait for service start before adding replica config (300s)'
+                sys.stdout.flush()
                 import time
                 time.sleep(300)
                 Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')

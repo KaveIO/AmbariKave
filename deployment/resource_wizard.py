@@ -142,14 +142,14 @@ class cluster(object):
 
     def pretty_print(self):
         """
-        Since pandas isn' always installed, I need my own pretty-print equivalent
+        Since pandas isn't always installed, I need my own pretty-print equivalent
         """
-        fstring = ['{:>' + str(len(c)) + '}' for c in self.columns]
+        fstring = ['{' + str(i) + ':>' + str(len(c)) + '}' for i,c in enumerate(self.columns)]
         fstring = '  '.join(fstring)
-        print('{:<2} '.format('') + fstring.format(*self.columns))
+        print('{0:<2} '.format(' ') + fstring.format(*self.columns))
         for _i, machine in enumerate(self.machines):
-            print('{:<2} '.format(_i + 1) + fstring.format(*machine.arr()))
-        print('{:<2} '.format('') + fstring.format(*self.sum()))
+            print('{0:<2} '.format(_i + 1) + fstring.format(*machine.arr()))
+        print('{0:<2} '.format(' ') + fstring.format(*self.sum()))
 
 ###########################
 # Calculators

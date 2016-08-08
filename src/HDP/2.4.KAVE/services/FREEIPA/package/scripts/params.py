@@ -31,8 +31,8 @@ amb_server = default("/clusterHostInfo/ambari_server_host", [False])[0]
 ipa_server = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
 
 if not ipa_server:
-    raise SystemError('ipa_server could not be found in this cluster, this is very strange and indicates much worse problems'
-                      ' FreeIPA Client is the client partner of the server, so cannot install without its mommy')
+    raise KeyError('ipa_server could not be found in this cluster, this is very strange and indicates much worse problems'
+                   ' FreeIPA Client is the client partner of the server, so cannot install without its mommy')
 
 ipa_server_ip_address = socket.gethostbyname(ipa_server)
 if not ipa_server_ip_address:

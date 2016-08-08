@@ -33,7 +33,7 @@ class HDP24KAVEStackAdvisor(HDP24StackAdvisor):
     def getServiceConfigurationValidators(self):
         parentValidators = super(HDP24KAVEStackAdvisor, self).getServiceConfigurationValidators()
         childValidators = {
-            "FREEIPA": {"freeipa", self.validateFreeIPAConfigurations}
+            "FREEIPA": {"freeipa": self.validateFreeIPAConfigurations}
         }
         parentValidators.update(childValidators)
         return parentValidators

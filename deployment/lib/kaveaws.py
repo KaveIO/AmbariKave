@@ -70,21 +70,21 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                     "eu-central": "ami-2bf11444",
                                     "ap-northeast": "ami-25436924",
                                     "ap-southeast": "ami-0aaf8858",
-                                    "ap-south" : "ami-9b1c76f4"
+                                    "ap-south": "ami-9b1c76f4"
                                     },
                         "Centos7": {"default": "ami-e4ff5c93",
                                     "eu-west": "ami-e4ff5c93",
                                     "ap-northeast": "ami-89634988",
                                     "ap-southeast": "ami-aea582fc",
                                     "eu-central": "ami-9bf712f4",
-                                    "ap-south" : "ami-95cda6fa"
+                                    "ap-south": "ami-95cda6fa"
                                     },
                         "Ubuntu14": {"default": "ami-5da23a2a",
                                      "eu-west": "ami-47a23a30",
                                      "ap-northeast": "ami-936d9d93",
                                      "ap-southeast": "ami-96f1c1c4",
                                      "eu-central": "ami-26c43149",
-                                     "ap-south" : "ami-4a90fa25"
+                                     "ap-south": "ami-4a90fa25"
                                      }
                         }
 

@@ -124,7 +124,7 @@ i_stopped = []
 i_all = []
 
 exclude_names = [".*_dev_.*"]
-require_names = ["Test.*"]
+require_names = ["test.*", "Test.*"]
 dev_names = ["new-dev-image"]
 
 # Exclude _dev_box names!

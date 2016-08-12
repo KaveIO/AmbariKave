@@ -117,7 +117,8 @@ def apiquery(request, host="localhost", exit=True, user=None, passwd=None, JSON=
     if passwd is None:
         passwd = default_ambari_password
     url = "http://" + host + ":8080/api/v1/" + request
-    response = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By': 'ambari'})
+    s = kc.request_session()
+    response = s.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By': 'ambari'})
     if exit and response.status_code not in [200, 302]:
         response.raise_for_status()
     if not JSON:

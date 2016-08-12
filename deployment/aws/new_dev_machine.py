@@ -154,6 +154,9 @@ remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/confi
 
 lD.confallssh(remote)
 lD.confremotessh(remote)
+remote.run('sed -i \'s/PasswordAuthentication no/PasswordAuthentication yes/\' /etc/ssh/sshd_config')
+remote.run('sed -i \'s/#PermitRootLogin yes/PermitRootLogin without-password/\' /etc/ssh/sshd_config')
+remote.run('service sshd restart')
 vols = []
 vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))
 vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc))
@@ -167,19 +170,19 @@ print "OK, iid " + iid + " now lives at IP " + ip
 ##################################################
 # Installing vnc
 ##################################################
-print "installing vnc and gnome desktop"
-remote.run('yum -y install epel-release')
-remote.run('yum clean all')
-remote.run("yum -y install vim emacs wget curl zip unzip tar gzip rsync git")
-if tos in ["Centos6"]:
-    remote.run('yum -y groupinstall "Desktop" "Desktop Platform" '
-               '"X Window System" "Fonts" --exclude=NetworkManager\\*')
-else:
-    remote.run('yum -y install pixman pixman-devel libXfont')
-    remote.run('yum -y groupinstall "Gnome Desktop" "Fonts" ')
-
-remote.run('yum -y tigervnc-server')
-remote.run('yum -y install xpdf firefox')
+#print "installing vnc and gnome desktop"
+#remote.run('yum -y install epel-release')
+#remote.run('yum clean all')
+#remote.run("yum -y install vim emacs wget curl zip unzip tar gzip rsync git")
+#if tos in ["Centos6"]:
+#    remote.run('yum -y groupinstall "Desktop" "Desktop Platform" '
+#               '"X Window System" "Fonts" --exclude=NetworkManager\\*')
+#else:
+#    remote.run('yum -y install pixman pixman-devel libXfont')
+#    remote.run('yum -y groupinstall "Gnome Desktop" "Fonts" ')
+#
+#remote.run('yum -y tigervnc-server')
+#remote.run('yum -y install xpdf firefox')
 
 ################################################
 # Add user and add to sudoers
@@ -197,7 +200,7 @@ try:
     tempdir = tempfile.mkdtemp()
     tempdir = tempdir + '/'
     fname = username + ip
-    with open(tempdir + fname) as fp:
+    with open(tempdir + fname, 'w') as fp:
         fp.write(password + '\n')
         fp.write(password + '\n')
     remote.cp(tempdir + fname, fname)
@@ -208,16 +211,10 @@ except Exception as e:
         os.system('rm -rf ' + tempdir)
     raise e
 
-remote.describe()
-import time
-print "pause here!"
-sys.stdout.flush()
-time.sleep(60)
-
 ################################################
 # Add KaveToolbox
 ################################################
-lD.deploy_our_soft(remote, pack="kavetoolbox", version='2.1-Beta', options='--workstation')
+lD.deploy_our_soft(remote, pack="kavetoolbox", version='2.2-Beta-Pre', options='--workstation')
 
 
 print "OK, iid " + iid + " now lives at IP " + ip

@@ -144,7 +144,7 @@ class cluster(object):
         """
         Since pandas isn't always installed, I need my own pretty-print equivalent
         """
-        fstring = ['{' + str(i) + ':>' + str(len(c)) + '}' for i,c in enumerate(self.columns)]
+        fstring = ['{' + str(i) + ':>' + str(len(c)) + '}' for i, c in enumerate(self.columns)]
         fstring = '  '.join(fstring)
         print('{0:<2} '.format(' ') + fstring.format(*self.columns))
         for _i, machine in enumerate(self.machines):

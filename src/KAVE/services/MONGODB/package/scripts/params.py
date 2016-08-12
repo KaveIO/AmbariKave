@@ -143,20 +143,20 @@ replSet={{setname}}
 # between replica set members
 #keyFile=/path/to/keyfile """)
 
-replica_config_params = {"_id" : setname, "members" : [] }
+replica_config_params = {"_id": setname, "members": []}
 init_id = 0
 for _host in mongo_hosts:
-    replica_config_params["members"].append({"_id" : init_id,
-                                             "host" : _host + ":" + str(tcp_port) })
+    replica_config_params["members"].append({"_id": init_id,
+                                             "host": _host + ":" + str(tcp_port)})
     init_id = init_id + 1
 
 if set_with_arbiters:
     for _host in mongo_arbiter_hosts:
-        replica_config_params["members"].append({"_id" : init_id,
-                                                 "host" : _host + ":" + str(tcp_port),
-                                                 "arbiterOnly" : True})
+        replica_config_params["members"].append({"_id": init_id,
+                                                 "host": _host + ":" + str(tcp_port),
+                                                 "arbiterOnly": True})
         init_id = init_id + 1
 
 import json
 replica_config_params = json.dumps(replica_config_params)
-replica_config_params.replace("True",'true')
+replica_config_params.replace("True", 'true')

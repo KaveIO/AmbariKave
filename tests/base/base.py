@@ -664,22 +664,22 @@ class LDTest(unittest.TestCase):
             self.assertTrue(False, "ambari server failed to start (" + ' '.join(ambari.sshcmd()) + ")")
         return True
 
-    def check_json(self, ason):
+    def check_json(self, jsonfile):
         """
         Check that these files are complete and self-consistent
         Check first that the files exist and are json complete
         """
-        self.assertTrue(os.path.exists(ason), "json file does not exist " + ason)
-        f = open(ason)
+        self.assertTrue(os.path.exists(jsonfile), "json file does not exist " + jsonfile)
+        f = open(jsonfile)
         l = f.read()
         f.close()
         interp = None
-        self.assertTrue(len(l) > 1, "json file " + ason + " is empty, a fragment or corrupted")
+        self.assertTrue(len(l) > 1, "json file " + jsonfile + " is empty, a fragment or corrupted")
         try:
             interp = json.loads(l)
         except Exception as e:
             print e
-            self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+            self.assertTrue(False, "json file " + jsonfile + " is not complete or not readable")
         return interp
 
     def verify_awsjson(self, jaws, aws):
@@ -781,8 +781,8 @@ class LDTest(unittest.TestCase):
                     b) + " .cluster " + str(c))
         # check the files can be opened, and then check that the cluster contains the machines from the aws file
         jsons = []
-        for ason in [aws, blueprint, cluster]:
-            jsons.append(self.check_json(ason))
+        for jsonfile in [aws, blueprint, cluster]:
+            jsons.append(self.check_json(jsonfile))
         # check that the aws creates the correct drive names, no duplicates or mounting to 'a'
         jaws = jsons[0]
         self.verify_awsjson(jaws, aws)

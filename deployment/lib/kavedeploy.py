@@ -752,7 +752,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             pass
 
         try:
-            stdout = ambari.run("curl --netrc http://localhost:8080/api/v1/clusters")
+            stdout = ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except ShellExecuteError:
@@ -776,7 +776,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= timeout:
-        cmd = ("curl --netrc http://localhost:8080/api/v1/clusters/"
+        cmd = ("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters/"
                + clustername + "/requests/" + str(request))
         # If this fails, wait a second and try again, then really fail
         try:

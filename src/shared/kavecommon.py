@@ -162,7 +162,7 @@ def failover_source(sources):
         if source is None:
             continue
         if source.startswith("ftp:") or (source.startswith("http") and ":" in source):
-            stat, stdout, stderr = shell_call_wrapper("curl -i -X HEAD " + source)
+            stat, stdout, stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
             if "200 OK" not in stdout and "302 Found" not in stdout:
                 continue
             return source

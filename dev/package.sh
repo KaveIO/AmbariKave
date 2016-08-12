@@ -135,7 +135,7 @@ if [ -f /etc/kave/mirror ]; then
 			fi
 			continue
 		fi
-		res=\`curl -i -X HEAD "\$line" 2>&1\`
+		res=\`curl --retry 5 -i -X HEAD "\$line" 2>&1\`
 		#echo \$res
 		if [[ "\$res" =~ "200 OK" ]]; then
 			repos_server=\${line}

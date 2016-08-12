@@ -61,10 +61,10 @@ function runHelp {
 
 function runAddService {
   echo "Adding a service"
-  if [ "`curl -s -i --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari" -w "%{http_code}" -o /dev/null`" = "404" ]; then
+  if [ "`curl --retry 5 -s -i --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari" -w "%{http_code}" -o /dev/null`" = "404" ]; then
     echo "Adding the service to the cluster"
-    curl -i -X POST --netrc -d '{"ServiceInfo":{"service_name":"'$service'"}}' http://$ambari:8080/api/v1/clusters/$cluster/services  -H "X-Requested-By:ambari"
-    curl -i -X POST --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service/components/$component  -H "X-Requested-By:ambari"
+    curl --retry 5  -i -X POST --netrc -d '{"ServiceInfo":{"service_name":"'$service'"}}' http://$ambari:8080/api/v1/clusters/$cluster/services  -H "X-Requested-By:ambari"
+    curl --retry 5  -i -X POST --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service/components/$component  -H "X-Requested-By:ambari"
     echo
     echo "Sleeping for a bit..."
     sleep 5s
@@ -73,7 +73,7 @@ function runAddService {
 
 function runInstallService {
   echo "Installing the service"
-  curl -i -X PUT --netrc -d '{"RequestInfo":{"context":"Install '$service'"},"Body":{"HostRoles":{"state":"INSTALLED"}}}' http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
+  curl --retry 5  -i -X PUT --netrc -d '{"RequestInfo":{"context":"Install '$service'"},"Body":{"HostRoles":{"state":"INSTALLED"}}}' http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -81,7 +81,7 @@ function runInstallService {
 
 function runInstallComponent {
   echo "Installing a component"
-  curl -i -X POST --netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
+  curl --retry 5  -i -X POST --netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -89,7 +89,7 @@ function runInstallComponent {
 
 function runUninstallComponent {
   echo "Uninstalling a component"
-  curl -i -X DELETE --netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
+  curl --retry 5  -i -X DELETE --netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -97,7 +97,7 @@ function runUninstallComponent {
 
 function runStart {
   echo "Starting a service"
-  curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+  curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
@@ -105,14 +105,14 @@ function runStart {
 
 function runStop {
   echo "Stopping a service"
-  curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+  curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
   echo
   echo "Sleeping for a bit..."
   sleep 5s
 }
 
 function runStatus {
-curl -i -X GET --netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari" | grep state
+curl --retry 5  -i -X GET --netrc http://$ambari:8080/api/v1/clusters/$cluster/hosts/$host/host_components/$component -H "X-Requested-By:ambari" | grep state
 }
 
 function runConfigureService {
@@ -162,7 +162,7 @@ function buildConfiguration {
     fi
   done
 
-  curl -i -X PUT -d '{"Clusters": {"desired_config": {"type": "'$type'", "tag": "version'`date +%Y%m%d%H%M%S`'", "properties": {'$configuration'}}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster -H "X-Requested-By:ambari"
+  curl --retry 5  -i -X PUT -d '{"Clusters": {"desired_config": {"type": "'$type'", "tag": "version'`date +%Y%m%d%H%M%S`'", "properties": {'$configuration'}}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster -H "X-Requested-By:ambari"
 }
 
 
@@ -241,7 +241,7 @@ if [ ! -f "$HOME/.netrc" ]; then
 fi
 
 if [ "$cluster" = "" ]; then
-  cluster="`curl -i -s --netrc http://$ambari:8080/api/v1/clusters | grep "cluster_name" | sed -r 's/^.*?"cluster_name" : "(.*?)".*$/\1/g'`"
+  cluster="`curl --retry 5  -i -s --netrc http://$ambari:8080/api/v1/clusters | grep "cluster_name" | sed -r 's/^.*?"cluster_name" : "(.*?)".*$/\1/g'`"
 fi
 if [ $service = "GITLAB" ]; then
   component="GITLAB_SERVER"

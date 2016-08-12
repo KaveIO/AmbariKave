@@ -106,7 +106,7 @@ class TestServiceKaveLanding(TestServiceBlueprint):
                         "Incorrect response from KaveLanding, scan.sh" + __kavelanding_html__ + "\n-----------\nnot "
                                                                                                 "equal to\n-------\n"
                         + pph)
-        pph2 = ambari.run("curl -X GET http://localhost/", exit=False)
+        pph2 = ambari.run("curl --retry 5  -X GET http://localhost/", exit=False)
         self.assertTrue(nowhite(__kavelanding_html__) in nowhite(pph2), "KaveLanding page is incomplete")
 
 

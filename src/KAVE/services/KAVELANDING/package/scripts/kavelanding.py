@@ -36,7 +36,7 @@ class KaveLanding(ApacheScript):
         Package('python-pip')
         import os
         Execute('pip install requests')
-        Execute('pip install --update requests')
+        Execute('pip install --upgrade requests')
         Execute('cp ' + os.path.dirname(__file__) + '/KAVE-logo-thin.png ' + params.www_folder + '/')
         Execute('chmod 0644 ' + params.www_folder + '/KAVE-logo-thin.png')
         self.configure(env)

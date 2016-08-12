@@ -49,7 +49,7 @@ yum install -y epel-release
 yum clean all
 yum install -y pdsh python-devel python-pip
 pip install requests
-pip install --update requests
+pip install --upgrade requests
 
 if [ "$os" == "centos7" ]; then
 	yum install -y pdsh-mod-dshgroup

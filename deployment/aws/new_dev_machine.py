@@ -170,14 +170,14 @@ print "OK, iid " + iid + " now lives at IP " + ip
 ##################################################
 # Installing vnc
 ##################################################
-#print "installing vnc and gnome desktop"
+# print "installing vnc and gnome desktop"
 #remote.run('yum -y install epel-release')
 #remote.run('yum clean all')
 #remote.run("yum -y install vim emacs wget curl zip unzip tar gzip rsync git")
-#if tos in ["Centos6"]:
+# if tos in ["Centos6"]:
 #    remote.run('yum -y groupinstall "Desktop" "Desktop Platform" '
 #               '"X Window System" "Fonts" --exclude=NetworkManager\\*')
-#else:
+# else:
 #    remote.run('yum -y install pixman pixman-devel libXfont')
 #    remote.run('yum -y groupinstall "Gnome Desktop" "Fonts" ')
 #

@@ -194,7 +194,7 @@ A KAVE official version tag appears like:
 The tag is split into four parts:
 
 * **Major**: Major versions separate backwards incompatible changes or drastic noticable changes to the user experience or interface
-* **.Minor**: Minor versions represent subsequent releases of bugfixes, small improvements or changes which do not affect the user experience
+* **.minor**: Minor versions represent subsequent releases of bugfixes, small improvements or changes which do not affect the user experience
 * **-KAVE-**: A signifier that this is an official tag
 * **qualifier**: Some logical qualification of the tag making it easier to understand. It is our convention to always use the -Beta tag at the moment. Example qualifies may include -Test (a release for developer testing only), -Pre (prerelease of a release candidate for beta-testing).
 

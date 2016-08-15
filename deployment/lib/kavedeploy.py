@@ -732,6 +732,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     cat = ambari.run("cat " + afile).strip().lower()
                     # ignore errors with mirrors
                     cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
+                    cat = cat.replace("[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
                         raise SystemError("Failure in ambari server start server detected!")
         except ShellExecuteError:

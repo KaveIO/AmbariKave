@@ -124,7 +124,7 @@ i_stopped = []
 i_all = []
 
 exclude_names = [".*_dev_.*"]
-require_names = ["Test.*"]
+require_names = ["test.*", "Test.*"]
 dev_names = ["new-dev-image"]
 
 # Exclude _dev_box names!
@@ -206,13 +206,15 @@ if yn_ids in yes:
 stacks_to_delete = []
 formations = lA.runawstojson("cloudformation describe-stacks")["Stacks"]
 for stack in formations:
-    skip = False
-    for ex in exclude_names:
-        if re.match(ex, stack["StackName"]) is not None:
-            skip = True
-            break
+    skip = True
     for req in require_names:
         if re.match(req, stack["StackName"]) is None:
+            continue
+        else:
+            skip = False
+            break
+    for ex in exclude_names:
+        if re.match(ex, stack["StackName"]) is not None:
             skip = True
             break
     if amazon_keypair_name not in stack["StackName"] and amazon_keypair_name.replace('_', '') not in stack["StackName"]:

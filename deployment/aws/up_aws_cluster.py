@@ -29,7 +29,7 @@ optional:
     security_config.json : a json file with the security group/subnet-id keypair/keyfile (see readme for details). If
     not set I will follow the AWSSECCONF environment variable.
     --verbose : print all remotely running commands
-    --not-strict : turn off strict host-key checking
+    --strict/--not-strict : turn on/off strict host-key checking, default --not-strict
     --this-branch : read what this branch is called and deploy software direct from this branch
 """
 
@@ -55,6 +55,7 @@ if lD.detect_proxy() and lD.proxy_blocks_22:
         "skip this check set kavedeploy.proxy_blocks_22 to false and kavedeploy.proxy_port=22")
 
 lD.testproxy()
+lD.strict_host_key_checking = False
 
 
 def help():
@@ -73,6 +74,9 @@ def check_opts():
         sys.argv = [s for s in sys.argv if s != "--verbose"]
     else:
         lD.debug = False
+    if "--strict" in sys.argv:
+        sys.argv = [s for s in sys.argv if s not in ["--not-strict"]]
+        lD.strict_host_key_checking = True
     if "--not-strict" in sys.argv:
         sys.argv = [s for s in sys.argv if s not in ["--not-strict"]]
         lD.strict_host_key_checking = False

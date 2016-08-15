@@ -213,4 +213,4 @@ We currently name our stack within ambari to reflect both the version of the HDP
 
 * X.Y.KAVE.W.Z implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies.
 
-In older KAVE versions we used a different approach, not including the KAVE stack tag.
+This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.

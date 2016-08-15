@@ -174,3 +174,43 @@ echo "http://my/local/apache/mirror" >> /etc/kave/mirror
 ```
 
 So long as the directory structure of the nearside cache is identical to our website, you can drop, remove or replace, any local packages you will never install from this directory structure, and update it as our repo server updates.
+
+
+Versioning System
+=========================================
+
+## Relationship with Ambari Stacks
+
+KAVE extends a HDP stack, adding additional services. See the versioning diagram on our wiki for details.
+
+The HDP stack number looks like X.Y, with a major and minor version. The KAVE also has an W.Z versioning scheme, but this is not 100% coupled to the HDP stack.
+
+## KAVE tags
+
+A KAVE official version tag appears like:
+
+* **Major.minor-KAVE-qualifier** i.e. **2.2-KAVE-Beta** or **1.4-Beta-Pre**
+
+The tag is split into four parts:
+
+* **Major**: Major versions separate backwards incompatible changes or drastic noticable changes to the user experience or interface
+* **.Minor**: Minor versions represent subsequent releases of bugfixes, small improvements or changes which do not affect the user experience
+* **-KAVE-**: A signifier that this is an official tag
+* **qualifier**: Some logical qualification of the tag making it easier to understand. It is our convention to always use the -Beta tag at the moment. Example qualifies may include -Test (a release for developer testing only), -Pre (prerelease of a release candidate for beta-testing).
+
+## What consititues a major version change?
+
+A new major version is started whenever changes of the following type are made:
+
+* **Backwards incompatible change:** a change which completely prevents working with previous systems or installations.
+* **Major version increase of Ambari:** AmbariKave relies on Ambari, and if they increase major version, then so will we
+* **Serious security-related bugfix:** in the unlikely event that a major fault is discovered we will always increase the major version and inform the mailing list as to the reason for this
+* **Drastic change in user experience or interface:**  in order that users are aware that their experience will drastically change we increase the major version number whenever something drastically different in the experience is changed
+
+## KAVE stack in Ambari
+
+We currently name our stack within ambari to reflect both the version of the HDP stack we depend on, and the installed version of the KAVE.
+
+* X.Y.KAVE.W.Z implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies.
+
+In older KAVE versions we used a different approach, not including the KAVE stack tag.

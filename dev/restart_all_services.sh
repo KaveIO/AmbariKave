@@ -75,8 +75,13 @@ sleep 10
 #assumes deploy_from_blueprint was used...
 echo "restarting all ambari agents"
 pdsh -R ssh -g $cluster ambari-agent stop 2>/dev/null
-sleep 5
+sleep 15
 pdsh -R ssh -g $cluster ambari-agent start 2>/dev/null
+if [[ $? -ne 0 ]]; then
+	echo "retry agent start"
+	sleep 15
+	pdsh -R ssh -g $cluster ambari-agent start 2>/dev/null
+fi
 
 
 echo "sleeping for 70 seconds (heartbeat duration)"
@@ -85,6 +90,7 @@ op=`pdsh -R ssh -g $cluster ambari-agent status 2>/dev/null | grep "not running"
 if [ ! -z "$op" ]; then
 	echo "Warning, at least one ambari agent is still not started, check the log files for that node: /var/log/ambari-agent/ambari-agent.log"
 	echo "$op"
+	sleep 10
 fi
 
 #find all service names

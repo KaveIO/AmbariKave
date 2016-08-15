@@ -95,7 +95,7 @@ if "Subnet" in security_config:
 
 lA.testaws()
 
-instancetype = lA.chooseinstancetype("c4.xlarge")
+instancetype = lA.chooseinstancetype("c4.2xlarge")
 
 ##################################################
 # Create machine

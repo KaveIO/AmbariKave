@@ -17,6 +17,7 @@
             This password, due to a bug in Archiva, is currently limited to max 8 characters
             Please therefore use a very strong 8-character mix and do not expose as a public internet endpoint
         </description>
+        <property-type>PASSWORD</property-type>
     </property>
     <property>
         <name>install_topdir</name>

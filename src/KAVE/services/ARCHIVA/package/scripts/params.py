@@ -40,7 +40,7 @@ archiva_jetty_port = default('configurations/archiva/archiva_jetty_port', '5050'
 ARCHIVA_ADMIN = default("configurations/archiva/ARCHIVA_ADMIN", "admin")
 ARCHIVA_ADMIN_FULLNAME = default("configurations/archiva/ARCHIVA_ADMIN_FULLNAME", "administrator")
 ARCHIVA_ADMIN_EMAIL = default("configurations/archiva/ARCHIVA_ADMIN_EMAIL", "default")
-ARCHIVA_ADMIN_PASSWORD = config["archiva"]["ARCHIVA_ADMIN_PASSWORD"]
+ARCHIVA_ADMIN_PASSWORD = config['configurations']["archiva"]["ARCHIVA_ADMIN_PASSWORD"]
 Logger.sensitive_strings[ARCHIVA_ADMIN_PASSWORD] = "[PROTECTED]"
 
 if ARCHIVA_ADMIN_EMAIL == 'default':

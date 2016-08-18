@@ -129,6 +129,11 @@
         <value>25</value>
         <description>Port of the default mail server</description>
     </property>
+    <property>
+        <name>log_directory</name>
+        <value>/var/log/wildfly</value>
+        <description>logfiles get stored here</description>
+    </property>
  	<property>
         <name>wildflyxmlconfig</name>
         <value>&lt;?xml version="1.0" ?&gt;

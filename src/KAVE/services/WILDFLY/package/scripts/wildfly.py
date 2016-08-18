@@ -20,11 +20,13 @@ from resource_management import *
 import pwd
 import grp
 import os
+from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class Wildfly(Script):
     installer_cache_path = '/tmp/'
     package = 'wildfly-10.1.0.CR1.zip'
+    binlink = '/var/lib/ambari-agent/wildfly'
 
     def install(self, env):
         import params
@@ -65,16 +67,20 @@ class Wildfly(Script):
         # solution
         self.configure(env)
         Execute('nohup' + params.bin_dir +
-                './standalone.sh > /var/log/wildfly/stdin '
-                '> /var/log/wildfly/stdout > /var/log/wildfly/error &',
+                './standalone.sh < /dev/null '
+                '>> %s/stdout >> %s/stderr &' % (params.logdir, params.logdir),
                 wait_for_finish=False, user=params.service_user)
+        Execute('ln -s ' + params.bin_dir + ' ' + self.binlink)
         import time
         time.sleep(6)
 
     def stop(self, env):
+        import params
+        env.set_params(params)
         Execute('nohup' + params.bin_dir
                 + '/./jboss-cli.sh --connect command=:shutdown '
-                + '> /var/log/wildfly/stdin > /var/log/wildfly/stdout > /var/log/wildfly/error &',
+                + '< /dev/null '
+                + '>> %s/stdout >> %s/stderr &' % (params.logdir, params.logdir),
                 wait_for_finish=False)
 
     def restart(self, env):
@@ -85,7 +91,15 @@ class Wildfly(Script):
 
     def status(self, env):
         # need to save pid in filr and retrieve to see the value of status
-        Execute('service wildfly status')
+        import subprocess
+        p = subprocess.Popen([self.binlink + '/jboss-cli.sh',
+                              '--connect',
+                              'command=:read-attribute(name=server-state)'],
+                             stdout=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        if '"running"' not in stdout:
+            print stdout, stderr
+            raise ComponentIsNotRunning()
 
     def configure(self, env):
         import params

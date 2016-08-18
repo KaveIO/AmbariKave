@@ -161,7 +161,8 @@ def ambari_get(apath, ambhost=None, port=8080,
         ambhost = thehost
     url = prot + ambhost + ':' + str(port) + api + apath
     # print url
-    req = requests.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By': 'ambari'})
+    s = lD.request_session()
+    req = s.get(url, auth=HTTPBasicAuth(user, passwd), headers={'X-Requested-By': 'ambari'})
     return _r2j(req)
 
 
@@ -174,7 +175,8 @@ def ambari_post(apath, ambhost=None, data={}, port=8080,
         ambhost = thehost
     url = prot + ambhost + ':' + str(port) + api + apath
     # print url
-    req = requests.post(url, auth=HTTPBasicAuth(user, passwd), headers={
+    s = lD.request_session()
+    req = s.post(url, auth=HTTPBasicAuth(user, passwd), headers={
                         'X-Requested-By': 'ambari'}, data=json.dumps(data))
     return _r2j(req)
 

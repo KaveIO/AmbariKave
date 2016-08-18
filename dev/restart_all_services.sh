@@ -94,20 +94,20 @@ if [ ! -z "$op" ]; then
 fi
 
 #find all service names
-allnames=`curl -i -X GET --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/ -H "X-Requested-By:ambari" | grep "service_name" | awk -F '"' '{print $4}'`
+allnames=`curl --retry 5  -i -X GET --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/ -H "X-Requested-By:ambari" | grep "service_name" | awk -F '"' '{print $4}'`
 
 echo "Restarting FreeIPA first, if it exists"
 #stop them
 if [[ "$allnames" == *"FREEIPA"* ]]; then
 	service="FREEIPA"
 	echo $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds, (heartbeat duration)"
 	sleep 30
 	# manual start to ensure the correct ordering
 	service ipa start
 	sleep 40
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds (heartbeat duration)"
 	sleep 70
 	# end with manual start in case the stop/install takes too long.
@@ -121,7 +121,7 @@ for service in $allnames; do
 		continue
 	fi
 	echo "stopping" $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Stopping '$service'"},"Body":{"ServiceInfo":{"state":"INSTALLED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
 
 echo "sleeping for 70 seconds (heartbeat duration)"
@@ -132,11 +132,11 @@ for service in $allnames; do
 		continue
 	fi
     echo "starting" $service
-	curl -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
+	curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 done
 
 
 echo "All request hrefs"
-curl --netrc http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
+curl --retry 5  --netrc http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep 'href' | grep "requests/" | awk -F '"' '{print $4}'
 echo "Final request ID for semi-automatic monitoring:"
-curl --netrc http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'
+curl --retry 5  --netrc http://$ambari:8080/api/v1/clusters/$cluster/requests 2>/dev/null | grep "id" | tail -n 1 | awk -F ':' '{print $2}' | awk -F ' ' '{print $1}'

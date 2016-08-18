@@ -514,18 +514,18 @@ class LDTest(unittest.TestCase):
                   "~/.netrc")
         time.sleep(10)
         while rounds <= max_rounds:
-            # if curl fails, the ambari server may have dies for some reason
+            # if curl --retry 5  fails, the ambari server may have dies for some reason
             # the standard restart_all_services script will then work to recover this failure
             try:
                 stdout = ambari.run(
-                    "curl --netrc "
+                    "curl --retry 5  --netrc "
                     + " http://localhost:8080/api/v1/clusters/"
                     + clustername + "/requests/" + str(requestid))
             except lD.ShellExecuteError:
                 time.sleep(3)
                 try:
                     stdout = ambari.run(
-                        "curl --netrc "
+                        "curl --retry 5  --netrc "
                         + " http://localhost:8080/api/v1/clusters/"
                         + clustername + "/requests/" + str(requestid))
                 except lD.ShellExecuteError as e:
@@ -898,7 +898,7 @@ class LDTest(unittest.TestCase):
                 self.assertFalse("fail" in stdout,
                                  "checking existence of " + check + " failed (" + ' '.join(ambari.sshcmd()) + ")")
             elif self.service.startswith("APACHE") and check.startswith("http://"):
-                stdout = ambari.run(" curl -i -X GET --keepalive-time 5 " + check, exit=False)
+                stdout = ambari.run(" curl --retry 5  -i -X GET --keepalive-time 5 " + check, exit=False)
                 self.assertTrue(
                     "If you can read this page it means that the Apache HTTP server installed at this site is working "
                     "properly." in stdout,
@@ -909,22 +909,22 @@ class LDTest(unittest.TestCase):
                 import time
 
                 while rounds <= 10:
-                    stdout = ambari.run(" curl -i -I --keepalive-time 5 " + check, exit=False)
+                    stdout = ambari.run(" curl --retry 5  -i -I --keepalive-time 5 " + check, exit=False)
                     if "200 OK" in stdout:
                         flag = True
                         break
                     time.sleep(5)
                     rounds = rounds + 1
                 self.assertTrue(flag, "checking existence of " + check + " failed (" + ' '.join(
-                    ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+                    ambari.sshcmd()) + " 'curl --retry 5  -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif check.startswith("http://"):
-                stdout = ambari.run(" curl -i -I --keepalive-time 5 " + check, exit=False)
+                stdout = ambari.run(" curl --retry 5  -i -I --keepalive-time 5 " + check, exit=False)
                 self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
-                    ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+                    ambari.sshcmd()) + " 'curl --retry 5  -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif check.startswith("https://"):
-                stdout = ambari.run(" curl -k -i -I --keepalive-time 5 " + check, exit=False)
+                stdout = ambari.run(" curl --retry 5  -k -i -I --keepalive-time 5 " + check, exit=False)
                 self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
-                    ambari.sshcmd()) + " 'curl -k -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+                    ambari.sshcmd()) + " 'curl --retry 5  -k -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif len(check):
                 self.assertTrue(False, "don't know how to check existence of " + check)
         return

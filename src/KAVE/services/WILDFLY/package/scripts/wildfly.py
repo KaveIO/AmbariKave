@@ -66,7 +66,7 @@ class Wildfly(Script):
         env.set_params(params)
         self.configure(env)
         Execute('nohup ' + params.bin_dir +
-                './standalone.sh < /dev/null '
+                '/standalone.sh < /dev/null '
                 '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False, user=params.service_user)
         if os.path.exists(self.symlink):

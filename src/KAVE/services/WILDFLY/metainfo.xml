@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>WILDFLY</name>
+            <displayName>Wildfly</displayName>
+            <comment>Wildfly, a frontline server for jar files</comment>
+            <version>10.1.0</version>
+            <components>
+                    <component>
+                    <name>WILDFLY_APP_SERVER</name>
+                    <displayName>Wildfly</displayName>
+                    <category>MASTER</category>
+                    <commandScript>
+                        <script>scripts/wildfly.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                    	<package><name>wget</name></package>
+                    	<package><name>java-1.8.0-openjdk</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

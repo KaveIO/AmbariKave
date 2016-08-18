@@ -186,6 +186,20 @@ def parse_uname(output):
     if "el7" in output:
         return "Centos7"
     return None
+
+def request_session(retries=5, backoff_factor=0.1, status_forcelist=[ 500, 501, 502, 503, 504, 401, 404 ]):
+    import requests
+    from requests.packages.urllib3.util.retry import Retry
+    from requests.adapters import HTTPAdapter
+    s = requests.Session()
+    retries = Retry(total=retries,
+                    backoff_factor=backoff_factor,
+                    status_forcelist=status_forcelist)
+    s.mount('http://', HTTPAdapter(max_retries=retries))
+    s.mount('https://', HTTPAdapter(max_retries=retries))
+    return s
+
+
 #
 # Functions for contacting remote machines
 #
@@ -739,7 +753,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             pass
 
         try:
-            stdout = ambari.run("curl --netrc http://localhost:8080/api/v1/clusters")
+            stdout = ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except ShellExecuteError:
@@ -763,7 +777,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= timeout:
-        cmd = ("curl --netrc http://localhost:8080/api/v1/clusters/"
+        cmd = ("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters/"
                + clustername + "/requests/" + str(request))
         # If this fails, wait a second and try again, then really fail
         try:

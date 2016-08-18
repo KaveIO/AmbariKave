@@ -162,7 +162,7 @@ def failover_source(sources):
         if source is None:
             continue
         if source.startswith("ftp:") or (source.startswith("http") and ":" in source):
-            stat, stdout, stderr = shell_call_wrapper("curl -i -X HEAD " + source)
+            stat, stdout, stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
             if "200 OK" not in stdout and "302 Found" not in stdout:
                 continue
             return source
@@ -285,6 +285,18 @@ def ps(number):
         return stdout[0:8] + [stdout[8:]]
     return None
 
+
+def request_session(retries=5, backoff_factor=0.1, status_forcelist=[ 500, 501, 502, 503, 504, 401, 404 ]):
+    import requests
+    from requests.packages.urllib3.util.retry import Retry
+    from requests.adapters import HTTPAdapter
+    s = requests.Session()
+    retries = Retry(total=retries,
+                    backoff_factor=backoff_factor,
+                    status_forcelist=status_forcelist)
+    s.mount('http://', HTTPAdapter(max_retries=retries))
+    s.mount('https://', HTTPAdapter(max_retries=retries))
+    return s
 
 class ApacheScript(res.Script):
     """

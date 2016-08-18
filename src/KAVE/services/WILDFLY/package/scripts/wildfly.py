@@ -52,9 +52,6 @@ class Wildfly(Script):
         if not len(glob.glob(params.JAVA_HOME)):
             raise ValueError("Could not find JAVA_HOME in location : " + params.JAVA_HOME)
 
-        Execute('chkconfig --add wildfly')
-        Execute('chkconfig wildfly on')
-
         self.configure(env)
 
     def clean_up_failed_install(self):

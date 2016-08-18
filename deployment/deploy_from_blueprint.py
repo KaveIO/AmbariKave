@@ -177,7 +177,7 @@ def ambari_post(apath, ambhost=None, data={}, port=8080,
     # print url
     s = lD.request_session()
     req = s.post(url, auth=HTTPBasicAuth(user, passwd), headers={
-                        'X-Requested-By': 'ambari'}, data=json.dumps(data))
+        'X-Requested-By': 'ambari'}, data=json.dumps(data))
     return _r2j(req)
 
 ret = ambari_get("clusters")

@@ -187,7 +187,8 @@ def parse_uname(output):
         return "Centos7"
     return None
 
-def request_session(retries=5, backoff_factor=0.1, status_forcelist=[ 500, 501, 502, 503, 504, 401, 404 ]):
+
+def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 502, 503, 504, 401, 404]):
     import requests
     from requests.packages.urllib3.util.retry import Retry
     from requests.adapters import HTTPAdapter

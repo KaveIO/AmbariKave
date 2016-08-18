@@ -52,11 +52,6 @@ class Wildfly(Script):
         if not len(glob.glob(params.JAVA_HOME)):
             raise ValueError("Could not find JAVA_HOME in location : " + params.JAVA_HOME)
 
-        #File('/etc/init.d/wildfly',
-             #content=Template("wildfly.j2"),
-             #mode=0755
-             #)
-
         Execute('chkconfig --add wildfly')
         Execute('chkconfig wildfly on')
 

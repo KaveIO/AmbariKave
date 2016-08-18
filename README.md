@@ -189,7 +189,7 @@ The HDP stack number looks like X.Y, with a major and minor version. The KAVE al
 
 A KAVE official version tag appears like:
 
-* **Major.minor-KAVE-qualifier** i.e. **2.2-KAVE-Beta** or **1.4-Beta-Pre**
+* **Major.minor-KAVE-qualifier** i.e. **2.2-KAVE-Beta**
 
 The tag is split into four parts:
 

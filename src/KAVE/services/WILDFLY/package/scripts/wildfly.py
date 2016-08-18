@@ -34,7 +34,7 @@ class Wildfly(Script):
 
         kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path, arch='noarch')
         self.clean_up_failed_install()
-        Execute('unzip -o -q %s ' % (self.package, params.installation_dir))
+        Execute('unzip -o -q %s ' % (self.package))
         Execute('mv %s %s' % (self.package.replace('.zip', ''), params.installation_dir))
         # Execute('rm -rf %s/jb*.Final' % params.installation_dir)
         try:

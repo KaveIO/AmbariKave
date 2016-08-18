@@ -18,12 +18,17 @@
 from resource_management import *
 
 config = Script.get_config()
-# declare bin directory for wildlfly
-bin_dir = default('configurations/wildfly/bin_dir', '/opt/wildfly/bin')
+
+log_dir = default('configurations/wildfly/log_dir', '/var/log/wildfly')
+
+if not len(log_dir) > 3 or '/' not in log_dir:
+    raise ValueError("You have set a directory incorrectly! " + log_dir)
 
 installation_dir = default('configurations/wildfly/installation_dir', '/opt/wildfly/')
 if not len(installation_dir) > 3 or '/' not in installation_dir:
     raise ValueError("You have set a directory incorrectly! " + installation_dir)
+
+bin_dir = installation_dir + '/bin'
 
 config_dir = default('configurations/wildfly/config_dir', '/standalone/configuration/')
 if not len(config_dir) > 3 or '/' not in config_dir:

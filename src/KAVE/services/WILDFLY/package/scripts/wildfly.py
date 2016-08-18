@@ -68,8 +68,10 @@ class Wildfly(Script):
         self.configure(env)
         Execute('nohup' + params.bin_dir +
                 './standalone.sh < /dev/null '
-                '>> %s/stdout >> %s/stderr &' % (params.logdir, params.logdir),
+                '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False, user=params.service_user)
+        if os.path.exists(self.binlink):
+            Execute('rm -f ' + self.binlink)
         Execute('ln -s ' + params.bin_dir + ' ' + self.binlink)
         import time
         time.sleep(6)
@@ -78,9 +80,9 @@ class Wildfly(Script):
         import params
         env.set_params(params)
         Execute('nohup' + params.bin_dir
-                + '/./jboss-cli.sh --connect command=:shutdown '
+                + '/jboss-cli.sh --connect command=:shutdown '
                 + '< /dev/null '
-                + '>> %s/stdout >> %s/stderr &' % (params.logdir, params.logdir),
+                + '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False)
 
     def restart(self, env):

@@ -130,7 +130,7 @@
         <description>Port of the default mail server</description>
     </property>
     <property>
-        <name>log_directory</name>
+        <name>log_dir</name>
         <value>/var/log/wildfly</value>
         <description>logfiles get stored here</description>
     </property>

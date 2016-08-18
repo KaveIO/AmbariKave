@@ -26,7 +26,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 class Wildfly(Script):
     installer_cache_path = '/tmp/'
     package = 'wildfly-10.1.0.CR1.zip'
-    binlink = '/var/lib/ambari-agent/wildfly'
+    symlink = '/var/lib/ambari-agent/tmp/wildfly'
 
     def install(self, env):
         import params
@@ -65,20 +65,20 @@ class Wildfly(Script):
         import params
         env.set_params(params)
         self.configure(env)
-        Execute('nohup' + params.bin_dir +
+        Execute('nohup ' + params.bin_dir +
                 './standalone.sh < /dev/null '
                 '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False, user=params.service_user)
         if os.path.exists(self.binlink):
             Execute('rm -f ' + self.binlink)
-        Execute('ln -s ' + params.bin_dir + ' ' + self.binlink)
+        Execute('ln -s ' + params.installation_dir + ' ' + self.symlink)
         import time
         time.sleep(6)
 
     def stop(self, env):
         import params
         env.set_params(params)
-        Execute('nohup' + params.bin_dir
+        Execute('nohup ' + params.bin_dir
                 + '/jboss-cli.sh --connect command=:shutdown '
                 + '< /dev/null '
                 + '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
@@ -93,7 +93,7 @@ class Wildfly(Script):
     def status(self, env):
         # need to save pid in filr and retrieve to see the value of status
         import subprocess
-        p = subprocess.Popen([self.binlink + '/jboss-cli.sh',
+        p = subprocess.Popen([self.symlink + '/jboss-cli.sh',
                               '--connect',
                               'command=:read-attribute(name=server-state)'],
                              stdout=subprocess.PIPE)

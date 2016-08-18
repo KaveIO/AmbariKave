@@ -72,12 +72,14 @@ class Wildfly(Script):
         if os.path.exists(self.symlink):
             Execute('rm -f ' + self.symlink)
         Execute('ln -s ' + params.installation_dir + ' ' + self.symlink)
+        # write a file with the bind address and the port number for the management somewhere
         import time
         time.sleep(6)
 
     def stop(self, env):
         import params
         env.set_params(params)
+        # use the bind address/port number!
         Execute('nohup ' + params.bin_dir
                 + '/jboss-cli.sh --connect command=:shutdown '
                 + '< /dev/null '
@@ -93,6 +95,7 @@ class Wildfly(Script):
     def status(self, env):
         # need to save pid in filr and retrieve to see the value of status
         import subprocess
+        # use the bind address/port number!
         p = subprocess.Popen([self.symlink + '/bin/jboss-cli.sh',
                               '--connect',
                               'command=:read-attribute(name=server-state)'],
@@ -106,7 +109,9 @@ class Wildfly(Script):
         import params
 
         env.set_params(params)
-
+        if not os.path.exists(params.log_dir):
+            Execute('mkdir -p ' + params.log_dir)
+        Execute('chown -R %s:%s %s' % (params.service_user, params.service_user, params.log_dir))
         File(params.wildfly_conf_file,
              content=InlineTemplate(params.wildflyxmlconfig),
              mode=0644

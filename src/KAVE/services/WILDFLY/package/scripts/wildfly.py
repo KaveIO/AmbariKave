@@ -108,7 +108,7 @@ class Wildfly(Script):
 
         env.set_params(params)
 
-        File(params.jboss_conf_file,
+        File(params.wildfly_conf_file,
              content=InlineTemplate(params.wildflyxmlconfig),
              mode=0644
              )

@@ -24,7 +24,7 @@
         </description>
     </property>
     <property>
-        <name>wildflyl_management_filename</name>
+        <name>wildfly_management_filename</name>
         <value>mgmt-users.properties</value>
         <description>
 			default properties file for Management User
@@ -41,7 +41,7 @@
     </property>
     <property>
         <name>service_user</name>
-        <value>jboss</value>
+        <value>wildfly</value>
         <description>
             the user under which jboss will run.
         </description>

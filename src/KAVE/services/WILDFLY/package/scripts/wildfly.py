@@ -67,18 +67,27 @@ class Wildfly(Script):
         # So the > /dev/null fixes this. However this not really a fundamental
         # solution
         self.configure(env)
-        Execute('nohup'+ params.bin_dir + './standalone.sh > /var/log/wildfly/stdin > /var/log/wildfly/stdout > /var/log/wildfly/error &',wait_for_finish=False)
+        Execute('nohup' + params.bin_dir +
+                './standalone.sh > /var/log/wildfly/stdin '
+                '> /var/log/wildfly/stdout > /var/log/wildfly/error &',
+                wait_for_finish=False)
+        import time
+        time.sleep(6)
 
     def stop(self, env):
-        Execute('nohup' +params.bin_dir +'./jboss-cli.sh --connect command=:shutdown > /var/log/wildfly/stdin > /var/log/wildfly/stdout > /var/log/wildfly/error &',wait_for_finish=False )
-
+        Execute('nohup' + params.bin_dir
+                + '/./jboss-cli.sh --connect command=:shutdown '
+                + '> /var/log/wildfly/stdin > /var/log/wildfly/stdout > /var/log/wildfly/error &',
+                wait_for_finish=False)
 
     def restart(self, env):
-        self.configure(env)
-        #Execute('service wildfly restart > /dev/null')
+        import time
+        self.stop()
+        time.sleep(6)
+        self.start()
 
     def status(self, env):
-        #need to save pid in filr and retrieve to see the value of status
+        # need to save pid in filr and retrieve to see the value of status
         Execute('service wildfly status')
 
     def configure(self, env):

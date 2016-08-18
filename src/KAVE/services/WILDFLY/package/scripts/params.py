@@ -18,15 +18,15 @@
 from resource_management import *
 
 config = Script.get_config()
-#declare bin directory for wildlfly
+# declare bin directory for wildlfly
 bin_dir = default('configurations/wildfly/bin_dir', '/opt/wildfly/bin')
 
 installation_dir = default('configurations/wildfly/installation_dir', '/opt/wildfly/')
-if not len(installation_dir)>3 or '/' not in installation_dir:
+if not len(installation_dir) > 3 or '/' not in installation_dir:
     raise ValueError("You have set a directory incorrectly! " + installation_dir)
 
 config_dir = default('configurations/wildfly/config_dir', '/standalone/configuration/')
-if not len(config_dir)>3 or '/' not in config_dir:
+if not len(config_dir) > 3 or '/' not in config_dir:
     raise ValueError("You have set a directory incorrectly! " + config_dir)
 
 service_user = default('configurations/wildfly/service_user', 'wildfly')
@@ -65,7 +65,7 @@ txn_status_manager_port = default('configurations/wildfly/txn_status_manager_por
 mail_server = default('configurations/wildfly/mail_server', 'localhost')
 mail_port = default('configurations/wildfly/mail_port', '25')
 
-jbossxmlconfig =default('configurations/wildfly/jbossxmlconfig',"""
+jbossxmlconfig = default('configurations/wildfly/jbossxmlconfig', """
 <?xml version="1.0" ?>
 
 <server xmlns="urn:jboss:domain:4.2">
@@ -467,9 +467,9 @@ jbossxmlconfig =default('configurations/wildfly/jbossxmlconfig',"""
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
         <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:{{management_http_port}}}"/>
         <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:{{management_https_port}}}"/>
-        <socket-binding name="ajp" port="${jboss.ajp.port:{{ajp_port}}"/>
-        <socket-binding name="http" port="${jboss.http.port:{{http_port}}"/>
-        <socket-binding name="https" port="${jboss.https.port:{{https_port}}"/>
+        <socket-binding name="ajp" port="${jboss.ajp.port:{{ajp_port}}}"/>
+        <socket-binding name="http" port="${jboss.http.port:{{http_port}}}"/>
+        <socket-binding name="https" port="${jboss.https.port:{{https_port}}}"/>
         <socket-binding name="txn-recovery-environment" port="{{txn_recovery_environment_port}}"/>
         <socket-binding name="txn-status-manager" port="{{txn_status_manager_port}}"/>
         <outbound-socket-binding name="mail-smtp">

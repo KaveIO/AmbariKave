@@ -35,7 +35,7 @@ class Wildfly(Script):
         kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path, arch='noarch')
         self.clean_up_failed_install()
         Execute('unzip -o -q %s ' % (self.package, params.installation_dir))
-        Execute('mv %s %s' % (self.package.replace('.zip',''), params.installation_dir))
+        Execute('mv %s %s' % (self.package.replace('.zip', ''), params.installation_dir))
         # Execute('rm -rf %s/jb*.Final' % params.installation_dir)
         try:
             grp.getgrnam(params.service_user)
@@ -70,7 +70,7 @@ class Wildfly(Script):
         Execute('nohup' + params.bin_dir +
                 './standalone.sh > /var/log/wildfly/stdin '
                 '> /var/log/wildfly/stdout > /var/log/wildfly/error &',
-                wait_for_finish=False, user = params.service_user)
+                wait_for_finish=False, user=params.service_user)
         import time
         time.sleep(6)
 

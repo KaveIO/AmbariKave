@@ -62,9 +62,8 @@ class Wildfly(Script):
             Execute('rm -rf %s' % params.installation_dir)
 
     def start(self, env):
-        # @fixme The jboss start doesn't return nicely if the output is not catched.
-        # So the > /dev/null fixes this. However this not really a fundamental
-        # solution
+        import params
+        env.set_params(params)
         self.configure(env)
         Execute('nohup' + params.bin_dir +
                 './standalone.sh < /dev/null '

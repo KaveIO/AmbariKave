@@ -69,8 +69,8 @@ class Wildfly(Script):
                 './standalone.sh < /dev/null '
                 '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False, user=params.service_user)
-        if os.path.exists(self.binlink):
-            Execute('rm -f ' + self.binlink)
+        if os.path.exists(self.symlink):
+            Execute('rm -f ' + self.symlink)
         Execute('ln -s ' + params.installation_dir + ' ' + self.symlink)
         import time
         time.sleep(6)

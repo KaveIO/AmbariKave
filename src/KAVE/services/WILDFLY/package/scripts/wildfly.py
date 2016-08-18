@@ -93,7 +93,7 @@ class Wildfly(Script):
     def status(self, env):
         # need to save pid in filr and retrieve to see the value of status
         import subprocess
-        p = subprocess.Popen([self.symlink + '/jboss-cli.sh',
+        p = subprocess.Popen([self.symlink + '/bin/jboss-cli.sh',
                               '--connect',
                               'command=:read-attribute(name=server-state)'],
                              stdout=subprocess.PIPE)

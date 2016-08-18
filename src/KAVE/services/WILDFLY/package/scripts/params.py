@@ -65,7 +65,7 @@ txn_status_manager_port = default('configurations/wildfly/txn_status_manager_por
 mail_server = default('configurations/wildfly/mail_server', 'localhost')
 mail_port = default('configurations/wildfly/mail_port', '25')
 
-jbossxmlconfig = default('configurations/wildfly/jbossxmlconfig', """
+jbossxmlconfig = default('configurations/wildfly/wildflyxmlconfig', """
 <?xml version="1.0" ?>
 
 <server xmlns="urn:jboss:domain:4.2">

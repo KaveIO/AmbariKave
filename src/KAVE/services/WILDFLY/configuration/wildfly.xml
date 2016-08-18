@@ -130,7 +130,7 @@
         <description>Port of the default mail server</description>
     </property>
  	<property>
-        <name>jbossxmlconfig</name>
+        <name>wildflyxmlconfig</name>
         <value>&lt;?xml version="1.0" ?&gt;
 		&lt;server xmlns="urn:jboss:domain:4.2"&gt;
     	&lt;extensions&gt;

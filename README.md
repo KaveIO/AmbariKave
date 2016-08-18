@@ -21,6 +21,8 @@ This means there are two genral ways to install these services
 Installation (on the 'ambari node' of your cluster, or one large machine)
 =========================================================================
 
+If you are looking for the extensive documentation, including descriptions of disk/cpu/ram requirements, please look at [the installation wiki](https://github.com/KaveIO/AmbariKave/wiki/Detailed-Guides-AmbariKave)
+
 * Ambari is a cluster installation management system for hadoop-based clusters. It installs separate services on different machines across a cluster. AmbariKave is a small extention fo this. If what you're looking for is a common set of data science tools to install on one single machine (without a database or hdfs) consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
 * To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta-Pre, with username repos and password kaverepos, including downloading and installing ambari:
@@ -98,6 +100,8 @@ sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
 
 Installation of a full cluster
 ==============================
+
+If you are looking for the extensive documentation, including descriptions of disk/cpu/ram requirements, please look at [the installation wiki](https://github.com/KaveIO/AmbariKave/wiki/Detailed-Guides-AmbariKave)
 
 If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
 If you have git access, and are working from the git version, See the wiki.

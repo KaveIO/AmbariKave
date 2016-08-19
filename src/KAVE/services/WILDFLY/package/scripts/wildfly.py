@@ -27,6 +27,7 @@ class Wildfly(Script):
     installer_cache_path = '/tmp/'
     package = 'wildfly-10.1.0.CR1.zip'
     symlink = '/var/lib/ambari-agent/tmp/wildfly'
+    statcmd = '/wf_kave_status.sh'
 
     def install(self, env):
         import params
@@ -73,6 +74,12 @@ class Wildfly(Script):
             Execute('rm -f ' + self.symlink)
         Execute('ln -s ' + params.installation_dir + ' ' + self.symlink)
         # write a file with the bind address and the port number for the management somewhere
+        with open(self.symlink + self.statcmd,'w') as fp:
+            fp.write(params.bin_dir
+                     + "/jboss-cli.sh "
+                     + params.management_connection
+                     + " --connect 'command=:read-attribute(name=server-state)'")
+        Execute('chmod 700 ' + self.symlink + self.statcmd)
         import time
         time.sleep(6)
 
@@ -81,7 +88,9 @@ class Wildfly(Script):
         env.set_params(params)
         # use the bind address/port number!
         Execute('nohup ' + params.bin_dir
-                + '/jboss-cli.sh --connect command=:shutdown '
+                + '/jboss-cli.sh '
+                + params.management_connection
+                + "--connect 'command=:shutdown'"
                 + '< /dev/null '
                 + '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False)
@@ -96,9 +105,7 @@ class Wildfly(Script):
         # need to save pid in filr and retrieve to see the value of status
         import subprocess
         # use the bind address/port number!
-        p = subprocess.Popen([self.symlink + '/bin/jboss-cli.sh',
-                              '--connect',
-                              'command=:read-attribute(name=server-state)'],
+        p = subprocess.Popen([self.symlink + self.statcmd],
                              stdout=subprocess.PIPE)
         stdout, stderr = p.communicate()
         if '"running"' not in stdout:

@@ -54,6 +54,13 @@ else:
 # ip adresses the service will be listening on
 ip_address = default('configurations/wildfly/ip_address', '0.0.0.0')
 ip_address_management = default('configurations/wildfly/ip_address_management', '127.0.0.1')
+management_http_port = default('configurations/wildfly/management_http_port', '9990')
+
+management_connection = 'http://' + ip_address_management + ':' + management_http_port
+
+if management_password:
+    management_connection = management_connection + ' --user=' +  management_user
+    management_connection = management_connection + ' --password=' +  management_password
 
 # Port configurations
 http_port = default('configurations/wildfly/http_port', "8080")

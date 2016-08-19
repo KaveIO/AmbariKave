@@ -79,7 +79,7 @@ class Wildfly(Script):
             fp.write(params.bin_dir
                      + "/jboss-cli.sh "
                      + params.management_connection
-                     + " --connect 'command=:read-attribute(name=server-state)'")
+                     + " --connect 'command=:read-attribute(name=server-state)'\n")
         Execute('chmod 700 ' + self.symlink + self.statcmd)
         import time
         time.sleep(6)

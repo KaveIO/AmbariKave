@@ -98,9 +98,9 @@ class Wildfly(Script):
 
     def restart(self, env):
         import time
-        self.stop()
+        self.stop(env)
         time.sleep(6)
-        self.start()
+        self.start(env)
 
     def status(self, env):
         # need to save pid in filr and retrieve to see the value of status

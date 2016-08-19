@@ -18,7 +18,7 @@
 ##############################################################################
 
 
-class HDP24KAVEStackAdvisor(HDP24StackAdvisor):
+class HDP24KAVE22StackAdvisor(HDP24StackAdvisor):
 
     # List of validators which should also be evaluated if there is not recommended default present.
     validateWithoutRecommendedDefault = ['freeipa']

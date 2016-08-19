@@ -106,9 +106,7 @@ class Wildfly(Script):
             p = subprocess.Popen([params.bin_dir
                                   + '/jboss-cli.sh '
                                   + params.management_connection
-                                  + " --connect 'command=:shutdown' "]
-                                 , stdout=subprocess.PIPE
-                                 , shell=True)
+                                  + " --connect 'command=:shutdown' "], stdout=subprocess.PIPE, shell=True)
             stdout, stderr = p.communicate(str(params.management_password) + '\n')
             if p.returncode or 'success' not in stdout:
                 raise Exception('Unable to stop the service, did you change the password?'

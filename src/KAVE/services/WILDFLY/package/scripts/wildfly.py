@@ -91,7 +91,7 @@ class Wildfly(Script):
         Execute('nohup ' + params.bin_dir
                 + '/jboss-cli.sh '
                 + params.management_connection
-                + "--connect 'command=:shutdown'"
+                + " --connect 'command=:shutdown' "
                 + '< /dev/null '
                 + '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
                 wait_for_finish=False)

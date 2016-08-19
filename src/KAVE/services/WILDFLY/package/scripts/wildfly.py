@@ -28,6 +28,7 @@ class Wildfly(Script):
     package = 'wildfly-10.1.0.CR1.zip'
     symlink = '/var/lib/ambari-agent/tmp/wildfly'
     statcmd = '/wf_kave_status.sh'
+    stopcmd = '/wf_kave_stop.sh'
 
     def install(self, env):
         import params
@@ -81,20 +82,37 @@ class Wildfly(Script):
                      + params.management_connection
                      + " --connect 'command=:read-attribute(name=server-state)'\n")
         Execute('chmod 700 ' + self.symlink + self.statcmd)
+        # write a file with the bind address and the port number for the management somewhere
+        with open(self.symlink + self.stopcmd, 'w') as fp:
+            fp.write("#!/bin/bash\n")
+            fp.write(params.bin_dir
+                     + "/jboss-cli.sh "
+                     + params.management_connection
+                     + " --connect 'command=:shutdown'\n")
+        Execute('chmod 700 ' + self.symlink + self.stopcmd)
         import time
         time.sleep(6)
 
     def stop(self, env):
         import params
         env.set_params(params)
-        # use the bind address/port number!
-        Execute('nohup ' + params.bin_dir
-                + '/jboss-cli.sh '
-                + params.management_connection
-                + " --connect 'command=:shutdown' "
-                + '< /dev/null '
-                + '>> %s/stdout >> %s/stderr &' % (params.log_dir, params.log_dir),
-                wait_for_finish=False)
+        import subprocess
+        # try with old password first!
+        p = subprocess.Popen([self.symlink + self.stopcmd],
+                             stdout=subprocess.PIPE)
+        stdout, stderr = p.communicate(str(params.management_password) + '\n')
+        if p.returncode or 'success' not in stdout:
+            # try with new password if that did not work
+            p = subprocess.Popen([params.bin_dir
+                                  + '/jboss-cli.sh '
+                                  + params.management_connection
+                                  + " --connect 'command=:shutdown' "]
+                                 , stdout=subprocess.PIPE
+                                 , shell=True)
+            stdout, stderr = p.communicate(str(params.management_password) + '\n')
+            if p.returncode or 'success' not in stdout:
+                raise Exception('Unable to stop the service, did you change the password?'
+                                ' examine the contents of ' + self.symlink + self.stopcmd)
 
     def restart(self, env):
         import time

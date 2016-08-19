@@ -5,7 +5,7 @@
         <service>
             <name>WILDFLY</name>
             <displayName>Wildfly</displayName>
-            <comment>Wildfly, a frontline server for jar files</comment>
+            <comment>Wildfly, a frontline server for jar files, replaces JBOSS</comment>
             <version>10.1.0</version>
             <components>
                     <component>

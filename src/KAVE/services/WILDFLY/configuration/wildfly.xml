@@ -43,14 +43,14 @@
         <name>service_user</name>
         <value>wildfly</value>
         <description>
-            the user under which jboss will run.
+            the user under which wildfly will run.
         </description>
     </property>
     <property>
         <name>ip_address</name>
         <value>0.0.0.0</value>
         <description>
-            Public ip address JBoss will bind to. 0.0.0.0 implies any ip
+            Public ip address wildfly will bind to. 0.0.0.0 implies any ip
             address.
         </description>
     </property>
@@ -58,7 +58,7 @@
         <name>ip_address_management</name>
         <value>127.0.0.1</value>
         <description>
-            Management ip address JBoss will bind to. 0.0.0.0 implies any ip
+            Management ip address wildfly will bind to. 0.0.0.0 implies any ip
             address which. This is not recommended for the management services.
         </description>
     </property>

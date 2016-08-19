@@ -75,6 +75,7 @@ class Wildfly(Script):
         Execute('ln -s ' + params.installation_dir + ' ' + self.symlink)
         # write a file with the bind address and the port number for the management somewhere
         with open(self.symlink + self.statcmd, 'w') as fp:
+            fp.write("#!/bin/bash\n")
             fp.write(params.bin_dir
                      + "/jboss-cli.sh "
                      + params.management_connection

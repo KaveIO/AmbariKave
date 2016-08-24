@@ -24,8 +24,6 @@
 # from all the machines in the cluster as well as the local machine
 #
 
-if
-
 echo "This will completely destroy your local ambari installation and database."
 read -p "Are you sure? " -n 1 -r
 echo    # (optional) move to a new line

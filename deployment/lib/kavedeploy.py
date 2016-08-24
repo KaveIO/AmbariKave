@@ -636,7 +636,8 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
         remote.run("service iptables stop")
         remote.run("chkconfig iptables off")
     except ShellExecuteError:
-        pass
+        remote.run("systemctl disable firewalld")
+        remote.run("systemctl stop firewalld")
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)
@@ -738,6 +739,9 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             # modify iptables, only in case of Centos6
             if ambari.detect_linux_version() in ["Centos6"]:
                 ambari.run("service iptables stop")
+            else:
+                ambari.run("systemctl disable firewalld")
+                ambari.run("systemctl stop firewalld")
         except ShellExecuteError:
             pass
         # check file pointed to for failures

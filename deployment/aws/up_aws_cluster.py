@@ -423,6 +423,8 @@ if instance_to_remote.values()[0].detect_linux_version() in ["Centos6"]:
     allremotes.run("service iptables stop")
 elif instance_to_remote.values()[0].detect_linux_version() in ["Centos7"]:
     allremotes.run("setenforce permissive")
+    allremotes.run("systemctl disable firewalld")
+    allremotes.run("systemctl stop firewalld")
 
 print "==================================="
 print "add any extra disk space (parallelized per instance)"

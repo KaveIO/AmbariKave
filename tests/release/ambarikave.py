@@ -49,6 +49,8 @@ class TestAmbariKaveRelease(base.LDTest):
             ambari.run("echo 0 > /selinux/enforce")
         elif self.ostype in ["Centos7"]:
             ambari.run("setenforce permissive")
+            ambari.run("systemctl disable firewalld")
+            ambari.run("systemctl stop firewalld")
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("rm -rf inst.*")
         ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")

@@ -67,7 +67,8 @@ def detect_region():
 
 __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtual, 6.5 release media
                                     "eu-west": "ami-30ff5c47",  # good, centos 6 "with updates"
-                                    "eu-central": "ami-2bf11444",
+                                    # "eu-central": "ami-2bf11444", # too new, user is centos!
+                                    "eu-central": "ami-46c4f65b",  # good, centos 6 "with updates"
                                     "ap-northeast": "ami-25436924",
                                     "ap-southeast": "ami-0aaf8858",
                                     "ap-south": "ami-9b1c76f4"

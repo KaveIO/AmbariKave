@@ -202,6 +202,9 @@ except lD.ShellExecuteError:
 # modify iptables, only in case of Centos6
 if ambari.detect_linux_version() in ["Centos6"]:
     ambari.run("service iptables stop")
+else:
+    ambari.run("systemctl disable firewalld")
+    ambari.run("systemctl stop firewalld")
 
 admin = ambari.run("hostname")
 

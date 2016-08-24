@@ -40,6 +40,9 @@ sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
 # If on Centos6, turn off iptables with:
 sudo service iptables stop
 sudo chkconfig iptables off
+# If on Centos7 use:
+systemctl disable firewalld
+systemctl stop firewalld
 #test ssh keys with
 ssh -T git@github.com
 #if this works,

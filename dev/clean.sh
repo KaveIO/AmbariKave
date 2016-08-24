@@ -89,7 +89,7 @@ service postgresql restart
 rm -rf /var/lib/ambari-server/*
 rm -rf /etc/ambari-server/*
 
-if [ ! -z ${clustercmd} ]; then
+if [ ! -z "$clustercmd" ]; then
 	${clustercmd} "rm -rf /var/lib/ambari-agent/*"
 	${clustercmd} "rm -rf /etc/ambari-agent/*"
 else

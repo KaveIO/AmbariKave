@@ -81,10 +81,19 @@ ${clustercmd}ambari-agent stop
 sleep 5
 yum -y erase ambari-server
 ${clustercmd}yum -y erase ambari-agent
-su - postgres bash -c 'psql -c "drop role ambari"; psql -c "drop database ambari"; psql -c "drop database ambarirca";'
+su - postgres psql -c "REVOKE CONNECT ON DATABASE ambari FROM public; ALTER DATABASE ambari CONNECTION LIMIT 0; SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname='ambari';"
+su - postgres psql -c "REVOKE CONNECT ON DATABASE ambarirca FROM public; ALTER DATABASE ambarirca CONNECTION LIMIT 0; SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname='ambarirca';"
+su - postgres bash -c 'psql -c "drop database ambari"; psql -c "drop database ambarirca"; psql -c "drop role ambari";'
 rm -f .pgpass
+service postgresql restart
 rm -rf /var/lib/ambari-server/*
 rm -rf /etc/ambari-server/*
-${clustercmd}rm -rf /var/lib/ambari-agent/*
-${clustercmd}rm -rf /etc/ambari-agent/*
+
+if [ ! -z ${clustercmd} ]; then
+	${clustercmd} "rm -rf /var/lib/ambari-agent/*"
+	${clustercmd} "rm -rf /etc/ambari-agent/*"
+else
+	rm -rf /var/lib/ambari-agent/*
+	rm -rf /etc/ambari-agent/*
+fi
 ${clustercmd}rm -rf /etc/yum.repos.d/ambari.repo

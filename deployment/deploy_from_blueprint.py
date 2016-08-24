@@ -203,8 +203,11 @@ except lD.ShellExecuteError:
 if ambari.detect_linux_version() in ["Centos6"]:
     ambari.run("service iptables stop")
 else:
+    try:
+        ambari.run("systemctl stop firewalld")
+    except lD.ShellExecuteError:
+        pass
     ambari.run("systemctl disable firewalld")
-    ambari.run("systemctl stop firewalld")
 
 admin = ambari.run("hostname")
 

@@ -83,7 +83,7 @@ ${clustercmd}ambari-agent stop
 sleep 5
 yum -y erase ambari-server
 ${clustercmd}yum -y erase ambari-agent
-su - postgres bash -c 'psql -c "drop role ambari; drop database ambari"; psql -c "drop database ambarirca";'
+su - postgres bash -c 'psql -c "drop role ambari"; psql -c "drop database ambari"; psql -c "drop database ambarirca";'
 rm -f .pgpass
 rm -rf /var/lib/ambari-server/*
 rm -rf /etc/ambari-server/*

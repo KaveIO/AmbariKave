@@ -150,8 +150,11 @@ if tos in ["Centos6"]:
     remote.run("echo 0 >/selinux/enforce")
 else:
     remote.run("setenforce permissive")
+    try:
+        remote.run("systemctl stop firewalld")
+    except lD.ShellExecuteError:
+        pass
     remote.run("systemctl disable firewalld")
-    remote.run("systemctl stop firewalld")
 
 remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
 

@@ -81,8 +81,8 @@ ${clustercmd}ambari-agent stop
 sleep 5
 yum -y erase ambari-server
 ${clustercmd}yum -y erase ambari-agent
-su - postgres psql -c "REVOKE CONNECT ON DATABASE ambari FROM public; ALTER DATABASE ambari CONNECTION LIMIT 0; SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname='ambari';"
-su - postgres psql -c "REVOKE CONNECT ON DATABASE ambarirca FROM public; ALTER DATABASE ambarirca CONNECTION LIMIT 0; SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname='ambarirca';"
+sudo -u postgres psql -c "REVOKE CONNECT ON DATABASE ambari FROM public; ALTER DATABASE ambari CONNECTION LIMIT 0; SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname='ambari';"
+sudo -u postgres psql -c "REVOKE CONNECT ON DATABASE ambarirca FROM public; ALTER DATABASE ambarirca CONNECTION LIMIT 0; SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname='ambarirca';"
 su - postgres bash -c 'psql -c "drop database ambari"; psql -c "drop database ambarirca"; psql -c "drop role ambari";'
 rm -f .pgpass
 service postgresql restart

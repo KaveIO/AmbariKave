@@ -685,13 +685,17 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     # get directly from repo
     if not git:
         remote.run("yum -y install wget curl")
-        arch = "centos6"
+        arch="noarch"
+        archtag=""
         dir = "AmbariKave"
-        dfile = pack + "-installer-" + arch + "-" + version + ".sh"
         if pack == "kavetoolbox":
             arch = "noarch"
             dir = "KaveToolbox"
-            dfile = pack + "-installer-" + version + ".sh"
+        elif version != 'latest' and version < "2.2":
+            arch="centos6"
+            archtag='-' + arch
+        # name of file depends on version
+        dfile = pack + "-installer" + archtag + "-" + version + ".sh"
         remote.run("wget " + repo + "/" + arch + "/" + dir + "/" + version + "/" + dfile)
         if not background:
             remote.run("bash " + dfile + " " + options)

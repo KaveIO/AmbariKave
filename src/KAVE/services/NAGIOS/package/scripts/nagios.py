@@ -53,7 +53,7 @@ class Nagios(Script):
         # SET NAGIOS ADMINPASSWORD
         p = subprocess.Popen(['htpasswd' + self.nagios_passwd_dir + 'nagiosadmin'],
                              stdout=subprocess.PIPE, shell=True)
-        stdout, stderr = p.communicate(str(params.nagios_admin_password) + '\n' +str(params.nagios_admin_password))
+        stdout, stderr = p.communicate(str(params.nagios_admin_password) + '\n' + str(params.nagios_admin_password))
         if p.returncode or 'success' not in stdout:
                 raise Exception('Unable create nagios admin password, did you enter wrong password second time?')
 

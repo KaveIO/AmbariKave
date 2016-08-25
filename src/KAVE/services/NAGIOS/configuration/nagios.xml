@@ -81,7 +81,7 @@ Alias /nagios "/usr/share/nagios/html"
     </property>
 
     <property>
-        <name>EMAIL</name>
+        <name>nagios_admin_email</name>
         <value>dna@kpmglab.com</value>
         <description>email id to receive updates regarding nagios</description>
     </property>
@@ -120,7 +120,7 @@ define contact{
         use                             generic-contact         ; Inherit default values from generic-contact template (defined above)
         alias                           Nagios Admin            ; Full name of user
 
-        email                           {{EMAIL}}        ; Email Address
+        email                           {{nagios_admin_email}}        ; Email Address
         }
 
 

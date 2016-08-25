@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+
+    <property>
+        <name>nagios_admin_password</name>
+        <value>nagiosadmin</value>
+        <description>password for nagios admin</description>
+    </property>
+    <property>
+        <name>nagios_conf_file</name>
+        <value> SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
+#
+# This file contains examples of entries that need
+# to be incorporated into your Apache web server
+# configuration file.  Customize the paths, etc. as
+# needed to fit your system.
+
+ScriptAlias /nagios/cgi-bin/ "/usr/lib64/nagios/cgi-bin/"
+
+&lt;Directory "/usr/lib64/nagios/cgi-bin/"&gt;
+#  SSLRequireSSL
+   Options ExecCGI
+   AllowOverride None
+
+   AuthName "Nagios Access"
+   AuthType Basic
+   AuthUserFile /etc/nagios/passwd
+
+   &lt;IfModule mod_authz_core.c&gt;
+      # Apache 2.4
+      &lt;RequireAll&gt;
+         Require all granted
+         # Require local
+         Require valid-user
+      &lt;/RequireAll&gt;
+   &lt;/IfModule&gt;
+   &lt;IfModule !mod_authz_core.c&gt;
+      # Apache 2.2
+      Order allow,deny
+      Allow from all
+      #  Order deny,allow
+      #  Deny from all
+      #  Allow from 127.0.0.1
+      Require valid-user
+   &lt;/IfModule&gt;
+&lt;/Directory&gt;
+
+Alias /nagios "/usr/share/nagios/html"
+
+&lt;Directory "/usr/share/nagios/html"&gt;
+#  SSLRequireSSL
+   Options None
+   AllowOverride None
+
+   AuthName "Nagios Access"
+   AuthType Basic
+   AuthUserFile /etc/nagios/passwd
+
+   &lt;IfModule mod_authz_core.c&gt;
+      # Apache 2.4
+      &lt;RequireAll&gt;
+         Require all granted
+         # Require local
+         Require valid-user
+      &lt;/RequireAll&gt;
+   &lt;/IfModule&gt;
+   &lt;IfModule !mod_authz_core.c&gt;
+      # Apache 2.2
+      Order allow,deny
+      Allow from all
+      #  Order deny,allow
+      #  Deny from all
+      #  Allow from 127.0.0.1
+      Require valid-user
+   &lt;/IfModule&gt;
+&lt;/Directory&gt;
+        </value>
+        <description>configuration file for nagios</description>
+    </property>
+
+    <property>
+        <name>EMAIL</name>
+        <value>dna@kpmglab.com</value>
+        <description>email id to receive updates regarding nagios</description>
+    </property>
+    <property>
+        <name>nagios_contacts_file</name>
+        <value>##############################################################################
+# CONTACTS.CFG - SAMPLE CONTACT/CONTACTGROUP DEFINITIONS
+#
+#
+# NOTES: This config file provides you with some example contact and contact
+#        group definitions that you can reference in host and service
+#        definitions.
+#
+#        You don't need to keep these definitions in a separate file from your
+#        other object definitions.  This has been done just to make things
+#        easier to understand.
+#
+###############################################################################
+
+
+
+###############################################################################
+###############################################################################
+#
+# CONTACTS
+#
+###############################################################################
+###############################################################################
+
+# Just one contact defined by default - the Nagios admin (that's you)
+# This contact definition inherits a lot of default values from the 'generic-contact'
+# template which is defined elsewhere.
+
+define contact{
+        contact_name                    nagiosadmin             ; Short name of user
+        use                             generic-contact         ; Inherit default values from generic-contact template (defined above)
+        alias                           Nagios Admin            ; Full name of user
+
+        email                           {{EMAIL}}        ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
+        }
+
+
+
+###############################################################################
+###############################################################################
+#
+# CONTACT GROUPS
+#
+###############################################################################
+###############################################################################
+
+# We only have one contact in this simple configuration file, so there is
+# no need to create more than one contact group.
+
+define contactgroup{
+        contactgroup_name       admins
+        alias                   Nagios Administrators
+        members                 nagiosadmin
+        }
+        </value>
+        <description>contacts file for nagios</description>
+    </property>
+
+
+</configuration>

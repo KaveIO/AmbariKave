@@ -148,5 +148,3 @@ define contactgroup{
         alias                   Nagios Administrators
         members                 nagiosadmin
         }""")
-
-

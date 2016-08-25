@@ -120,7 +120,7 @@ define contact{
         use                             generic-contact         ; Inherit default values from generic-contact template (defined above)
         alias                           Nagios Admin            ; Full name of user
 
-        email                           {{EMAIL}}               ; Email Address
+        email                           {{EMAIL}}        ; Email Address
         }
 
 

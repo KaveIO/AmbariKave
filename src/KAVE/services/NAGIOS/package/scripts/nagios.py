@@ -50,7 +50,7 @@ class Nagios(Script):
 
         Execute('service httpd start')
         Execute('chkconfig httpd on')
-        #SET NAGIOS ADMINPASSWORD
+        # SET NAGIOS ADMINPASSWORD
         p = subprocess.Popen(['htpasswd' + self.nagios_passwd_dir + 'nagiosadmin'],
                              stdout=subprocess.PIPE, shell=True)
         stdout, stderr = p.communicate(str(params.nagios_admin_password) + '\n' +str(params.nagios_admin_password))

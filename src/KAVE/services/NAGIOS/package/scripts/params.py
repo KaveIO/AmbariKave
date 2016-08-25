@@ -28,7 +28,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 nagios_admin_password = default('configurations/nagios/nagios_admin_password', 'nagiosadmin')
 
-nagios_conf_file = default('configurations/nagios/nagios_conf_file',""" SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
+nagios_conf_file = default('configurations/nagios/nagios_conf_file', """ SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
 # This file contains examples of entries that need
 # to be incorporated into your Apache web server
@@ -124,10 +124,11 @@ nagios_contacts_file = default('configurations/nagios/nagios_contacts_file', """
 
 define contact{
         contact_name                    nagiosadmin             ; Short name of user
-        use                             generic-contact         ; Inherit default values from generic-contact template (defined above)
+        use                             generic-contact         ; Inherit
+        default values from generic-contact template (defined above)
         alias                           Nagios Admin            ; Full name of user
 
-        email                           {{EMAIL}}        ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
+        email                           {{EMAIL}}        ; Email Address
         }
 
 

@@ -1,0 +1,18 @@
+{
+    "blueprint" : "nagios",
+    "default_password" : "admin",
+    "configurations" : [
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "ci",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ci.kave.io" } ]
+	}
+	]
+}

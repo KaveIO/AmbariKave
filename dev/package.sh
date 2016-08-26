@@ -97,8 +97,8 @@ cd $PROJECT_DIR
 ################################################################
 # Write the actual installation script to the file
 ################################################################
-RELEASE_INSTALLER="ambarikave-installer-centos6-$TAG.sh"
-echo "Writing the centos6 installer: $RELEASE_INSTALLER"
+RELEASE_INSTALLER="ambarikave-installer-$TAG.sh"
+echo "Writing the installer: $RELEASE_INSTALLER"
 
 echo '#!/bin/bash' > $BUILD_DIR/$RELEASE_INSTALLER
 cat $PROJECT_DIR/LICENSE >> $BUILD_DIR/$RELEASE_INSTALLER

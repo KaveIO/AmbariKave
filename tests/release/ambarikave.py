@@ -57,10 +57,9 @@ class TestAmbariKaveRelease(base.LDTest):
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("rm -rf inst.*")
         ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
-        ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"
-                   + "centos6/AmbariKave/" + self.version + "/ambarikave-installer-centos6-" + self.version + ".sh")
-        ambari.run("nohup bash ambarikave-installer-centos6-" + self.version
-                   + ".sh > inst.stdout 2> inst.stderr < /dev/null & ")
+        lD.deploy_our_soft(ambari, self.version, repo="http://repos:kaverepos@repos.dna.kpmglab.com")
+        import time
+        time.sleep(10)
         self.wait_for_ambari(ambari, rounds=15, check_inst=["inst.stdout", "inst.stderr"])
         return self.check(ambari)
 

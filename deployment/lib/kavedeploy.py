@@ -19,13 +19,10 @@
 Automated deployment library. Functions for interacting with any remote host and common shared functions useful in
 deployment
 """
-import commands
 import subprocess as sub
-import json
 import os
 import sys
 import time
-import re
 #
 # use for configuration
 #
@@ -77,12 +74,10 @@ class ShellExecuteError(RuntimeError):
 
 
 def which(program):
-    import os
-
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-    fpath, fname = os.path.split(program)
+    fpath, _fname = os.path.split(program)
     if fpath:
         if is_exe(program):
             return program
@@ -159,7 +154,7 @@ def strictopts():
 def mysleep(x):
     print "Sleeping", x * 10, "s"
     print "Z",
-    for i in range(x):
+    for _i in range(x):
         print "z",
         sys.__stdout__.flush()
         time.sleep(10)
@@ -368,8 +363,6 @@ class remoteHost(object):
                     self.run("apt-get -y install git")
             except ShellExecuteError:
                 # back off and retry once, ABK-207
-                import time
-
                 time.sleep(5)
                 if ver.startswith("Centos"):
                     self.run("yum -y install git ")
@@ -391,7 +384,7 @@ class remoteHost(object):
         if not self.gitprep:
             raise RuntimeError("host must be prepared with the github access key and gitwrap, run prep_git first")
         cmd = cmd.replace("'", "\'")
-        out = self.run(
+        return self.run(
             "bash -c 'export GIT_SSH=" + self.github_script_remote + " ; env | grep GIT_SSH; git " + cmd + " '")
 
     def clean_git(self):
@@ -688,14 +681,18 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     # get directly from repo
     if not git:
         remote.run("yum -y install wget curl")
-        arch = "centos6"
-        dir = "AmbariKave"
-        dfile = pack + "-installer-" + arch + "-" + version + ".sh"
+        arch = "noarch"
+        archtag = ""
+        dire = "AmbariKave"
         if pack == "kavetoolbox":
             arch = "noarch"
-            dir = "KaveToolbox"
-            dfile = pack + "-installer-" + version + ".sh"
-        remote.run("wget " + repo + "/" + arch + "/" + dir + "/" + version + "/" + dfile)
+            dire = "KaveToolbox"
+        elif version != 'latest' and version < "2.2":
+            arch = "centos6"
+            archtag = '-' + arch
+        # name of file depends on version
+        dfile = pack + "-installer" + archtag + "-" + version + ".sh"
+        remote.run("wget " + repo + "/" + arch + "/" + dire + "/" + version + "/" + dfile)
         if not background:
             remote.run("bash " + dfile + " " + options)
             return
@@ -718,7 +715,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
         else:
             dest_type = "workstation"
             if "--node" in options:
-                dest_type == "node"
+                dest_type = "node"
             _addtoolboxtoremote(remote, github_key_location=github_key_location, dest_type=dest_type,
                                 git_origin=git_origin, branch=version, background=background)
             return
@@ -729,7 +726,6 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
     Wait until ambari server is up and running, error if it doesn't appear!
     Also check if a list of files, e.g. inst.stdout or inst.stderr contains errors
     """
-    import time
     # wait until ambari server is up
     rounds = 1
     flag = False
@@ -764,7 +760,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             pass
 
         try:
-            stdout = ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
+            ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except ShellExecuteError:
@@ -780,7 +776,6 @@ def waitforrequest(ambari, clustername, request, timeout=10):
     """
     Wait until a certain request succeeds, error if it fails!
     """
-    import time
     # wait until ambari server is up
     rounds = 1
     flag = False
@@ -833,7 +828,6 @@ def confremotessh(remote, port=443):
         remote.run("service sshd restart")
     except ShellExecuteError:
         remote.run("service ssh restart")
-    import time
     time.sleep(2)
     # modify iptables, only in case of Centos6
     if remote.detect_linux_version() in ["Centos6"]:
@@ -859,7 +853,6 @@ def confallssh(remote, restart=True):
             remote.run("service sshd restart")
         except ShellExecuteError:
             remote.run("service ssh restart")
-        import time
         time.sleep(2)
 
 
@@ -869,7 +862,7 @@ def wait_until_up(remote, max_wait):
     """
     try:
         return remote.check(firsttime=True)
-    except ShellExecuteError, ValueError:
+    except (ShellExecuteError, ValueError):
         pass
     up = False
     for i in range(max_wait):
@@ -877,7 +870,7 @@ def wait_until_up(remote, max_wait):
             mysleep(10 - (i > 0) * 7)
             up = remote.check(firsttime=True)
             break
-        except ShellExecuteError, ValueError:
+        except (ShellExecuteError, ValueError):
             print "not ready yet, sleep again"
             pass
     if not up:

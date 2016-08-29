@@ -28,11 +28,11 @@ config = Script.get_config()
 hostname = config["hostname"]
 www_folder = default('configurations/nagios/www_folder', '/var/www/html/')
 PORT = default('configurations/nagios/PORT', '80')
-servername = default('configurations/kaveganglia/servername', hostname)
+servername = default('configurations/nagios/servername', hostname)
 if servername == "hostname":
     servername = hostname
 
-template_000_default = default('configurations/kavelanding/template_000_default', """# Created automatically with Ambari
+template_000_default = default('configurations/nagios/template_000_default', """# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off

@@ -57,7 +57,7 @@ ScriptAlias /nagios/cgi-bin/ "/usr/lib64/nagios/cgi-bin/"
 
    AuthName "Nagios Access"
    AuthType Basic
-   AuthUserFile /etc/nagios/passwd
+   AuthUserFile {{nagios_passwd_file}}
 
    &lt;IfModule mod_authz_core.c&gt;
       # Apache 2.4

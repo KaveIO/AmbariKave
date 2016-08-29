@@ -26,6 +26,7 @@ import kavecommon as kc
 config = Script.get_config()
 
 hostname = config["hostname"]
+nagios_passwd_file = "/etc/nagios/passwd"
 www_folder = default('configurations/nagios/www_folder', '/var/www/html/')
 PORT = default('configurations/nagios/PORT', '80')
 servername = default('configurations/nagios/servername', hostname)
@@ -63,7 +64,7 @@ ScriptAlias /nagios/cgi-bin/ "/usr/lib64/nagios/cgi-bin/"
 
    AuthName "Nagios Access"
    AuthType Basic
-   AuthUserFile /etc/nagios/passwd
+   AuthUserFile {{nagios_passwd_file}}
 
    <IfModule mod_authz_core.c>
       # Apache 2.4

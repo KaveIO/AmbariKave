@@ -24,7 +24,6 @@ from kavecommon import ApacheScript
 class Nagios(ApacheScript):
     nagios_conf_file = "/etc/httpd/conf.d/nagios.conf"
     nagios_contacts_file = "/etc/nagios/objects/contacts.cfg"
-    nagios_passwd_dir = "/etc/nagios/passwd"
 
     def install(self, env):
         import params
@@ -50,12 +49,15 @@ class Nagios(ApacheScript):
              )
 
         # SET NAGIOS ADMINPASSWORD
-        p = subprocess.Popen(['htpasswd',self.nagios_passwd_dir, 'nagiosadmin'],
+        Execute('mkdir -p ' + os.path.dirname(params.nagios_passwd_file))
+        p = subprocess.Popen(['htpasswd', params.nagios_passwd_file, 'nagiosadmin'],
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate(str(params.nagios_admin_password) + '\n' + str(params.nagios_admin_password))
         if p.returncode:
-                raise Exception('Unable create nagios admin password, did you enter wrong password second time?'
-                                + str(stdout) + str(stderr))
+            raise Exception('Unable create nagios admin password, did you enter wrong password second time?'
+                            + str(stdout) + str(stderr))
+        Execute('chown apache:apache ' + params.nagios_passwd_file)
+        Execute('chmod 700 ' + params.nagios_passwd_file)
         super(Nagios, self).configure(env)
 
     def start(self, env):
@@ -67,7 +69,6 @@ class Nagios(ApacheScript):
     def stop(self, env):
         Execute("service nagios stop")
         super(Nagios, self).stop(env)
-
 
     def status(self, env):
         Execute("service nagios status")

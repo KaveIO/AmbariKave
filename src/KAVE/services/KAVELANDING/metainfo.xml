@@ -26,7 +26,6 @@
                     <packages>
                         <package><name>wget</name></package>
                         <package><name>httpd</name></package>
-                        <package><name>epel-release</name></package>
                     </packages>
                 </osSpecific>
             </osSpecifics>

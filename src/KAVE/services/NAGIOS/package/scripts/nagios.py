@@ -20,6 +20,7 @@ import os
 from resource_management import *
 from kavecommon import ApacheScript
 
+
 class Nagios(ApacheScript):
     nagios_conf_file = "/etc/httpd/conf.d/nagios.conf"
     nagios_contacts_file = "/etc/nagios/objects/contacts.cfg"
@@ -57,7 +58,6 @@ class Nagios(ApacheScript):
         if p.returncode or 'success' not in stdout:
                 raise Exception('Unable create nagios admin password, did you enter wrong password second time?')
         super(Nagios, self).configure(env)
-
 
     def start(self, env):
         import params

@@ -113,6 +113,7 @@ class TestKaveToolbox(base.LDTest):
             ambari.run('apt-get update')
         else:
             # add default 10GB in /opt
+            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
             stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict --iid " + iid)
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)

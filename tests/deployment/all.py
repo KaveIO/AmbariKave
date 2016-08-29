@@ -16,12 +16,15 @@
 #
 ##############################################################################
 import one_centos_dev
-import centos7
+import knownami
 import single_machine_cluster
 import micro_cluster
 import base
 
-mods = [micro_cluster, single_machine_cluster, centos7, one_centos_dev]
+mods = [micro_cluster, single_machine_cluster, knownami, one_centos_dev]
+
+
+modargs = {knownami: ['Centos6', 'Centos7', 'Redhat7']}
 
 if __name__ == "__main__":
-    base.parallel(mods)
+    base.parallel(mods, modargs)

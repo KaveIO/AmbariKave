@@ -90,11 +90,12 @@ def which(program):
 
     return None
 
+
 def force_ascii(a_str):
     """
     Replace all non-ascii chars with ?
     """
-    return ''.join([c if ord(c)<128 else '?' for c in a_str])
+    return ''.join([c if ord(c) < 128 else '?' for c in a_str])
 
 
 def run_quiet(cmd, exit=True, shell=True):

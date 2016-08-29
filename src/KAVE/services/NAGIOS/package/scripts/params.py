@@ -26,6 +26,23 @@ import kavecommon as kc
 config = Script.get_config()
 
 hostname = config["hostname"]
+www_folder = default('configurations/nagios/www_folder', '/var/www/html/')
+PORT = default('configurations/nagios/PORT', '80')
+servername = default('configurations/kaveganglia/servername', hostname)
+if servername == "hostname":
+    servername = hostname
+
+template_000_default = default('configurations/kavelanding/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+RequestHeader unset Proxy early
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")
+
+
 nagios_admin_password = default('configurations/nagios/nagios_admin_password', 'nagiosadmin')
 nagios_admin_email = default('configurations/nagios/nagios_admin_email', 'dna@kpmglab.com')
 nagios_conf_file = default('configurations/nagios/nagios_conf_file', """ SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER

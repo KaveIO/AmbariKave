@@ -50,11 +50,12 @@ class Nagios(ApacheScript):
              )
 
         # SET NAGIOS ADMINPASSWORD
-        p = subprocess.Popen(['htpasswd' + self.nagios_passwd_dir + 'nagiosadmin'],
-                             stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(['htpasswd',self.nagios_passwd_dir, 'nagiosadmin'],
+                             stdout=subprocess.PIPE)
         stdout, stderr = p.communicate(str(params.nagios_admin_password) + '\n' + str(params.nagios_admin_password))
         if p.returncode or 'success' not in stdout:
-                raise Exception('Unable create nagios admin password, did you enter wrong password second time?')
+                raise Exception('Unable create nagios admin password, did you enter wrong password second time?'
+                                + stdout + stderr)
         super(Nagios, self).configure(env)
 
     def start(self, env):

@@ -3,9 +3,10 @@
 
 <configuration>
 
-    <property>
+   <property require-input = "true">
         <name>nagios_admin_password</name>
-        <value>nagiosadmin</value>
+        <value></value>
+        <property-type>PASSWORD</property-type>
         <description>password for nagios admin</description>
     </property>
     <property>
@@ -40,7 +41,7 @@ DocumentRoot "{{www_folder}}"
 
     <property>
         <name>nagios_conf_file</name>
-        <value> SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
+        <value># SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
 # This file contains examples of entries that need
 # to be incorporated into your Apache web server

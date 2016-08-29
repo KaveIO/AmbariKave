@@ -43,9 +43,11 @@ DocumentRoot "{{www_folder}}"
 """)
 
 
-nagios_admin_password = default('configurations/nagios/nagios_admin_password', 'nagiosadmin')
+nagios_admin_password = config['configurations']['nagios']['nagios_admin_password']
+Logger.sensitive_strings[nagios_admin_password] = "[PROTECTED]"
+
 nagios_admin_email = default('configurations/nagios/nagios_admin_email', 'dna@kpmglab.com')
-nagios_conf_file = default('configurations/nagios/nagios_conf_file', """ SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
+nagios_conf_file = default('configurations/nagios/nagios_conf_file', """# SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
 # This file contains examples of entries that need
 # to be incorporated into your Apache web server

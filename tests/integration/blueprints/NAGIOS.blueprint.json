@@ -6,6 +6,11 @@
       }
     },
     {
+      "nagios" : {
+        "nagios_admin_password" : "averylongandannoyingpassword"
+      }
+    },
+    {
       "ams-grafana-env" : {
         "metrics_grafana_password" : "SnowCapMountainChap"
       }
@@ -20,7 +25,6 @@
         { "name" : "AMBARI_SERVER"   },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
-        { "name" : "NAGIOS_SERVER"   },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],

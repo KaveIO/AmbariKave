@@ -173,6 +173,11 @@ if iid is None:
         remote.run("echo 0 >/selinux/enforce")
     else:
         remote.run("setenforce permissive")
+        try:
+            remote.run("systemctl stop firewalld")
+        except lD.ShellExecuteError:
+            pass
+        remote.run("systemctl disable firewalld")
 
     lD.confallssh(remote)
     vols = []

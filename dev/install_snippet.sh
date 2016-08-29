@@ -67,6 +67,7 @@ fi
 yum clean all
 yum install -y pdsh python-devel python-pip
 pip install requests
+pip install --upgrade requests
 
 if [[ "$os" == *"7" ]]; then
 	yum install -y pdsh-mod-dshgroup

@@ -15,16 +15,20 @@
 #   limitations under the License.
 #
 ##############################################################################
-"""
-Simple test script which creates a packaged version of root compiling everything
-"""
-import base
-import ktb_package_root_version
+import os
 
-mods = [ktb_package_root_version]
+from resource_management import *
+from mongo_master import MongoMaster
 
 
-modargs = {ktb_package_root_version: ['Centos6', 'Centos7', 'Ubuntu14']}
+class MongoArbiter(MongoMaster):
+
+    def start(self, env):
+        import params
+        if not params.setname or params.setname in ["None", "False"]:
+            raise ValueError("An arbiter needs to be told what setname to attach to")
+        super(MongoArbiter, self).start(env)
+
 
 if __name__ == "__main__":
-    base.parallel(mods, modargs)
+    MongoArbiter().execute()

@@ -52,7 +52,7 @@ This can be completed through the ambari web interface, using the command-line-t
 2. Design your cluster, allocating node to be within host groups
 3. Deploy this blueprint to the cluster
 
-* <b>deploy\_from\_blueprint.py:<b>
+* <b>deploy\_from\_blueprint.py:</b>
    * Completely automated blueprint deployment, one-click-installer, see below
 * <b>blueprints/</b>
    * directory with example configurations

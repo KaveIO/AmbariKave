@@ -35,10 +35,10 @@ class MicroCluster(base.LDTest):
         blueprint_dir = os.path.realpath(os.path.dirname(__file__) + '/blueprints/')
         import kaveaws as lA
         clusterfile = "micro.aws.json"
-        stdout = self.deploycluster(blueprint_dir + '/' + clusterfile, cname="TestDeploy")
-        self.assertTrue(stdout.strip().split("\n")[-2].startswith("Complete, created:"),
-                        "failed to generate cluster, \n" + stdout)
-        ahost, iid = self.remote_from_cluster_stdout(stdout, mname="testing-001")
+        cstdout = self.deploycluster(blueprint_dir + '/' + clusterfile, cname="TestDeploy")
+        self.assertTrue(cstdout.strip().split("\n")[-2].startswith("Complete, created:"),
+                        "failed to generate cluster, \n" + cstdout)
+        ahost, iid = self.remote_from_cluster_stdout(cstdout, mname="testing-001")
         ahost.register()
         stdout = ahost.run("cat /etc/resolv.conf")
         self.assertTrue("kave.io" in stdout,
@@ -61,6 +61,10 @@ class MicroCluster(base.LDTest):
         self.assertTrue("domain name pointer" in stdout,
                         "Reverse lookup broken on testing-001.kave.io! ("
                         + ' '.join(ahost.sshcmd()) + ")")
+        # Check multiremote functionality
+        allremotes, iids = self.multiremote_from_cluster_stdout(cstdout)
+        allremotes.cp(deploy_dir + '/remotescripts/add_incoming_port.py', 'testtest.py')
+        self.assertTrue("testtest.py" in ahost.run("ls -l"), "pdcp failed to work properly")
 
 
 def suite(verbose=False, branch="__local__"):

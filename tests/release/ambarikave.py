@@ -28,7 +28,7 @@ class TestAmbariKaveRelease(base.LDTest):
 
     def runTest(self):
         """
-        Run the packaged installer on a blank Centos6 machine
+        Run the packaged installer on a blank Centos machine
         """
         import os
 
@@ -49,13 +49,17 @@ class TestAmbariKaveRelease(base.LDTest):
             ambari.run("echo 0 > /selinux/enforce")
         elif self.ostype in ["Centos7"]:
             ambari.run("setenforce permissive")
+            try:
+                ambari.run("systemctl stop firewalld")
+            except lD.ShellExecuteError:
+                pass
+            ambari.run("systemctl disable firewalld")
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("rm -rf inst.*")
         ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
-        ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"
-                   + "centos6/AmbariKave/" + self.version + "/ambarikave-installer-centos6-" + self.version + ".sh")
-        ambari.run("nohup bash ambarikave-installer-centos6-" + self.version
-                   + ".sh > inst.stdout 2> inst.stderr < /dev/null & ")
+        lD.deploy_our_soft(ambari, self.version, repo="http://repos:kaverepos@repos.dna.kpmglab.com")
+        import time
+        time.sleep(10)
         self.wait_for_ambari(ambari, rounds=15, check_inst=["inst.stdout", "inst.stderr"])
         return self.check(ambari)
 

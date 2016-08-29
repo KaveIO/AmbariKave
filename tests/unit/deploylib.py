@@ -58,16 +58,16 @@ class TestJSON(unittest.TestCase):
 
         jsons = glob.glob(deploydir + "/*/*.json") + glob.glob(testdir + "/../*/*.json") + glob.glob(
             testdir + "/../*/*/*.json")
-        for ason in jsons:
-            # print ason
-            f = open(ason)
+        for jsonfile in jsons:
+            # print jsonfile
+            f = open(jsonfile)
             l = f.read()
             f.close()
-            self.assertTrue(len(l) > 1, "json file " + ason + " is a fragment or corrupted")
+            self.assertTrue(len(l) > 1, "json file " + jsonfile + " is a fragment or corrupted")
             try:
                 interp = json.loads(l)
             except:
-                self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+                self.assertTrue(False, "json file " + jsonfile + " is not complete or not readable")
 
 
 def suite():

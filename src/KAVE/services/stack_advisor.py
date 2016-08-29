@@ -18,7 +18,7 @@
 ##############################################################################
 
 
-class HDP24KAVEStackAdvisor(HDP24StackAdvisor):
+class HDP24KAVE22StackAdvisor(HDP24StackAdvisor):
 
     # List of validators which should also be evaluated if there is not recommended default present.
     validateWithoutRecommendedDefault = ['freeipa']
@@ -33,7 +33,7 @@ class HDP24KAVEStackAdvisor(HDP24StackAdvisor):
     def getServiceConfigurationValidators(self):
         parentValidators = super(HDP24KAVEStackAdvisor, self).getServiceConfigurationValidators()
         childValidators = {
-            "FREEIPA": {"freeipa", self.validateFreeIPAConfigurations}
+            "FREEIPA": {"freeipa": self.validateFreeIPAConfigurations}
         }
         parentValidators.update(childValidators)
         return parentValidators

@@ -36,25 +36,25 @@ class jsonbpchecks(base.LDTest):
             testdir + "/../*/*/*.json")
         # check json completeness
         interpreted = {}
-        for ason in jsons:
-            interpreted[ason] = self.check_json(ason)
+        for jsonfile in jsons:
+            interpreted[jsonfile] = self.check_json(jsonfile)
         # verify .aws files
-        for ason in jsons:
-            if ason.endswith('.aws.json'):
-                self.verify_awsjson(interpreted[ason], ason)
+        for jsonfile in jsons:
+            if jsonfile.endswith('.aws.json'):
+                self.verify_awsjson(interpreted[jsonfile], jsonfile)
         # verify blueprint files
-        for ason in jsons:
-            if ason.endswith('.blueprint.json'):
-                self.verify_bpjson(interpreted[ason], ason)
+        for jsonfile in jsons:
+            if jsonfile.endswith('.blueprint.json'):
+                self.verify_bpjson(interpreted[jsonfile], jsonfile)
         # do grouped consistency tests
         groups = {}
-        for ason in jsons:
-            cat = '.'.join(ason.split('.')[:-2])
-            self.service = ason.split('/')[-1].split('.')[1]
+        for jsonfile in jsons:
+            cat = '.'.join(jsonfile.split('.')[:-2])
+            self.service = jsonfile.split('/')[-1].split('.')[1]
             try:
-                groups[cat].append(ason)
+                groups[cat].append(jsonfile)
             except KeyError:
-                groups[cat] = [ason]
+                groups[cat] = [jsonfile]
         for k, group in groups.iteritems():
             if len(set(group)) == 3:
                 self.verify_blueprint(k + '.aws.json', k + '.blueprint.json', k + '.cluster.json')

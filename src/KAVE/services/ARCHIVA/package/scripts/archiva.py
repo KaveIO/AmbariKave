@@ -27,6 +27,8 @@ class Archiva(Script):
 
     def install(self, env):
         import params
+        import time
+        import json
 
         env.set_params(params)
         self.install_packages(env)
@@ -43,7 +45,20 @@ class Archiva(Script):
             Execute('rm -f /etc/init.d/archiva')
         Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % (params.install_topdir + params.install_subdir))
 
-        self.configure(env)
+        archiva_dict = json.dumps(params.archiva_admin_dict)
+        curl_command = ('curl -H Content-type:application/json -d'
+                        + " '" + archiva_dict + "' "
+                        + 'http://' + 'localhost' + ':' + str(params.archiva_jetty_port)
+                        + '/restServices/redbackServices/userService/createAdminUser')
+        self.start(env)
+        for retry in range(3):
+            try:
+                time.sleep(60)
+                Execute(curl_command, logoutput=True)
+                break
+            except Fail as ex:
+                print "the curl command met with failure this time,,,trying in another 60 secs"
+                print ex
 
     def start(self, env):
         self.configure(env)

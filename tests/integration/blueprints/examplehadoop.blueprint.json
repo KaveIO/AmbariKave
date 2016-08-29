@@ -10,6 +10,7 @@
         "AMBARI_ADMIN_PASS" : "admin"
     	}
     },
+    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "core-site" : { "hadoop.proxyuser.hue.hosts"  : "*",
     				  "hadoop.proxyuser.hue.groups" : "*",
     				  "hadoop.proxyuser.hcat.groups": "*",

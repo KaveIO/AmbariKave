@@ -10,6 +10,7 @@
         "AMBARI_ADMIN_PASS" : "admin"
     	}
     },
+    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",

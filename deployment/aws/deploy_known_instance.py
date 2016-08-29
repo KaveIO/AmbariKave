@@ -72,7 +72,7 @@ def parse_opts():
         help()
         raise AttributeError("You supplied too many arguments")
     osval = sys.argv[1]
-    macname = sys.argv[2]
+    macname = sys.argv[2].lower()
     secf = ""
     insttype = "m4.large"
     if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):

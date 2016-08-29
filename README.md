@@ -21,13 +21,15 @@ This means there are two genral ways to install these services
 Installation (on the 'ambari node' of your cluster, or one large machine)
 =========================================================================
 
+If you are looking for the extensive documentation, including descriptions of disk/cpu/ram requirements, please look at [the installation wiki](https://github.com/KaveIO/AmbariKave/wiki/Detailed-Guides-AmbariKave)
+
 * Ambari is a cluster installation management system for hadoop-based clusters. It installs separate services on different machines across a cluster. AmbariKave is a small extention fo this. If what you're looking for is a common set of data science tools to install on one single machine (without a database or hdfs) consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
 * To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta-Pre, with username repos and password kaverepos, including downloading and installing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.2-Beta-Pre/ambarikave-installer-centos6-2.2-Beta-Pre.sh
-sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta-Pre/ambarikave-installer-2.2-Beta-Pre.sh
+sudo bash ambarikave-installer-2.2-Beta-Pre.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -38,6 +40,9 @@ sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
 # If on Centos6, turn off iptables with:
 sudo service iptables stop
 sudo chkconfig iptables off
+# If on Centos7 use:
+systemctl disable firewalld
+systemctl stop firewalld
 #test ssh keys with
 ssh -T git@github.com
 #if this works,
@@ -89,8 +94,8 @@ pull-update also respects git branches, as a command-line argument and is linked
 To update between released versions, simply install the new version over the old version after stopping the ambari server. Installing a new version of the stack, will not trigger an update of any running service. You would need to do this manually in the current state.
 ```
 sudo ambari-server stop
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.2-Beta-Pre/ambarikave-installer-centos6-2.2-Beta-Pre.sh
-sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta-Pre/ambarikave-installer-2.2-Beta-Pre.sh
+sudo bash ambarikave-installer-2.2-Beta-Pre.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -98,6 +103,8 @@ sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
 
 Installation of a full cluster
 ==============================
+
+If you are looking for the extensive documentation, including descriptions of disk/cpu/ram requirements, please look at [the installation wiki](https://github.com/KaveIO/AmbariKave/wiki/Detailed-Guides-AmbariKave)
 
 If you have taken the released version, go to http://YOUR_AMBARI_NODE:8080 or deploy using a blueprint, see https://cwiki.apache.org/confluence/display/AMBARI/Blueprints
 If you have git access, and are working from the git version, See the wiki.
@@ -174,3 +181,43 @@ echo "http://my/local/apache/mirror" >> /etc/kave/mirror
 ```
 
 So long as the directory structure of the nearside cache is identical to our website, you can drop, remove or replace, any local packages you will never install from this directory structure, and update it as our repo server updates.
+
+
+Versioning System
+=========================================
+
+## Relationship with Ambari Stacks
+
+KAVE extends a HDP stack, adding additional services. See the versioning diagram on our wiki for details.
+
+The HDP stack number looks like X.Y, with a major and minor version. The KAVE also has an W.Z versioning scheme, but this is not 100% coupled to the HDP stack.
+
+## KAVE tags
+
+A KAVE official version tag appears like:
+
+* **Major.minor-KAVE-qualifier** i.e. **2.2-KAVE-Beta**
+
+The tag is split into four parts:
+
+* **Major**: Major versions separate backwards incompatible changes or drastic noticable changes to the user experience or interface
+* **.minor**: Minor versions represent subsequent releases of bugfixes, small improvements or changes which do not affect the user experience
+* **-KAVE-**: A signifier that this is an official tag
+* **qualifier**: Some logical qualification of the tag making it easier to understand. It is our convention to always use the -Beta tag at the moment. Example qualifies may include -Test (a release for developer testing only), -Pre (prerelease of a release candidate for beta-testing).
+
+## What consititues a major version change?
+
+A new major version is started whenever changes of the following type are made:
+
+* **Backwards incompatible change:** a change which completely prevents working with previous systems or installations.
+* **Major version increase of Ambari:** AmbariKave relies on Ambari, and if they increase major version, then so will we
+* **Serious security-related bugfix:** in the unlikely event that a major fault is discovered we will always increase the major version and inform the mailing list as to the reason for this
+* **Drastic change in user experience or interface:**  in order that users are aware that their experience will drastically change we increase the major version number whenever something drastically different in the experience is changed
+
+## KAVE stack in Ambari
+
+We currently name our stack within ambari to reflect both the version of the HDP stack we depend on, and the installed version of the KAVE.
+
+* X.Y.KAVE.W.Z implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.4.KAVE.2.2 is KAVE release 2.2 running on top of Ambari HDP stack 2.4
+
+This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.

@@ -67,6 +67,7 @@ template_000_default = default('configurations/twiki/template_000_default', """#
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
+RequestHeader unset Proxy early
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
@@ -81,6 +82,7 @@ authtest_httpd_conf = default('configurations/twiki/authtest_httpd_conf', """# C
 # If the user can access /twiki/authconf/index.html this shows the system is working
 
 BrowserMatchNoCase ^$ blockAccess
+RequestHeader unset Proxy early
 
 #### Change the path to match your local installation
 <Directory "{{install_dir}}authtest">

@@ -71,7 +71,7 @@ class Jenkins(Script):
             print ex
             import time
             time.sleep(60)
-            Execute(curlCommand)
+            Execute(curl_command)
 
     def start(self, env):
         self.configure(env)

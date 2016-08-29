@@ -33,6 +33,7 @@ template_000_default = default('configurations/apache/template_000_default', """
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
+RequestHeader unset Proxy early
 ServerSignature Off
 ServerTokens Prod
 Options -Multiviews

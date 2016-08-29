@@ -97,8 +97,8 @@ cd $PROJECT_DIR
 ################################################################
 # Write the actual installation script to the file
 ################################################################
-RELEASE_INSTALLER="ambarikave-installer-centos6-$TAG.sh"
-echo "Writing the centos6 installer: $RELEASE_INSTALLER"
+RELEASE_INSTALLER="ambarikave-installer-$TAG.sh"
+echo "Writing the installer: $RELEASE_INSTALLER"
 
 echo '#!/bin/bash' > $BUILD_DIR/$RELEASE_INSTALLER
 cat $PROJECT_DIR/LICENSE >> $BUILD_DIR/$RELEASE_INSTALLER
@@ -135,7 +135,7 @@ if [ -f /etc/kave/mirror ]; then
 			fi
 			continue
 		fi
-		res=\`curl -i -X HEAD "\$line" 2>&1\`
+		res=\`curl --retry 5 -i -X HEAD "\$line" 2>&1\`
 		#echo \$res
 		if [[ "\$res" =~ "200 OK" ]]; then
 			repos_server=\${line}

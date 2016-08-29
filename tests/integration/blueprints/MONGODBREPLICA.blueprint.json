@@ -25,8 +25,7 @@
         { "name" : "METRICS_GRAFANA"     },
         { "name" : "ZOOKEEPER_SERVER"    },
         { "name" : "METRICS_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "KAVELANDING"         }
+        { "name" : "ZOOKEEPER_CLIENT"    }
       ],
       "cardinality" : "1"
     },
@@ -50,6 +49,17 @@
         { "name" : "MONGODB_CLIENT"     }
       ],
       "cardinality" : "1+"
+    },
+    {
+      "name" : "arbiter",
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0" } } ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_ARBITER"    },
+        { "name" : "MONGODB_CLIENT"     }
+      ],
+      "cardinality" : "0+"
     }
   ],
   "Blueprints" : {

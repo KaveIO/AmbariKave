@@ -514,18 +514,18 @@ class LDTest(unittest.TestCase):
                   "~/.netrc")
         time.sleep(10)
         while rounds <= max_rounds:
-            # if curl fails, the ambari server may have dies for some reason
+            # if curl --retry 5  fails, the ambari server may have dies for some reason
             # the standard restart_all_services script will then work to recover this failure
             try:
                 stdout = ambari.run(
-                    "curl --netrc "
+                    "curl --retry 5  --netrc "
                     + " http://localhost:8080/api/v1/clusters/"
                     + clustername + "/requests/" + str(requestid))
             except lD.ShellExecuteError:
                 time.sleep(3)
                 try:
                     stdout = ambari.run(
-                        "curl --netrc "
+                        "curl --retry 5  --netrc "
                         + " http://localhost:8080/api/v1/clusters/"
                         + clustername + "/requests/" + str(requestid))
                 except lD.ShellExecuteError as e:
@@ -621,6 +621,36 @@ class LDTest(unittest.TestCase):
                         "wrong keyfile seen in (" + connectcmd + ")")
         return lD.remoteHost("root", ip, keyfile), iid
 
+    def multiremote_from_cluster_stdout(self, stdout, mname='ambari'):
+        """
+        take the output from the up_aws_cluster script and parse it
+        first check it was successful, then create a multiremote object
+        to contact all machines
+        Return multiremote, [iids]
+        """
+        import kavedeploy as lD
+        connectcmd = ""
+        adict = stdout.split("\n")[-2].replace("Complete, created:", "")
+        # try interpreting as json
+        adict = d2j(adict)
+        iids = [deets[0] for _name, deets in adict.iteritems()]
+        ips = [deets[1] for _name, deets in adict.iteritems()]
+        testm = adict.keys()[0]
+        connectcmd = ""
+        for line in range(len(stdout.split('\n'))):
+            if (testm + " connect remotely with") in stdout.split("\n")[line]:
+                connectcmd = stdout.split("\n")[line + 1].strip()
+        iid, ip = adict[testm]
+        self.assertTrue(ip in connectcmd, ip + " Wrong IP seen for connecting to " + testm + ' ' + connectcmd)
+        jsondat = open(os.path.expanduser(os.environ["AWSSECCONF"]))
+        import json
+        acconf = json.loads(jsondat.read())
+        jsondat.close()
+        keyfile = acconf["AccessKeys"]["SSH"]["KeyFile"]
+        self.assertTrue(keyfile in connectcmd or os.path.expanduser(keyfile) in connectcmd,
+                        "wrong keyfile seen in (" + connectcmd + ")")
+        return lD.multiremotes(["ssh:root@" + str(ip) for ip in ips], access_key=keyfile), iids
+
     def wait_for_ambari(self, ambari, rounds=20, check_inst=None):
         """
         Wait until ambari server is up and running, error if it doesn't appear!
@@ -634,22 +664,22 @@ class LDTest(unittest.TestCase):
             self.assertTrue(False, "ambari server failed to start (" + ' '.join(ambari.sshcmd()) + ")")
         return True
 
-    def check_json(self, ason):
+    def check_json(self, jsonfile):
         """
         Check that these files are complete and self-consistent
         Check first that the files exist and are json complete
         """
-        self.assertTrue(os.path.exists(ason), "json file does not exist " + ason)
-        f = open(ason)
+        self.assertTrue(os.path.exists(jsonfile), "json file does not exist " + jsonfile)
+        f = open(jsonfile)
         l = f.read()
         f.close()
         interp = None
-        self.assertTrue(len(l) > 1, "json file " + ason + " is empty, a fragment or corrupted")
+        self.assertTrue(len(l) > 1, "json file " + jsonfile + " is empty, a fragment or corrupted")
         try:
             interp = json.loads(l)
         except Exception as e:
             print e
-            self.assertTrue(False, "json file " + ason + " is not complete or not readable")
+            self.assertTrue(False, "json file " + jsonfile + " is not complete or not readable")
         return interp
 
     def verify_awsjson(self, jaws, aws):
@@ -751,8 +781,8 @@ class LDTest(unittest.TestCase):
                     b) + " .cluster " + str(c))
         # check the files can be opened, and then check that the cluster contains the machines from the aws file
         jsons = []
-        for ason in [aws, blueprint, cluster]:
-            jsons.append(self.check_json(ason))
+        for jsonfile in [aws, blueprint, cluster]:
+            jsons.append(self.check_json(jsonfile))
         # check that the aws creates the correct drive names, no duplicates or mounting to 'a'
         jaws = jsons[0]
         self.verify_awsjson(jaws, aws)
@@ -868,7 +898,7 @@ class LDTest(unittest.TestCase):
                 self.assertFalse("fail" in stdout,
                                  "checking existence of " + check + " failed (" + ' '.join(ambari.sshcmd()) + ")")
             elif self.service.startswith("APACHE") and check.startswith("http://"):
-                stdout = ambari.run(" curl -i -X GET --keepalive-time 5 " + check, exit=False)
+                stdout = ambari.run(" curl --retry 5  -i -X GET --keepalive-time 5 " + check, exit=False)
                 self.assertTrue(
                     "If you can read this page it means that the Apache HTTP server installed at this site is working "
                     "properly." in stdout,
@@ -879,22 +909,22 @@ class LDTest(unittest.TestCase):
                 import time
 
                 while rounds <= 10:
-                    stdout = ambari.run(" curl -i -I --keepalive-time 5 " + check, exit=False)
+                    stdout = ambari.run(" curl --retry 5  -i -I --keepalive-time 5 " + check, exit=False)
                     if "200 OK" in stdout:
                         flag = True
                         break
                     time.sleep(5)
                     rounds = rounds + 1
                 self.assertTrue(flag, "checking existence of " + check + " failed (" + ' '.join(
-                    ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+                    ambari.sshcmd()) + " 'curl --retry 5  -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif check.startswith("http://"):
-                stdout = ambari.run(" curl -i -I --keepalive-time 5 " + check, exit=False)
+                stdout = ambari.run(" curl --retry 5  -i -I --keepalive-time 5 " + check, exit=False)
                 self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
-                    ambari.sshcmd()) + " 'curl -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+                    ambari.sshcmd()) + " 'curl --retry 5  -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif check.startswith("https://"):
-                stdout = ambari.run(" curl -k -i -I --keepalive-time 5 " + check, exit=False)
+                stdout = ambari.run(" curl --retry 5  -k -i -I --keepalive-time 5 " + check, exit=False)
                 self.assertTrue("200 OK" in stdout, "checking existence of " + check + " failed (" + ' '.join(
-                    ambari.sshcmd()) + " 'curl -k -i -I --keepalive-time 5 " + check + "') \n" + stdout)
+                    ambari.sshcmd()) + " 'curl --retry 5  -k -i -I --keepalive-time 5 " + check + "') \n" + stdout)
             elif len(check):
                 self.assertTrue(False, "don't know how to check existence of " + check)
         return

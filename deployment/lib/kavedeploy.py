@@ -1042,7 +1042,7 @@ def install_epel(remote):
         remote.run("yum -y install epel-release")
         remote.run("yum clean all")
     elif remote.detect_linux_version() in ["Centos7"]:
-        remote.cp(os.path.dirname(__file__) + os.sep + "remotescripts/install_epel.sh", 'install_epel.sh')
+        remote.cp(os.path.dirname(__file__) + "/../remotescripts/install_epel.sh", 'install_epel.sh')
         remote.run("bash install_epel.sh")
 
 

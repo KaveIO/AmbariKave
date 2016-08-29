@@ -87,6 +87,18 @@ def detect_linux_version():
     raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
 
+def is_true_redhat():
+    """
+    Return true if /etc/redhat-release begins with Red Hat
+    """
+    fn = '/etc/redhat-release'
+    if os.path.exists(fn):
+        with open(fn) as fp:
+            rf = fp.read()
+            return rf.startswith("Red Hat")
+    return False
+
+
 def repo_url(filename, repo=__repo_url__, arch=None, dir=__main_dir__, ver=__version__):
     """
     Construct the repository address for our code

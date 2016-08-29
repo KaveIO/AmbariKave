@@ -111,6 +111,9 @@ class TestKaveToolbox(base.LDTest):
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype.startswith("Ubuntu"):
             ambari.run('apt-get update')
+        else:
+            # add default 10GB in /opt
+            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict --iid " + iid)
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)

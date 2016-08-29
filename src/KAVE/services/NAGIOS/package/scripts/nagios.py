@@ -18,8 +18,7 @@
 import os
 
 from resource_management import *
-import kavecommon as kc
-
+from kavecommon import ApacheScript
 
 class Nagios(ApacheScript):
     nagios_conf_file = "/etc/httpd/conf.d/nagios.conf"
@@ -39,8 +38,6 @@ class Nagios(ApacheScript):
 
     def configure(self, env):
         import params
-        import kavecommon as kc
-
         env.set_params(params)
         File(self.nagios_conf_file,
              content=InlineTemplate(params.nagios_conf_file),

@@ -21,17 +21,20 @@ from resource_management import *
 import kavecommon as kc
 
 
-class Nagios(Script):
+class Nagios(ApacheScript):
     nagios_conf_file = "/etc/httpd/conf.d/nagios.conf"
     nagios_contacts_file = "/etc/nagios/objects/contacts.cfg"
     nagios_passwd_dir = "/etc/nagios/passwd"
 
     def install(self, env):
         import params
+        super(Nagios, self).install(env)
         env.set_params(params)
-        Execute('yum repolist')
-        Execute('yum install nagios*')
         self.install_packages(env)
+        Execute('yum -y install epel-release')
+        Execute('yum clean all')
+        Execute('yum -y install nagios')
+        Execute('yum -y install nagios-plugins')
         self.configure(env)
 
     def configure(self, env):
@@ -56,6 +59,8 @@ class Nagios(Script):
         stdout, stderr = p.communicate(str(params.nagios_admin_password) + '\n' + str(params.nagios_admin_password))
         if p.returncode or 'success' not in stdout:
                 raise Exception('Unable create nagios admin password, did you enter wrong password second time?')
+        super(Nagios, self).configure(env)
+
 
     def start(self, env):
         import params

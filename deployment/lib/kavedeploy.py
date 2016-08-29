@@ -538,6 +538,13 @@ class multiremotes(object):
 
         excmd = ""
 
+        # Cant use pdcp unless it;s installed across the entire cluster!
+        if pdcp:
+            try:
+                self.run('which pdcp')
+            except ShellExecuteError:
+                pdcp = False
+
         if self.jump is not None:
             self.jump.cp(localfile, remotefile)
             localfile = remotefile
@@ -569,11 +576,11 @@ class multiremotes(object):
         else:
             for host in self.hosts:
                 if self.jump is None:
-                    remote = remoteHost("root", host, self.access_key)
+                    remote = remoteHost("root", host.split('@')[-1], self.access_key)
                     remote.cp(localfile, remotefile)
                     return
                 else:
-                    if host != self.jump.user + '@' + self.jump.host:
+                    if host != self.jump.user + '@' + self.jump.host.split('@')[-1]:
                         self.jump.run('scp ' + diropt + remotefile + " " + host + ":" + remotefile)
 
 

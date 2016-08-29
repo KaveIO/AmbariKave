@@ -47,6 +47,7 @@ if [[ "$flavor" == "centos" ]]; then
 	yum install -y epel-release
 else
 	if [[ $epel_not_installed -ne 0 ]]; then
+		yum -y install wget
 		wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 		yum -y install epel-release-latest-7.noarch.rpm
 	fi

@@ -298,6 +298,18 @@ def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 5
     s.mount('https://', HTTPAdapter(max_retries=retries))
     return s
 
+def install_epel(clean = True):
+    if detect_linux_version() in ["Centos6"]:
+        res.Execute('yum -y install epel-release')
+    else:
+        status, stdout, _stderr = shell_call_wrapper('yum info epel-release')
+        if status or 'installed' not in stdout:
+            res.Execute('yum -y install wget')
+            res.Execute('wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
+            res.Execute('yum -y install epel-release-latest-7.noarch.rpm')
+    if clean:
+            res.Execute('yum clean all')
+
 
 class ApacheScript(res.Script):
     """

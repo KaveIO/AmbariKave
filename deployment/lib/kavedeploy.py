@@ -90,6 +90,12 @@ def which(program):
 
     return None
 
+def force_ascii(a_str):
+    """
+    Replace all non-ascii chars with ?
+    """
+    return ''.join([c if ord(c)<128 else '?' for c in a_str])
+
 
 def run_quiet(cmd, exit=True, shell=True):
     """
@@ -117,8 +123,11 @@ def run_quiet(cmd, exit=True, shell=True):
         raise ShellExecuteError("Problem running: \n" + cmdstr + "\n got:\n\t" + str(
             status) + "\n from stdout: \n" + output + " stderr: \n" + err)
     elif status:
-        print >> sys.__stderr__, "ERROR: " + "Problem running: \n" + cmdstr + "\n got:\n\t" + str(
-            status) + "\n from stdout: \n" + output + " stderr: \n" + err
+        print >> sys.__stderr__, ("ERROR: " + "Problem running: \n" + cmdstr
+                                  + "\n got:\n\t" + str(status)
+                                  + "\n from stdout: \n" + force_ascii(output)
+                                  + "\n stderr: \n" + force_ascii(err)
+                                  )
     return output.strip()
 
 
@@ -322,6 +331,8 @@ class remoteHost(object):
         """
         Which flavour of linux is running?
         """
+        if hasattr(self, '_lv') and self._lv is not None:
+            return self._lv
 
         # try commands first...
         for cmd in ["cat /etc/redhat-release", "lsb_release -a"]:
@@ -329,6 +340,7 @@ class remoteHost(object):
                 output = self.run(cmd)
                 v = parse_rhrelease(output)
                 if v:
+                    self._lv = v
                     return v
             except ShellExecuteError:
                 pass
@@ -336,6 +348,7 @@ class remoteHost(object):
         output = self.run("uname -r")
         el = parse_uname(output)
         if el:
+            self._lv = el
             return el
         raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
@@ -414,8 +427,15 @@ class multiremotes(object):
         via should be a remotehost object where these commands run, or else they will be run locally,
         assuming passwordless access
         Sat jump if going through a intermediate jump box, otherwise set access_key if not id_rsa
+        list_of_hosts can either be a list of strings or a list of remoteHosts, or a mixture of the two
         """
-        self.hosts = list_of_hosts
+        mixlist = []
+        for host in list_of_hosts:
+            if isinstance(host, remoteHost):
+                mixlist.append(host.user + "@" + host.host)
+            else:
+                mixlist.append(host)
+        self.hosts = mixlist
         self.jump = jump
         global strict_host_key_checking
         self.strict = strict_host_key_checking
@@ -431,13 +451,12 @@ class multiremotes(object):
         Register keys to list of remotes
         """
         if self.jump is None:
-            for host in self.hosts:
-                remote = remoteHost("root", host)
+            for remote in self.remotes():
                 remote.register()
             return
         self.jump.register()
         # register remotes anyway, even though the strict checking is none for the local machine!
-        for host in self.hosts:
+        for host in self.host_names():
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
             self.jump.run("ssh-keygen -R " + host + "")
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
@@ -446,7 +465,10 @@ class multiremotes(object):
     def detect_linux_version(self):
         """
         Which flavour of linux is running?
+        Cache this because it will not change over a session!
         """
+        if hasattr(self, '_lv') and self._lv is not None:
+            return self._lv
 
         # try commands first...
         vs = []
@@ -469,7 +491,9 @@ class multiremotes(object):
         if not len(versions):
             raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
         if len(versions) == 1:
+            self._lv = list(versions)[0]
             return list(versions)[0]
+        self._lv = versions
         return versions
 
     def check(self, firsttime=False):
@@ -478,8 +502,7 @@ class multiremotes(object):
         """
         # if there's no jump, I need keyless access from here
         if self.jump is None:
-            for host in self.hosts:
-                remote = remoteHost("root", host)
+            for remote in self.remotes():
                 remote.check(firsttime=firsttime)
             return True
         # if there is a jump, I need keyless access from there
@@ -487,7 +510,7 @@ class multiremotes(object):
         if firsttime:
             extrasshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
                             "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
-        for host in self.hosts:
+        for host in self.host_names():
             out = self.jump.run(
                 "ssh " + ' '.join(extrasshopts) + " root@" + host + " echo Hello World from \\$HOSTNAME",
                 extrasshopts=extrasshopts)
@@ -495,6 +518,18 @@ class multiremotes(object):
             if "Hello World" not in out or "HOSTNAME" in out:
                 raise ValueError("Unable to contact machine root@" + host + "! or machine did not respond correctly")
             return True
+
+    def remotes(self):
+        """
+        Return a list of remotes instead of one multiremote instance
+        """
+        return [remoteHost("root", host, self.access_key) for host in self.host_names()]
+
+    def host_names(self):
+        """
+        Return a list of host names, with suer and protocol stripped off instead of one multiremote instance
+        """
+        return [host.split('@')[-1].split(':')[-1] for host in self.hosts]
 
     def run(self, cmd, exit=True):
         """
@@ -538,7 +573,7 @@ class multiremotes(object):
 
         excmd = ""
 
-        # Cant use pdcp unless it;s installed across the entire cluster!
+        # Cant use pdcp unless it's installed across the entire cluster!
         if pdcp:
             try:
                 self.run('which pdcp')
@@ -574,14 +609,14 @@ class multiremotes(object):
                 self.jump.run(excmd + "pdcp -w " + diropt + ','.join(self.hosts)
                               + " " + localfile + " " + remotefile, exit=exit)
         else:
-            for host in self.hosts:
-                if self.jump is None:
-                    remote = remoteHost("root", host.split('@')[-1], self.access_key)
+            if self.jump is None:
+                for remote in self.remotes():
                     remote.cp(localfile, remotefile)
-                    return
-                else:
-                    if host != self.jump.user + '@' + self.jump.host.split('@')[-1]:
-                        self.jump.run('scp ' + diropt + remotefile + " " + host + ":" + remotefile)
+                return
+            else:
+                for host in self.hosts:
+                    if host.split('@')[-1].split(':')[-1] != self.jump.host.split('@')[-1].split(':')[-1]:
+                        self.jump.run('scp ' + diropt + remotefile + " " + host.split(':')[-1] + ":" + remotefile)
 
 
 # @TODO: Consolidate the two methods below!
@@ -1060,3 +1095,5 @@ def install_pdsh(remote):
     except ShellExecuteError:
         install_epel(remote)
         remote.run("yum -y install pdsh curl")
+        if remote.detect_linux_version() in ["Centos7"]:
+            remote.run('yum install -y pdsh-mod-dshgroup')

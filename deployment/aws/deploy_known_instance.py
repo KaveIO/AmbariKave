@@ -131,7 +131,7 @@ while (ip is None and acount < 20):
     ip = lA.pub_ip(iid)
     acount = acount + 1
 
-remoteuser = lA.default_usernamedict[lA.default_os]
+remoteuser = lA.default_usernamedict[osval]
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"

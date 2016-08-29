@@ -114,7 +114,7 @@ class TestKaveToolbox(base.LDTest):
         else:
             # add default 10GB in /opt
             deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py --not-strict --iid " + iid)
+            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)

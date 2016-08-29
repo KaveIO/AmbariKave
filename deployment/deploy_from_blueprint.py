@@ -191,17 +191,7 @@ sys.stdout.flush()
 ambari = lD.remoteHost("root", thehost, access_key)
 
 # Step one, install myself, dsh and deploy ambari agents to all nodes
-try:
-    ambari.run("which pdsh")
-    ambari.run("which curl")
-    ambari.run("yum info epel-release 2>/dev/null | grep installed")
-
-except lD.ShellExecuteError:
-    #ambari.run("wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm")
-    #ambari.run("yum -y install epel-release-latest-7.noarch.rpm")
-    #ambari.run("yum -y install epel-release")
-    ambari.run("yum clean all")
-    ambari.run("yum -y install pdsh curl")
+lD.install_pdsh(ambari)
 
 # modify iptables, only in case of Centos6
 if ambari.detect_linux_version() in ["Centos6"]:
@@ -242,9 +232,7 @@ try:
         raise lD.ShellExecuteError()
 except lD.ShellExecuteError:
     whole_cluster.register()
-    #whole_cluster.run("wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm")
-    #whole_cluster.run("yum -y install epel-release-latest-7.noarch.rpm")
-    #whole_cluster.run("yum -y install epel-release")
+    lD.install_pdsh(whole_cluster)
     # TODO: instead copy this file _from_ the ambari node *to* the others directly
     # For the time being, copy to tmp, then redistribute if necessary
     copy_from = None

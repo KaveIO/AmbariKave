@@ -87,13 +87,13 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                      "eu-central": "ami-26c43149",
                                      "ap-south": "ami-4a90fa25"
                                      },
-                        "Redhat7":  {"default": "ami-2051294a",
-                                     "eu-west": "ami-8b8c57f8",
-                                     "ap-northeast": "ami-0dd8f963",
-                                     "ap-southeast": "ami-cdbdd7a2",
-                                     "ap-south": "ami-cdbdd7a2",
-                                     "eu-central": "ami-875042eb"
-                                     }
+                        "Redhat7": {"default": "ami-2051294a",
+                                    "eu-west": "ami-8b8c57f8",
+                                    "ap-northeast": "ami-0dd8f963",
+                                    "ap-southeast": "ami-cdbdd7a2",
+                                    "ap-south": "ami-cdbdd7a2",
+                                    "eu-central": "ami-875042eb"
+                                    }
                         }
 
 

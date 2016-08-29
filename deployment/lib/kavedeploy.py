@@ -212,6 +212,8 @@ class remoteHost(object):
     Handles copying, remotely running commands and preparation for git
     """
 
+    multi = False
+
     def __init__(self, user, host, access_key="~/.ssh/id_rsa"):
         if user is None or host is None or access_key is None:
             raise TypeError("None passed as argument to remoteHost" + str(user) + str(host) + str(access_key))
@@ -404,6 +406,7 @@ class multiremotes(object):
     Simple wrapper around pdsh
     Local machine must have passwordless access under same user to remote machines
     """
+    multi = True
 
     def __init__(self, list_of_hosts, jump=None, access_key="~/.ssh/id_rsa"):
         """
@@ -1032,3 +1035,21 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
     edit_remote.run(pre + "grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
     edit_remote.run("mv -f tmpfile /etc/hosts")
     edit_remote.run(pre + "echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts " + pre)
+
+
+def install_epel(remote):
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.run("yum -y install epel-release")
+        remote.run("yum clean all")
+    elif remote.detect_linux_version() in ["Centos7"]:
+        remote.cp(os.path.dirname(__file__) + os.sep + "remotescripts/install_epel.sh", 'install_epel.sh')
+        remote.run("bash install_epel.sh")
+
+
+def install_pdsh(remote):
+    try:
+        remote.run("which pdsh")
+        remote.run("which curl")
+    except ShellExecuteError:
+        install_epel(remote)
+        remote.run("yum -y install pdsh curl")

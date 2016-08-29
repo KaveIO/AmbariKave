@@ -20,6 +20,7 @@
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",

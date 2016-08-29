@@ -49,8 +49,6 @@ class Nagios(ApacheScript):
              mode=0755
              )
 
-        Execute('service httpd start')
-        Execute('chkconfig httpd on')
         # SET NAGIOS ADMINPASSWORD
         p = subprocess.Popen(['htpasswd' + self.nagios_passwd_dir + 'nagiosadmin'],
                              stdout=subprocess.PIPE, shell=True)
@@ -61,15 +59,18 @@ class Nagios(ApacheScript):
 
     def start(self, env):
         import params
-        self.configure(env)
+        env.set_params(params)
+        super(Nagios, self).start(env)
         Execute('service nagios start')
 
     def stop(self, env):
         Execute("service nagios stop")
+        super(Nagios, self).stop(env)
+
 
     def status(self, env):
-        print Execute("service nagios status")
-
+        Execute("service nagios status")
+        super(Nagios, self).status(env)
 
 if __name__ == "__main__":
     Nagios().execute()

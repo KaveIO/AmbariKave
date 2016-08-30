@@ -22,16 +22,26 @@ import scan
 import license
 import pyfilenames
 import testversion
+import ipaportsed
 import testpythonimport
 import verifyxml
 import checkpep8
 import pep8functions
+import pep8variables
 import jsonbpchecks
+import repoimports
+import testresourcewizard
 import base
+import checkdistkclib
+import sys
 
-mods = [checkpep8, testpythonimport, testversion, pep8functions,
-        deploylib, kclib, servicesh, scan, license, pyfilenames,
-        jsonbpchecks, verifyxml]
+mods = [testresourcewizard, checkpep8, testpythonimport, testversion,
+        pep8functions, deploylib, kclib, servicesh, scan, license, repoimports,
+        pyfilenames, pep8variables, jsonbpchecks, verifyxml,
+        ipaportsed, checkdistkclib]
 
 if __name__ == "__main__":
+    # Repo imports does not work on jenkins, no idea why ... perhaps memory usage?
+    if '--jenkins' in sys.argv:
+        mods = [m for m in mods if m not in [repoimports]]
     base.parallel(mods)

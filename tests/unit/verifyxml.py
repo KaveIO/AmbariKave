@@ -43,7 +43,7 @@ class TestXMLCompleteness(unittest.TestCase):
         import os
         import string
         failingfiles = {}
-        for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
+        for root, dirs, files in os.walk(os.path.dirname(__file__) + '/../../src'):
             for f in [os.path.join(root, f) for f in files if f.endswith('.xml')]:
                 try:
                     parsefile(f)
@@ -162,23 +162,23 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
                     if property.tag != 'property':
                         continue
                     name = property.find('name').text
-                    isRequired = (
+                    is_required = (
                         'require-input' in property.attrib and
                         kc.trueorfalse(property.attrib['require-input'])
                     )
-                    hasDefault = False
+                    has_default = False
                     for child in property:
                         if child.tag != 'value':
                             continue
                         if child.text is not None and len(child.text.strip()):
-                            hasDefault = True
-                            if not isRequired:
+                            has_default = True
+                            if not is_required:
                                 try:
                                     defaults[f][name] = child.text.strip()
                                 except KeyError:
                                     defaults[f] = {name: child.text.strip()}
                             break
-                    if not hasDefault and not isRequired:
+                    if not has_default and not is_required:
                         failingxmlfiles[f] = name
 
         self.assertEqual(len(failingxmlfiles), 0,
@@ -209,6 +209,30 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
                     search_string = 'default(configurations/' + servicename + '/' + defaultp + ',' + defaultvs + ')'
                     if search_string not in all_params:
                         failingpyfiles[f + '/' + servicename + '/' + defaultp] = search_string
+                        # If the default is longer than 80 characters it' very difficult to debug, and best if I return
+                        # just some substring instead
+                        if len(search_string) > 80:
+                            begin = 'default(configurations/' + servicename + '/' + defaultp + ','
+                            if begin not in all_params:
+                                failingpyfiles[f + '/' + servicename + '/' + defaultp] = search_string[:80] + '... )'
+                            else:
+                                # find the first non-matching character and return 80 chars including 10 before
+                                search_string = 'default(configurations/' + servicename + '/' + defaultp + ','
+                                this_default = all_params[all_params.find(search_string) + len(search_string):]
+                                print this_default[:10]
+                                start = 0
+                                for start in range(len(defaultvs)):
+                                    if len(this_default) < start:
+                                        start = 0
+                                        break
+                                    if defaultvs[start] != this_default[start]:
+                                        start = max(start - 10, 0)
+                                        break
+                                failingpyfiles[f + '/' + servicename + '/' + defaultp
+                                               ] = ('( ... '
+                                                    + this_default[start:start + 80]
+                                                    + '... )'
+                                                    )
 
         self.assertEqual(len(failingpyfiles), 0,
                          "Found " + str(len(failingpyfiles))

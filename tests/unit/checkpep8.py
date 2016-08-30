@@ -21,7 +21,9 @@ import pep8
 
 LINES_SKIP = 17
 
-ignoreList = ["JBOSS/package/scripts/params.py"]
+ignore_list = ["WILDFLY/package/scripts/params.py",
+               "JBOSS/package/scripts/params.py",
+               "KAVEGANGLIA/package/scripts/params.py"]
 
 
 class PEP8(pep8.StyleGuide):
@@ -46,7 +48,7 @@ class TestCodeFormat(unittest.TestCase):
         allpyfiles = []
         for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
             allpyfiles = allpyfiles + [os.path.join(root, f) for f in files if f.endswith('.py')]
-        allpyfiles = [a for a in allpyfiles if not max([a.endswith(b) for b in ignoreList])]
+        allpyfiles = [a for a in allpyfiles if not max([a.endswith(b) for b in ignore_list])]
         result = pep8style.check_files(allpyfiles)
         self.assertEqual(result.total_errors, 0,
                          "Found " + str(result.total_errors)

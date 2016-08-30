@@ -1,0 +1,444 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>installation_dir</name>
+        <value>/opt/jboss-as/</value>
+        <description>
+            Path where this service will be installed.
+        </description>
+    </property>
+    <property>
+        <name>config_dir</name>
+        <value>/standalone/configuration/</value>
+        <description>
+            Location of configuration files
+        </description>
+    </property>
+    <property>
+        <name>jboss_xmlconf_filename</name>
+        <value>standalone.xml</value>
+        <description>
+            default XML file for Jboss configuration
+        </description>
+    </property>
+    <property>
+        <name>jboss_management_filename</name>
+        <value>mgmt-users.properties</value>
+        <description>
+			default properties file for Management User
+        </description>
+    </property>
+    <property>
+        <name>management_password</name>
+        <value>NOTAPASSWORD</value>
+        <description>
+            Password for the admin user of the management console. If not set, or if left as the default 'NOTAPASSWORD'
+            there will be no admin user available.
+        </description>
+       <property-type>PASSWORD</property-type>
+    </property>
+    <property>
+        <name>service_user</name>
+        <value>jboss</value>
+        <description>
+            the user under which jboss will run.
+        </description>
+    </property>
+    <property>
+        <name>ip_address</name>
+        <value>0.0.0.0</value>
+        <description>
+            Public ip address JBoss will bind to. 0.0.0.0 implies any ip
+            address.
+        </description>
+    </property>
+    <property>
+        <name>ip_address_management</name>
+        <value>127.0.0.1</value>
+        <description>
+            Management ip address JBoss will bind to. 0.0.0.0 implies any ip
+            address which. This is not recommended for the management services.
+        </description>
+    </property>
+    <property>
+        <name>JAVA_HOME</name>
+        <value>/usr/lib/jvm/java-1.7*-openjdk*/jre</value>
+        <description>
+			Where to look for java to set JAVA_HOME. Needs to be a java 1.7 version.
+        </description>
+    </property>
+    <property>
+        <name>http_port</name>
+        <value>8080</value>
+        <description>http port</description>
+    </property>
+    <property>
+        <name>https_port</name>
+        <value>8443</value>
+        <description>https port</description>
+    </property>
+    <property>
+        <name>management_native_port</name>
+        <value>9999</value>
+        <description>native port for the management interface</description>
+    </property>
+    <property>
+        <name>management_http_port</name>
+        <value>9990</value>
+        <description>http port for the management interface</description>
+    </property>
+    <property>
+        <name>management_https_port</name>
+        <value>9443</value>
+        <description>https port for the management interface</description>
+    </property>
+    <property>
+        <name>ajp_port</name>
+        <value>8009</value>
+        <description>Apache JServ Protocol port</description>
+    </property>
+    <property>
+        <name>osgi_http_port</name>
+        <value>8090</value>
+        <description>OSGi http port</description>
+    </property>
+    <property>
+        <name>remoting_port</name>
+        <value>4447</value>
+        <description>remoting port</description>
+    </property>
+    <property>
+        <name>txn_recovery_environment_port</name>
+        <value>4712</value>
+        <description>txn recovery environment port</description>
+    </property>
+    <property>
+        <name>txn_status_manager_port</name>
+        <value>4713</value>
+        <description>txn status manager port</description>
+    </property>
+    <property>
+        <name>mail_server</name>
+        <value>localhost</value>
+        <description>Address of the default mail server. Localhost used by default.</description>
+    </property>
+    <property>
+        <name>mail_port</name>
+        <value>25</value>
+        <description>Port of the default mail server</description>
+    </property>
+ 	<property>
+        <name>jbossxmlconfig</name>
+        <value>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+        &lt;server xmlns="urn:jboss:domain:1.2"&gt;
+        &lt;extensions&gt;
+        &lt;extension module="org.jboss.as.clustering.infinispan"/&gt;
+        &lt;extension module="org.jboss.as.configadmin"/&gt;
+        &lt;extension module="org.jboss.as.connector"/&gt;
+        &lt;extension module="org.jboss.as.deployment-scanner"/&gt;
+        &lt;extension module="org.jboss.as.ee"/&gt;
+        &lt;extension module="org.jboss.as.ejb3"/&gt;
+        &lt;extension module="org.jboss.as.jaxrs"/&gt;
+        &lt;extension module="org.jboss.as.jdr"/&gt;
+        &lt;extension module="org.jboss.as.jmx"/&gt;
+        &lt;extension module="org.jboss.as.jpa"/&gt;
+        &lt;extension module="org.jboss.as.logging"/&gt;
+        &lt;extension module="org.jboss.as.mail"/&gt;
+        &lt;extension module="org.jboss.as.naming"/&gt;
+        &lt;extension module="org.jboss.as.osgi"/&gt;
+        &lt;extension module="org.jboss.as.pojo"/&gt;
+        &lt;extension module="org.jboss.as.remoting"/&gt;
+        &lt;extension module="org.jboss.as.sar"/&gt;
+        &lt;extension module="org.jboss.as.security"/&gt;
+        &lt;extension module="org.jboss.as.threads"/&gt;
+        &lt;extension module="org.jboss.as.transactions"/&gt;
+        &lt;extension module="org.jboss.as.web"/&gt;
+        &lt;extension module="org.jboss.as.webservices"/&gt;
+        &lt;extension module="org.jboss.as.weld"/&gt;
+    &lt;/extensions&gt;
+    &lt;management&gt;
+        &lt;security-realms&gt;
+            &lt;security-realm name="ManagementRealm"&gt;
+                &lt;authentication&gt;
+                    &lt;properties path="mgmt-users.properties" relative-to="jboss.server.config.dir"/&gt;
+                &lt;/authentication&gt;
+            &lt;/security-realm&gt;
+            &lt;security-realm name="ApplicationRealm"&gt;
+                &lt;authentication&gt;
+                    &lt;properties path="application-users.properties" relative-to="jboss.server.config.dir"/&gt;
+                &lt;/authentication&gt;
+            &lt;/security-realm&gt;
+        &lt;/security-realms&gt;
+        &lt;management-interfaces&gt;
+            &lt;native-interface security-realm="ManagementRealm"&gt;
+                &lt;socket-binding native="management-native"/&gt;
+            &lt;/native-interface&gt;
+            &lt;http-interface security-realm="ManagementRealm"&gt;
+                &lt;socket-binding http="management-http"/&gt;
+            &lt;/http-interface&gt;
+        &lt;/management-interfaces&gt;
+    &lt;/management&gt;
+    &lt;profile&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:logging:1.1"&gt;
+            &lt;console-handler name="CONSOLE"&gt;
+                &lt;level name="INFO"/&gt;
+                &lt;formatter&gt;
+                    &lt;pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/&gt;
+                &lt;/formatter&gt;
+            &lt;/console-handler&gt;
+            &lt;periodic-rotating-file-handler name="FILE"&gt;
+                &lt;formatter&gt;
+                    &lt;pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/&gt;
+                &lt;/formatter&gt;
+                &lt;file relative-to="jboss.server.log.dir" path="server.log"/&gt;
+                &lt;suffix value=".yyyy-MM-dd"/&gt;
+                &lt;append value="true"/&gt;
+            &lt;/periodic-rotating-file-handler&gt;
+            &lt;logger category="com.arjuna"&gt;
+                &lt;level name="WARN"/&gt;
+            &lt;/logger&gt;
+            &lt;logger category="org.apache.tomcat.util.modeler"&gt;
+                &lt;level name="WARN"/&gt;
+            &lt;/logger&gt;
+            &lt;logger category="sun.rmi"&gt;
+                &lt;level name="WARN"/&gt;
+            &lt;/logger&gt;
+            &lt;logger category="jacorb"&gt;
+                &lt;level name="WARN"/&gt;
+            &lt;/logger&gt;
+            &lt;logger category="jacorb.config"&gt;
+                &lt;level name="ERROR"/&gt;
+            &lt;/logger&gt;
+            &lt;root-logger&gt;
+                &lt;level name="INFO"/&gt;
+                &lt;handlers&gt;
+                    &lt;handler name="CONSOLE"/&gt;
+                    &lt;handler name="FILE"/&gt;
+                &lt;/handlers&gt;
+            &lt;/root-logger&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:configadmin:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:datasources:1.0"&gt;
+            &lt;datasources&gt;
+                &lt;datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true"&gt;
+                    &lt;connection-url&gt;jdbc:h2:mem:test;DB_CLOSE_DELAY=-1&lt;/connection-url&gt;
+                    &lt;driver&gt;h2&lt;/driver&gt;
+                    &lt;security&gt;
+                        &lt;user-name&gt;sa&lt;/user-name&gt;
+                        &lt;password&gt;sa&lt;/password&gt;
+                    &lt;/security&gt;
+                &lt;/datasource&gt;
+                &lt;drivers&gt;
+                    &lt;driver name="h2" module="com.h2database.h2"&gt;
+                        &lt;xa-datasource-class&gt;org.h2.jdbcx.JdbcDataSource&lt;/xa-datasource-class&gt;
+                    &lt;/driver&gt;
+                &lt;/drivers&gt;
+            &lt;/datasources&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:deployment-scanner:1.1"&gt;
+            &lt;deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000"/&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:ee:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:ejb3:1.2"&gt;
+            &lt;session-bean&gt;
+                &lt;stateless&gt;
+                    &lt;bean-instance-pool-ref pool-name="slsb-strict-max-pool"/&gt;
+                &lt;/stateless&gt;
+                &lt;stateful default-access-timeout="5000" cache-ref="simple"/&gt;
+                &lt;singleton default-access-timeout="5000"/&gt;
+            &lt;/session-bean&gt;
+            &lt;pools&gt;
+                &lt;bean-instance-pools&gt;
+                    &lt;strict-max-pool name="slsb-strict-max-pool" max-pool-size="20" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/&gt;
+                    &lt;strict-max-pool name="mdb-strict-max-pool" max-pool-size="20" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/&gt;
+                &lt;/bean-instance-pools&gt;
+            &lt;/pools&gt;
+            &lt;caches&gt;
+                &lt;cache name="simple" aliases="NoPassivationCache"/&gt;
+                &lt;cache name="passivating" passivation-store-ref="file" aliases="SimpleStatefulCache"/&gt;
+            &lt;/caches&gt;
+            &lt;passivation-stores&gt;
+                &lt;file-passivation-store name="file"/&gt;
+            &lt;/passivation-stores&gt;
+            &lt;async thread-pool-name="default"/&gt;
+            &lt;timer-service thread-pool-name="default"&gt;
+                &lt;data-store path="timer-service-data" relative-to="jboss.server.data.dir"/&gt;
+            &lt;/timer-service&gt;
+            &lt;remote connector-ref="remoting-connector" thread-pool-name="default"/&gt;
+            &lt;thread-pools&gt;
+                &lt;thread-pool name="default"&gt;
+                    &lt;max-threads count="10"/&gt;
+                    &lt;keepalive-time time="100" unit="milliseconds"/&gt;
+                &lt;/thread-pool&gt;
+            &lt;/thread-pools&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:infinispan:1.2" default-cache-container="hibernate"&gt;
+            &lt;cache-container name="hibernate" default-cache="local-query"&gt;
+                &lt;local-cache name="entity"&gt;
+                    &lt;transaction mode="NON_XA"/&gt;
+                    &lt;eviction strategy="LRU" max-entries="10000"/&gt;
+                    &lt;expiration max-idle="100000"/&gt;
+                &lt;/local-cache&gt;
+                &lt;local-cache name="local-query"&gt;
+                    &lt;transaction mode="NONE"/&gt;
+                    &lt;eviction strategy="LRU" max-entries="10000"/&gt;
+                    &lt;expiration max-idle="100000"/&gt;
+                &lt;/local-cache&gt;
+                &lt;local-cache name="timestamps"&gt;
+                    &lt;transaction mode="NONE"/&gt;
+                    &lt;eviction strategy="NONE"/&gt;
+                &lt;/local-cache&gt;
+            &lt;/cache-container&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:jaxrs:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:jca:1.1"&gt;
+            &lt;archive-validation enabled="true" fail-on-error="true" fail-on-warn="false"/&gt;
+            &lt;bean-validation enabled="true"/&gt;
+            &lt;default-workmanager&gt;
+                &lt;short-running-threads&gt;
+                    &lt;core-threads count="50"/&gt;
+                    &lt;queue-length count="50"/&gt;
+                    &lt;max-threads count="50"/&gt;
+                    &lt;keepalive-time time="10" unit="seconds"/&gt;
+                &lt;/short-running-threads&gt;
+                &lt;long-running-threads&gt;
+                    &lt;core-threads count="50"/&gt;
+                    &lt;queue-length count="50"/&gt;
+                    &lt;max-threads count="50"/&gt;
+                    &lt;keepalive-time time="10" unit="seconds"/&gt;
+                &lt;/long-running-threads&gt;
+            &lt;/default-workmanager&gt;
+            &lt;cached-connection-manager/&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:jdr:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:jmx:1.1"&gt;
+            &lt;show-model value="true"/&gt;
+            &lt;remoting-connector/&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:jpa:1.0"&gt;
+            &lt;jpa default-datasource=""/&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:mail:1.0"&gt;
+            &lt;mail-session jndi-name="java:jboss/mail/Default"&gt;
+                &lt;smtp-server outbound-socket-binding-ref="mail-smtp"/&gt;
+            &lt;/mail-session&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:naming:1.1"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:osgi:1.2" activation="lazy"&gt;
+            &lt;properties&gt;
+                &lt;!-- Specifies the beginning start level of the framework --&gt;
+                &lt;property name="org.osgi.framework.startlevel.beginning"&gt;1&lt;/property&gt;
+            &lt;/properties&gt;
+            &lt;capabilities&gt;
+                &lt;!-- modules registered with the OSGi layer on startup --&gt;
+                &lt;capability name="javax.servlet.api:v25"/&gt;
+                &lt;capability name="javax.transaction.api"/&gt;
+                &lt;!-- bundles started in startlevel 1 --&gt;
+                &lt;capability name="org.apache.felix.log" startlevel="1"/&gt;
+                &lt;capability name="org.jboss.osgi.logging" startlevel="1"/&gt;
+                &lt;capability name="org.apache.felix.configadmin" startlevel="1"/&gt;
+                &lt;capability name="org.jboss.as.osgi.configadmin" startlevel="1"/&gt;
+            &lt;/capabilities&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:pojo:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:remoting:1.1"&gt;
+            &lt;connector name="remoting-connector" socket-binding="remoting" security-realm="ApplicationRealm"/&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:resource-adapters:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:sar:1.0"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:security:1.1"&gt;
+            &lt;security-domains&gt;
+                &lt;security-domain name="other" cache-type="default"&gt;
+                    &lt;authentication&gt;
+                        &lt;login-module code="Remoting" flag="optional"&gt;
+                            &lt;module-option name="password-stacking" value="useFirstPass"/&gt;
+                        &lt;/login-module&gt;
+                        &lt;login-module code="RealmUsersRoles" flag="required"&gt;
+                            &lt;module-option name="usersProperties" value="${jboss.server.config.dir}/application-users.properties"/&gt;
+                            &lt;module-option name="rolesProperties" value="${jboss.server.config.dir}/application-roles.properties"/&gt;
+                            &lt;module-option name="realm" value="ApplicationRealm"/&gt;
+                            &lt;module-option name="password-stacking" value="useFirstPass"/&gt;
+                        &lt;/login-module&gt;
+                    &lt;/authentication&gt;
+                &lt;/security-domain&gt;
+                &lt;security-domain name="jboss-web-policy" cache-type="default"&gt;
+                    &lt;authorization&gt;
+                        &lt;policy-module code="Delegating" flag="required"/&gt;
+                    &lt;/authorization&gt;
+                &lt;/security-domain&gt;
+                &lt;security-domain name="jboss-ejb-policy" cache-type="default"&gt;
+                    &lt;authorization&gt;
+                        &lt;policy-module code="Delegating" flag="required"/&gt;
+                    &lt;/authorization&gt;
+                &lt;/security-domain&gt;
+            &lt;/security-domains&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:threads:1.1"/&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:transactions:1.1"&gt;
+            &lt;core-environment&gt;
+                &lt;process-id&gt;
+                    &lt;uuid/&gt;
+                &lt;/process-id&gt;
+            &lt;/core-environment&gt;
+            &lt;recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager"/&gt;
+            &lt;coordinator-environment default-timeout="300"/&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:web:1.1" default-virtual-server="default-host" native="false"&gt;
+            &lt;connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http"/&gt;
+            &lt;virtual-server name="default-host" enable-welcome-root="true"&gt;
+                &lt;alias name="localhost"/&gt;
+                &lt;alias name="example.com"/&gt;
+            &lt;/virtual-server&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:webservices:1.1"&gt;
+            &lt;modify-wsdl-address&gt;true&lt;/modify-wsdl-address&gt;
+            &lt;wsdl-host&gt;${jboss.bind.address:127.0.0.1}&lt;/wsdl-host&gt;
+            &lt;endpoint-config name="Standard-Endpoint-Config"/&gt;
+            &lt;endpoint-config name="Recording-Endpoint-Config"&gt;
+                &lt;pre-handler-chain name="recording-handlers" protocol-bindings="##SOAP11_HTTP ##SOAP11_HTTP_MTOM ##SOAP12_HTTP ##SOAP12_HTTP_MTOM"&gt;
+                    &lt;handler name="RecordingHandler" class="org.jboss.ws.common.invocation.RecordingServerHandler"/&gt;
+                &lt;/pre-handler-chain&gt;
+            &lt;/endpoint-config&gt;
+        &lt;/subsystem&gt;
+        &lt;subsystem xmlns="urn:jboss:domain:weld:1.0"/&gt;
+    &lt;/profile&gt;
+    &lt;interfaces&gt;
+        &lt;interface name="management"&gt;
+            &lt;inet-address value="${jboss.bind.address.management:{{ip_address_management}}}"/&gt;
+        &lt;/interface&gt;
+        &lt;interface name="public"&gt;
+            &lt;inet-address value="${jboss.bind.address:{{ip_address}}}"/&gt;
+        &lt;/interface&gt;
+        &lt;!-- TODO - only show this if the jacorb subsystem is added  --&gt;
+        &lt;interface name="unsecure"&gt;
+            &lt;!--
+              ~  Used for IIOP sockets in the standard configuration.
+              ~                  To secure JacORB you need to setup SSL
+              --&gt;
+            &lt;inet-address value="${jboss.bind.address.unsecure:127.0.0.1}"/&gt;
+        &lt;/interface&gt;
+    &lt;/interfaces&gt;
+    &lt;socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}"&gt;
+        &lt;socket-binding name="management-native" interface="management" port="${jboss.management.native.port:{{management_native_port}}}"/&gt;
+        &lt;socket-binding name="management-http" interface="management" port="${jboss.management.http.port:{{management_http_port}}}"/&gt;
+        &lt;socket-binding name="management-https" interface="management" port="${jboss.management.https.port:{{management_https_port}}}"/&gt;
+        &lt;socket-binding name="ajp" port="{{ajp_port}}"/&gt;
+        &lt;socket-binding name="http" port="{{http_port}}"/&gt;
+        &lt;socket-binding name="https" port="{{https_port}}"/&gt;
+        &lt;socket-binding name="osgi-http" interface="management" port="{{osgi_http_port}}"/&gt;
+        &lt;socket-binding name="remoting" port="{{remoting_port}}"/&gt;
+        &lt;socket-binding name="txn-recovery-environment" port="{{txn_recovery_environment_port}}"/&gt;
+        &lt;socket-binding name="txn-status-manager" port="{{txn_status_manager_port}}"/&gt;
+        &lt;outbound-socket-binding name="mail-smtp"&gt;
+            &lt;remote-destination host="{{mail_server}}" port="{{mail_port}}"/&gt;
+        &lt;/outbound-socket-binding&gt;
+    &lt;/socket-binding-group&gt;
+&lt;/server&gt;
+	</value>
+        <description>standalone xml as a value for parameter jbossxmlconfig</description>
+    </property>
+
+
+</configuration>

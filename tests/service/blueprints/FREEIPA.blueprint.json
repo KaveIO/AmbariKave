@@ -24,7 +24,6 @@
       "components" : [
         { "name" : "AMBARI_SERVER"     },
         { "name" : "METRICS_COLLECTOR" },
-        { "name" : "METRICS_GRAFANA"   },
         { "name" : "ZOOKEEPER_SERVER"  },
         { "name" : "FREEIPA_SERVER"    },
         { "name" : "FREEIPA_CLIENT"    },
@@ -46,6 +45,6 @@
   "Blueprints" : {
     "blueprint_name" : "default",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE"
+    "stack_version" : "2.4.KAVE.2.2"
   }
 }

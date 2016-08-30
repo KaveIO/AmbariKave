@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>db_path</name>
+        <value>/var/lib/mongo</value>
+        <description>
+            Path where the mongodb is stored.
+        </description>
+    </property>
+    <property>
+        <name>bind_ip</name>
+        <value>0.0.0.0</value>
+        <description>
+            Interface on which to listen, by default all interfaces.
+            Set for example, 127.0.0.1 to switch to the local loopback interface only.
+            Or set to a specific internal IP if known.
+            If you don't know the specific internal IP here, you should set mongodb_host instead to the hostname of the master server.
+            This will make client connections easier.
+        </description>
+    </property>
+    <property>
+        <name>tcp_port</name>
+        <value>27017</value>
+        <description>
+            Port on which mongod listens for incoming client connections.
+            The Web Status page is always 1000 higher than this port number
+        </description>
+    </property>
+    <property>
+        <name>setname</name>
+        <value>None</value>
+        <description>
+            Name of the replica set this mongod will be part of.
+	    If name is None, and this is the only member of the set,
+	    this mongod will run in standalone mode and not be added to the set.
+	    setname is 100% necessary in the case a MONGODB_ARBITER must be configured
+        </description>
+    </property>
+    <property>
+        <name>db_path</name>
+        <value>/var/lib/mongo</value>
+        <description>
+            Path do where data will be stored.
+	    The folder must exist beforehand.
+        </description>
+    </property>
+    <property>
+        <name>logpath</name>
+        <value>/var/log/mongodb/mongod.log</value>
+        <description>
+            The name and location of the log file.
+        </description>
+    </property>
+    <property>
+        <name>mongodb_baseurl</name>
+        <value>https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/</value>
+        <description>
+            Base URL of mongo repository.
+        </description>
+    </property>
+        <property>
+        <name>mongodb_conf</name>
+        <value>
+# mongod.conf
+
+#where to log
+logpath={{logpath}}
+
+logappend=true
+
+# fork and run in background
+fork=true
+
+#which port to listen for client connections?
+port={{tcp_port}}
+#
+# The web status page is always accessible at a port number that is 1000 greater than the port determined by port.
+#
+
+#where to store the database?
+dbpath={{db_path}}
+
+# location of pidfile
+pidfilepath=/var/run/mongodb/mongod.pid
+
+# Listen to local interface only. Comment out to listen on all interfaces.
+# bind_ip=127.0.0.1
+bind_ip={{bind_ip}}
+
+# Disables write-ahead journaling
+# nojournal=true
+{% if is_arbiter %}
+nojournal=true
+{% endif %}
+
+# Enables periodic logging of CPU utilization and I/O wait
+#cpu=true
+
+# Turn on/off security.  Off is currently the default
+#noauth=true
+#auth=true
+
+# Verbose logging output.
+#verbose=true
+
+# Inspect all client data for validity on receipt (useful for
+# developing drivers)
+#objcheck=true
+
+# Enable db quota management
+#quota=true
+
+# Set oplogging level where n is
+#   0=off (default)
+#   1=W
+#   2=R
+#   3=both
+#   7=W+some reads
+#diaglog=0
+
+# Ignore query hints
+#nohints=true
+
+# Enable the HTTP interface (Defaults to port 28017).
+httpinterface=true
+
+# Turns off server-side scripting.  This will result in greatly limited
+# functionality
+#noscripting=true
+
+# Turns off table scans.  Any query that would do a table scan fails.
+#notablescan=true
+
+# Disable data file preallocation.
+#noprealloc=true
+{% if is_arbiter %}
+noprealloc=true
+{% endif %}
+
+# Specify .ns file size for new databases.
+# nssize=&lt;size&gt;
+
+# Replication Options
+
+# in replicated mongo databases, specify the replica set name here
+replSet={{setname}}
+# maximum size in megabytes for replication operation log
+#oplogSize=1024
+# path to a key file storing authentication info for connections
+# between replica set members
+#keyFile=/path/to/keyfile
+        </value>
+        <description>
+            MongoDB configuration details.
+        </description>
+    </property>
+
+</configuration>

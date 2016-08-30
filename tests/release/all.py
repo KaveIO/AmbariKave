@@ -16,13 +16,15 @@
 #
 ##############################################################################
 import base
+import checkpackage
 import ambarikave
 import kavetoolbox
 
-mods = [ambarikave, kavetoolbox]
+mods = [checkpackage, ambarikave, kavetoolbox]
 
 
-modargs = {kavetoolbox: ['Centos6', 'Centos7', 'Ubuntu14'],
+modargs = {checkpackage: [],
+           kavetoolbox: ['Centos6', 'Centos7', 'Ubuntu14'],
            ambarikave: []
            }
 

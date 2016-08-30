@@ -1,0 +1,68 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    },
+    { "sonarqube" : {
+    	"sonar_database_url":"ci.kave.io",
+    	"sonar_database_user_passwd" : "admin"
+    	}
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_GRAFANA"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "configurations" : [      ],
+      "components" : [
+        { "name" : "KAVELANDING"          },
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     }
+
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "ci",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      }
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "SONARQUBE",
+    "stack_name" : "HDP",
+    "stack_version" : "2.4.KAVE.2.2"
+  }
+}

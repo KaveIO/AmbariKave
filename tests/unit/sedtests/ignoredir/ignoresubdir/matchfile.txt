@@ -1,0 +1,3 @@
+matchline, contains 8080
+cannot match
+ignorematch 8443

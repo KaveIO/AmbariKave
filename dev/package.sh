@@ -33,6 +33,7 @@ set -e
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 BUILD_DIR=$PROJECT_DIR/build
 DEV_DIR=$PROJECT_DIR/dev
+TEST_DIR=$PROJECT_DIR/tests
 SRC_DIR=$PROJECT_DIR/src
 DPM_DIR=$PROJECT_DIR/deployment
 
@@ -55,11 +56,13 @@ RELEASE_PACKAGE="ambarikave-package-$TAG.tar.gz"
 echo "Building $RELEASE_PACKAGE"
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/
 cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
+mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/HDP
+cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2
 cp -r $SRC_DIR/common-services $BUILD_DIR/package/ambari-server/resources/common-services
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/README.md $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/package/ambari-server/
 
 # apply dist_kavecommon.py
-python $PROJECT_DIR/dev/dist_kavecommon.py $BUILD_DIR/package/ambari-server/resources/stacks/
+python $PROJECT_DIR/dev/dist_kavecommon.py $BUILD_DIR/package/ambari-server/resources/stacks/HDP
 
 # Tar autocollapses. If I'm not in the same path as I'm taring than my tarball
 # contains the full path.
@@ -75,6 +78,9 @@ DEPLOYMENT_TARBALL="ambarikave-deployment-$TAG.tar.gz"
 echo "Building $DEPLOYMENT_TARBALL"
 cp -r $DPM_DIR $BUILD_DIR/ambarikave-deployment
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/ambarikave-deployment
+cp $TEST_DIR/integration/blueprints/example*.json $BUILD_DIR/ambarikave-deployment/blueprints/
+cp $TEST_DIR/integration/blueprints/MONGODB*.json $BUILD_DIR/ambarikave-deployment/blueprints/
+cp $TEST_DIR/integration/blueprints/STORM*.json $BUILD_DIR/ambarikave-deployment/blueprints/
 #remove aws parts
 rm -rf $BUILD_DIR/ambarikave-deployment/aws
 rm -rf $BUILD_DIR/ambarikave-deployment/lib/kaveaws.py
@@ -129,7 +135,7 @@ if [ -f /etc/kave/mirror ]; then
 			fi
 			continue
 		fi
-		res=\`curl -i -X HEAD "\$line" 2>&1\`
+		res=\`curl --retry 5 -i -X HEAD "\$line" 2>&1\`
 		#echo \$res
 		if [[ "\$res" =~ "200 OK" ]]; then
 			repos_server=\${line}

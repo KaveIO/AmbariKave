@@ -10,6 +10,7 @@
         "AMBARI_ADMIN_PASS" : "admin"
     	}
     },
+    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
@@ -84,6 +85,6 @@
   "Blueprints" : {
     "blueprint_name" : "exampledev",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE"
+    "stack_version" : "2.4.KAVE.2.2"
   }
 }

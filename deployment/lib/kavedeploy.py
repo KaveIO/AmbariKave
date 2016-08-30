@@ -167,9 +167,44 @@ def mysleep(x):
     sys.__stdout__.flush()
 
 
+def parse_rhrelease(output):
+    """
+    Take a string and return a linux flavor
+    """
+    if "centos" in output.lower() and "release 6" in output.lower():
+        return "Centos6"
+    elif "centos" in output.lower() and "release 7" in output.lower():
+        return "Centos7"
+    elif "Ubuntu" in output:
+        return "Ubuntu"
+    return None
+
+
+def parse_uname(output):
+    if "el6" in output:
+        return "Centos6"
+    if "el7" in output:
+        return "Centos7"
+    return None
+
+
+def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 502, 503, 504, 401, 404]):
+    import requests
+    from requests.packages.urllib3.util.retry import Retry
+    from requests.adapters import HTTPAdapter
+    s = requests.Session()
+    retries = Retry(total=retries,
+                    backoff_factor=backoff_factor,
+                    status_forcelist=status_forcelist)
+    s.mount('http://', HTTPAdapter(max_retries=retries))
+    s.mount('https://', HTTPAdapter(max_retries=retries))
+    return s
+
+
 #
 # Functions for contacting remote machines
 #
+
 
 class remoteHost(object):
     """
@@ -290,31 +325,21 @@ class remoteHost(object):
         """
         Which flavour of linux is running?
         """
-        # first look into the redhat release
-        def find_return(output):
-            if "centos" in output.lower() and "release 6" in output.lower():
-                return "Centos6"
-            elif "centos" in output.lower() and "release 7" in output.lower():
-                return "Centos7"
-            elif "Ubuntu" in output:
-                return "Ubuntu"
-            return None
 
         # try commands first...
         for cmd in ["cat /etc/redhat-release", "lsb_release -a"]:
             try:
                 output = self.run(cmd)
-                v = find_return(output)
+                v = parse_rhrelease(output)
                 if v:
                     return v
             except ShellExecuteError:
                 pass
         # then try running uname
         output = self.run("uname -r")
-        if "el6" in output:
-            return "Centos6"
-        elif "el7" in output:
-            return "Centos7"
+        el = parse_uname(output)
+        if el:
+            return el
         raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
     def prep_git(self, github_key_local, force=False, git_origin="git@gitlab-nl.dna.kpmglab.com"):
@@ -422,6 +447,35 @@ class multiremotes(object):
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
         return
 
+    def detect_linux_version(self):
+        """
+        Which flavour of linux is running?
+        """
+
+        # try commands first...
+        vs = []
+        for cmd in ["cat /etc/redhat-release", "lsb_release -a"]:
+            try:
+                output = self.run(cmd)
+            except ShellExecuteError:
+                continue
+            vs = [parse_rhrelease(o) for o in output.split('\n')]
+        # then try running uname
+        try:
+            output = self.run("uname -r")
+            nvs = [parse_uname(o) for o in output.split('\n')]
+        except ShellExecuteError:
+            nvs = []
+
+        versions = vs + nvs
+        versions = [v for v in versions if v is not None]
+        versions = set(versions)
+        if not len(versions):
+            raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
+        if len(versions) == 1:
+            return list(versions)[0]
+        return versions
+
     def check(self, firsttime=False):
         """
         Verify keyless access to all destinations
@@ -467,20 +521,64 @@ class multiremotes(object):
 
     def cp(self, localfile, remotefile):
         """
-        use scp, one at a time, unfortunately :S, either starting locally or starting on some remote jump server
+        Use pdcp if it exists, else use scp one-at-a-time
         """
         directory = os.path.isdir(os.path.realpath(os.path.expanduser(localfile)))
-        for host in self.hosts:
+
+        # first detect if I am able to use pdcp or not
+
+        pdcp = False
+        if self.jump is None and which('pdcp'):
+            # local pdcp
+            pdcp = True
+
+        if self.jump is not None:
+            try:
+                # remote pdcp
+                self.jump.run('which pdcp')
+                pdcp = True
+            except ShellExecuteError:
+                pdcp = False
+
+        excmd = ""
+
+        if self.jump is not None:
+            self.jump.cp(localfile, remotefile)
+            localfile = remotefile
+
+        diropt = ''
+
+        if directory:
+            diropt = ' -r '
+
+        if pdcp:
+            excmd = 'export PDSH_SSH_ARGS_APPEND=" '
             if self.jump is None:
-                remote = remoteHost("root", host, self.access_key)
-                remote.cp(localfile, remotefile)
-                return
+                excmd = excmd + " -i " + self.access_key
+
+            if detect_proxy():
+                propts = proxopts()
+                propts = " ".join(propts[:-1]) + '\\"' + propts[-1] + '\\"'
+                excmd = excmd + " " + propts + " " + ' '.join(strictopts())
+            elif not self.strict:
+                excmd = excmd + " " + ' '.join(strictopts())
+            excmd = excmd + '"; '
+
+            if self.jump is None:
+                run_quiet(excmd + "pdcp -w " + diropt + ','.join(self.hosts)
+                          + " " + localfile + " " + remotefile, exit=exit)
             else:
-                self.jump.cp(localfile, remotefile)
-                cmd = 'scp '
-                if directory:
-                    cmd = cmd + '-r '
-                self.jump.run(cmd + remotefile + " " + host + ":" + remotefile)
+                self.jump.run(excmd + "pdcp -w " + diropt + ','.join(self.hosts)
+                              + " " + localfile + " " + remotefile, exit=exit)
+        else:
+            for host in self.hosts:
+                if self.jump is None:
+                    remote = remoteHost("root", host, self.access_key)
+                    remote.cp(localfile, remotefile)
+                    return
+                else:
+                    if host != self.jump.user + '@' + self.jump.host:
+                        self.jump.run('scp ' + diropt + remotefile + " " + host + ":" + remotefile)
 
 
 # @TODO: Consolidate the two methods below!
@@ -574,7 +672,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "2.1-Beta"
+        version = "2.2-Beta-Pre"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -649,13 +747,14 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     cat = ambari.run("cat " + afile).strip().lower()
                     # ignore errors with mirrors
                     cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
+                    cat = cat.replace("[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
                         raise SystemError("Failure in ambari server start server detected!")
         except ShellExecuteError:
             pass
 
         try:
-            stdout = ambari.run("curl --netrc http://localhost:8080/api/v1/clusters")
+            stdout = ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except ShellExecuteError:
@@ -679,7 +778,7 @@ def waitforrequest(ambari, clustername, request, timeout=10):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= timeout:
-        cmd = ("curl --netrc http://localhost:8080/api/v1/clusters/"
+        cmd = ("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters/"
                + clustername + "/requests/" + str(request))
         # If this fails, wait a second and try again, then really fail
         try:
@@ -712,10 +811,13 @@ def confremotessh(remote, port=443):
         remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
         remote.run("python add_incoming_port.py " + str(port))
     # modify sshconfig
-    remote.run("echo >> /etc/ssh/sshd_config")
-    remote.run("echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config")
-    remote.run("echo \"Port 22\" >> /etc/ssh/sshd_config")
-    remote.run("echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config")
+    pre = ''
+    if hasattr(remote, 'hosts'):
+        pre = '"'
+    remote.run(pre + "echo >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"Port 22\" >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config" + pre)
     # restart services
     try:
         remote.run("service sshd restart")
@@ -862,16 +964,30 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
     return True
 
 
-def rename_remote_host(remote, new_name, newdomain=None):
+def rename_remote_host(remote, new_name, newdomain=None, skip_cp=False):
     """
     rename a remote host to new_name.
     If newdomain is given, also add the new domain, if not given, use localdomain
     """
-    remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
+    if not skip_cp:
+        remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
     cmd = "python rename_me.py " + new_name.lower()
     if newdomain is not None:
-        cmd = cmd + " " + newdomain
+        cmd = cmd + " " + newdomain.lower()
     remote.run(cmd)
+
+
+def rename_remote_hosts(remotes_to_name, newdomain=None):
+    """
+    rename several remote hosts to new_name.
+    If newdomain is given, also add the new domain, if not given, use localdomain
+    """
+    remotes = remotes_to_name.keys()
+    mremotes = ["ssh:root@" + remote.host for remote in remotes]
+    mremotes = multiremotes(list_of_hosts=mremotes, access_key=remotes[0].access_key)
+    mremotes.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "rename_me.py")
+    for remote, name in remotes_to_name.iteritems():
+        rename_remote_host(remote, name, newdomain, skip_cp=True)
 
 
 def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):  # ["localdomain"]):
@@ -907,6 +1023,9 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
     if dest_internal_ip is None:
         dest_internal_ip = add_remote.host
     # first remove this host if it is already defined ...
-    edit_remote.run("grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile ")
+    pre = ''
+    if hasattr(edit_remote, 'hosts'):
+        pre = '"'
+    edit_remote.run(pre + "grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
     edit_remote.run("mv -f tmpfile /etc/hosts")
-    edit_remote.run("echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts")
+    edit_remote.run(pre + "echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts " + pre)

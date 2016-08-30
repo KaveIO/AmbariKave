@@ -20,6 +20,11 @@
 	    "hosts" : [ { "fqdn" : "replica-001.kave.io" },
 	                { "fqdn" : "replica-002.kave.io" },
 	                { "fqdn" : "replica-003.kave.io" } ]
+	},
+	{
+	    "name" : "arbiter",
+	    "configurations" : [ ],
+	    "hosts" : [ { "fqdn" : "arbiter-001.kave.io" } ]
 	}
 	]
 }

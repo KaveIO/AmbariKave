@@ -47,8 +47,9 @@ ambari-server setup -s
 yum install -y epel-release
 # necessary step to update epel and HDP cached repos
 yum clean all
-yum install -y pdsh python-pip
+yum install -y pdsh python-devel python-pip
 pip install requests
+pip install --upgrade requests
 
 if [ "$os" == "centos7" ]; then
 	yum install -y pdsh-mod-dshgroup

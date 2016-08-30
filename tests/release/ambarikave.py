@@ -21,8 +21,10 @@ import unittest
 
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
-    version = "2.1-Beta"
-    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE']
+    version = "2.2-Beta-Pre"
+    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2',
+                 '/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2'
+                 '/services/JENKINS/package/scripts/kavecommon.py']
 
     def runTest(self):
         """
@@ -31,7 +33,8 @@ class TestAmbariKaveRelease(base.LDTest):
         import os
 
         lD = self.pre_check()
-        self.ostype = "Centos6"
+        import kaveaws as lA
+        self.ostype = lA.default_os
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype in ["Centos6"]:
             # work around for problematic default DNS settings :S
@@ -41,8 +44,8 @@ class TestAmbariKaveRelease(base.LDTest):
                        + '.'.join(out.split()[-1].split('.')[1:-1]))
             # now the machine will be re-renamed with the public dns
         ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
-        ambari.run("service iptables stop")
         if self.ostype in ["Centos6"]:
+            ambari.run("service iptables stop")
             ambari.run("echo 0 > /selinux/enforce")
         elif self.ostype in ["Centos7"]:
             ambari.run("setenforce permissive")

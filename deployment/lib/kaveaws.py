@@ -36,7 +36,7 @@ import Queue
 
 # Centos6 has the username root, Centos7 has the username 'centos'
 default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
-default_os = "Centos6"
+default_os = "Centos7"
 
 
 def testaws():
@@ -67,18 +67,24 @@ def detect_region():
 
 __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtual, 6.5 release media
                                     "eu-west": "ami-30ff5c47",  # good, centos 6 "with updates"
+                                    "eu-central": "ami-2bf11444",
                                     "ap-northeast": "ami-25436924",
-                                    "ap-southeast": "aami-0aaf8858"
+                                    "ap-southeast": "ami-0aaf8858",
+                                    "ap-south": "ami-9b1c76f4"
                                     },
                         "Centos7": {"default": "ami-e4ff5c93",
                                     "eu-west": "ami-e4ff5c93",
                                     "ap-northeast": "ami-89634988",
-                                    "ap-southeast": "ami-aea582fc"
+                                    "ap-southeast": "ami-aea582fc",
+                                    "eu-central": "ami-9bf712f4",
+                                    "ap-south": "ami-95cda6fa"
                                     },
                         "Ubuntu14": {"default": "ami-5da23a2a",
                                      "eu-west": "ami-47a23a30",
                                      "ap-northeast": "ami-936d9d93",
-                                     "ap-southeast": "ami-96f1c1c4"
+                                     "ap-southeast": "ami-96f1c1c4",
+                                     "eu-central": "ami-26c43149",
+                                     "ap-south": "ami-4a90fa25"
                                      }
                         }
 
@@ -136,7 +142,7 @@ def chooseinstancetype(instancetype):
     """
     region = "-".join(detect_region().split("-")[0:2])
     # ap region has different strange behaviour for new generation instances, default centos image not hvm
-    regioninstdict = {"ap-northeast": {"t2.small": "m1.medium", "t2.medium": "m3.medium",
+    regioninstdict = {"ap-northeast": {"t2.small": "m3.medium", "t2.medium": "m3.medium",
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
                                        "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
                       "eu-west": {"m1.medium": "t2.small"}}
@@ -248,12 +254,12 @@ def killinstance(iid, state="terminate"):
     return runawstojson('ec2 ' + state + '-instances --instance-ids ' + iid)
 
 
-def killvolume(volID):
-    descvol = runawstojson("ec2 describe-volumes --volume " + volID)
+def killvolume(vol_id):
+    descvol = runawstojson("ec2 describe-volumes --volume " + vol_id)
     # print descvol
     if descvol['Volumes'][0]["State"] != "available":
-        raise ValueError("Volume not available to be killed " + volID)
-    return runawstojson("ec2 delete-volume --volume " + volID)
+        raise ValueError("Volume not available to be killed " + vol_id)
+    return runawstojson("ec2 delete-volume --volume " + vol_id)
 
 
 def createimage(iid, aname, description):
@@ -334,24 +340,24 @@ def add_new_ebs_vol(iid, conf, access_key):
         if tag["Key"] == "Name":
             instnam = tag["Value"]
     # print voljson
-    volID = voljson["VolumeId"]
-    name_resource(volID, instnam + conf["Mount"].replace("/", "_"))
+    vol_id = voljson["VolumeId"]
+    name_resource(vol_id, instnam + conf["Mount"].replace("/", "_"))
     time.sleep(5)
     count = 0
     while count < 10:
-        descvol = runawstojson("ec2 describe-volumes --volume " + volID)
+        descvol = runawstojson("ec2 describe-volumes --volume " + vol_id)
         # print descvol
         if descvol['Volumes'][0]["State"] == "available":
             break
         time.sleep(5)
         count = count + 1
     resjson = runawstojson(
-        "ec2 attach-volume --volume-id " + volID + " --instance-id " + iid + " --device " + conf["Attach"])
+        "ec2 attach-volume --volume-id " + vol_id + " --instance-id " + iid + " --device " + conf["Attach"])
     # print resjson
     time.sleep(5)
     count = 0
     while count < 10:
-        descvol = runawstojson("ec2 describe-volumes --volume " + volID)
+        descvol = runawstojson("ec2 describe-volumes --volume " + vol_id)
         # print descvol
         if descvol['Volumes'][0]['Attachments'][0]["State"] == "attached":
             break
@@ -374,7 +380,7 @@ def add_new_ebs_vol(iid, conf, access_key):
     res = remote.run("df -hP")
     if conf["Mount"] not in res:
         raise lD.ShellExecuteError("Could not mount the requested disk, resulted in " + res)
-    return volID
+    return vol_id
 
 
 class _add_ebs_volumesThread(threading.Thread):
@@ -447,7 +453,7 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
     #                 print [ord(ki) for ki in k], [ord(vi) for vi in v]
     #             else:
     #                 print [ord(ki) for ki in k]
-    itemPool = Queue.Queue()
+    item_pool = Queue.Queue()
     for iid, mounts in zip(iids, mounts):
         # print iid, mounts
         # sys.__stdout__.flush()
@@ -455,11 +461,11 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
             raise TypeError("Mounts must be a _list_ of mounts...")
         if type(iid) is list:
             raise TypeError("At this point, iid should be a string!...")
-        itemPool.put((iid, mounts))
+        item_pool.put((iid, mounts))
     lock = thread.allocate_lock()
     thethreads = []
     for _i in range(nthreads):
-        t = _add_ebs_volumesThread(itemPool, lock, access_key)
+        t = _add_ebs_volumesThread(item_pool, lock, access_key)
         thethreads.append(t)
         t.start()
     # setup a timeout to prevent really infinite loops!

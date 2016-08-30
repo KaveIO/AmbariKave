@@ -32,7 +32,7 @@ from grp import getgrnam
 #  this password is intended to be widely known and is used here as an extension of the URL
 #
 __repo_url__ = "http://repos:kaverepos@repos.kave.io"
-__version__ = "2.1-Beta"
+__version__ = "2.2-Beta-Pre"
 __main_dir__ = "AmbariKave"
 __mirror_list_file__ = "/etc/kave/mirror"
 
@@ -162,7 +162,7 @@ def failover_source(sources):
         if source is None:
             continue
         if source.startswith("ftp:") or (source.startswith("http") and ":" in source):
-            stat, stdout, stderr = shell_call_wrapper("curl -i -X HEAD " + source)
+            stat, stdout, stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
             if "200 OK" not in stdout and "302 Found" not in stdout:
                 continue
             return source
@@ -248,6 +248,55 @@ def chmod_up(lowest, mode, seen=[]):
         # prevent infinite recursion!
         return
     return chmod_up(os.sep.join(lowest.split(os.sep)[:-1]), mode, seen=seen)
+
+
+def check_port(number):
+    """
+    Check if a port is in use and return details about what is using the port
+    Proto Recv-Q Send-Q, Local Address, Foreign Address, State, User, Inode, PID/Program name
+    """
+    _status, stdout, _stderr = shell_call_wrapper("netstat -lpe | grep ':" + str(number) + "'")
+    stdout = stdout.strip().split()
+    if len(stdout) < 4:
+        return None
+    if stdout[3].endswith(':' + str(number)):
+        return stdout
+    return None
+    # old code with psutil
+    import psutil
+    for portstat in psutil.net_connections():
+        # Return system-wide connections as a list of
+        # (fd, family, type, laddr, raddr, status, pid) namedtuples.
+        if int(number) == int(portstat[3][-1]):
+            return portstat
+    return None
+
+
+def ps(number):
+    """
+    return ps details for this process
+    UID        PID  PPID  C STIME TTY      STAT   TIME CMD
+    """
+    _status, stdout, _stderr = shell_call_wrapper("ps -f " + str(number) + " | grep " + str(number))
+    stdout = stdout.strip().split()
+    if len(stdout) < 4:
+        return None
+    if stdout[1] == str(number):
+        return stdout[0:8] + [stdout[8:]]
+    return None
+
+
+def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 502, 503, 504, 401, 404]):
+    import requests
+    from requests.packages.urllib3.util.retry import Retry
+    from requests.adapters import HTTPAdapter
+    s = requests.Session()
+    retries = Retry(total=retries,
+                    backoff_factor=backoff_factor,
+                    status_forcelist=status_forcelist)
+    s.mount('http://', HTTPAdapter(max_retries=retries))
+    s.mount('https://', HTTPAdapter(max_retries=retries))
+    return s
 
 
 class ApacheScript(res.Script):

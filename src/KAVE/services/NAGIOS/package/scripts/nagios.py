@@ -68,7 +68,6 @@ class Nagios(ApacheScript):
              content=InlineTemplate(params.nagios_clients_file),
              mode=0755
              )
-        Execute("service nagios restart")
         super(Nagios, self).configure(env)
 
     def start(self, env):

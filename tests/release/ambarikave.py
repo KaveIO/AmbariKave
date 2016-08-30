@@ -44,16 +44,7 @@ class TestAmbariKaveRelease(base.LDTest):
                        + '.'.join(out.split()[-1].split('.')[1:-1]))
             # now the machine will be re-renamed with the public dns
         ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
-        if self.ostype in ["Centos6"]:
-            ambari.run("service iptables stop")
-            ambari.run("echo 0 > /selinux/enforce")
-        elif self.ostype in ["Centos7"]:
-            ambari.run("setenforce permissive")
-            try:
-                ambari.run("systemctl stop firewalld")
-            except lD.ShellExecuteError:
-                pass
-            ambari.run("systemctl disable firewalld")
+        lD.disable_security(ambari)
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("rm -rf inst.*")
         ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")

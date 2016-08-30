@@ -194,15 +194,7 @@ ambari = lD.remoteHost("root", thehost, access_key)
 lD.install_pdsh(ambari)
 
 # modify iptables, only in case of Centos6
-if ambari.detect_linux_version() in ["Centos6"]:
-    ambari.run("service iptables stop")
-else:
-    try:
-        ambari.run("systemctl stop firewalld")
-    except lD.ShellExecuteError:
-        pass
-    ambari.run("systemctl disable firewalld")
-
+lD.disable_security(remote)
 admin = ambari.run("hostname")
 
 whole_cluster = lD.multiremotes(hosts, jump=ambari)

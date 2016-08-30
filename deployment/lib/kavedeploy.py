@@ -671,15 +671,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     Add our ambari to a remote machine
     """
     # ignore failures here for now, since iptables does not exist on centos7
-    try:
-        remote.run("service iptables stop")
-        remote.run("chkconfig iptables off")
-    except ShellExecuteError:
-        remote.run("systemctl disable firewalld")
-        try:
-            remote.run("systemctl stop firewalld")
-        except ShellExecuteError:
-            pass
+    disable_security(remote)
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)
@@ -785,14 +777,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
         # ignore failures here for now, since iptables does not exist on centos7
         try:
             # modify iptables, only in case of Centos6
-            if ambari.detect_linux_version() in ["Centos6"]:
-                ambari.run("service iptables stop")
-            else:
-                try:
-                    ambari.run("systemctl stop firewalld")
-                except ShellExecuteError:
-                    pass
-                ambari.run("systemctl disable firewalld")
+            disable_security(ambari)
         except ShellExecuteError:
             pass
         # check file pointed to for failures
@@ -903,6 +888,35 @@ def confallssh(remote, restart=True):
         except ShellExecuteError:
             remote.run("service ssh restart")
         time.sleep(2)
+
+def disable_security(remote, selinux=True, firewall=True, permanent=True):
+    """
+    Turn off firewall and selinux
+    """
+    if remote.detect_linux_version() in ["Centos6"]:
+        if selinux:
+            if remote.multi:
+                remote.run("'echo 0 > /selinux/enforce'")
+            else:
+                remote.run("echo 0 > /selinux/enforce")
+            if permanent:
+                remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
+        if firewall:
+            remote.run("service iptables stop")
+            if permanent:
+                remote.run("chkconfig iptables off")
+    elif remote.detect_linux_version() in ["Centos7"]:
+        if selinux:
+            remote.run("setenforce permissive")
+            if permanent:
+                remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
+        if firewall:
+            try:
+                remote.run("systemctl stop firewalld")
+            except ShellExecuteError:
+                pass
+            if permanent:
+                remote.run("systemctl disable firewalld")
 
 
 def wait_until_up(remote, max_wait):

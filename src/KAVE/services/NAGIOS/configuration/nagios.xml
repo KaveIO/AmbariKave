@@ -207,16 +207,16 @@ connection_timeout=300
 # INCLUDE CONFIG FILE
 # This directive allows you to include definitions from an external config file.
 
-#include=<somefile.cfg>
+#include=&lt;somefile.cfg&gt;
 
 # COMMAND DEFINITIONS
 # Command definitions that this daemon will run.  Definitions
 # are in the following format:
 #
-# command[<command_name>]=<command_line>
+# command[&lt;command_name&gt;]=&lt;command_line&gt;
 #
-# When the daemon receives a request to return the results of <command_name>
-# it will execute the command specified by the <command_line> argument.
+# When the daemon receives a request to return the results of &lt;command_name&gt;
+# it will execute the command specified by the &lt;command_line&gt; argument.
 #
 # Unlike Nagios, the command line cannot contain macros - it must be
 # typed exactly as it should be executed.

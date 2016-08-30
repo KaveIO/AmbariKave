@@ -172,7 +172,7 @@ define contactgroup{
         members                 nagiosadmin
         }""")
 
-nagios_client_nrpe_file = default('configurations/nagios/nagios_client_nrpe_file',"""
+nagios_client_nrpe_file = default('configurations/nagios/nagios_client_nrpe_file', """
 ############################################################################
 # Sample NRPE Config File
 # Written by: Ethan Galstad (nagios@nagios.org)
@@ -400,7 +400,7 @@ command[check_total_procs]=/usr/lib64/nagios/plugins/check_procs -w 150 -c 200
 include_dir=/etc/nrpe.d/
 """)
 
-nagios_clients_file = default('configurations/nagios/nagios_clients_file',"""
+nagios_clients_file = default('configurations/nagios/nagios_clients_file', """
 define host{
 
 use                             linux-server

@@ -312,6 +312,9 @@ def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 5
 
 
 def install_epel(clean=True):
+    """
+    install epel independent of redhat or centos version
+    """
     if detect_linux_version() in ["Centos6"]:
         res.Execute('yum -y install epel-release')
     else:
@@ -322,6 +325,21 @@ def install_epel(clean=True):
             res.Execute('yum -y install epel-release-latest-7.noarch.rpm')
     if clean:
         res.Execute('yum clean all')
+
+
+def extra_redhat_repos():
+    """
+    Enable additional redhat repositories needed by some
+    select components
+    """
+    rh = is_true_redhat()
+    if rh:
+        for repo in ['rhui-REGION-rhel-server-optional',
+                     'rhui-REGION-rhel-server-extras'
+                     'rhui-REGION-rhel-server-source-optional',
+                     'rhui-REGION-rhel-server-releases-source']:
+            res.Execute('yum-config-manager --enable ' + repo)
+    return rh
 
 
 class ApacheScript(res.Script):

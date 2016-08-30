@@ -36,7 +36,7 @@ import Queue
 
 # Centos6 has the username root, Centos7 has the username 'centos'
 default_usernamedict = {"Centos6": "root", "Centos7": 'centos',
-                        "Redhat7": 'ec2-user', "Ubuntu14" : 'ubuntu'}
+                        "Redhat7": 'ec2-user', "Ubuntu14": 'ubuntu'}
 default_os = "Redhat7"
 
 

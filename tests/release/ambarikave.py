@@ -25,6 +25,7 @@ class TestAmbariKaveRelease(base.LDTest):
     checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE',
                  '/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE'
                  '/services/JENKINS/package/scripts/kavecommon.py']
+    ostype = "Centos6"
 
     def runTest(self):
         """
@@ -34,7 +35,6 @@ class TestAmbariKaveRelease(base.LDTest):
 
         lD = self.pre_check()
         import kaveaws as lA
-        self.ostype = lA.default_os
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype in ["Centos6"]:
             # work around for problematic default DNS settings :S
@@ -73,6 +73,8 @@ if __name__ == "__main__":
         sys.argv = [s for s in sys.argv if s != "--verbose"]
     test1 = TestAmbariKaveRelease()
     test1.debug = verbose
+    if len(sys.argv) > 1:
+        test1.ostype = sys.argv[1]
     suite = unittest.TestSuite()
     suite.addTest(test1)
     base.run(suite)

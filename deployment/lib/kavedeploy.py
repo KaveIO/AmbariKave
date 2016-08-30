@@ -889,6 +889,7 @@ def confallssh(remote, restart=True):
             remote.run("service ssh restart")
         time.sleep(2)
 
+
 def disable_security(remote, selinux=True, firewall=True, permanent=True):
     """
     Turn off firewall and selinux

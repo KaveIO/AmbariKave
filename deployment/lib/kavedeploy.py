@@ -726,7 +726,10 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     remote.check()
     # get directly from repo
     if not git:
-        remote.run("yum -y install wget curl")
+        if remote.detect_linux_version().lower().startswith('centos'):
+            remote.run("yum -y install wget curl")
+        else:
+            remote.run("apt-get install -y wget curl")
         arch = "noarch"
         archtag = ""
         dire = "AmbariKave"

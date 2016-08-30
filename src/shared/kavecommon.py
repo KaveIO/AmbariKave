@@ -335,7 +335,7 @@ def extra_redhat_repos():
     rh = is_true_redhat()
     if rh:
         for repo in ['rhui-REGION-rhel-server-optional',
-                     'rhui-REGION-rhel-server-extras'
+                     'rhui-REGION-rhel-server-extras',
                      'rhui-REGION-rhel-server-source-optional',
                      'rhui-REGION-rhel-server-releases-source']:
             res.Execute('yum-config-manager --enable ' + repo)

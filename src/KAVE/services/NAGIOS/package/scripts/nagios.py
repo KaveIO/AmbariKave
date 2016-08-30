@@ -50,8 +50,8 @@ class Nagios(ApacheScript):
 
         # SET NAGIOS ADMINPASSWORD
         Execute('mkdir -p ' + os.path.dirname(params.nagios_passwd_file))
-        p = subprocess.Popen(['htpasswd','-i', params.nagios_passwd_file, 'nagiosadmin'],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+        p = subprocess.Popen(['htpasswd', '-i', params.nagios_passwd_file, 'nagiosadmin'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         stdout, stderr = p.communicate(str(params.nagios_admin_password))
         if p.returncode:
             raise Exception('Unable to create nagios admin password, did you enter wrong password second time?'

@@ -22,63 +22,37 @@ from kavecommon import ApacheScript
 
 
 class Nagios(ApacheScript):
-    nagios_conf_file = "/etc/httpd/conf.d/nagios.conf"
-    nagios_contacts_file = "/etc/nagios/objects/contacts.cfg"
-    nagios_clients_file = "/etc/nagios/servers/clients.cfg"
+    nagios_client_nrpe_file = "/etc/nagios/nrpe.cfg"
 
     def install(self, env):
         import params
         super(Nagios, self).install(env)
         env.set_params(params)
         self.install_packages(env)
-        Execute('yum -y install epel-release')
-        Execute('yum clean all')
-        Execute('yum -y install nagios')
-        Execute('yum -y install nagios-plugins')
+        Execute('yum -y install nrpe')
         Execute('yum -y install nagios-plugins-all')
+        Execute('yum -y install openssl')
         self.configure(env)
 
     def configure(self, env):
         import params
         env.set_params(params)
-        File(self.nagios_conf_file,
-             content=InlineTemplate(params.nagios_conf_file),
-             mode=0755
-             )
-        File(self.nagios_contacts_file,
-             content=InlineTemplate(params.nagios_contacts_file),
+        File(self.nagios_client_nrpe_file,
+             content=InlineTemplate(params.nagios_client_nrpe_file),
              mode=0755
              )
 
-        # SET NAGIOS ADMINPASSWORD
-        Execute('mkdir -p ' + os.path.dirname(params.nagios_passwd_file))
-        p = subprocess.Popen(['htpasswd', '-i', params.nagios_passwd_file, 'nagiosadmin'],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        stdout, stderr = p.communicate(str(params.nagios_admin_password))
-        if p.returncode:
-            raise Exception('Unable to create nagios admin password, did you enter wrong password second time?'
-                            + str(stdout) + str(stderr))
-        Execute('chown apache:apache ' + params.nagios_passwd_file)
-        Execute('chmod 700 ' + params.nagios_passwd_file)
-
-        if not os.path.exists('/etc/nagios/servers'):
-            Execute('mkdir -p /etc/nagios/servers')
-
-        File(self.nagios_clients_file,
-             content=InlineTemplate(params.nagios_clients_file),
-             mode=0755
-             )
-        Execute("service nagios restart")
         super(Nagios, self).configure(env)
 
     def start(self, env):
         import params
         env.set_params(params)
         super(Nagios, self).start(env)
-        Execute('service nagios start')
+        Execute('service nrpe start')
+        Execute('chkconfig nrpe on')
 
     def stop(self, env):
-        Execute("service nagios stop")
+        Execute("service nrpe stop")
         super(Nagios, self).stop(env)
 
     def status(self, env):

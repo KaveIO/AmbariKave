@@ -149,10 +149,6 @@ fi
 
 EOF
 
-# From now on, allow failures to stop the script
-echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
-echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
-
 cat $DEV_DIR/install_snippet.sh >> $BUILD_DIR/$RELEASE_INSTALLER
 
 #Jump into cat until eof in order to write arbitrary things into the installer script

@@ -117,8 +117,7 @@ class StormGenericSD(StormGeneric):
                  mode=0755
                  )
         Execute('mkdir -p %s' % params.childlogdir)
-        Package('epel-release')
-        Execute('yum clean all')
+        kc.install_epel()
         Package('python-meld3')
         Package('python-devel')
         Package('python-pip')

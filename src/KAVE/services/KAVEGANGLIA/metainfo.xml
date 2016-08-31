@@ -33,7 +33,6 @@
                 <osSpecific>
                     <osFamily>any</osFamily>
                     <packages>
-                        <package><name>epel-release</name></package>
                         <package><name>ganglia</name></package>
                         <package><name>ganglia-gmond</name></package>
                         <package><name>ganglia-web</name></package>

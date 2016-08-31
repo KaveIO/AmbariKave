@@ -30,6 +30,7 @@ class KaveGangliaSlave(Script):
         import params
 
         env.set_params(params)
+        kc.install_epel()
         self.install_packages(env)
         self.configure(env)
 

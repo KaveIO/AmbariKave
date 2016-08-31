@@ -57,7 +57,7 @@ echo "Building $RELEASE_PACKAGE"
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/
 cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/HDP
-cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2
+cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.4.KAVE
 cp -r $SRC_DIR/common-services $BUILD_DIR/package/ambari-server/resources/common-services
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/README.md $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/package/ambari-server/
 
@@ -148,10 +148,6 @@ if [ -f /etc/kave/mirror ]; then
 fi
 
 EOF
-
-# From now on, allow failures to stop the script
-echo '# abort at first failure' >> $BUILD_DIR/$RELEASE_INSTALLER
-echo 'set -e' >> $BUILD_DIR/$RELEASE_INSTALLER
 
 cat $DEV_DIR/install_snippet.sh >> $BUILD_DIR/$RELEASE_INSTALLER
 

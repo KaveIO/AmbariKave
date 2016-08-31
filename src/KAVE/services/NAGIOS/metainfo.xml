@@ -4,12 +4,13 @@
     <services>
         <service>
             <name>NAGIOS</name>
-            <comment>NAGIOS  monitoring tool</comment>
+            <comment>NAGIOS monitoring tool, nagios is used to monitor and issue
+            email warnings in the case of issues on the host</comment>
             <displayName>Nagios</displayName>
             <components>
                   <component>
                     <name>NAGIOS_SERVER</name>
-                    <displayName>nagios server</displayName>
+                    <displayName>Nagios Server</displayName>
                     <category>MASTER</category>
 	                <cardinality>1</cardinality>
                     <commandScript>

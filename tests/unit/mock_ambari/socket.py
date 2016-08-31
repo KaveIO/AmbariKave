@@ -30,3 +30,4 @@ def timeout():
 _GLOBAL_DEFAULT_TIMEOUT = 10
 IPPROTO_TCP = ""
 TCP_NODELAY = 1
+has_ipv6 = True

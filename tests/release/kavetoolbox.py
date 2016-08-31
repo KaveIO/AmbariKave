@@ -36,15 +36,16 @@ class TestKaveToolboxRelease(test_kavetoolbox_head.TestKaveToolbox):
     version = "2.2-Beta-Pre"
 
     def deploy_ktb(self, ambari):
-        if self.ostype.lower().startswith("centos"):
+        if self.ostype.lower().startswith("centos") or self.ostype.lower().startswith("redhat"):
             ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
         else:
             ambari.run("apt-get install -y wget curl tar zip unzip gzip rsync")
-        ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"
-                   + "noarch/KaveToolbox/" + self.version + "/kavetoolbox-installer-" + self.version + ".sh")
+        ambari.run("mkdir -p /etc/kave/")
+        ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
         ambari.run("rm -rf inst.* ")
-        ambari.run("nohup bash kavetoolbox-installer-" + self.version
-                   + ".sh --workstation --quiet > inst.stdout 2> inst.stderr < /dev/null & ")
+        import kavedeploy as lD
+        lD.deploy_our_soft(ambari, self.version,
+                           repo="http://repos:kaverepos@repos.dna.kpmglab.com", pack="kavetoolbox")
         return True
 
 

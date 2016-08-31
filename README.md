@@ -28,8 +28,8 @@ If you are looking for the extensive documentation, including descriptions of di
 * To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta-Pre, with username repos and password kaverepos, including downloading and installing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.2-Beta-Pre/ambarikave-installer-centos6-2.2-Beta-Pre.sh
-sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta-Pre/ambarikave-installer-2.2-Beta-Pre.sh
+sudo bash ambarikave-installer-2.2-Beta-Pre.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -40,6 +40,9 @@ sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
 # If on Centos6, turn off iptables with:
 sudo service iptables stop
 sudo chkconfig iptables off
+# If on Centos7 use:
+systemctl disable firewalld
+systemctl stop firewalld
 #test ssh keys with
 ssh -T git@github.com
 #if this works,
@@ -91,8 +94,8 @@ pull-update also respects git branches, as a command-line argument and is linked
 To update between released versions, simply install the new version over the old version after stopping the ambari server. Installing a new version of the stack, will not trigger an update of any running service. You would need to do this manually in the current state.
 ```
 sudo ambari-server stop
-wget http://repos:kaverepos@repos.kave.io/centos6/AmbariKave/2.2-Beta-Pre/ambarikave-installer-centos6-2.2-Beta-Pre.sh
-sudo bash ambarikave-installer-centos6-2.2-Beta-Pre.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta-Pre/ambarikave-installer-2.2-Beta-Pre.sh
+sudo bash ambarikave-installer-2.2-Beta-Pre.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks

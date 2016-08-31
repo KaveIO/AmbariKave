@@ -5,12 +5,7 @@
         "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
-    { "kavelanding" : {
-        "AMBARI_ADMIN" : "admin",
-        "AMBARI_ADMIN_PASS" : "admin"
-    	}
-    },
-    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
+
     { "core-site" : { "hadoop.proxyuser.hue.hosts"  : "*",
     				  "hadoop.proxyuser.hue.groups" : "*",
     				  "hadoop.proxyuser.hcat.groups": "*",
@@ -25,6 +20,7 @@
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
@@ -37,7 +33,6 @@
     	"sonar_database_user_passwd" : "admin"
     	}
     },
-    { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711" }  },
     { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
     { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} },
@@ -55,36 +50,32 @@
         { "name" : "AMBARI_SERVER"      },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
-        { "name" : "FREEIPA_SERVER"     },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
     },
     {
       "name" : "gateway",
-      "configurations" : [      ],
+      "configurations" : [   ],
       "components" : [
-        { "name" : "KAVETOOLBOXGATE"      },
-        { "name" : "KAVELANDING"          },
 		{ "name" : "SQOOP"                },
 	    { "name" : "HDFS_CLIENT"          },
 	    { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "METRICS_MONITOR"      },
 		{ "name" : "HIVE_CLIENT"          },
 		{ "name" : "TEZ_CLIENT"           },
 		{ "name" : "SPARK_CLIENT"         },
         { "name" : "OOZIE_CLIENT"         },
-        { "name" : "SONARQUBE_RUNNER"     },
-		{ "name" : "STORMSD_CLIENT"       },
-		{ "name" : "MONGODB_CLIENT"       },
-        { "name" : "METRICS_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "FREEIPA_CLIENT"       }
+        { "name" : "SONARQUBE_RUNNER"     }
 
       ],
-      "cardinality" : "1+"
+      "cardinality" : "0-10"
     },
     {
       "name":"namenode-1",
@@ -108,8 +99,6 @@
         { "name" : "TEZ_CLIENT"             },
         { "name" : "YARN_CLIENT"            },
 	    { "name" : "MAPREDUCE2_CLIENT"      },
-        { "name" : "OOZIE_CLIENT"           },
-        { "name" : "KAVETOOLBOXNODE"        },
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "FREEIPA_CLIENT"         }
@@ -120,8 +109,6 @@
       "name":"namenode-2",
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
-        { "name" : "ZOOKEEPER_SERVER"     },
-        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
@@ -133,42 +120,16 @@
       "components" : [
         { "name" : "DATANODE"             },
         { "name" : "NODEMANAGER"          },
-        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "FREEIPA_CLIENT"       }
-      ],
-      "cardinality" : "1+"
-    },
-    {
-      "name" : "mongo",
-      "components" : [
-        { "name" : "MONGODB_MASTER"       },
-        { "name" : "MONGODB_CLIENT"       },
-        { "name" : "METRICS_MONITOR"      },
-        { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "FREEIPA_CLIENT"       }
-      ],
-      "cardinality" : "1+"
-    },
-    {
-      "name" : "jboss",
-      "configurations" : [  ],
-      "components" : [
-        { "name" : "APACHE_WEB_MASTER"     },
-        { "name" : "JBOSS_APP_SERVER"      },
-		{ "name" : "MONGODB_CLIENT"        },
-        { "name" : "METRICS_MONITOR"       },
-        { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
     },
     {
       "name" : "ci",
       "configurations" : [
-      	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } },
-      	{ "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
+      	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } }
       	],
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },
@@ -178,65 +139,22 @@
         { "name" : "SONARQUBE_SERVER"      },
         { "name" : "SONARQUBE_MYSQL_SERVER"},
         { "name" : "SONARQUBE_RUNNER"      },
-        { "name" : "KAVETOOLBOXNODE"       },
 	    { "name" : "HDFS_CLIENT"           },
 	    { "name" : "YARN_CLIENT"           },
 	    { "name" : "MAPREDUCE2_CLIENT"     },
 		{ "name" : "HIVE_CLIENT"           },
 		{ "name" : "TEZ_CLIENT"            },
-        { "name" : "OOZIE_CLIENT"          },
 		{ "name" : "SPARK_CLIENT"          },
-		{ "name" : "STORMSD_CLIENT"        },
-		{ "name" : "MONGODB_CLIENT"        },
+        { "name" : "OOZIE_CLIENT"          },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
-    },
-    {
-      "name" : "nimbus",
-      "components" : [
-        { "name" : "NIMBUS_SD_MASTER"   },
-        { "name" : "STORMSD_UI_SERVER"  },
-        { "name" : "STORMSD_LOG_VIEWER" },
-        { "name" : "STORMSD_DRPC_SERVER"},
-        { "name" : "ZOOKEEPER_SERVER"   },
-        { "name" : "KAVETOOLBOXNODE"    },
-        { "name" : "METRICS_MONITOR"    },
-        { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "FREEIPA_CLIENT"     }
-      ],
-      "cardinality" : "1"
-    },
-    {
-      "name" : "supervisor",
-      "configurations" : [  ],
-      "components" : [
-        { "name" : "METRICS_MONITOR"     },
-        { "name" : "KAVETOOLBOXNODE"     },
-        { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "STORMSD_LOG_VIEWER"  },
-        { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "FREEIPA_CLIENT"      }
-      ],
-      "cardinality" : "1+"
-    },
-    {
-      "name" : "kafka",
-      "configurations" : [ { "kafka-broker" : { "zookeeper.connect" : "nimbus.kave.io:2181,nno-001.kave.io:2181,nno-002.kave.io:2181" }  } ],
-      "components" : [
-        { "name" : "METRICS_MONITOR"  },
-        { "name" : "KAVETOOLBOXNODE"  },
-        { "name" : "KAFKA_BROKER"     },
-        { "name" : "ZOOKEEPER_CLIENT" },
-        { "name" : "FREEIPA_CLIENT"   }
-      ],
-      "cardinality" : "1+"
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "examplelambda",
+    "blueprint_name" : "exampleredhat7",
     "stack_name" : "HDP",
     "stack_version" : "2.4.KAVE"
   }

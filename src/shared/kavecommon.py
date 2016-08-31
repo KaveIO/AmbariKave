@@ -87,6 +87,18 @@ def detect_linux_version():
     raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
 
+def is_true_redhat():
+    """
+    Return true if /etc/redhat-release begins with Red Hat
+    """
+    fn = '/etc/redhat-release'
+    if os.path.exists(fn):
+        with open(fn) as fp:
+            rf = fp.read()
+            return rf.startswith("Red Hat")
+    return False
+
+
 def repo_url(filename, repo=__repo_url__, arch=None, dir=__main_dir__, ver=__version__):
     """
     Construct the repository address for our code
@@ -162,7 +174,7 @@ def failover_source(sources):
         if source is None:
             continue
         if source.startswith("ftp:") or (source.startswith("http") and ":" in source):
-            stat, stdout, stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
+            _stat, stdout, _stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
             if "200 OK" not in stdout and "302 Found" not in stdout:
                 continue
             return source
@@ -299,6 +311,37 @@ def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 5
     return s
 
 
+def install_epel(clean=True):
+    """
+    install epel independent of redhat or centos version
+    """
+    if detect_linux_version() in ["Centos6"]:
+        res.Execute('yum -y install epel-release')
+    else:
+        status, stdout, _stderr = shell_call_wrapper('yum info epel-release')
+        if status or 'installed' not in stdout:
+            res.Execute('yum -y install wget')
+            res.Execute('wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
+            res.Execute('yum -y install epel-release-latest-7.noarch.rpm')
+    if clean:
+        res.Execute('yum clean all')
+
+
+def extra_redhat_repos():
+    """
+    Enable additional redhat repositories needed by some
+    select components
+    """
+    rh = is_true_redhat()
+    if rh:
+        for repo in ['rhui-REGION-rhel-server-optional',
+                     'rhui-REGION-rhel-server-extras',
+                     'rhui-REGION-rhel-server-source-optional',
+                     'rhui-REGION-rhel-server-releases-source']:
+            res.Execute('yum-config-manager --enable ' + repo)
+    return rh
+
+
 class ApacheScript(res.Script):
     """
     Common script class for apache web pages
@@ -321,7 +364,6 @@ class ApacheScript(res.Script):
 
     def configure(self, env):
         import params
-        import os
 
         env.set_params(params)
         res.Execute('chkconfig httpd on')

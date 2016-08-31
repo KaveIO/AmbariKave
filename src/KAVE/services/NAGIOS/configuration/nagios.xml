@@ -264,11 +264,11 @@ include_dir=/etc/nrpe.d/</value>
 
 use                             linux-server
 
-host_name                       client
+host_name                       {{nagios_host}}
 
-alias                           client
+alias                           {{nagios_host}}
 
-address                         {{nagios_monitor_hosts}}
+address                         {{nagios_host_address}}
 
 
 max_check_attempts              5
@@ -277,7 +277,8 @@ check_period                    24x7
 
 notification_interval           30
 
-notification_period             24x7</value>
+notification_period             24x7
+}</value>
         <description>nagios client file</description>
     </property>
     <property>

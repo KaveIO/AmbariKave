@@ -31,6 +31,7 @@ class Nagios(ApacheScript):
         self.install_packages(env)
         Execute('yum -y install nrpe')
         Execute('yum -y install nagios-plugins-all')
+        Execute('yum -y install nagios-plugins-nrpe')
         Execute('yum -y install openssl')
         self.configure(env)
 

@@ -45,6 +45,8 @@ ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
 """)
 
+nagios_host = default("/clusterHostInfo/nagios_server_hosts", [False])[0]
+nagios_host_address = socket.gethostbyname(nagios_host)
 
 nagios_admin_password = config['configurations']['nagios']['nagios_admin_password']
 Logger.sensitive_strings[nagios_admin_password] = "[PROTECTED]"
@@ -252,7 +254,7 @@ nrpe_group=nrpe
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
 #allowed_hosts=127.0.0.1
-allowed_hosts=127.0.0.1 {{hostname}}
+allowed_hosts=127.0.0.1 {{nagios_host_address}}
 
 
 
@@ -405,11 +407,11 @@ define host{
 
 use                             linux-server
 
-host_name                       client
+host_name                       {{nagios_host}}
 
-alias                           client
+alias                           {{nagios_host}}
 
-address                         {{nagios_monitor_hosts}}
+address                         {{nagios_host_address}}
 
 
 max_check_attempts              5
@@ -419,4 +421,5 @@ check_period                    24x7
 notification_interval           30
 
 notification_period             24x7
+}
 """)

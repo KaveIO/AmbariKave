@@ -27,6 +27,7 @@ class NagiosClient(Script):
         import params
         env.set_params(params)
         self.install_packages(env)
+        kc.install_epel()
         Execute('yum -y install nrpe')
         Execute('yum -y install nagios-plugins-all')
         Execute('yum -y install openssl')

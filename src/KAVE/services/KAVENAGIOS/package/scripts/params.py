@@ -26,16 +26,16 @@ import kavecommon as kc
 config = Script.get_config()
 
 hostname = config["hostname"]
-nagios_passwd_file = "/etc/nagios/passwd"
-www_folder = default('configurations/nagios/www_folder', '/var/www/html/')
-PORT = default('configurations/nagios/PORT', '80')
-servername = default('configurations/nagios/servername', hostname)
+nagios_passwd_file = "/etc/kavenagios/passwd"
+www_folder = default('configurations/kavenagios/www_folder', '/var/www/html/')
+PORT = default('configurations/kavenagios/PORT', '80')
+servername = default('configurations/kavenagios/servername', hostname)
 if servername == "hostname":
     servername = hostname
 
-nagios_monitor_hosts = default('/clusterHostInfo/nagios_monitor_hosts', ['unknown'])
+nagios_monitor_hosts = default('/clusterHostInfo/kavenagios_monitor_hosts', ['unknown'])
 
-template_000_default = default('configurations/nagios/template_000_default', """
+template_000_default = default('configurations/kavenagios/template_000_default', """
 # Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
@@ -46,21 +46,21 @@ ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
 """)
 
-nagios_host = default("/clusterHostInfo/nagios_server_hosts", [False])[0]
+nagios_host = default("/clusterHostInfo/kavenagios_server_hosts", [False])[0]
 nagios_host_address = socket.gethostbyname(nagios_host)
 
 nagios_slave_dict = {}
 if nagios_monitor_hosts != ['unknown']:
     nagios_slave_dict = {shost: socket.gethostbyname(shost) for shost in nagios_monitor_hosts}
 
-nagios_admin_password = config['configurations']['nagios']['nagios_admin_password']
+nagios_admin_password = config['configurations']['kavenagios']['nagios_admin_password']
 Logger.sensitive_strings[nagios_admin_password] = "[PROTECTED]"
 
-nagios_admin_email = default('configurations/nagios/nagios_admin_email', 'default')
+nagios_admin_email = default('configurations/kavenagios/nagios_admin_email', 'default')
 if nagios_admin_email is None or not len(nagios_admin_email) or nagios_admin_email == 'default':
     nagios_admin_email = 'nagiosadmin@' + nagios_host
 
-nagios_clients_file = default('configurations/nagios/nagios_clients_file', """
+nagios_clients_file = default('configurations/kavenagios/nagios_clients_file', """
 {% for ahost, anip in nagios_slave_dict.iteritems() %}define host{
 
 use                             linux-server
@@ -150,7 +150,7 @@ Alias /nagios "/usr/share/nagios/html"
    </IfModule>
 </Directory>""")
 
-nagios_contacts_file = default('configurations/nagios/nagios_contacts_file', """
+nagios_contacts_file = default('configurations/kavenagios/nagios_contacts_file', """
 ##############################################################################
 # CONTACTS.CFG - SAMPLE CONTACT/CONTACTGROUP DEFINITIONS
 #
@@ -207,7 +207,7 @@ define contactgroup{
         members                 nagiosadmin
         }""")
 
-nagios_client_nrpe_file = default('configurations/nagios/nagios_client_nrpe_file', """
+nagios_client_nrpe_file = default('configurations/kavenagios/nagios_client_nrpe_file', """
 ############################################################################
 # Sample NRPE Config File
 # Written by: Ethan Galstad (nagios@nagios.org)

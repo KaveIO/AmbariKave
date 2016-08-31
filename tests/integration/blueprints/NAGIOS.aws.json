@@ -12,22 +12,16 @@
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "test",
-    "Count" : -1,
+    "Count" : 1,
     "InstanceType" : "m4.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" } ]
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "ci",
-    "Count" : -1,
+    "Count" : 1,
     "InstanceType" : "m4.large",
     "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" } ]
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   }
   ]
 }

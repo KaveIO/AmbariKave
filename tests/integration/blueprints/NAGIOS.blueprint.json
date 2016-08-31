@@ -39,7 +39,7 @@
         { "name" : "NAGIOS_SERVER"     },
         { "name" : "NAGIOS_MONITOR"     }
       ],
-      "cardinality" : "0-10"
+      "cardinality" : "1+"
     },
     {
       "name" : "ci",
@@ -49,7 +49,7 @@
         { "name" : "ZOOKEEPER_CLIENT"  },
         { "name" : "NAGIOS_MONITOR"    }
       ],
-      "cardinality" : "0-10"
+      "cardinality" : "1+"
     }
   ],
   "Blueprints" : {

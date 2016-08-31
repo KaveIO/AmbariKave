@@ -17,7 +17,16 @@
                         <timeout>600</timeout>
                     </commandScript>
                 </component>
-
+	            <component>
+	                <name>NAGIOS_MONITOR</name>
+	                <displayName>Nagios Monitor</displayName>
+	                <category>SLAVE</category>
+	                <cardinality>1+</cardinality>
+	                <commandScript>
+	                    <script>scripts/nagios_client.py</script>
+	                    <scriptType>PYTHON</scriptType>
+	                    <timeout>600</timeout>
+	                </commandScript>
             </components>
            <osSpecifics>
                 <osSpecific>

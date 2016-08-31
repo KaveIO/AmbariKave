@@ -31,12 +31,23 @@
       "cardinality" : "1"
     },
     {
+      "name" : "nagiosserver",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  },
+        { "name" : "NAGIOS_SERVER"     },
+        { "name" : "NAGIOS_MONITOR"     }
+      ],
+      "cardinality" : "0-10"
+    },
+    {
       "name" : "ci",
       "configurations" : [ ],
       "components" : [
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
-        { "name" : "NAGIOS_SERVER"     }
+        { "name" : "NAGIOS_MONITOR"    }
       ],
       "cardinality" : "0-10"
     }

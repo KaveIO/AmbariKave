@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>KAVENAGIOS</name>
+            <comment>NAGIOS monitoring tool, nagios is used to monitor and issue
+            email warnings in the case of issues on the host</comment>
+            <displayName>KaveNagios</displayName>
+            <components>
+                  <component>
+                    <name>KAVENAGIOS_SERVER</name>
+                    <displayName>Kave Nagios Server</displayName>
+                    <category>MASTER</category>
+	                <cardinality>1</cardinality>
+                    <commandScript>
+                        <script>scripts/nagios.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>600</timeout>
+                    </commandScript>
+                  </component>
+	            <component>
+	                <name>KAVENAGIOS_MONITOR</name>
+	                <displayName>KaveNagios Monitor</displayName>
+	                <category>SLAVE</category>
+	                <cardinality>1+</cardinality>
+	                <commandScript>
+	                    <script>scripts/nagios_client.py</script>
+	                    <scriptType>PYTHON</scriptType>
+	                    <timeout>600</timeout>
+	                </commandScript>
+	              </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>rrdtool</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

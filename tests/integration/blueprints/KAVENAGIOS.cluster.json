@@ -1,0 +1,23 @@
+{
+    "blueprint" : "kavenagios",
+    "default_password" : "admin",
+    "configurations" : [
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "test",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "test-001.kave.io" } ]
+	},
+	{
+	    "name" : "ci",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "ci-001.kave.io" } ]
+	}
+	]
+}

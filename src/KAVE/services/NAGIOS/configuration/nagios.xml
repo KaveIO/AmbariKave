@@ -30,6 +30,49 @@
         <description>Where to put the web files?</description>
     </property>
     <property>
+        <name>nagios_admin_email</name>
+        <value>default</value>
+        <description>email id to receive updates regarding nagios</description>
+    </property>
+
+    <property>
+        <name>nagios_clients_file</name>
+        <value>{% for ahost, anip in nagios_slave_dict.iteritems() %}define host{
+
+use                             linux-server
+
+host_name                       {{ahost}}
+
+alias                           {{ahost}}
+
+address                         {{anip}}
+
+max_check_attempts              5
+
+check_period                    24x7
+
+notification_interval           30
+
+notification_period             24x7
+}
+{% endfor %}</value>
+        <description>nagios client file</description>
+    </property>
+    <property>
+        <name>template_000_default</name>
+        <value># Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+RequestHeader unset Proxy early
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+        </value>
+        <description>In order to ensure the general apache settings we make are picked up, such as the port number, we create 0000_default.conf in the apache directory
+        Advanced users will want to edit this manually.</description>
+    </property>
+    <property>
         <name>nagios_client_nrpe_file</name>
         <value>############################################################################
 # Sample NRPE Config File
@@ -259,44 +302,6 @@ include_dir=/etc/nrpe.d/</value>
         <description>file for client nrpe configuration</description>
     </property>
     <property>
-        <name>nagios_clients_file</name>
-        <value>define host{
-
-use                             linux-server
-
-host_name                       {{nagios_host}}
-
-alias                           {{nagios_host}}
-
-address                         {{nagios_host_address}}
-
-
-max_check_attempts              5
-
-check_period                    24x7
-
-notification_interval           30
-
-notification_period             24x7
-}</value>
-        <description>nagios client file</description>
-    </property>
-    <property>
-        <name>template_000_default</name>
-        <value># Created automatically with Ambari
-# All manual changes will be undone in the case of a server restart
-# Edit the template through the Ambari interface instead
-TraceEnable Off
-RequestHeader unset Proxy early
-Listen {{PORT}}
-ServerName "{{servername}}"
-DocumentRoot "{{www_folder}}"
-        </value>
-        <description>In order to ensure the general apache settings we make are picked up, such as the port number, we create 0000_default.conf in the apache directory
-        Advanced users will want to edit this manually.</description>
-    </property>
-
-    <property>
         <name>nagios_conf_file</name>
         <value># SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
@@ -368,11 +373,6 @@ Alias /nagios "/usr/share/nagios/html"
         <description>configuration file for nagios</description>
     </property>
 
-    <property>
-        <name>nagios_admin_email</name>
-        <value>dna@kpmglab.com</value>
-        <description>email id to receive updates regarding nagios</description>
-    </property>
     <property>
         <name>nagios_contacts_file</name>
         <value>##############################################################################

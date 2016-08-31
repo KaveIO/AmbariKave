@@ -48,11 +48,41 @@ DocumentRoot "{{www_folder}}"
 nagios_host = default("/clusterHostInfo/nagios_server_hosts", [False])[0]
 nagios_host_address = socket.gethostbyname(nagios_host)
 
+nagios_slave_dict = {}
+if nagios_monitor_hosts != ['unknown']:
+    nagios_slave_dict = {shost: socket.gethostbyname(shost) for shost in nagios_monitor_hosts}
+
 nagios_admin_password = config['configurations']['nagios']['nagios_admin_password']
 Logger.sensitive_strings[nagios_admin_password] = "[PROTECTED]"
 
-nagios_admin_email = default('configurations/nagios/nagios_admin_email', 'dna@kpmglab.com')
-nagios_conf_file = default('configurations/nagios/nagios_conf_file', """# SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
+nagios_admin_email = default('configurations/nagios/nagios_admin_email', 'default')
+if nagios_admin_email is None or not len(nagios_admin_email) or nagios_admin_email == 'default':
+    nagios_admin_email = 'nagiosadmin@' + nagios_host
+
+nagios_clients_file = default('configurations/nagios/nagios_clients_file', """
+{% for ahost, anip in nagios_slave_dict.iteritems() %}define host{
+
+use                             linux-server
+
+host_name                       {{ahost}}
+
+alias                           {{ahost}}
+
+address                         {{anip}}
+
+max_check_attempts              5
+
+check_period                    24x7
+
+notification_interval           30
+
+notification_period             24x7
+}
+{% endfor %}""")
+
+
+nagios_conf_file = default('configurations/nagios/nagios_conf_file', """
+# SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
 # This file contains examples of entries that need
 # to be incorporated into your Apache web server
@@ -118,7 +148,9 @@ Alias /nagios "/usr/share/nagios/html"
       Require valid-user
    </IfModule>
 </Directory>""")
-nagios_contacts_file = default('configurations/nagios/nagios_contacts_file', """##############################################################################
+
+nagios_contacts_file = default('configurations/nagios/nagios_contacts_file', """
+##############################################################################
 # CONTACTS.CFG - SAMPLE CONTACT/CONTACTGROUP DEFINITIONS
 #
 #
@@ -400,26 +432,4 @@ command[check_total_procs]=/usr/lib64/nagios/plugins/check_procs -w 150 -c 200
 # .cfg extension) in one or more directories (with recursion).
 
 include_dir=/etc/nrpe.d/
-""")
-
-nagios_clients_file = default('configurations/nagios/nagios_clients_file', """
-define host{
-
-use                             linux-server
-
-host_name                       {{nagios_host}}
-
-alias                           {{nagios_host}}
-
-address                         {{nagios_host_address}}
-
-
-max_check_attempts              5
-
-check_period                    24x7
-
-notification_interval           30
-
-notification_period             24x7
-}
 """)

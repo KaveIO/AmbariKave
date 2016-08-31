@@ -1,5 +1,5 @@
 {
-    "blueprint" : "nagios",
+    "blueprint" : "kavenagios",
     "default_password" : "admin",
     "configurations" : [
     ],

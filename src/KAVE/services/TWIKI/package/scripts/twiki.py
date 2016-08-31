@@ -26,7 +26,7 @@ class Twiki(ApacheScript):
     def install(self, env):
         import params
         import kavecommon as kc
-
+        kc.extra_redhat_repos()
         super(Twiki, self).install(env)
         env.set_params(params)
         kc.copy_cache_or_repo('TWiki-6.0.0.zip', arch='noarch')

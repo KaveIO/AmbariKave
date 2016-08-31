@@ -35,7 +35,8 @@ if servername == "hostname":
 
 nagios_monitor_hosts = default('/clusterHostInfo/nagios_monitor_hosts', ['unknown'])
 
-template_000_default = default('configurations/nagios/template_000_default', """# Created automatically with Ambari
+template_000_default = default('configurations/nagios/template_000_default', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off

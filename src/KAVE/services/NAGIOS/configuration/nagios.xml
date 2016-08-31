@@ -72,7 +72,8 @@ Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
         </value>
-        <description>In order to ensure the general apache settings we make are picked up, such as the port number, we create 0000_default.conf in the apache directory
+        <description>In order to ensure the general apache settings we make are picked up, such as the port number,
+        we create 0000_default.conf in the apache directory
         Advanced users will want to edit this manually.</description>
     </property>
     <property>

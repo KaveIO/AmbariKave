@@ -36,6 +36,7 @@ class Nagios(ApacheScript):
         Execute('yum -y install nagios')
         Execute('yum -y install nagios-plugins')
         Execute('yum -y install nagios-plugins-all')
+        Execute('yum -y install nagios-plugins-nrpe')
         self.configure(env)
 
     def configure(self, env):

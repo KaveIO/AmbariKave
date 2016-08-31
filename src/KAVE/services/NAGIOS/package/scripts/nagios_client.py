@@ -18,20 +18,17 @@
 import os
 import subprocess
 from resource_management import *
-from kavecommon import ApacheScript
 
 
-class Nagios(ApacheScript):
+class Nagios(Script):
     nagios_client_nrpe_file = "/etc/nagios/nrpe.cfg"
 
     def install(self, env):
         import params
-        super(Nagios, self).install(env)
         env.set_params(params)
         self.install_packages(env)
         Execute('yum -y install nrpe')
         Execute('yum -y install nagios-plugins-all')
-        Execute('yum -y install nagios-plugins-nrpe')
         Execute('yum -y install openssl')
         self.configure(env)
 
@@ -48,17 +45,14 @@ class Nagios(ApacheScript):
     def start(self, env):
         import params
         env.set_params(params)
-        super(Nagios, self).start(env)
         Execute('service nrpe start')
         Execute('chkconfig nrpe on')
 
     def stop(self, env):
         Execute("service nrpe stop")
-        super(Nagios, self).stop(env)
 
     def status(self, env):
         Execute("service nagios status")
-        super(Nagios, self).status(env)
 
 if __name__ == "__main__":
     Nagios().execute()

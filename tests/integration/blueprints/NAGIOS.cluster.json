@@ -13,7 +13,7 @@
 	    "name" : "nagiosserver",
 	    "configurations" : [   ],
 	    "hosts" : [ { "fqdn" : "nagiosserver-001.kave.io" } ]
-	}
+	},
 	{
 	    "name" : "ci",
 	    "configurations" : [   ],

@@ -24,7 +24,7 @@ from kavecommon import ApacheScript
 class Nagios(ApacheScript):
     nagios_conf_file = "/etc/httpd/conf.d/nagios.conf"
     nagios_contacts_file = "/etc/nagios/objects/contacts.cfg"
-    nagios_clients_file = "/etc/nagios/servers/clients.cfg"
+    nagios_clients_file = "/etc/nagios/conf.d/clients.cfg"
 
     def install(self, env):
         import params

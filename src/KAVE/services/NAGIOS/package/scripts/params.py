@@ -180,8 +180,8 @@ nagios_contacts_file = default('configurations/nagios/nagios_contacts_file', """
 
 define contact{
         contact_name                    nagiosadmin             ; Short name of user
-        use                             generic-contact         ; Inherit
-        default values from generic-contact template (defined above)
+        use                             generic-contact
+        ; Inherit default values from generic-contact template (defined above)
         alias                           Nagios Admin            ; Full name of user
 
         email                           {{nagios_admin_email}}        ; Email Address

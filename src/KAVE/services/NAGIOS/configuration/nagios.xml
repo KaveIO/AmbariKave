@@ -32,7 +32,9 @@
     <property>
         <name>nagios_admin_email</name>
         <value>default</value>
-        <description>email id to receive updates regarding nagios</description>
+        <description>email id to receive updates regarding nagios
+        default will resolve to nagiosadmin@hostname
+        </description>
     </property>
 
     <property>
@@ -56,7 +58,8 @@ notification_interval           30
 notification_period             24x7
 }
 {% endfor %}</value>
-        <description>nagios client file</description>
+        <description>nagios client file, used by the nagios server to
+        find all nagios clients</description>
     </property>
     <property>
         <name>template_000_default</name>
@@ -74,7 +77,8 @@ DocumentRoot "{{www_folder}}"
     </property>
     <property>
         <name>nagios_client_nrpe_file</name>
-        <value>############################################################################
+        <value>
+############################################################################
 # Sample NRPE Config File
 # Written by: Ethan Galstad (nagios@nagios.org)
 #
@@ -303,7 +307,8 @@ include_dir=/etc/nrpe.d/</value>
     </property>
     <property>
         <name>nagios_conf_file</name>
-        <value># SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
+        <value>
+# SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
 # This file contains examples of entries that need
 # to be incorporated into your Apache web server
@@ -375,7 +380,8 @@ Alias /nagios "/usr/share/nagios/html"
 
     <property>
         <name>nagios_contacts_file</name>
-        <value>##############################################################################
+        <value>
+##############################################################################
 # CONTACTS.CFG - SAMPLE CONTACT/CONTACTGROUP DEFINITIONS
 #
 #
@@ -405,7 +411,8 @@ Alias /nagios "/usr/share/nagios/html"
 
 define contact{
         contact_name                    nagiosadmin             ; Short name of user
-        use                             generic-contact         ; Inherit default values from generic-contact template (defined above)
+        use                             generic-contact
+        ; Inherit default values from generic-contact template (defined above)
         alias                           Nagios Admin            ; Full name of user
 
         email                           {{nagios_admin_email}}        ; Email Address

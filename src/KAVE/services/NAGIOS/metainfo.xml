@@ -35,7 +35,6 @@
                 <osSpecific>
                     <osFamily>any</osFamily>
                     <packages>
-                        <package><name>httpd</name></package>
                         <package><name>rrdtool</name></package>
                     </packages>
                 </osSpecific>

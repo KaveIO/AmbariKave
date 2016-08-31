@@ -19,6 +19,7 @@ import os
 import subprocess
 from resource_management import *
 from kavecommon import ApacheScript
+import kavecommon as kc
 
 
 class Nagios(ApacheScript):
@@ -31,8 +32,8 @@ class Nagios(ApacheScript):
         super(Nagios, self).install(env)
         env.set_params(params)
         self.install_packages(env)
-        Execute('yum -y install epel-release')
-        Execute('yum clean all')
+        Package('httpd')
+        kc.install_epel()
         Execute('yum -y install nagios')
         Execute('yum -y install nagios-plugins')
         Execute('yum -y install nagios-plugins-all')

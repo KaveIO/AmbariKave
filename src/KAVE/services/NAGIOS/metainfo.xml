@@ -7,7 +7,7 @@
             <comment>NAGIOS  monitoring tool</comment>
             <displayName>Nagios</displayName>
             <components>
-                    <component>
+                  <component>
                     <name>NAGIOS_SERVER</name>
                     <displayName>nagios server</displayName>
                     <category>MASTER</category>
@@ -16,7 +16,7 @@
                         <scriptType>PYTHON</scriptType>
                         <timeout>600</timeout>
                     </commandScript>
-                </component>
+                  </component>
 	            <component>
 	                <name>NAGIOS_MONITOR</name>
 	                <displayName>Nagios Monitor</displayName>
@@ -27,6 +27,7 @@
 	                    <scriptType>PYTHON</scriptType>
 	                    <timeout>600</timeout>
 	                </commandScript>
+	              </component>
             </components>
            <osSpecifics>
                 <osSpecific>

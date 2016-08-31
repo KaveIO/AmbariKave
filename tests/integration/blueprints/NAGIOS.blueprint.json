@@ -31,7 +31,7 @@
       "cardinality" : "1"
     },
     {
-      "name" : "nagiosserver",
+      "name" : "test",
       "configurations" : [ ],
       "components" : [
         { "name" : "METRICS_MONITOR"   },

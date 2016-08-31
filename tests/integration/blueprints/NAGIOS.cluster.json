@@ -10,9 +10,9 @@
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
 	},
 	{
-	    "name" : "nagiosserver",
+	    "name" : "test",
 	    "configurations" : [   ],
-	    "hosts" : [ { "fqdn" : "nagiosserver-001.kave.io" } ]
+	    "hosts" : [ { "fqdn" : "test-001.kave.io" } ]
 	},
 	{
 	    "name" : "ci",

@@ -82,7 +82,7 @@ notification_period             24x7
 {% endfor %}""")
 
 
-nagios_conf_file = default('configurations/nagios/nagios_conf_file', """
+nagios_conf_file = default('configurations/kavenagios/nagios_conf_file', """
 # SAMPLE CONFIG SNIPPETS FOR APACHE WEB SERVER
 #
 # This file contains examples of entries that need

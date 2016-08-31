@@ -20,7 +20,7 @@ import subprocess
 from resource_management import *
 
 
-class Nagios(Script):
+class NagiosClient(Script):
     nagios_client_nrpe_file = "/etc/nagios/nrpe.cfg"
 
     def install(self, env):
@@ -40,8 +40,6 @@ class Nagios(Script):
              mode=0755
              )
 
-        super(Nagios, self).configure(env)
-
     def start(self, env):
         import params
         env.set_params(params)
@@ -55,4 +53,4 @@ class Nagios(Script):
         Execute("service nagios status")
 
 if __name__ == "__main__":
-    Nagios().execute()
+    NagiosClient().execute()

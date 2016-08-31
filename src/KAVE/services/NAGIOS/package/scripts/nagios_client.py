@@ -50,7 +50,7 @@ class NagiosClient(Script):
         Execute("service nrpe stop")
 
     def status(self, env):
-        Execute("service nagios status")
+        Execute("service nrpe status")
 
 if __name__ == "__main__":
     NagiosClient().execute()

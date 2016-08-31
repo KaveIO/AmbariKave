@@ -11,6 +11,7 @@
                     <name>NAGIOS_SERVER</name>
                     <displayName>nagios server</displayName>
                     <category>MASTER</category>
+	                <cardinality>1</cardinality>
                     <commandScript>
                         <script>scripts/nagios.py</script>
                         <scriptType>PYTHON</scriptType>

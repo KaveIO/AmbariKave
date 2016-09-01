@@ -30,46 +30,50 @@ For <= 100 GB static input data, consider a single large VM
                             ([0.3, 4, 0, 0, 0, 0], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-1     ambari      1       2         6                0.0               40
-2  datanodes      3       8        36                1.0               30
-3  namenodes      2       8        32                0.0               70
-4   gateways      1       8        32                0.1              330
-       TOTAL      7      50       210                3.1              600
+1     ambari      1       2         6                0.0               50
+2        ipa      1       1         3                0.0               20
+3  datanodes      3       8        36                1.0               30
+4  namenodes      2       8        32                0.0               70
+5   gateways      1       8        32                0.1              330
+       TOTAL      8      51       213                3.1              630
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----"""),
                             ([1, 1, 0, 0, 0, 0], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-1     ambari      1       2         6                0.0               40
-2  datanodes      3      16        72                3.0               30
-3  namenodes      2       8        32                0.0               70
-4   gateways      1       8        32                0.1              130
-       TOTAL      7      74       318                9.1              400
+1     ambari      1       2         6                0.0               50
+2        ipa      1       1         3                0.0               20
+3  datanodes      3      16        72                3.0               30
+4  namenodes      2       8        32                0.0               70
+5   gateways      1       8        32                0.1              130
+       TOTAL      8      75       321                9.1              430
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----"""),
                             ([1, 1, 1, 1, 1, 1, 1], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-1     ambari      1       2         6                0.0               40
-2  datanodes      3      16        72                3.0               30
-3  namenodes      2       8        32                0.0               70
-4   gateways      1       8        32                0.1              130
-5      mongo      1       2         4                0.0              130
-6  storm-wrk      1       4        16                0.0               30
-7     nimbus      1       2         4                0.0               30
-8        dev      1       2         8                0.1              130
-9      jboss      1       2         4                0.0               20
-       TOTAL     12      86       354                9.2              740
+1     ambari      1       2         6                0.0               50
+2        ipa      1       1         3                0.0               20
+3  datanodes      3      16        72                3.0               30
+4  namenodes      2       8        32                0.0               70
+5   gateways      1       8        32                0.1              130
+6      mongo      1       2         4                0.0              130
+7  storm-wrk      1       4        16                0.0               30
+8     nimbus      1       2         4                0.0               30
+9        dev      1       2         8                0.1              130
+10     jboss      1       2         4                0.0               20
+       TOTAL     13      87       357                9.2              770
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----"""),
                             ([8, 8, 0, 0, 0, 0], """
 ------------------- Guess Reasonable Specs --------------------------------
         name  count  vcores  ram / GB  jbod_storage / TB  other_disk / GB
-1     ambari      1       2         6                0.0               40
-2  datanodes      4      64       256               16.0               30
-3  namenodes      2      32       128                0.0               70
-4   gateways      1      12        48                0.1              500
-       TOTAL      8     334      1334               64.1              800
+1     ambari      1       2         6                0.0               50
+2        ipa      1       1         3                0.0               20
+3  datanodes      4      64       256               16.0               30
+4  namenodes      2      32       128                0.0               70
+5   gateways      1      12        48                0.1              500
+       TOTAL      9     335      1337               64.1              830
 -----------------  Most relevant example blueprints  ----------------------
 ---- (don't forget to modify and test, especially modifying passwords) ----""")]
 

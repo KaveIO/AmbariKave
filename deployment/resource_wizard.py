@@ -199,6 +199,12 @@ def ambari_node(multinode, data_scientists, amb_cores=2, amb_nodes=1, amb_ram=6)
         return virtual_machine('os', 1, 1, 2, 0, 20)
 
 
+def ipa_node(multinode, ipa_cores=1, ipa_nodes=1, ipa_ram=3.5):
+    if multinode:
+        return virtual_machine('ipa', ipa_nodes, ipa_cores, ipa_ram, 0, 20)
+    return None
+
+
 def hadoop_nodes(data, multinode):
     global nncores
     global hadoop_nodes
@@ -371,6 +377,10 @@ if __name__ == '__main__':
     # ambari:
     if multinode or ds == 0:
         result_cluster.machines.append(ambari_node(multinode, ds))
+
+    # ambari:
+    if multinode:
+        result_cluster.machines.append(ipa_node(multinode))
 
     if hadoop or data > 0.1:
         for line in hadoop_nodes(data, multinode):

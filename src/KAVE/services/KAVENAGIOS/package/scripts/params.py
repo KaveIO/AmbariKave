@@ -26,7 +26,7 @@ import kavecommon as kc
 config = Script.get_config()
 
 hostname = config["hostname"]
-nagios_passwd_file = "/etc/kavenagios/passwd"
+nagios_passwd_file = "/etc/nagios/passwd"
 www_folder = default('configurations/kavenagios/www_folder', '/var/www/html/')
 PORT = default('configurations/kavenagios/PORT', '80')
 servername = default('configurations/kavenagios/servername', hostname)

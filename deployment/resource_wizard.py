@@ -194,7 +194,7 @@ def is_multinode_needed(hadoop, storm, storm_slots=0):
 def ambari_node(multinode, data_scientists, amb_cores=2, amb_nodes=1, amb_ram=6):
     if multinode:
         return virtual_machine('ambari', amb_nodes * multinode + 1 * (data_scientists == 0),
-                               amb_cores * multinode, amb_ram * multinode, 0, 40)
+                               amb_cores * multinode, amb_ram * multinode, 0, 50)
     if data_scientists == 0:
         return virtual_machine('os', 1, 1, 2, 0, 20)
 

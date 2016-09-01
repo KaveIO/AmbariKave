@@ -25,7 +25,7 @@ class TestAmbariKaveRelease(base.LDTest):
     checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE',
                  '/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE'
                  '/services/JENKINS/package/scripts/kavecommon.py']
-    ostype = "Centos6"
+    ostype = "Centos7"
 
     def runTest(self):
         """

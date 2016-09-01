@@ -24,7 +24,7 @@ class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
     checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
                  '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
-    ostype = "Centos6"
+    ostype = "Centos7"
     workstation = True
 
     def deploy_ktb(self, ambari):

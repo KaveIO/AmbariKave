@@ -62,11 +62,11 @@ class Archiva(Script):
 
     def start(self, env):
         self.configure(env)
-
+        # stop needed otherwise start fails on RH7
         try:
             Execute('service archiva stop')
         except:
-            Execute('service archiva start > /dev/null')
+            pass
 
         Execute('service archiva start > /dev/null')
 

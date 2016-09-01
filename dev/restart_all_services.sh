@@ -105,7 +105,7 @@ if [[ "$allnames" == *"FREEIPA"* ]]; then
 	echo "sleeping for 70 seconds, (heartbeat duration)"
 	sleep 30
 	# manual start to ensure the correct ordering
-	service ipa start
+	pdsh -R ssh -g $cluster service ipa start
 	sleep 40
 	curl --retry 5  -i -X PUT -d '{"RequestInfo":{"context":"Starting '$service'"},"Body":{"ServiceInfo":{"state":"STARTED"}}}' --netrc http://$ambari:8080/api/v1/clusters/$cluster/services/$service -H "X-Requested-By:ambari"
 	echo "sleeping for 70 seconds (heartbeat duration)"

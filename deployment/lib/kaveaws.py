@@ -442,7 +442,7 @@ class _add_ebs_volumesThread(threading.Thread):
                 self.errors.append(str(e) + " " + str(err1) + " " + str(err2) + "\n" + str(err3) + "\n" + str(self.cur))
 
 
-def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
+def add_ebs_volumes(iids, mounts, access_key, nthreads=10):
     """
     Add a lot of EBS volumes in parallel with threading
     iid, list of iids,

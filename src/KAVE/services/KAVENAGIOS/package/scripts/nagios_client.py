@@ -18,6 +18,7 @@
 import os
 import subprocess
 from resource_management import *
+import kavecommon as kc
 
 
 class NagiosClient(Script):

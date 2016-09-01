@@ -24,8 +24,6 @@ import kavecommon as kc
 config = Script.get_config()
 
 hostname = config["hostname"]
-name = hostname
-kc.is_valid_hostname(name)
 
 short_host = config["hostname"].split('.')[0]
 

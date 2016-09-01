@@ -29,11 +29,11 @@ JENKINS_USER = default("configurations/jenkins/JENKINS_USER", "jenkins")
 JENKINS_ADMIN = default("configurations/jenkins/JENKINS_ADMIN", "admin")
 JENKINS_ADMIN_EMAIL = default("configurations/jenkins/JENKINS_ADMIN_EMAIL", "default")
 
-email = JENKINS_ADMIN_EMAIL
-kc.is_valid_emailid(email)
 
 if JENKINS_ADMIN_EMAIL == 'default':
     JENKINS_ADMIN_EMAIL = JENKINS_ADMIN + '@' + '.'.join(hostname.split('.')[1:])
+
+kc.is_valid_emailid(JENKINS_ADMIN_EMAIL, 'jenkins/JENKINS_ADMIN_EMAIL')
 
 
 JENKINS_ADMIN_PASSWORD = config['configurations']['jenkins']['JENKINS_ADMIN_PASSWORD']

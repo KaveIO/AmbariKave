@@ -6,9 +6,7 @@ Contains a list of the released versions with a summary of the main changes in e
 # Beta Releases
 
 # v2.2-Beta
-- Sept 2016
 
-Minor release with significant improvements, new services and support of centos6 centos7 and redhat7
 This may be one of the last versions with centos6 support. More than 100 independent improvements made since 2.1
 
 **Important information:**

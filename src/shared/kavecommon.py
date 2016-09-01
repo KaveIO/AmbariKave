@@ -21,7 +21,9 @@ This file will be copied to the scripts directory of each service we have added
 to use in your service, import kavecommon as kc
 """
 import os
+import re
 import shutil
+import socket
 import subprocess as sub
 from pwd import getpwnam
 from grp import getgrnam
@@ -309,6 +311,99 @@ def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 5
     s.mount('http://', HTTPAdapter(max_retries=retries))
     s.mount('https://', HTTPAdapter(max_retries=retries))
     return s
+
+
+def is_valid_directory(dirname, toplevel=True, paramname=''):
+    dirname = dirname.replace('//', '/')
+    if not (len(dirname) > 3):
+        raise ValueError("You have made too small a directory name set a directory incorrectly! "
+                         + dirname
+                         + ' ' + paramname)
+    for c in ':`"' + "'" + ";|*":
+        if c in dirname:
+            raise ValueError("you have added a special character to your directory name. "
+                             + dirname
+                             + ' ' + paramname)
+    if toplevel and not dirname.startswith('/'):
+        raise ValueError("top level directories must start with a /. "
+                         + dirname
+                         + ' ' + paramname)
+    if toplevel and dirname.count('/') < 2:
+        raise ValueError("Directories must contain two /. "
+                         + dirname
+                         + ' ' + paramname)
+
+
+def is_valid_username(user, paramname=''):
+    for c in '/:`"' + "'" + ";|*":
+        if c in user:
+            raise ValueError("you have added a special character to your user name. "
+                             + user
+                             + ' ' + paramname)
+    if user.lower() != user:
+        raise NameError("The user needs to contain only lower case alphabets "
+                        + user
+                        + ' ' + paramname)
+
+
+def is_valid_port(portnum, paramname=''):
+    try:
+        portnum = int(portnum)
+    except (ValueError, TypeError):
+        raise ValueError("A portnum must be an integer "
+                         + str(portnum)
+                         + ' ' + paramname)
+    if portnum < 10 or portnum > 100000:
+        raise ValueError("A portnum must be a port, range 10-100,000 "
+                         + str(portnum)
+                         + ' ' + paramname)
+
+
+def is_valid_emailid(email, paramname=''):
+
+    if '@' not in email or '.' not in email.split('@')[-1]:
+        raise ValueError("not a valid email ID "
+                         + email
+                         + ' ' + paramname)
+    for c in '"; ' + "'":
+        if c in email:
+            raise ValueError("you have added a special character to your email "
+                             + email
+                             + ' ' + paramname)
+
+
+def is_valid_ipv4_address(address, paramname=''):
+    if address.count('.') < 3:
+        raise ValueError("Not a valid IP address "
+                         + str(address)
+                         + ' ' + paramname)
+    for level in address.split("."):
+        try:
+            int(level)
+        except (ValueError, TypeError):
+            raise ValueError("Not a valid IP address "
+                             + str(address)
+                             + ' ' + paramname)
+
+
+def is_valid_hostname(name, paramname=''):
+    if name.lower() != name:
+        raise NameError("The hostname needs to contain only lower case alphabets "
+                        + name
+                        + ' ' + paramname)
+    for c in '!?" ' + "'":
+        if c in name:
+            raise ValueError("you have added a special character to your host name. "
+                             + name
+                             + ' ' + paramname)
+
+
+def is_upper_case(name, paramname=''):
+    matches = re.match(r"^[A-Z]*$", name)
+    if matches is None:
+        raise ValueError("This needs to be upper case "
+                         + name
+                         + ' ' + paramname)
 
 
 def install_epel(clean=True):

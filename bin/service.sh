@@ -142,6 +142,9 @@ function runConfigureService {
     JENKINS)
 	buildConfiguration jenkins JENKINS_ADMIN_PASSWORD
       ;;
+    KAVENAGIOS)
+	buildConfiguration kavenagios nagios_admin_password
+      ;;
   esac
 }
 
@@ -170,6 +173,7 @@ function runList {
   echo "Known services:"
   echo "	GITLAB"
   echo "	KAVEGANGLIA"
+  echo "	KAVENAGIOS"
   echo "	FREEIPA"
   echo "	KAVETOOLBOX"
   echo "	KAVELANDING"
@@ -302,6 +306,11 @@ elif [ $service = "TWIKI" ]; then
   component="TWIKI_SERVER"
 elif [ $service = "NAGIOS" ]; then
   component="NAGIOS_SERVER"
+elif [ $service = "KAVENAGIOS" ]; then
+  component="KAVENAGIOS_SERVER"
+elif [ $service = "KAVENAGIOS_MONITOR" ]; then
+  service="KAVENAGIOS"
+  component="KAVENAGIOS_MONITOR"
 elif [ $service = "AMBARI_METRICS" ]; then
   component="METRICS_COLLECTOR"
 elif [ $service = "ZOOKEEPER" ]; then

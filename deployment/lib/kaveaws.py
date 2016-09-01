@@ -35,7 +35,8 @@ import thread
 import Queue
 
 # Centos6 has the username root, Centos7 has the username 'centos'
-default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
+default_usernamedict = {"Centos6": "root", "Centos7": 'centos',
+                        "Redhat7": 'ec2-user', "Ubuntu14": 'ubuntu'}
 default_os = "Centos7"
 
 
@@ -86,7 +87,14 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                      "ap-southeast": "ami-96f1c1c4",
                                      "eu-central": "ami-26c43149",
                                      "ap-south": "ami-4a90fa25"
-                                     }
+                                     },
+                        "Redhat7": {"default": "ami-2051294a",
+                                    "eu-west": "ami-8b8c57f8",
+                                    "ap-northeast": "ami-0dd8f963",
+                                    "ap-southeast": "ami-cdbdd7a2",
+                                    "ap-south": "ami-cdbdd7a2",
+                                    "eu-central": "ami-875042eb"
+                                    }
                         }
 
 

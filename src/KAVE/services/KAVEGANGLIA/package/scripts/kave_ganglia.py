@@ -32,6 +32,7 @@ class KaveGanglia(kc.ApacheScript):
 
         super(KaveGanglia, self).install(env)
         env.set_params(params)
+        kc.install_epel()
         self.install_packages(env)
         Package('ganglia-gmetad')
         Package('rrdtool')

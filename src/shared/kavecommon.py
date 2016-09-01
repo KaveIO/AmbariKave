@@ -89,6 +89,18 @@ def detect_linux_version():
     raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
 
+def is_true_redhat():
+    """
+    Return true if /etc/redhat-release begins with Red Hat
+    """
+    fn = '/etc/redhat-release'
+    if os.path.exists(fn):
+        with open(fn) as fp:
+            rf = fp.read()
+            return rf.startswith("Red Hat")
+    return False
+
+
 def repo_url(filename, repo=__repo_url__, arch=None, dir=__main_dir__, ver=__version__):
     """
     Construct the repository address for our code
@@ -344,6 +356,37 @@ def is_valid_cluster_or_grid_name(name):
         re.match(r"^[A-Z]{*}$", name)
     except ValueError, Argument:
         print "The argument needs to contain only upper case alphabets\n", Argument
+
+
+def install_epel(clean=True):
+    """
+    install epel independent of redhat or centos version
+    """
+    if detect_linux_version() in ["Centos6"]:
+        res.Execute('yum -y install epel-release')
+    else:
+        status, stdout, _stderr = shell_call_wrapper('yum info epel-release')
+        if status or 'installed' not in stdout:
+            res.Execute('yum -y install wget')
+            res.Execute('wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
+            res.Execute('yum -y install epel-release-latest-7.noarch.rpm')
+    if clean:
+        res.Execute('yum clean all')
+
+
+def extra_redhat_repos():
+    """
+    Enable additional redhat repositories needed by some
+    select components
+    """
+    rh = is_true_redhat()
+    if rh:
+        for repo in ['rhui-REGION-rhel-server-optional',
+                     'rhui-REGION-rhel-server-extras',
+                     'rhui-REGION-rhel-server-source-optional',
+                     'rhui-REGION-rhel-server-releases-source']:
+            res.Execute('yum-config-manager --enable ' + repo)
+    return rh
 
 
 class ApacheScript(res.Script):

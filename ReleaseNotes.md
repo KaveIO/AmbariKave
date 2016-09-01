@@ -5,6 +5,56 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v2.2-Beta
+- Sept 2016
+
+Minor release with significant improvements, new services and support of centos6 centos7 and redhat7
+This may be one of the last versions with centos6 support.
+
+**New OS support**
+- We now support the following OSes for AmbariKave
+- Centos6 (well tested and stable, to be removed in a future release)
+- Centos7 (for all services except HUE, well tested and stable)
+- Redhat7 (for all services except HUE, not yet fully tested)
+- Since we now support multiple OSes, we have removed the centos6-flag from the installer
+- Note that KaveToolbox has been similarly modified to support C6/C7/U14/U16/RH7
+
+**Deprecated HUE on centos7/redhat7**
+- In the latest HDP, the Ambari web itself contains interfaces to HIVE
+- We notice that most of our users are switching to TEZ&Spark as default processors
+- Hortonworks HUE does not support Tez (now the default) or Centos7/Redhat7
+- So not only is the use case reduced but the compatibility is removed
+- We advise users familiar with Hue to switch to ipython notebooks and pyspark
+
+**FreeIPA independence**
+- In previous versions of AmbariKave FreeIPA was forced to be installed on the ambari node
+- In 2.2-Beta FreeIPA can now be installed on a different node within the cluster
+- Installing on a separate node is now the preferred method due to separation of concerns
+- FreeIPA is the central security system for KAVE, so much better if it is isolated
+- The FreeIPA node root must also be able to ssh into all other machines as with ambari
+
+New Services:
+* Nagios:  A common monitoring and alerting framework with a large userbase.
+           In HDP 2.4 Nagios was deprecated, however no sufficiently stable alternative was added.
+           In this release we have restored a KAVENAGIOS service with basic Nagios functionality
+           for users to use in the intervening time before migration to Ambari Metrics
+
+* Ganglia: A common monitoring and alerting framework with a large userbase.
+           In HDP 2.4 Ganglia was deprecated, however no sufficiently stable alternative was added.
+           In this release we have restored a KAVEGANGLIA service with basic Ganglia functionality
+           for users to use in the intervening time before migration to Ambari Metrics
+
+Minor improvements in services:
+
+Bugfixes in services:
+* The recently announced CVE known as httpoxy would potentially within KAVE
+  allow a malicious user inside the secure environment to damage running Apache
+  services. It is simple for the sysadmin to prevent via configuration options
+  but was not the default. We have modified all apache defaults to disable httpoxy.
+
+Other topics:
+* We have begun docker experimentations in both AmbariKave and Centos7
+
 # v2.1-Beta
 - June 2016
 

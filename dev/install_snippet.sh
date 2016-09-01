@@ -19,12 +19,23 @@
 # used in the dev install.sh command, and also catted into the packaged install script
 
 #abort at first failure
+yum info epel-release 2>/dev/null | grep installed
+epel_not_installed=$?
 set -e
 #set -o pipefail #not a good idea, causes failures even in actual successful situations
 
 os=`uname -r`
+flavor='centos'
 if [[ "$os" == *"el7"* ]]; then
 	os="centos7"
+	if [ -e "/etc/redhat-release" ]; then
+		release=`cat /etc/redhat-release`
+		if [[ "$release" == *" 7."* ]]; then
+			if [[ "$release" == "Red Hat"* ]]; then
+				flavor="redhat"
+			fi
+		fi
+	fi
 elif [[ "$os" == *"el6"* ]]; then
 	os="centos6"
 else
@@ -44,14 +55,21 @@ yum install ambari-server -y
 ambari-server setup -s
 
 # install requests library for python
-yum install -y epel-release
+if [[ "$flavor" == "centos" ]]; then
+	yum install -y epel-release
+else
+	if [[ $epel_not_installed -ne 0 ]]; then
+		wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+		yum -y install epel-release-latest-7.noarch.rpm
+	fi
+fi
 # necessary step to update epel and HDP cached repos
 yum clean all
 yum install -y pdsh python-devel python-pip
 pip install requests
 pip install --upgrade requests
 
-if [ "$os" == "centos7" ]; then
+if [[ "$os" == *"7" ]]; then
 	yum install -y pdsh-mod-dshgroup
 fi
 

@@ -36,7 +36,7 @@ class TestKaveToolboxRelease(test_kavetoolbox_head.TestKaveToolbox):
     version = "2.2-Beta-Pre"
 
     def deploy_ktb(self, ambari):
-        if self.ostype.lower().startswith("centos"):
+        if self.ostype.lower().startswith("centos") or self.ostype.lower().startswith("redhat"):
             ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
         else:
             ambari.run("apt-get install -y wget curl tar zip unzip gzip rsync")

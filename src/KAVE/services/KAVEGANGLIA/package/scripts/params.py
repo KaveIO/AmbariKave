@@ -28,14 +28,39 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
+
 kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE')
+#name = kaveganglia_clustername
+kc.is_valid_cluster_or_grid_name(kaveganglia_clustername)
+
 kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE')
+#name = kaveganglia_gridname
+kc.is_valid_cluster_or_grid_name(kaveganglia_gridname)
+
 kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
+#portnum = kaveganglia_port
+kc.is_valid_port(kaveganglia_port)
+
 kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_xml_port', '8651')
+#portnum = kaveganglia_xml_port
+kc.is_valid_port(kaveganglia_xml_port)
+
 kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_interactive_port', '8652')
+#portnum = kaveganglia_interactive_port
+kc.is_valid_port(kaveganglia_interactive_port)
+
 kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_carbon_port', '2003')
+#portnum = kaveganglia_carbon_port
+kc.is_valid_port(kaveganglia_carbon_port)
+
 kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riemann_port', '5555')
+#portnum = kaveganglia_riemann_port
+kc.is_valid_port(kaveganglia_riemann_port)
+
 kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
+#portnum = kaveganglia_udp_port
+kc.is_valid_port(kaveganglia_udp_port)
+
 kaveganglia_monitor_hosts = default('/clusterHostInfo/kaveganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
 
@@ -87,7 +112,7 @@ RequestHeader unset Proxy early
   # Allow from .example.com
 </Location>""")
 
-kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """# Created automatically with Ambari
+kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """        <value># Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 # This is an example of a Ganglia Meta Daemon configuration file
@@ -137,7 +162,6 @@ kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad
 
 data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hosts %} {{host}}:{{kaveganglia_port}} {% endfor %}
 
-
 #
 # Round-Robin Archives
 # You can specify custom Round-Robin archives here (defaults are listed below)
@@ -154,7 +178,7 @@ data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hos
 #-------------------------------------------------------------------------------
 # Scalability mode. If on, we summarize over downstream grids, and respect
 # authority tags. If off, we take on 2.5.0-era behavior: we do not wrap our output
-# in <GRID></GRID> tags, we ignore all <GRID> tags we see, and always assume
+# in &lt;GRID&gt;&lt;/GRID&gt; tags, we ignore all &lt;GRID&gt; tags we see, and always assume
 # we are the "authority" on data source feeds. This approach does not scale to
 # large groups of clusters, but is provided for backwards compatibility.
 # default: on
@@ -242,7 +266,7 @@ setuid_username {{kaveganglia_gmetad_uid}}
 # If your hostname directories have been renamed to lower case,
 # set this option to 0 to disable backward compatibility.
 # From version 3.2, backwards compatibility will be disabled by default.
-# default: 1   (for gmetad < 3.2)
+# default: 1   (for gmetad &lt; 3.2)
 # default: 0   (for gmetad >= 3.2)
 case_sensitive_hostnames 0
 
@@ -336,7 +360,7 @@ case_sensitive_hostnames 0
 # default: undefined
 # riemann_attributes "key=val[,...]"
 # riemann_attributes "customer=Acme Corp,environment=PROD"
-""")
+        </value>""")
 
 kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart

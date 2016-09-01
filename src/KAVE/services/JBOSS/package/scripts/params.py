@@ -16,16 +16,22 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 
 installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as/')
-if not len(installation_dir)>3 or '/' not in installation_dir:
-    raise ValueError("You have set a directory incorrectly! " + installation_dir)
+#if not len(installation_dir)>3 or '/' not in installation_dir:
+#    raise ValueError("You have set a directory incorrectly! " + installation_dir)
+dirname = installation_dir
+kc.is_valid_directory(dirname)
+
 
 config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/')
-if not len(config_dir)>3 or '/' not in config_dir:
-    raise ValueError("You have set a directory incorrectly! " + config_dir)
+#if not len(config_dir)>3 or '/' not in config_dir:
+#    raise ValueError("You have set a directory incorrectly! " + config_dir)
+dirname = config_dir
+kc.is_valid_directory(dirname)
 
 service_user = default('configurations/jboss/service_user', 'jboss')
 
@@ -62,6 +68,8 @@ txn_status_manager_port = default('configurations/jboss/txn_status_manager_port'
 
 mail_server = default('configurations/jboss/mail_server', 'localhost')
 mail_port = default('configurations/jboss/mail_port', '25')
+portnum = mail_port
+kc.is_valid_port(portnum)
 
 jbossxmlconfig =default('configurations/jboss/jbossxmlconfig',"""
 <?xml version='1.0' encoding='UTF-8'?>

@@ -16,6 +16,8 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
+
 
 config = Script.get_config()
 
@@ -26,6 +28,9 @@ JENKINS_PORT = default("configurations/jenkins/JENKINS_PORT", "8080")
 JENKINS_USER = default("configurations/jenkins/JENKINS_USER", "jenkins")
 JENKINS_ADMIN = default("configurations/jenkins/JENKINS_ADMIN", "admin")
 JENKINS_ADMIN_EMAIL = default("configurations/jenkins/JENKINS_ADMIN_EMAIL", "default")
+
+email = JENKINS_ADMIN_EMAIL
+kc.is_valid_emailid(email)
 
 if JENKINS_ADMIN_EMAIL == 'default':
     JENKINS_ADMIN_EMAIL = JENKINS_ADMIN + '@' + '.'.join(hostname.split('.')[1:])

@@ -26,6 +26,9 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
+name = hostname
+kc.is_valid_hostname(name)
+
 enable_pam_auth = default('configurations/hue/enable_pam_auth', 'True')
 enable_pam_auth = kc.trueorfalse(enable_pam_auth)
 

@@ -18,12 +18,19 @@
 from resource_management import *
 from resource_management.core.system import System
 import os
+import kavecommon as kc
+
 
 config = Script.get_config()
 
 hostname = config["hostname"]
+name = hostname
+kc.is_valid_hostname(name)
 
 www_folder = default('configurations/apache/www_folder', '/var/www/html/')
+dirname = www_folder
+kc.is_valid_directory(dirname)
+
 PORT = default('configurations/apache/PORT', '80')
 servername = default('configurations/apache/servername', hostname)
 if servername == "hostname":

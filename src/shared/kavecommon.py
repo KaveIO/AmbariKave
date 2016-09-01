@@ -21,7 +21,9 @@ This file will be copied to the scripts directory of each service we have added
 to use in your service, import kavecommon as kc
 """
 import os
+import re
 import shutil
+import socket
 import subprocess as sub
 from pwd import getpwnam
 from grp import getgrnam
@@ -297,6 +299,51 @@ def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 5
     s.mount('http://', HTTPAdapter(max_retries=retries))
     s.mount('https://', HTTPAdapter(max_retries=retries))
     return s
+
+
+def is_valid_directory(dirname):
+    if not (len(dirname) > 3) or ('/' not in dirname) or (':' in dirname):
+        raise ValueError("You have set a directory incorrectly! " + dirname)
+
+
+def is_valid_port(portnum):
+    if not re.match(r"^\d{1,5}$", portnum):
+        raise ValueError("Please provide a valid port number\n" + portnum)
+
+
+def is_valid_emailid(email):
+    try:
+        re.match(r"[^@]+@[^@]+\.[^@]+", email)
+    except ValueError, Argument:
+        print "The argument is not a valid email Id\n", Argument
+
+
+def is_valid_ipv4_address(address):
+    try:
+        socket.inet_pton(socket.AF_INET, address)
+    except AttributeError:
+        try:
+            socket.inet_aton(address)
+        except socket.error:
+            return False
+    except socket.error:  # invalid address
+        return False
+
+    return True
+
+
+def is_valid_hostname(name):
+    try:
+        re.match(r"^[a-z]{*}$", name)
+    except ValueError, Argument:
+        print "The argument needs to contain only lower case alphabets\n", Argument
+
+
+def is_valid_cluster_or_grid_name(name):
+    try:
+        re.match(r"^[A-Z]{*}$", name)
+    except ValueError, Argument:
+        print "The argument needs to contain only upper case alphabets\n", Argument
 
 
 class ApacheScript(res.Script):

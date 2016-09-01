@@ -82,7 +82,8 @@ servername = default('configurations/kaveganglia/servername', hostname)
 if servername == "hostname":
     servername = hostname
 
-template_000_default = default('configurations/kaveganglia/template_000_default', """# Created automatically with Ambari
+template_000_default = default('configurations/kaveganglia/template_000_default', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
@@ -92,7 +93,8 @@ ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
 """)
 
-kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """# Created automatically with Ambari
+kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 #
@@ -112,7 +114,8 @@ RequestHeader unset Proxy early
   # Allow from .example.com
 </Location>""")
 
-kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """        <value># Created automatically with Ambari
+kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 # This is an example of a Ganglia Meta Daemon configuration file
@@ -162,6 +165,7 @@ kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad
 
 data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hosts %} {{host}}:{{kaveganglia_port}} {% endfor %}
 
+
 #
 # Round-Robin Archives
 # You can specify custom Round-Robin archives here (defaults are listed below)
@@ -178,7 +182,7 @@ data_source "{{kaveganglia_clustername}}" {% for host in kaveganglia_monitor_hos
 #-------------------------------------------------------------------------------
 # Scalability mode. If on, we summarize over downstream grids, and respect
 # authority tags. If off, we take on 2.5.0-era behavior: we do not wrap our output
-# in &lt;GRID&gt;&lt;/GRID&gt; tags, we ignore all &lt;GRID&gt; tags we see, and always assume
+# in <GRID></GRID> tags, we ignore all <GRID> tags we see, and always assume
 # we are the "authority" on data source feeds. This approach does not scale to
 # large groups of clusters, but is provided for backwards compatibility.
 # default: on
@@ -232,13 +236,15 @@ setuid_username {{kaveganglia_gmetad_uid}}
 #-------------------------------------------------------------------------------
 # The port gmetad will answer requests for XML
 # default: 8651
-# xml_port {{kaveganglia_xml_port}}
+xml_port {{kaveganglia_xml_port}}
+
 #
 #-------------------------------------------------------------------------------
 # The port gmetad will answer queries for XML. This facility allows
 # simple subtree and summation views of the XML tree.
 # default: 8652
-# interactive_port {{kaveganglia_interactive_port}}
+interactive_port {{kaveganglia_interactive_port}}
+
 #
 #-------------------------------------------------------------------------------
 # The number of threads answering XML requests
@@ -266,7 +272,7 @@ setuid_username {{kaveganglia_gmetad_uid}}
 # If your hostname directories have been renamed to lower case,
 # set this option to 0 to disable backward compatibility.
 # From version 3.2, backwards compatibility will be disabled by default.
-# default: 1   (for gmetad &lt; 3.2)
+# default: 1   (for gmetad < 3.2)
 # default: 0   (for gmetad >= 3.2)
 case_sensitive_hostnames 0
 
@@ -280,7 +286,8 @@ case_sensitive_hostnames 0
 #
 # The port and protocol on which Graphite is listening
 # default: 2003
-# carbon_port {{kaveganglia_carbon_port}}
+carbon_port {{kaveganglia_carbon_port}}
+
 #
 # default: tcp
 # carbon_protocol udp
@@ -349,7 +356,8 @@ case_sensitive_hostnames 0
 #
 # The port and protocol on which Riemann is listening
 # default: 5555
-# riemann_port {{kaveganglia_riemann_port}}
+riemann_port {{kaveganglia_riemann_port}}
+
 #
 # default: udp
 # riemann_protocol tcp
@@ -360,9 +368,10 @@ case_sensitive_hostnames 0
 # default: undefined
 # riemann_attributes "key=val[,...]"
 # riemann_attributes "customer=Acme Corp,environment=PROD"
-        </value>""")
+""")
 
-kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """# Created automatically with Ambari
+kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 /* This configuration is as close to 2.5.x default behavior as possible

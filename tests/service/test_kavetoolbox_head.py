@@ -24,7 +24,7 @@ class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
     checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
                  '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
-    ostype = "Centos6"
+    ostype = "Centos7"
     workstation = True
 
     def deploy_ktb(self, ambari):
@@ -111,6 +111,10 @@ class TestKaveToolbox(base.LDTest):
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype.startswith("Ubuntu"):
             ambari.run('apt-get update')
+        else:
+            # add default 10GB in /opt
+            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)

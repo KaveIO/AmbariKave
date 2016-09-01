@@ -21,20 +21,20 @@ import unittest
 
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
-    version = "2.2-Beta-Pre"
-    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2',
-                 '/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE.2.2'
+    version = "2.2-Beta"
+    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE',
+                 '/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVE'
                  '/services/JENKINS/package/scripts/kavecommon.py']
+    ostype = "Centos7"
 
     def runTest(self):
         """
-        Run the packaged installer on a blank Centos6 machine
+        Run the packaged installer on a blank Centos machine
         """
         import os
 
         lD = self.pre_check()
         import kaveaws as lA
-        self.ostype = lA.default_os
         ambari, iid = self.deploy_os(self.ostype)
         if self.ostype in ["Centos6"]:
             # work around for problematic default DNS settings :S
@@ -44,18 +44,13 @@ class TestAmbariKaveRelease(base.LDTest):
                        + '.'.join(out.split()[-1].split('.')[1:-1]))
             # now the machine will be re-renamed with the public dns
         ambari.run("yum -y install wget curl tar zip unzip gzip rsync")
-        if self.ostype in ["Centos6"]:
-            ambari.run("service iptables stop")
-            ambari.run("echo 0 > /selinux/enforce")
-        elif self.ostype in ["Centos7"]:
-            ambari.run("setenforce permissive")
+        lD.disable_security(ambari)
         ambari.run("mkdir -p /etc/kave/")
         ambari.run("rm -rf inst.*")
         ambari.run("echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
-        ambari.run("wget http://repos:kaverepos@repos.dna.kpmglab.com/"
-                   + "centos6/AmbariKave/" + self.version + "/ambarikave-installer-centos6-" + self.version + ".sh")
-        ambari.run("nohup bash ambarikave-installer-centos6-" + self.version
-                   + ".sh > inst.stdout 2> inst.stderr < /dev/null & ")
+        lD.deploy_our_soft(ambari, self.version, repo="http://repos:kaverepos@repos.dna.kpmglab.com")
+        import time
+        time.sleep(10)
         self.wait_for_ambari(ambari, rounds=15, check_inst=["inst.stdout", "inst.stderr"])
         return self.check(ambari)
 
@@ -69,6 +64,8 @@ if __name__ == "__main__":
         sys.argv = [s for s in sys.argv if s != "--verbose"]
     test1 = TestAmbariKaveRelease()
     test1.debug = verbose
+    if len(sys.argv) > 1:
+        test1.ostype = sys.argv[1]
     suite = unittest.TestSuite()
     suite.addTest(test1)
     base.run(suite)

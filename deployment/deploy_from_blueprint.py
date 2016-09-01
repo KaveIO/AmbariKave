@@ -191,18 +191,10 @@ sys.stdout.flush()
 ambari = lD.remoteHost("root", thehost, access_key)
 
 # Step one, install myself, dsh and deploy ambari agents to all nodes
-try:
-    ambari.run("which pdsh")
-    ambari.run("which curl")
-except lD.ShellExecuteError:
-    ambari.run("yum -y install epel-release")
-    ambari.run("yum clean all")
-    ambari.run("yum -y install pdsh curl")
+lD.install_pdsh(ambari)
 
 # modify iptables, only in case of Centos6
-if ambari.detect_linux_version() in ["Centos6"]:
-    ambari.run("service iptables stop")
-
+lD.disable_security(ambari)
 admin = ambari.run("hostname")
 
 whole_cluster = lD.multiremotes(hosts, jump=ambari)
@@ -232,7 +224,7 @@ try:
         raise lD.ShellExecuteError()
 except lD.ShellExecuteError:
     whole_cluster.register()
-    whole_cluster.run("yum -y install epel-release")
+    lD.install_pdsh(whole_cluster)
     # TODO: instead copy this file _from_ the ambari node *to* the others directly
     # For the time being, copy to tmp, then redistribute if necessary
     copy_from = None
@@ -268,10 +260,10 @@ except lD.ShellExecuteError:
         "; fi; rm -f /tmp/ambari.repo ;'\"")
     try:
         # try and retry
-        whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
+        whole_cluster.run("yum -y install  ambari-agent curl wget")
     except lD.ShellExecuteError:
         time.sleep(5)
-        whole_cluster.run("yum -y install epel-release ambari-agent curl wget")
+        whole_cluster.run("yum -y install  ambari-agent curl wget")
 
 try:
     whole_cluster.run("echo $HOSTNAME")

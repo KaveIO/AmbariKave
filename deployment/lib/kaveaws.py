@@ -35,7 +35,8 @@ import thread
 import Queue
 
 # Centos6 has the username root, Centos7 has the username 'centos'
-default_usernamedict = {"Centos6": "root", "Centos7": 'centos'}
+default_usernamedict = {"Centos6": "root", "Centos7": 'centos',
+                        "Redhat7": 'ec2-user', "Ubuntu14": 'ubuntu'}
 default_os = "Centos7"
 
 
@@ -67,7 +68,8 @@ def detect_region():
 
 __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtual, 6.5 release media
                                     "eu-west": "ami-30ff5c47",  # good, centos 6 "with updates"
-                                    "eu-central": "ami-2bf11444",
+                                    # "eu-central": "ami-2bf11444", # too new, user is centos!
+                                    "eu-central": "ami-46c4f65b",  # good, centos 6 "with updates"
                                     "ap-northeast": "ami-25436924",
                                     "ap-southeast": "ami-0aaf8858",
                                     "ap-south": "ami-9b1c76f4"
@@ -85,7 +87,14 @@ __region_ami_links__ = {"Centos6": {"default": "ami-42718735",  # only paravirtu
                                      "ap-southeast": "ami-96f1c1c4",
                                      "eu-central": "ami-26c43149",
                                      "ap-south": "ami-4a90fa25"
-                                     }
+                                     },
+                        "Redhat7": {"default": "ami-2051294a",
+                                    "eu-west": "ami-8b8c57f8",
+                                    "ap-northeast": "ami-0dd8f963",
+                                    "ap-southeast": "ami-cdbdd7a2",
+                                    "ap-south": "ami-cdbdd7a2",
+                                    "eu-central": "ami-875042eb"
+                                    }
                         }
 
 
@@ -129,7 +138,6 @@ def up_default(type, security_group, keys, count=1, subnet=None, ambaridev=False
 
 def up_os(os, type, security_group, keys, count=1, subnet=None):
     region = "default"
-    amiid = ""
     if subnet is not None:
         region = detect_region()
     amiid = chooseamiid(os, region)
@@ -145,7 +153,8 @@ def chooseinstancetype(instancetype):
     regioninstdict = {"ap-northeast": {"t2.small": "m3.medium", "t2.medium": "m3.medium",
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
                                        "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
-                      "eu-west": {"m1.medium": "t2.small"}}
+                      "eu-west": {"m1.medium": "t2.small"},
+                      "eu-central": {"m1.medium": "m3.medium"}}
     try:
         return regioninstdict[region][instancetype]
     except KeyError:
@@ -433,7 +442,7 @@ class _add_ebs_volumesThread(threading.Thread):
                 self.errors.append(str(e) + " " + str(err1) + " " + str(err2) + "\n" + str(err3) + "\n" + str(self.cur))
 
 
-def add_ebs_volumes(iids, mounts, access_key, nthreads=20):
+def add_ebs_volumes(iids, mounts, access_key, nthreads=10):
     """
     Add a lot of EBS volumes in parallel with threading
     iid, list of iids,

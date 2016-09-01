@@ -21,7 +21,9 @@ This file will be copied to the scripts directory of each service we have added
 to use in your service, import kavecommon as kc
 """
 import os
+import re
 import shutil
+import socket
 import subprocess as sub
 from pwd import getpwnam
 from grp import getgrnam
@@ -32,7 +34,7 @@ from grp import getgrnam
 #  this password is intended to be widely known and is used here as an extension of the URL
 #
 __repo_url__ = "http://repos:kaverepos@repos.kave.io"
-__version__ = "2.2-Beta-Pre"
+__version__ = "2.2-Beta"
 __main_dir__ = "AmbariKave"
 __mirror_list_file__ = "/etc/kave/mirror"
 
@@ -85,6 +87,18 @@ def detect_linux_version():
         if v:
             return v
     raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
+
+
+def is_true_redhat():
+    """
+    Return true if /etc/redhat-release begins with Red Hat
+    """
+    fn = '/etc/redhat-release'
+    if os.path.exists(fn):
+        with open(fn) as fp:
+            rf = fp.read()
+            return rf.startswith("Red Hat")
+    return False
 
 
 def repo_url(filename, repo=__repo_url__, arch=None, dir=__main_dir__, ver=__version__):
@@ -162,7 +176,7 @@ def failover_source(sources):
         if source is None:
             continue
         if source.startswith("ftp:") or (source.startswith("http") and ":" in source):
-            stat, stdout, stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
+            _stat, stdout, _stderr = shell_call_wrapper("curl --retry 5 -i -X HEAD " + source)
             if "200 OK" not in stdout and "302 Found" not in stdout:
                 continue
             return source
@@ -299,6 +313,130 @@ def request_session(retries=5, backoff_factor=0.1, status_forcelist=[500, 501, 5
     return s
 
 
+def is_valid_directory(dirname, toplevel=True, paramname=''):
+    dirname = dirname.replace('//', '/')
+    if not (len(dirname) > 3):
+        raise ValueError("You have made too small a directory name set a directory incorrectly! "
+                         + dirname
+                         + ' ' + paramname)
+    for c in ':`"' + "'" + ";|*":
+        if c in dirname:
+            raise ValueError("you have added a special character to your directory name. "
+                             + dirname
+                             + ' ' + paramname)
+    if toplevel and not dirname.startswith('/'):
+        raise ValueError("top level directories must start with a /. "
+                         + dirname
+                         + ' ' + paramname)
+    if toplevel and dirname.count('/') < 2:
+        raise ValueError("Directories must contain two /. "
+                         + dirname
+                         + ' ' + paramname)
+
+
+def is_valid_username(user, paramname=''):
+    for c in '/:`"' + "'" + ";|*":
+        if c in user:
+            raise ValueError("you have added a special character to your user name. "
+                             + user
+                             + ' ' + paramname)
+    if user.lower() != user:
+        raise NameError("The user needs to contain only lower case alphabets "
+                        + user
+                        + ' ' + paramname)
+
+
+def is_valid_port(portnum, paramname=''):
+    try:
+        portnum = int(portnum)
+    except (ValueError, TypeError):
+        raise ValueError("A portnum must be an integer "
+                         + str(portnum)
+                         + ' ' + paramname)
+    if portnum < 10 or portnum > 100000:
+        raise ValueError("A portnum must be a port, range 10-100,000 "
+                         + str(portnum)
+                         + ' ' + paramname)
+
+
+def is_valid_emailid(email, paramname=''):
+
+    if '@' not in email or '.' not in email.split('@')[-1]:
+        raise ValueError("not a valid email ID "
+                         + email
+                         + ' ' + paramname)
+    for c in '"; ' + "'":
+        if c in email:
+            raise ValueError("you have added a special character to your email "
+                             + email
+                             + ' ' + paramname)
+
+
+def is_valid_ipv4_address(address, paramname=''):
+    if address.count('.') < 3:
+        raise ValueError("Not a valid IP address "
+                         + str(address)
+                         + ' ' + paramname)
+    for level in address.split("."):
+        try:
+            int(level)
+        except (ValueError, TypeError):
+            raise ValueError("Not a valid IP address "
+                             + str(address)
+                             + ' ' + paramname)
+
+
+def is_valid_hostname(name, paramname=''):
+    if name.lower() != name:
+        raise NameError("The hostname needs to contain only lower case alphabets "
+                        + name
+                        + ' ' + paramname)
+    for c in '!?" ' + "'":
+        if c in name:
+            raise ValueError("you have added a special character to your host name. "
+                             + name
+                             + ' ' + paramname)
+
+
+def is_upper_case(name, paramname=''):
+    matches = re.match(r"^[A-Z]*$", name)
+    if matches is None:
+        raise ValueError("This needs to be upper case "
+                         + name
+                         + ' ' + paramname)
+
+
+def install_epel(clean=True):
+    """
+    install epel independent of redhat or centos version
+    """
+    if detect_linux_version() in ["Centos6"]:
+        res.Execute('yum -y install epel-release')
+    else:
+        status, stdout, _stderr = shell_call_wrapper('yum info epel-release')
+        if status or 'installed' not in stdout:
+            res.Execute('yum -y install wget')
+            res.Execute('wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
+            res.Execute('yum -y install epel-release-latest-7.noarch.rpm')
+    if clean:
+        res.Execute('yum clean all')
+
+
+def extra_redhat_repos():
+    """
+    Enable additional redhat repositories needed by some
+    select components
+    """
+    rh = is_true_redhat()
+    if rh:
+        for repo in ['rhui-REGION-rhel-server-optional',
+                     'rhui-REGION-rhel-server-extras',
+                     'rhui-REGION-rhel-server-source-optional',
+                     'rhui-REGION-rhel-server-releases-source']:
+            res.Execute('yum-config-manager --enable ' + repo)
+    return rh
+
+
 class ApacheScript(res.Script):
     """
     Common script class for apache web pages
@@ -321,7 +459,6 @@ class ApacheScript(res.Script):
 
     def configure(self, env):
         import params
-        import os
 
         env.set_params(params)
         res.Execute('chkconfig httpd on')

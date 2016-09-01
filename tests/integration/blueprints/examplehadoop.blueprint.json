@@ -48,6 +48,18 @@
   ],
   "host_groups" : [
     {
+      "name" : "freeipa",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "FREEIPA_SERVER"     },
+        { "name" : "FREEIPA_CLIENT"     },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "KAVEGANGLIA_MONITOR" },
+        { "name" : "ZOOKEEPER_CLIENT"   }
+      ],
+      "cardinality" : "1"
+    },
+    {
       "name" : "admin",
       "configurations" : [ ],
       "components" : [
@@ -56,7 +68,8 @@
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "FREEIPA_SERVER"     },
+        { "name" : "KAVEGANGLIA_SERVER" },
+        { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
@@ -78,6 +91,7 @@
         { "name" : "OOZIE_CLIENT"         },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "SONARQUBE_RUNNER"     }
 
       ],
@@ -100,7 +114,6 @@
         { "name" : "OOZIE_SERVER"           },
         { "name" : "WEBHCAT_SERVER"         },
         { "name" : "MYSQL_SERVER"           },
-		{ "name" : "HUE_SERVER"             },
         { "name" : "HIVE_CLIENT"            },
         { "name" : "TEZ_CLIENT"             },
         { "name" : "YARN_CLIENT"            },
@@ -108,6 +121,7 @@
         { "name" : "KAVETOOLBOXNODE"        },
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
+        { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"         }
       ],
       "cardinality" : "1"
@@ -119,6 +133,7 @@
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1"
@@ -131,6 +146,7 @@
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "FREEIPA_CLIENT"       }
       ],
       "cardinality" : "1+"
@@ -158,6 +174,7 @@
         { "name" : "OOZIE_CLIENT"          },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
+        { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
@@ -166,6 +183,6 @@
   "Blueprints" : {
     "blueprint_name" : "examplehadoop",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE.2.2"
+    "stack_version" : "2.4.KAVE"
   }
 }

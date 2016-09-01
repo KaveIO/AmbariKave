@@ -79,6 +79,7 @@ default_ambari_password = "admin"
 service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              "KAVEGANGLIA_SERVER": {"ganglia": ["80/ganglia"]},
                              "NAGIOS_SERVER": {"alerts": ["80/nagios"]},
+                             "KAVENAGIOS_SERVER": {"alerts": ["80/nagios"]},
                              "METRICS_GRAFANA": {"grafana": [3000, 'ams-grafana-ini/port']},
                              "AMBARI_SERVER": {"admin": [8080]},
                              "JENKINS_MASTER": {"jenkins": [8080, "jenkins/JENKINS_PORT"]},

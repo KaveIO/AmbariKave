@@ -28,14 +28,31 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
+
 kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE')
+kc.is_upper_case(kaveganglia_clustername, "kaveganglia/kaveganglia_clustername")
+
 kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE')
+kc.is_upper_case(kaveganglia_gridname, "kaveganglia/kaveganglia_gridname")
+
 kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
+kc.is_valid_port(kaveganglia_port, "kaveganglia/kaveganglia_port")
+
 kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_xml_port', '8651')
+kc.is_valid_port(kaveganglia_xml_port, "kaveganglia/kaveganglia_xml_port")
+
 kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_interactive_port', '8652')
+kc.is_valid_port(kaveganglia_interactive_port, "kaveganglia/kaveganglia_interactive_port")
+
 kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_carbon_port', '2003')
+kc.is_valid_port(kaveganglia_carbon_port, "kaveganglia/kaveganglia_carbon_port")
+
 kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riemann_port', '5555')
+kc.is_valid_port(kaveganglia_riemann_port, "kaveganglia/kaveganglia_riemann_port")
+
 kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
+kc.is_valid_port(kaveganglia_udp_port, "kaveganglia/kaveganglia_udp_port")
+
 kaveganglia_monitor_hosts = default('/clusterHostInfo/kaveganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
 
@@ -57,7 +74,8 @@ servername = default('configurations/kaveganglia/servername', hostname)
 if servername == "hostname":
     servername = hostname
 
-template_000_default = default('configurations/kaveganglia/template_000_default', """# Created automatically with Ambari
+template_000_default = default('configurations/kaveganglia/template_000_default', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 TraceEnable Off
@@ -67,7 +85,8 @@ ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"
 """)
 
-kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """# Created automatically with Ambari
+kaveganglia_conf = default('configurations/kaveganglia/kaveganglia_conf', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 #
@@ -87,7 +106,8 @@ RequestHeader unset Proxy early
   # Allow from .example.com
 </Location>""")
 
-kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """# Created automatically with Ambari
+kaveganglia_gmetad_conf = default('configurations/kaveganglia/kaveganglia_gmetad_conf', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 # This is an example of a Ganglia Meta Daemon configuration file
@@ -208,13 +228,15 @@ setuid_username {{kaveganglia_gmetad_uid}}
 #-------------------------------------------------------------------------------
 # The port gmetad will answer requests for XML
 # default: 8651
-# xml_port {{kaveganglia_xml_port}}
+xml_port {{kaveganglia_xml_port}}
+
 #
 #-------------------------------------------------------------------------------
 # The port gmetad will answer queries for XML. This facility allows
 # simple subtree and summation views of the XML tree.
 # default: 8652
-# interactive_port {{kaveganglia_interactive_port}}
+interactive_port {{kaveganglia_interactive_port}}
+
 #
 #-------------------------------------------------------------------------------
 # The number of threads answering XML requests
@@ -256,7 +278,8 @@ case_sensitive_hostnames 0
 #
 # The port and protocol on which Graphite is listening
 # default: 2003
-# carbon_port {{kaveganglia_carbon_port}}
+carbon_port {{kaveganglia_carbon_port}}
+
 #
 # default: tcp
 # carbon_protocol udp
@@ -325,7 +348,8 @@ case_sensitive_hostnames 0
 #
 # The port and protocol on which Riemann is listening
 # default: 5555
-# riemann_port {{kaveganglia_riemann_port}}
+riemann_port {{kaveganglia_riemann_port}}
+
 #
 # default: udp
 # riemann_protocol tcp
@@ -338,7 +362,8 @@ case_sensitive_hostnames 0
 # riemann_attributes "customer=Acme Corp,environment=PROD"
 """)
 
-kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """# Created automatically with Ambari
+kaveganglia_gmond_conf = default('configurations/kaveganglia/kaveganglia_gmond_conf', """
+# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead
 /* This configuration is as close to 2.5.x default behavior as possible

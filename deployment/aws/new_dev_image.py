@@ -167,13 +167,7 @@ if iid is None:
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     # This is not needed for Centos7
-    if remote.detect_linux_version() in ["Centos6"]:
-        remote.run("service iptables stop")
-        remote.run("chkconfig iptables off")
-        remote.run("echo 0 >/selinux/enforce")
-    else:
-        remote.run("setenforce permissive")
-
+    lD.disable_security(remote)
     lD.confallssh(remote)
     vols = []
     vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))

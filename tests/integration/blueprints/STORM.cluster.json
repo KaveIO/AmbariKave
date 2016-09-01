@@ -10,6 +10,11 @@
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
 	},
 	{
+	    "name" : "freeipa",
+	    "configurations" : [ ],
+	    "hosts" : [ { "fqdn" : "freeipa.kave.io" } ]
+	},
+	{
 	    "name" : "nimbus",
 	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "nimbus.kave.io" } ]

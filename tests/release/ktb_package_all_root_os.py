@@ -15,6 +15,9 @@
 #   limitations under the License.
 #
 ##############################################################################
+"""
+Simple test script which creates a packaged version of root compiling everything
+"""
 import base
 import ktb_package_root_version
 

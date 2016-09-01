@@ -20,7 +20,8 @@ import sys
 import base
 
 
-class DepCentos7(base.LDTest):
+class DepKnown(base.LDTest):
+    ostype = "Redhat7"
 
     def runTest(self):
         """
@@ -32,7 +33,6 @@ class DepCentos7(base.LDTest):
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         self.service = "Deploy"
-        self.ostype = "Centos7"
         ambari, iid = self.deploy_os(self.ostype)
         stdout = ambari.run("echo Hello world from $HOSTNAME")
         self.assertTrue("ambari" in stdout or "test-" in stdout.lower(),
@@ -45,10 +45,11 @@ class DepCentos7(base.LDTest):
                          "Unable to crate/mount /dev/sdf " + ' '.join(ambari.sshcmd()) + "\n" + stdout)
 
 
-def suite(verbose=False):
+def suite(verbose=False, ostype="Centos7"):
     suite = unittest.TestSuite()
-    test = DepCentos7()
+    test = DepKnown()
     test.debug = verbose
+    test.ostype = ostype
     suite.addTest(test)
     return suite
 
@@ -57,4 +58,7 @@ if __name__ == "__main__":
     verbose = False
     if "--verbose" in sys.argv:
         verbose = True
-    base.run(suite(verbose))
+    ostype = "Centos7"
+    if len(sys.argv) > 1:
+        ostype = sys.argv[1]
+    base.run(suite(verbose, ostype=ostype))

@@ -238,9 +238,7 @@ allremotes = ["ssh:root@" + remote.host for remote in instance_to_remote.values(
 allremotes = lD.multiremotes(list_of_hosts=allremotes, access_key=amazon_keyfile)
 print "test local PDSH, install pdcp"
 print allremotes.run("echo yes")
-allremotes.run("yum -y install epel-release")
-allremotes.run("yum clean all")
-allremotes.run("yum -y install pdsh")
+lD.install_pdsh(allremotes)
 
 print "===================================="
 print "configure SSH on all machines"
@@ -417,12 +415,7 @@ for instancegroup in cluster_config["InstanceGroups"]:
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"
 print "=============================================="
-
-if instance_to_remote.values()[0].detect_linux_version() in ["Centos6"]:
-    allremotes.run("'echo 0 >/selinux/enforce'")
-    allremotes.run("service iptables stop")
-elif instance_to_remote.values()[0].detect_linux_version() in ["Centos7"]:
-    allremotes.run("setenforce permissive")
+lD.disable_security(allremotes)
 
 print "==================================="
 print "add any extra disk space (parallelized per instance)"

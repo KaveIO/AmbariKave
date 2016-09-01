@@ -5,6 +5,101 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v2.2-Beta
+
+This may be one of the last versions with centos6 support. More than 100 independent improvements made since 2.1
+
+**Important information:**
+
+**New OS support**
+- We now support the following OSes for AmbariKave
+- Centos6 (well tested and stable, to be removed in a future release)
+- Centos7 (for all services except HUE, well tested and stable)
+- Redhat7 (for all services except HUE, not yet fully tested)
+- Since we now support multiple OSes, we have removed the centos6-flag from the installer
+- Note that KaveToolbox has been similarly modified to support C6/C7/U14/U16/RH7
+
+**Deprecated HUE on centos7/redhat7**
+- In the latest HDP, the Ambari web itself contains interfaces to HIVE
+- We notice that most of our users are switching to TEZ&Spark as default processors
+- Hortonworks HUE does not support Tez (now the default) or Centos7/Redhat7
+- So not only is the use case reduced but the compatibility is removed
+- We advise users familiar with Hue to switch to ipython notebooks and pyspark
+
+**FreeIPA independence**
+- In previous versions of AmbariKave FreeIPA was forced to be installed on the ambari node
+- In 2.2-Beta FreeIPA can now be installed on a different node within the cluster
+- Installing on a separate node is now the preferred method due to separation of concerns
+- FreeIPA is the central security system for KAVE, so much better if it is isolated
+- The FreeIPA node root must also be able to ssh into all other machines as with ambari
+
+**JBOSS -> WildFly**
+- JBOSS 7.1 is deprecated in favor of the sucessor project, WildFly 10.1.0
+- JBOSS does not work on Centos7, but is kept for now for the sake of backwards-compatibility
+- JBOSS will be removed in a future release
+
+**KAVE stack versioning change**
+- Users were confused by the version numbering of KAVE
+- In 2.2-Beta we are now including the KAVE version as well as the HDP version in the stack name
+- So the stack now looks like 2.4.KAVE.2.2 (HDP-version.KAVE.KAVE-version)
+- KAVE is a as usual a small extension of HDP and this should improve the clarity
+
+New Services:
+
+* Nagios:  A common monitoring and alerting framework with a large userbase.
+           In HDP 2.4 Nagios was deprecated, however no sufficiently stable alternative was added.
+           In this release we have restored a KAVENAGIOS service with basic Nagios functionality
+           for users to use in the intervening time before migration to Ambari Metrics
+
+* Ganglia: A common monitoring and alerting framework with a large userbase.
+           In HDP 2.4 Ganglia was deprecated, however no sufficiently stable alternative was added.
+           In this release we have restored a KAVEGANGLIA service with basic Ganglia functionality
+           for users to use in the intervening time before migration to Ambari Metrics
+
+* WildFly: Successor of JBOSS, java application server.
+
+Minor improvements in existing services:
+
+* FreeIPA
+  * port numbers: certain ports are now configurable via a script
+    Changing ports in FreeIPA is not supported by the IPA developers, but is
+    possible with complex editing of the FreeIPA python. We have tested and wrapped
+    this editing to enable the user more control over the ports of FreeIPA
+    however this is not necessary unless FreeIPA is installed next to different services
+    which is no longer required or recommended, best to isolate FreeIPA
+  * Minor fixes in user generation order for code quality
+  * the freeipa service administrator (admin) is now by default not a command-line (shell) user
+  * role-command order fixes for more stable installation
+  * --force-join in client install to fix partial installation failures
+
+* MongoDB
+  * Add MONGODB\_ARBITER component
+    an Arbiter is a mongodb master component which does not store data
+    but does contribute to voting on the primary. Useful to break ties
+
+* Archiva
+  * Small modifications for RH/Centos7
+  * Allow configuration of Archiva admin user via Ambari
+
+* JBOSS
+  * Fix java version incompatibility
+  * Deprecate in favor of WildFly
+
+Httpoxy:
+* The simple fix for the recently announced CVE known as httpoxy is now applied by default
+  to all apache-based installations. For previous releases the admin can patch manually
+  with a small configuration change in Apache services
+
+Other topics:
+* resource\_wizard.py is now independent from pandas and updates with latest specs
+* restart\_all\_services.sh improved to perform better on larger clusters
+* clean.sh overhauled to solve database dropping issues on centos7 and
+  to enable cleaning within a cluster using pdsh
+* test scripts and deployment libraries have been slightly improved
+  we now also auto-deploy in frankfurt and mumbai regions for testing
+* additional unit tests for pep8 compliance
+* We have begun docker experimentations in both AmbariKave and Centos7
+
 # v2.1-Beta
 - June 2016
 

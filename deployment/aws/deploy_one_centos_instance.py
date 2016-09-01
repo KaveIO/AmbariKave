@@ -136,6 +136,8 @@ while (ip is None and acount < 20):
     acount = acount + 1
 
 remoteuser = lA.default_usernamedict[lA.default_os]
+if ambaridev:
+    remoteuser = 'root'
 
 if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
     print "waiting until contactable, ctrl-C to quit"
@@ -159,10 +161,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         if ambaridev:
             if "GIT" in security_config["AccessKeys"]:
                 remote.prep_git(security_config["AccessKeys"]["GIT"]["KeyFile"], force=True)
-            if remote.detect_linux_version() in ["Centos6"]:
-                remote.run("echo 0 > /selinux/enforce")
-            elif remote.detect_linux_version() in ["Centos7"]:
-                remote.run("setenforce permissive")
+        lD.disable_security(remote)
         remote.run("yum clean all")
         remote.describe()
     except KeyboardInterrupt:

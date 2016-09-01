@@ -19,13 +19,10 @@
 Automated deployment library. Functions for interacting with any remote host and common shared functions useful in
 deployment
 """
-import commands
 import subprocess as sub
-import json
 import os
 import sys
 import time
-import re
 #
 # use for configuration
 #
@@ -77,12 +74,10 @@ class ShellExecuteError(RuntimeError):
 
 
 def which(program):
-    import os
-
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-    fpath, fname = os.path.split(program)
+    fpath, _fname = os.path.split(program)
     if fpath:
         if is_exe(program):
             return program
@@ -94,6 +89,13 @@ def which(program):
                 return exe_file
 
     return None
+
+
+def force_ascii(a_str):
+    """
+    Replace all non-ascii chars with ?
+    """
+    return ''.join([c if ord(c) < 128 else '?' for c in a_str])
 
 
 def run_quiet(cmd, exit=True, shell=True):
@@ -122,8 +124,11 @@ def run_quiet(cmd, exit=True, shell=True):
         raise ShellExecuteError("Problem running: \n" + cmdstr + "\n got:\n\t" + str(
             status) + "\n from stdout: \n" + output + " stderr: \n" + err)
     elif status:
-        print >> sys.__stderr__, "ERROR: " + "Problem running: \n" + cmdstr + "\n got:\n\t" + str(
-            status) + "\n from stdout: \n" + output + " stderr: \n" + err
+        print >> sys.__stderr__, ("ERROR: " + "Problem running: \n" + cmdstr
+                                  + "\n got:\n\t" + str(status)
+                                  + "\n from stdout: \n" + force_ascii(output)
+                                  + "\n stderr: \n" + force_ascii(err)
+                                  )
     return output.strip()
 
 
@@ -159,7 +164,7 @@ def strictopts():
 def mysleep(x):
     print "Sleeping", x * 10, "s"
     print "Z",
-    for i in range(x):
+    for _i in range(x):
         print "z",
         sys.__stdout__.flush()
         time.sleep(10)
@@ -174,6 +179,8 @@ def parse_rhrelease(output):
     if "centos" in output.lower() and "release 6" in output.lower():
         return "Centos6"
     elif "centos" in output.lower() and "release 7" in output.lower():
+        return "Centos7"
+    elif "red hat" in output.lower() and "release 7" in output.lower():
         return "Centos7"
     elif "Ubuntu" in output:
         return "Ubuntu"
@@ -216,6 +223,8 @@ class remoteHost(object):
 
     Handles copying, remotely running commands and preparation for git
     """
+
+    multi = False
 
     def __init__(self, user, host, access_key="~/.ssh/id_rsa"):
         if user is None or host is None or access_key is None:
@@ -325,6 +334,8 @@ class remoteHost(object):
         """
         Which flavour of linux is running?
         """
+        if hasattr(self, '_lv') and self._lv is not None:
+            return self._lv
 
         # try commands first...
         for cmd in ["cat /etc/redhat-release", "lsb_release -a"]:
@@ -332,6 +343,7 @@ class remoteHost(object):
                 output = self.run(cmd)
                 v = parse_rhrelease(output)
                 if v:
+                    self._lv = v
                     return v
             except ShellExecuteError:
                 pass
@@ -339,6 +351,7 @@ class remoteHost(object):
         output = self.run("uname -r")
         el = parse_uname(output)
         if el:
+            self._lv = el
             return el
         raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
@@ -368,8 +381,6 @@ class remoteHost(object):
                     self.run("apt-get -y install git")
             except ShellExecuteError:
                 # back off and retry once, ABK-207
-                import time
-
                 time.sleep(5)
                 if ver.startswith("Centos"):
                     self.run("yum -y install git ")
@@ -391,7 +402,7 @@ class remoteHost(object):
         if not self.gitprep:
             raise RuntimeError("host must be prepared with the github access key and gitwrap, run prep_git first")
         cmd = cmd.replace("'", "\'")
-        out = self.run(
+        return self.run(
             "bash -c 'export GIT_SSH=" + self.github_script_remote + " ; env | grep GIT_SSH; git " + cmd + " '")
 
     def clean_git(self):
@@ -411,6 +422,7 @@ class multiremotes(object):
     Simple wrapper around pdsh
     Local machine must have passwordless access under same user to remote machines
     """
+    multi = True
 
     def __init__(self, list_of_hosts, jump=None, access_key="~/.ssh/id_rsa"):
         """
@@ -418,8 +430,15 @@ class multiremotes(object):
         via should be a remotehost object where these commands run, or else they will be run locally,
         assuming passwordless access
         Sat jump if going through a intermediate jump box, otherwise set access_key if not id_rsa
+        list_of_hosts can either be a list of strings or a list of remoteHosts, or a mixture of the two
         """
-        self.hosts = list_of_hosts
+        mixlist = []
+        for host in list_of_hosts:
+            if isinstance(host, remoteHost):
+                mixlist.append(host.user + "@" + host.host)
+            else:
+                mixlist.append(host)
+        self.hosts = mixlist
         self.jump = jump
         global strict_host_key_checking
         self.strict = strict_host_key_checking
@@ -435,13 +454,12 @@ class multiremotes(object):
         Register keys to list of remotes
         """
         if self.jump is None:
-            for host in self.hosts:
-                remote = remoteHost("root", host)
+            for remote in self.remotes():
                 remote.register()
             return
         self.jump.register()
         # register remotes anyway, even though the strict checking is none for the local machine!
-        for host in self.hosts:
+        for host in self.host_names():
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
             self.jump.run("ssh-keygen -R " + host + "")
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
@@ -450,7 +468,10 @@ class multiremotes(object):
     def detect_linux_version(self):
         """
         Which flavour of linux is running?
+        Cache this because it will not change over a session!
         """
+        if hasattr(self, '_lv') and self._lv is not None:
+            return self._lv
 
         # try commands first...
         vs = []
@@ -473,7 +494,9 @@ class multiremotes(object):
         if not len(versions):
             raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
         if len(versions) == 1:
+            self._lv = list(versions)[0]
             return list(versions)[0]
+        self._lv = versions
         return versions
 
     def check(self, firsttime=False):
@@ -482,8 +505,7 @@ class multiremotes(object):
         """
         # if there's no jump, I need keyless access from here
         if self.jump is None:
-            for host in self.hosts:
-                remote = remoteHost("root", host)
+            for remote in self.remotes():
                 remote.check(firsttime=firsttime)
             return True
         # if there is a jump, I need keyless access from there
@@ -491,7 +513,7 @@ class multiremotes(object):
         if firsttime:
             extrasshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
                             "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
-        for host in self.hosts:
+        for host in self.host_names():
             out = self.jump.run(
                 "ssh " + ' '.join(extrasshopts) + " root@" + host + " echo Hello World from \\$HOSTNAME",
                 extrasshopts=extrasshopts)
@@ -499,6 +521,18 @@ class multiremotes(object):
             if "Hello World" not in out or "HOSTNAME" in out:
                 raise ValueError("Unable to contact machine root@" + host + "! or machine did not respond correctly")
             return True
+
+    def remotes(self):
+        """
+        Return a list of remotes instead of one multiremote instance
+        """
+        return [remoteHost("root", host, self.access_key) for host in self.host_names()]
+
+    def host_names(self):
+        """
+        Return a list of host names, with suer and protocol stripped off instead of one multiremote instance
+        """
+        return [host.split('@')[-1].split(':')[-1] for host in self.hosts]
 
     def run(self, cmd, exit=True):
         """
@@ -542,6 +576,13 @@ class multiremotes(object):
 
         excmd = ""
 
+        # Cant use pdcp unless it's installed across the entire cluster!
+        if pdcp:
+            try:
+                self.run('which pdcp')
+            except ShellExecuteError:
+                pdcp = False
+
         if self.jump is not None:
             self.jump.cp(localfile, remotefile)
             localfile = remotefile
@@ -571,14 +612,14 @@ class multiremotes(object):
                 self.jump.run(excmd + "pdcp -w " + diropt + ','.join(self.hosts)
                               + " " + localfile + " " + remotefile, exit=exit)
         else:
-            for host in self.hosts:
-                if self.jump is None:
-                    remote = remoteHost("root", host, self.access_key)
+            if self.jump is None:
+                for remote in self.remotes():
                     remote.cp(localfile, remotefile)
-                    return
-                else:
-                    if host != self.jump.user + '@' + self.jump.host:
-                        self.jump.run('scp ' + diropt + remotefile + " " + host + ":" + remotefile)
+                return
+            else:
+                for host in self.hosts:
+                    if host.split('@')[-1].split(':')[-1] != self.jump.host.split('@')[-1].split(':')[-1]:
+                        self.jump.run('scp ' + diropt + remotefile + " " + host.split(':')[-1] + ":" + remotefile)
 
 
 # @TODO: Consolidate the two methods below!
@@ -632,11 +673,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     Add our ambari to a remote machine
     """
     # ignore failures here for now, since iptables does not exist on centos7
-    try:
-        remote.run("service iptables stop")
-        remote.run("chkconfig iptables off")
-    except ShellExecuteError:
-        pass
+    disable_security(remote)
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)
@@ -672,7 +709,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "2.2-Beta-Pre"
+        version = "2.2-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -683,15 +720,22 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     remote.check()
     # get directly from repo
     if not git:
-        remote.run("yum -y install wget curl")
-        arch = "centos6"
-        dir = "AmbariKave"
-        dfile = pack + "-installer-" + arch + "-" + version + ".sh"
+        if remote.detect_linux_version().lower().startswith('centos'):
+            remote.run("yum -y install wget curl")
+        else:
+            remote.run("apt-get install -y wget curl")
+        arch = "noarch"
+        archtag = ""
+        dire = "AmbariKave"
         if pack == "kavetoolbox":
             arch = "noarch"
-            dir = "KaveToolbox"
-            dfile = pack + "-installer-" + version + ".sh"
-        remote.run("wget " + repo + "/" + arch + "/" + dir + "/" + version + "/" + dfile)
+            dire = "KaveToolbox"
+        elif version != 'latest' and version < "2.2":
+            arch = "centos6"
+            archtag = '-' + arch
+        # name of file depends on version
+        dfile = pack + "-installer" + archtag + "-" + version + ".sh"
+        remote.run("wget " + repo + "/" + arch + "/" + dire + "/" + version + "/" + dfile)
         if not background:
             remote.run("bash " + dfile + " " + options)
             return
@@ -714,7 +758,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
         else:
             dest_type = "workstation"
             if "--node" in options:
-                dest_type == "node"
+                dest_type = "node"
             _addtoolboxtoremote(remote, github_key_location=github_key_location, dest_type=dest_type,
                                 git_origin=git_origin, branch=version, background=background)
             return
@@ -725,7 +769,6 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
     Wait until ambari server is up and running, error if it doesn't appear!
     Also check if a list of files, e.g. inst.stdout or inst.stderr contains errors
     """
-    import time
     # wait until ambari server is up
     rounds = 1
     flag = False
@@ -736,8 +779,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
         # ignore failures here for now, since iptables does not exist on centos7
         try:
             # modify iptables, only in case of Centos6
-            if ambari.detect_linux_version() in ["Centos6"]:
-                ambari.run("service iptables stop")
+            disable_security(ambari)
         except ShellExecuteError:
             pass
         # check file pointed to for failures
@@ -754,7 +796,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
             pass
 
         try:
-            stdout = ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
+            ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except ShellExecuteError:
@@ -770,7 +812,6 @@ def waitforrequest(ambari, clustername, request, timeout=10):
     """
     Wait until a certain request succeeds, error if it fails!
     """
-    import time
     # wait until ambari server is up
     rounds = 1
     flag = False
@@ -823,7 +864,6 @@ def confremotessh(remote, port=443):
         remote.run("service sshd restart")
     except ShellExecuteError:
         remote.run("service ssh restart")
-    import time
     time.sleep(2)
     # modify iptables, only in case of Centos6
     if remote.detect_linux_version() in ["Centos6"]:
@@ -849,8 +889,37 @@ def confallssh(remote, restart=True):
             remote.run("service sshd restart")
         except ShellExecuteError:
             remote.run("service ssh restart")
-        import time
         time.sleep(2)
+
+
+def disable_security(remote, selinux=True, firewall=True, permanent=True):
+    """
+    Turn off firewall and selinux
+    """
+    if remote.detect_linux_version() in ["Centos6"]:
+        if selinux:
+            if remote.multi:
+                remote.run("'echo 0 > /selinux/enforce'")
+            else:
+                remote.run("echo 0 > /selinux/enforce")
+            if permanent:
+                remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
+        if firewall:
+            remote.run("service iptables stop")
+            if permanent:
+                remote.run("chkconfig iptables off")
+    elif remote.detect_linux_version() in ["Centos7"]:
+        if selinux:
+            remote.run("setenforce permissive")
+            if permanent:
+                remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
+        if firewall:
+            try:
+                remote.run("systemctl stop firewalld")
+            except ShellExecuteError:
+                pass
+            if permanent:
+                remote.run("systemctl disable firewalld")
 
 
 def wait_until_up(remote, max_wait):
@@ -859,7 +928,7 @@ def wait_until_up(remote, max_wait):
     """
     try:
         return remote.check(firsttime=True)
-    except ShellExecuteError, ValueError:
+    except (ShellExecuteError, ValueError):
         pass
     up = False
     for i in range(max_wait):
@@ -867,7 +936,7 @@ def wait_until_up(remote, max_wait):
             mysleep(10 - (i > 0) * 7)
             up = remote.check(firsttime=True)
             break
-        except ShellExecuteError, ValueError:
+        except (ShellExecuteError, ValueError):
             print "not ready yet, sleep again"
             pass
     if not up:
@@ -1029,3 +1098,23 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
     edit_remote.run(pre + "grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
     edit_remote.run("mv -f tmpfile /etc/hosts")
     edit_remote.run(pre + "echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts " + pre)
+
+
+def install_epel(remote):
+    if remote.detect_linux_version() in ["Centos6"]:
+        remote.run("yum -y install epel-release")
+        remote.run("yum clean all")
+    elif remote.detect_linux_version() in ["Centos7"]:
+        remote.cp(os.path.dirname(__file__) + "/../remotescripts/install_epel.sh", 'install_epel.sh')
+        remote.run("bash install_epel.sh")
+
+
+def install_pdsh(remote):
+    try:
+        remote.run("which pdsh")
+        remote.run("which curl")
+    except ShellExecuteError:
+        install_epel(remote)
+        remote.run("yum -y install pdsh curl")
+        if remote.detect_linux_version() in ["Centos7"]:
+            remote.run('yum install -y pdsh-mod-dshgroup')

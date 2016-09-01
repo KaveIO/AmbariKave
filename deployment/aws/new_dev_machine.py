@@ -144,13 +144,7 @@ lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_i
 lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
 # This is not needed for Centos7
 tos = remote.detect_linux_version()
-if tos in ["Centos6"]:
-    remote.run("service iptables stop")
-    remote.run("chkconfig iptables off")
-    remote.run("echo 0 >/selinux/enforce")
-else:
-    remote.run("setenforce permissive")
-remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
+lD.disable_security(remote)
 
 lD.confallssh(remote)
 lD.confremotessh(remote)
@@ -214,7 +208,7 @@ except Exception as e:
 ################################################
 # Add KaveToolbox
 ################################################
-lD.deploy_our_soft(remote, pack="kavetoolbox", version='2.2-Beta-Pre', options='--workstation')
+lD.deploy_our_soft(remote, pack="kavetoolbox", version='2.2-Beta', options='--workstation')
 
 
 print "OK, iid " + iid + " now lives at IP " + ip

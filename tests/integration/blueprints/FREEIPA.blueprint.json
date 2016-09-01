@@ -33,7 +33,6 @@
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "ZOOKEEPER_SERVER"   },
-        { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   }
@@ -58,6 +57,7 @@
       "components" : [
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
+        { "name" : "FREEIPA_SERVER"        },
         { "name" : "FREEIPA_CLIENT"        }
       ],
       "cardinality" : "1+"
@@ -66,6 +66,6 @@
   "Blueprints" : {
     "blueprint_name" : "freeipa",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE.2.2"
+    "stack_version" : "2.4.KAVE"
   }
 }

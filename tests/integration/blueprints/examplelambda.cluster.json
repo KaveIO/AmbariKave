@@ -5,6 +5,11 @@
     ],
     "host_groups" : [
 	{
+	    "name" : "freeipa",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "freeipa.kave.io" } ]
+	},
+	{
 	    "name" : "admin",
 	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
@@ -50,9 +55,9 @@
 	    "hosts" : [ { "fqdn" : "mongo.kave.io" } ]
 	},
 	{
-	    "name" : "jboss",
+	    "name" : "as",
 	    "configurations" : [   ],
-	    "hosts" : [ { "fqdn" : "jboss.kave.io" } ]
+	    "hosts" : [ { "fqdn" : "edge.kave.io" } ]
 	},
 	{
 	    "name" : "kafka",

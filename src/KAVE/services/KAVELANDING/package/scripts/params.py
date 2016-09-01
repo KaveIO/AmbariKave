@@ -18,10 +18,13 @@
 from resource_management import *
 from resource_management.core.system import System
 import os
+import kavecommon as kc
+
 
 config = Script.get_config()
 
 hostname = config["hostname"]
+
 short_host = config["hostname"].split('.')[0]
 
 AMBARI_ADMIN = config['configurations']['kavelanding']['AMBARI_ADMIN']
@@ -38,7 +41,7 @@ servername = default('configurations/kavelanding/servername', hostname)
 if servername == "default":
     servername = hostname
 
-# It's nice to accept " " and '' as values for customlinks without throwing json errors
+# It's nice to accept " " and '' as values for customlinkskaveganglia_riemann_port without throwing json errors
 # smallest valid json will be {}
 if len(customlinks.strip()) <= 2:
     customlinks = '{}'

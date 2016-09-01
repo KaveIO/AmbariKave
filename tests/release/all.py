@@ -24,8 +24,8 @@ mods = [checkpackage, ambarikave, kavetoolbox]
 
 
 modargs = {checkpackage: [],
-           kavetoolbox: ['Centos6', 'Centos7', 'Ubuntu14'],
-           ambarikave: []
+           kavetoolbox: ['Centos6', 'Centos7', 'Redhat7', 'Ubuntu14'],
+           ambarikave: ['Centos6', 'Centos7', 'Redhat7']
            }
 
 if __name__ == "__main__":

@@ -11,6 +11,13 @@
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" }  ]
   },
+  { "Name" : "freeipa",
+    "Count" : -1,
+    "InstanceType" : "t2.medium",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+  },
   { "Name" : "nimbus",
     "Count" : -1,
     "InstanceType" : "t2.small",

@@ -17,9 +17,10 @@
   },
   { "Name" : "test",
     "Count" : 1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
+    "InstanceType" : "t2.medium",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   }
   ]
 }

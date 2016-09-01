@@ -10,6 +10,13 @@
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
+  { "Name" : "freeipa",
+    "Count" : -1,
+    "InstanceType" : "t2.medium",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+  },
   { "Name" : "gate",
     "Count" : 1,
     "InstanceType" : "m4.large",
@@ -28,7 +35,7 @@
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
   },
-  { "Name" : "jboss",
+  { "Name" : "edge",
     "Count" : -1,
     "InstanceType" : "c4.large",
     "AccessType" : "none",

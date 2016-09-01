@@ -5,6 +5,11 @@
     ],
     "host_groups" : [
 	{
+	    "name" : "freeipa",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "freeipa.kave.io" } ]
+	},
+	{
 	    "name" : "admin",
 	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]

@@ -138,7 +138,6 @@ def up_default(type, security_group, keys, count=1, subnet=None, ambaridev=False
 
 def up_os(os, type, security_group, keys, count=1, subnet=None):
     region = "default"
-    amiid = ""
     if subnet is not None:
         region = detect_region()
     amiid = chooseamiid(os, region)
@@ -154,7 +153,8 @@ def chooseinstancetype(instancetype):
     regioninstdict = {"ap-northeast": {"t2.small": "m3.medium", "t2.medium": "m3.medium",
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
                                        "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
-                      "eu-west": {"m1.medium": "t2.small"}}
+                      "eu-west": {"m1.medium": "t2.small"},
+                      "eu-central": {"m1.medium": "m3.medium"}}
     try:
         return regioninstdict[region][instancetype]
     except KeyError:

@@ -208,7 +208,7 @@ except Exception as e:
 ################################################
 # Add KaveToolbox
 ################################################
-lD.deploy_our_soft(remote, pack="kavetoolbox", version='2.2-Beta-Pre', options='--workstation')
+lD.deploy_our_soft(remote, pack="kavetoolbox", version='2.2-Beta', options='--workstation')
 
 
 print "OK, iid " + iid + " now lives at IP " + ip

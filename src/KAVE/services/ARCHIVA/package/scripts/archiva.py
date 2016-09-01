@@ -62,6 +62,12 @@ class Archiva(Script):
 
     def start(self, env):
         self.configure(env)
+
+        try:
+            Execute('service archiva stop')
+        except:
+            Execute('service archiva start > /dev/null')
+
         Execute('service archiva start > /dev/null')
 
     def stop(self, env):

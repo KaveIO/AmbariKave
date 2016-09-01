@@ -180,6 +180,8 @@ def parse_rhrelease(output):
         return "Centos6"
     elif "centos" in output.lower() and "release 7" in output.lower():
         return "Centos7"
+    elif "red hat" in output.lower() and "release 7" in output.lower():
+        return "Centos7"
     elif "Ubuntu" in output:
         return "Ubuntu"
     return None

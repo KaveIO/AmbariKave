@@ -27,7 +27,7 @@ If you are looking for the extensive documentation, including descriptions of di
 
 * To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta, with username repos and password kaverepos, including downloading and installing ambari:
 ```
-yum -y install wget curl tar zip unzip gzip
+yum -y install wget curl tar zip unzip gzip python
 wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta/ambarikave-installer-2.2-Beta.sh
 sudo bash ambarikave-installer-2.2-Beta.sh
 ```
@@ -61,7 +61,7 @@ Installation (patch) over existing Ambari
 
 * Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta, with username repos and password kaverepos, over existing ambari:
 ```
-yum -y install wget curl tar zip unzip gzip
+yum -y install wget curl tar zip unzip gzip python
 wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta/ambarikave-package-2.2-Beta.tar.gz
 tar -xzf ambarikave-package-2.2-Beta.tar.gz -C /var/lib/
 ```
@@ -148,7 +148,7 @@ Downloading deployment tools
 ----------------------------
 
 ```
-yum -y install wget curl tar zip unzip gzip
+yum -y install wget curl tar zip unzip gzip python
 wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta/ambarikave-deployment-2.2-Beta.tar.gz
 tar -xzf ambarikave-deployment-2.2-Beta.tar.gz
 ```

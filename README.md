@@ -13,7 +13,7 @@ Relationship to Ambari
 
 AmbariKave extends Ambari adding some more services. It does this by adding a stack to Ambari. Ambari is nicely extensible and adding a stack does not interfere with older stacks, not can it interfere with already running services.
 
-This means there are two genral ways to install these services
+This means there are two general ways to install these services
 
 * Install ambari however you wish to, and then add our patch for a new stack
 * Use our wrapper around the ambari installer to install and also patch

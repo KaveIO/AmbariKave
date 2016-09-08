@@ -29,7 +29,7 @@ class TestVersions(unittest.TestCase):
     """
     re = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     ignore = ["ReleaseNotes.md"]
-    check_against = "2.2-Beta"
+    check_against = "3.0-Beta-Pre"
 
     def findversion(self, fullpath):
         found = []

@@ -168,7 +168,8 @@ if iid is None:
     # lD.confremotessh(remote)
     # This is not needed for Centos7
     lD.disable_security(remote)
-    lD.confallssh(remote)
+    lD.confallssh(remote, restart=False)
+    lD.confsshpermissions(remote)
     vols = []
     vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))
     vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc))

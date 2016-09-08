@@ -144,7 +144,8 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         remote.register()
         remote = lD.remote_cp_authkeys(remote, 'root')
         lD.rename_remote_host(remote, machinename, 'kave.io')
-        lD.confallssh(remote)
+        lD.confallssh(remote, restart=False)
+        lD.confsshpermissions(remote)
         if osval.startswith("Centos"):
             remote.run("yum clean all")
         remote.describe()

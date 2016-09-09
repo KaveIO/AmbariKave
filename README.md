@@ -13,7 +13,7 @@ Relationship to Ambari
 
 AmbariKave extends Ambari adding some more services. It does this by adding a stack to Ambari. Ambari is nicely extensible and adding a stack does not interfere with older stacks, not can it interfere with already running services.
 
-This means there are two genral ways to install these services
+This means there are two general ways to install these services
 
 * Install ambari however you wish to, and then add our patch for a new stack
 * Use our wrapper around the ambari installer to install and also patch
@@ -27,7 +27,7 @@ If you are looking for the extensive documentation, including descriptions of di
 
 * To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta, with username repos and password kaverepos, including downloading and installing ambari:
 ```
-yum -y install wget curl tar zip unzip gzip
+yum -y install wget curl tar zip unzip gzip python
 wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta/ambarikave-installer-2.2-Beta.sh
 sudo bash ambarikave-installer-2.2-Beta.sh
 ```
@@ -61,7 +61,7 @@ Installation (patch) over existing Ambari
 
 * Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 2.2-Beta, with username repos and password kaverepos, over existing ambari:
 ```
-yum -y install wget curl tar zip unzip gzip
+yum -y install wget curl tar zip unzip gzip python
 wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta/ambarikave-package-2.2-Beta.tar.gz
 tar -xzf ambarikave-package-2.2-Beta.tar.gz -C /var/lib/
 ```
@@ -148,7 +148,7 @@ Downloading deployment tools
 ----------------------------
 
 ```
-yum -y install wget curl tar zip unzip gzip
+yum -y install wget curl tar zip unzip gzip python
 wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/2.2-Beta/ambarikave-deployment-2.2-Beta.tar.gz
 tar -xzf ambarikave-deployment-2.2-Beta.tar.gz
 ```

@@ -29,6 +29,6 @@ python $CURRENT_DIR/dist_kavecommon.py $TARGET_DIR"/HDP"
 pline="input = re.sub(r'\\.KAVE\\..*$', '', input)"
 pline2="input = re.sub(r\'\\\\.KAVE\\\\..*\$\', \'\', input)"
 
-for versionpath in `find / -path '/*/resource_management/*/version.py' | cut -d" " -f 1`
-	grep -F "$pline" $versionpath || sed -i "48i\ \ \ \ $pline2" $versionpath
-done
+#for versionpath in `find / -path '/*/resource_management/*/version.py' | cut -d" " -f 1`; do
+#	grep -F "$pline" $versionpath || sed -i "48i\ \ \ \ $pline2" $versionpath
+#done

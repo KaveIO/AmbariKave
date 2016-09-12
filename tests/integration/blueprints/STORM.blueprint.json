@@ -96,6 +96,6 @@
   "Blueprints" : {
     "blueprint_name" : "storm",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE-22"
+    "stack_version" : "2.4.KAVE22"
   }
 }

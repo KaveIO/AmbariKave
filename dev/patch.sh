@@ -24,3 +24,11 @@ rsync -razl "$CURRENT_DIR/../src/HDP/" $TARGET_DIR"/HDP"
 rsync -razl "$CURRENT_DIR/../src/KAVE/" $TARGET_DIR"/HDP/2.4.KAVE.2.2"
 rsync -razl "$CURRENT_DIR/../src/common-services/" $TARGET_DIR_COMMON
 python $CURRENT_DIR/dist_kavecommon.py $TARGET_DIR"/HDP"
+
+# Patch Ambari Version Finding
+pline="input = re.sub(r'\\.KAVE\\..*$', '', input)"
+pline2="input = re.sub(r\'\\\\.KAVE\\\\..*\$\', \'\', input)"
+
+for versionpath in `find / -path '/*/resource_management/*/version.py' /*/resource_management/* | cut -d" " -f 1`
+	grep -F "$pline" $versionpath || sed -i "48i\ \ \ \ $pline2" $versionpath
+done

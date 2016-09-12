@@ -29,7 +29,7 @@ tcp_port = default('configurations/mongodb/tcp_port', '27017')
 setname = default('configurations/mongodb/setname', 'None')
 
 mongodb_baseurl = default('configurations/mongodb/mongodb_baseurl',
-                          'https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/')
+                          'http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/')
 
 
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.

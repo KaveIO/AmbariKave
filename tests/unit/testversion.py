@@ -27,25 +27,24 @@ class TestVersions(unittest.TestCase):
     """
     Checks that all the specified versions are consistent
     """
-    re = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
+    regex = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
+    restack = re.compile("([0-9]\.[0-9]\.KAVE\.[0-9]\.[0-9])")
     ignore = ["ReleaseNotes.md"]
     check_against = "3.0-Beta-Pre"
+    check_against_stack = "2.4.KAVE.3.0"
 
-    def findversion(self, fullpath):
+    def findversion(self, fullpath, regex):
         found = []
         if os.path.isfile(fullpath):
             with open(fullpath) as fp:
                 for i, line in enumerate(fp):
-                    for match in re.finditer(self.re, line):
+                    for match in re.finditer(regex, line):
                         found.append((fullpath, i + 1, match.groups()))
         return found
 
-    def runTest(self):
-        """
-        The most basic python test possible, checks that the files we have written
-        are importable in python, this is a basic sanity check
-        """
+    def iterfiles(self, regex):
         found = []
+        foundstack = []
         for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
             if '.git' in root:
                 continue
@@ -58,15 +57,26 @@ class TestVersions(unittest.TestCase):
                     continue
                 if f in self.ignore:
                     continue
-                found = found + self.findversion(os.path.join(root, f))
+                found = found + self.findversion(os.path.join(root, f), regex)
         found = [i for i in found if i is not None and len(i)]
         foundn = [i[-1][0] for i in found]
-        self.assertTrue(len(set(foundn)) == 1, "Mis-matching version numbers found! \n\t" +
-                        '\n\t'.join([str(i) for i in found]))
-        foundp = [i for i in foundn if i != self.check_against]
-        self.assertFalse(len(set(foundp)), "Versions match, but are not what was expected: "
-                         + self.check_against + " \n\t"
-                         + '\n\t'.join([str(i) for i in found]))
+        return found, foundn
+
+    def runTest(self):
+        """
+        The most basic python test possible, checks that the files we have written
+        are importable in python, this is a basic sanity check
+        """
+        self.assertTrue(self.check_against[:3] == self.check_against_stack[-3:],
+                        "This version does not appear in the stack name!! Modify the stack name if required.")
+        for regex, version in [(self.regex, self.check_against), (self.restack, self.check_against_stack)]:
+            found, foundn = self.iterfiles(regex)
+            self.assertTrue(len(set(foundn)) == 1, "Mis-matching version numbers found! \n\t" +
+                            '\n\t'.join([str(i) for i in found]))
+            foundp = [i for i in foundn if i != version]
+            self.assertFalse(len(set(foundp)), "Versions match, but are not what was expected: "
+                             + self.check_against + " \n\t"
+                             + '\n\t'.join([str(i) for i in found]))
 
 if __name__ == "__main__":
     test = TestVersions()

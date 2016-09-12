@@ -49,7 +49,7 @@ config_dir = "/etc/zookeeper/conf"
 zk_smoke_out = os.path.join(tmp_dir, "zkSmoke.out")
 
 # hadoop parameters for 2.2+
-# KAVE: this is the only line we change to accept 2.2.KAVE.2.1 as a valid stack with zookeeper!
+# KAVE: this is the only line we change to accept 2.2.KAVE.X.Y as a valid stack with zookeeper!
 if Script.is_hdp_stack_greater_or_equal("2.2") or os.path.exists(format("/usr/hdp/current/{component_directory}/bin")):
   zk_home = format("/usr/hdp/current/{component_directory}")
   zk_bin = format("/usr/hdp/current/{component_directory}/bin")

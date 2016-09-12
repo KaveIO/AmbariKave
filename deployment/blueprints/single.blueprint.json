@@ -69,6 +69,6 @@
   "Blueprints" : {
     "blueprint_name" : "single",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE22"
+    "stack_version" : "2.4.KAVEv22"
   }
 }

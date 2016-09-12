@@ -21,7 +21,7 @@ TARGET_DIR="/var/lib/ambari-server/resources/stacks/"
 TARGET_DIR_COMMON="/var/lib/ambari-server/resources/common-services/"
 
 rsync -razl "$CURRENT_DIR/../src/HDP/" $TARGET_DIR"/HDP"
-rsync -razl "$CURRENT_DIR/../src/KAVE/" $TARGET_DIR"/HDP/2.4.KAVE22"
+rsync -razl "$CURRENT_DIR/../src/KAVE/" $TARGET_DIR"/HDP/2.4.KAVEv22"
 rsync -razl "$CURRENT_DIR/../src/common-services/" $TARGET_DIR_COMMON
 python $CURRENT_DIR/dist_kavecommon.py $TARGET_DIR"/HDP"
 

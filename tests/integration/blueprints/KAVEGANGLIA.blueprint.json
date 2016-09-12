@@ -64,6 +64,6 @@
   "Blueprints" : {
     "blueprint_name" : "kaveganglia",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE.3.0"
+    "stack_version" : "2.5.KAVE.3.0"
   }
 }

@@ -49,5 +49,5 @@ else:
   zk_user =  config['configurations']['zookeeper-env']['zk_user']
 
   config_dir = "/etc/zookeeper/conf"
-  if Script.is_hdp_stack_greater_or_equal("2.2") or os.path.exists(format("/usr/hdp/current/{component_directory}/bin")):
+  if Script.is_hdp_stack_greater_or_equal("2.2"):# or os.path.exists(format("/usr/hdp/current/{component_directory}/bin")):
     config_dir = format("/usr/hdp/current/{component_directory}/conf")

@@ -74,6 +74,6 @@
   "Blueprints" : {
     "blueprint_name" : "hue",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVEv22"
+    "stack_version" : "2.4.2.2.KAVE"
   }
 }

@@ -22,8 +22,8 @@ import unittest
 class TestAmbariKaveRelease(base.LDTest):
     service = "AmbariKave-Release"
     version = "2.2-Beta"
-    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVEv22',
-                 '/var/lib/ambari-server/resources/stacks/HDP/2.4.KAVEv22'
+    checklist = ['/var/lib/ambari-server/resources/stacks/HDP/2.4.2.2.KAVE',
+                 '/var/lib/ambari-server/resources/stacks/HDP/2.4.2.2.KAVE'
                  '/services/JENKINS/package/scripts/kavecommon.py']
     ostype = "Centos7"
 

@@ -11,19 +11,6 @@
     	}
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
-    { "core-site" : { "hadoop.proxyuser.hue.hosts"  : "*",
-    				  "hadoop.proxyuser.hue.groups" : "*",
-    				  "hadoop.proxyuser.hcat.groups": "*",
-    				  "hadoop.proxyuser.hcat.hosts" : "*"
-    				 } },
-    { "webhcat-site" : { "webhcat.proxyuser.hue.hosts"  : "*",
-    				     "webhcat.proxyuser.hue.groups" : "*"
-    				   } },
-    { "oozie-site" : { "oozie.service.ProxyUserService.proxyuser.hue.hosts"  : "*",
-    				   "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
-    				   } },
-    { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
-    { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",

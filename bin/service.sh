@@ -190,7 +190,6 @@ function runList {
   echo "	STORMSD_DRPC_SERVER"
   echo "	STORMSD_CLIENT"
   echo "	TWIKI"
-  echo "	HUE"
   echo ""
 }
 
@@ -298,10 +297,6 @@ elif [ $service = "STORMSD_DRPC_SERVER" ]; then
 elif [ $service = "STORMSD_CLIENT" ]; then
   service="STORMSD"
   component="STORMSD_CLIENT"
-elif [ $service = "HUE" ]; then
-  component="HUE_SERVER"
-elif [ $service = "HUE" ]; then
-  component="HUE_SERVER"
 elif [ $service = "TWIKI" ]; then
   component="TWIKI_SERVER"
 elif [ $service = "NAGIOS" ]; then

@@ -28,10 +28,10 @@ class TestVersions(unittest.TestCase):
     Checks that all the specified versions are consistent
     """
     regex = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
-    restack = re.compile("([0-9]\.[0-9]\.KAVE\.[0-9]\.[0-9])")
+    restack = re.compile("([0-9]\.[0-9]\.[0-9]\.[0-9]\.KAVE)")
     ignore = ["ReleaseNotes.md"]
     check_against = "3.0-Beta-Pre"
-    check_against_stack = "2.5.KAVE.3.0"
+    check_against_stack = "2.5.3.0.KAVE"
 
     def findversion(self, fullpath, regex):
         found = []
@@ -67,7 +67,7 @@ class TestVersions(unittest.TestCase):
         The most basic python test possible, checks that the files we have written
         are importable in python, this is a basic sanity check
         """
-        self.assertTrue(self.check_against[:3] == self.check_against_stack[-3:],
+        self.assertTrue(self.check_against[:3] == self.check_against_stack[4:7],
                         "This version does not appear in the stack name!! Modify the stack name if required.")
         for regex, version in [(self.regex, self.check_against), (self.restack, self.check_against_stack)]:
             found, foundn = self.iterfiles(regex)

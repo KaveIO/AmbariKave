@@ -1,0 +1,41 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [  ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "ZOOKEEPER_SERVER"    },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "ZOOKEEPER_SERVER"    },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "NIMBUS_SD_MASTER"    },
+        { "name" : "SUPERVISOR_SD_SLAVE" },
+        { "name" : "STORMSD_UI_SERVER"   },
+        { "name" : "STORMSD_DRPC_SERVER" },
+        { "name" : "STORMSD_CLIENT"      },
+        { "name" : "STORMSD_LOG_VIEWER"  }
+      ],
+      "cardinality" : "1"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "default",
+    "stack_name" : "HDP",
+    "stack_version" : "2.4.3.0.KAVE"
+  }
+}

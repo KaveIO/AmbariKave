@@ -1,0 +1,41 @@
+{
+  "configurations" : [
+    { "gitlab": { "gitlab_admin_password": "temptest999999" } },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ { "freeipa": { "directory_password": "bla12345", "ldap_bind_password": "bla456789" } } ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"     },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_GRAFANA"   },
+        { "name" : "ZOOKEEPER_SERVER"  },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  },
+        { "name" : "FREEIPA_SERVER"    }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gitlabs",
+      "configurations" : [  ],
+      "components" : [
+        { "name" : "GITLAB_SERVER"   },
+        { "name" : "METRICS_MONITOR" },
+        { "name" : "ZOOKEEPER_CLIENT"}
+      ],
+      "cardinality" : "0-10"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "management",
+    "stack_name" : "HDP",
+    "stack_version" : "2.4.3.0.KAVE"
+  }
+}

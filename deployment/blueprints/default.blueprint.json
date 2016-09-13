@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "ZOOKEEPER_SERVER"    },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "METRICS_GRAFANA"     },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "default",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "METRICS_MONITOR" },
+        { "name" : "ZOOKEEPER_CLIENT"}
+      ],
+      "cardinality" : "0-10"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "default",
+    "stack_name" : "HDP",
+    "stack_version" : "2.4.3.0.KAVE"
+  }
+}

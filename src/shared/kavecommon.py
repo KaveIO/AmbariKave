@@ -398,12 +398,30 @@ def is_valid_hostname(name, paramname=''):
                              + ' ' + paramname)
 
 
-def is_upper_case(name, paramname=''):
+def v1_is_upper_case(name, paramname=''):
     matches = re.match(r"^[A-Z]*$", name)
     if matches is None:
         raise ValueError("This needs to be upper case "
                          + name
                          + ' ' + paramname)
+
+
+def is_upper_case(name, paramname=''):
+
+    matches = re.match(r"^[A-Z]*$", name)
+    if matches is None:
+        raise ValueError("This needs to be upper case "
+                         + name
+                         + ' ' + paramname)
+    else:
+        return name
+
+
+def default(ud_name='', def_val='', val_func=''):
+    name = res.default(ud_name, def_val)
+    paramname = ud_name[[m.start for m in re.finditer(r"/", ud_name)][0]:]
+    val_func(name, paramname)
+
 
 
 def install_epel(clean=True):

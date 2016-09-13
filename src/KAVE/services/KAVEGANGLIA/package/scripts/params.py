@@ -29,11 +29,11 @@ hostname = config["hostname"]
 
 kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
 
-kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE')
-kc.is_upper_case(kaveganglia_clustername, "kaveganglia/kaveganglia_clustername")
 
-kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE')
-kc.is_upper_case(kaveganglia_gridname, "kaveganglia/kaveganglia_gridname")
+kaveganglia_clustername = kc.default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE', 'is_upper_case')
+
+kaveganglia_gridname = kc.default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE', "is_upper_case")
+
 
 kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
 kc.is_valid_port(kaveganglia_port, "kaveganglia/kaveganglia_port")

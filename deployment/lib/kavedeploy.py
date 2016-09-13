@@ -892,6 +892,21 @@ def confallssh(remote, restart=True):
         time.sleep(2)
 
 
+def confsshpermissions(remote, restart=True):
+    """
+    Common sshd_config for all machines upped with these scripts
+    Allow login with password so long as it is not root.
+    """
+    remote.run('sed -i \'s/PasswordAuthentication\\ no/PasswordAuthentication\\ yes/\' /etc/ssh/sshd_config')
+    remote.run('sed -i \'s/#PermitRootLogin\\ yes/PermitRootLogin\\ without-password/\' /etc/ssh/sshd_config')
+    if restart:
+        try:
+            remote.run("service sshd restart")
+        except ShellExecuteError:
+            remote.run("service ssh restart")
+        time.sleep(2)
+
+
 def disable_security(remote, selinux=True, firewall=True, permanent=True):
     """
     Turn off firewall and selinux

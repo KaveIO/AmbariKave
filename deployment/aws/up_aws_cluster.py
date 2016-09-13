@@ -243,7 +243,8 @@ lD.install_pdsh(allremotes)
 print "===================================="
 print "configure SSH on all machines"
 print "===================================="
-lD.confallssh(allremotes)
+lD.confallssh(allremotes, restart=False)
+lD.confsshpermissions(allremotes)
 
 print "===================================="
 print "name the instances"

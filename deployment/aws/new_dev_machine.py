@@ -146,11 +146,9 @@ lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preserveh
 tos = remote.detect_linux_version()
 lD.disable_security(remote)
 
-lD.confallssh(remote)
-lD.confremotessh(remote)
-remote.run('sed -i \'s/PasswordAuthentication no/PasswordAuthentication yes/\' /etc/ssh/sshd_config')
-remote.run('sed -i \'s/#PermitRootLogin yes/PermitRootLogin without-password/\' /etc/ssh/sshd_config')
-remote.run('service sshd restart')
+lD.confallssh(remote, restart=False)
+lD.confremotessh(remote, restart=False)
+lD.confsshpermissions(remote)
 vols = []
 vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/opt", "Size": 10, "Attach": "/dev/sdb"}, keyloc))
 vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc"}, keyloc))

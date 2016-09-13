@@ -154,7 +154,8 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         else:  # or remote.detect_linux_version() in ["Centos7"]:
             lD.rename_remote_host(remote, 'ambari', 'kave.io')
         if not ambaridev:
-            lD.confallssh(remote)
+            lD.confallssh(remote, restart=False)
+            lD.confsshpermissions(remote)
         lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_ip(iid))
         # Give the machine ssh access into itself
         lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)

@@ -41,8 +41,9 @@ This may be one of the last versions with centos6 support. More than 100 indepen
 **KAVE stack versioning change**
 - Users were confused by the version numbering of KAVE
 - In 2.2-Beta we are now including the KAVE version as well as the HDP version in the stack name
-- So the stack now looks like 2.4.2.2.KAVE (HDP-version.KAVE.KAVE-version)
+- So the stack now looks like 2.4.2.2.KAVE (HDP-version.KAVE-version.KAVE)
 - KAVE is a as usual a small extension of HDP and this should improve the clarity
+- Read more here about KAVE versioning: https://github.com/KaveIO/AmbariKave/wiki/kave-versioning
 
 New Services:
 

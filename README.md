@@ -186,6 +186,8 @@ So long as the directory structure of the nearside cache is identical to our web
 Versioning System
 =========================================
 
+Read more here about kave versioning: https://github.com/KaveIO/AmbariKave/wiki/kave-versioning
+
 ## Relationship with Ambari Stacks
 
 KAVE extends a HDP stack, adding additional services. See the versioning diagram on our wiki for details.
@@ -196,13 +198,12 @@ The HDP stack number looks like X.Y, with a major and minor version. The KAVE al
 
 A KAVE official version tag appears like:
 
-* **Major.minor-KAVE-qualifier** i.e. **2.2-KAVE-Beta**
+* **Major.minor-qualifier** i.e. **2.2-Beta**
 
 The tag is split into four parts:
 
 * **Major**: Major versions separate backwards incompatible changes or drastic noticable changes to the user experience or interface
 * **.minor**: Minor versions represent subsequent releases of bugfixes, small improvements or changes which do not affect the user experience
-* **-KAVE-**: A signifier that this is an official tag
 * **qualifier**: Some logical qualification of the tag making it easier to understand. It is our convention to always use the -Beta tag at the moment. Example qualifies may include -Test (a release for developer testing only), -Pre (prerelease of a release candidate for beta-testing).
 
 ## What consititues a major version change?
@@ -218,6 +219,6 @@ A new major version is started whenever changes of the following type are made:
 
 We currently name our stack within ambari to reflect both the version of the HDP stack we depend on, and the installed version of the KAVE.
 
-* X.Y.KAVE.W.Z implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.4.2.2.KAVE is KAVE release 2.2 running on top of Ambari HDP stack 2.4
+* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.4.2.2.KAVE is KAVE release 2.2 running on top of Ambari HDP stack 2.4
 
 This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.

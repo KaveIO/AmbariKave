@@ -1,0 +1,61 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    },
+    {
+      "kavenagios" : {
+        "nagios_admin_password" : "averylongandannoyingpassword"
+      }
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    }
+
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"   },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_GRAFANA"    },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "KAVENAGIOS_MONITOR"}
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "test",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  },
+        { "name" : "KAVENAGIOS_SERVER" },
+        { "name" : "KAVENAGIOS_MONITOR"}
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "ci",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  },
+        { "name" : "KAVENAGIOS_MONITOR"}
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "kavenagios",
+    "stack_name" : "HDP",
+    "stack_version" : "2.4.3.0.KAVE"
+  }
+}

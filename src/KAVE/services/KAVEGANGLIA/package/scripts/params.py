@@ -35,20 +35,15 @@ kaveganglia_gridname = kc.default('configurations/kaveganglia/kaveganglia_gridna
 
 kaveganglia_port = kc.default('configurations/kaveganglia/kaveganglia_port', '8649', kc.is_valid_port)
 
-kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_xml_port', '8651')
-kc.is_valid_port(kaveganglia_xml_port, "kaveganglia/kaveganglia_xml_port")
+kaveganglia_xml_port = kc.default('configurations/kaveganglia/kaveganglia_xml_port', '8651', kc.is_valid_port)
 
-kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_interactive_port', '8652')
-kc.is_valid_port(kaveganglia_interactive_port, "kaveganglia/kaveganglia_interactive_port")
+kaveganglia_interactive_port = kc.default('configurations/kaveganglia/kaveganglia_interactive_port', '8652', kc.is_valid_port)
 
-kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_carbon_port', '2003')
-kc.is_valid_port(kaveganglia_carbon_port, "kaveganglia/kaveganglia_carbon_port")
+kaveganglia_carbon_port = kc.default('configurations/kaveganglia/kaveganglia_carbon_port', '2003', kc.is_valid_port )
 
-kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riemann_port', '5555')
-kc.is_valid_port(kaveganglia_riemann_port, "kaveganglia/kaveganglia_riemann_port")
+kaveganglia_riemann_port = kc.default('configurations/kaveganglia/kaveganglia_riemann_port', '5555', kc.is_valid_port)
 
-kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
-kc.is_valid_port(kaveganglia_udp_port, "kaveganglia/kaveganglia_udp_port")
+kaveganglia_udp_port = kc.default('configurations/kaveganglia/kaveganglia_udp_port', '6343', kc.is_valid_port)
 
 kaveganglia_monitor_hosts = default('/clusterHostInfo/kaveganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')

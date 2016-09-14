@@ -61,6 +61,11 @@ except ImportError:
 
     res.Script = Script
 
+    def rdefault(inp, out):
+        return out
+
+    res.default = rdefault
+
 
 def detect_linux_version():
     """
@@ -363,7 +368,7 @@ def is_valid_emailid(email, paramname=''):
 
     if '@' not in email or '.' not in email.split('@')[-1]:
         raise ValueError("not a valid email ID "
-                         + email
+                         + email.__str__()
                          + ' ' + paramname)
     for c in '"; ' + "'":
         if c in email:
@@ -386,42 +391,48 @@ def is_valid_ipv4_address(address, paramname=''):
                              + ' ' + paramname)
 
 
-def is_valid_hostname(name, paramname=''):
-    if name.lower() != name:
+def is_valid_hostname(value, paramname=''):
+    if value.lower() != value:
         raise NameError("The hostname needs to contain only lower case alphabets "
-                        + name
+                        + value.__str__()
                         + ' ' + paramname)
     for c in '!?" ' + "'":
-        if c in name:
+        if c in value:
             raise ValueError("you have added a special character to your host name. "
-                             + name
+                             + value.__str__()
                              + ' ' + paramname)
 
 
-def v1_is_upper_case(name, paramname=''):
-    matches = re.match(r"^[A-Z]*$", name)
+def v1_is_upper_case(value, paramname=''):
+    matches = re.match(r"^[A-Z]*$", value)
     if matches is None:
         raise ValueError("This needs to be upper case "
-                         + name
+                         + value.__str__()
                          + ' ' + paramname)
 
 
-def is_upper_case(name, paramname=''):
+def is_upper_case(value, paramname=''):
 
-    matches = re.match(r"^[A-Z]*$", name)
+    matches = re.match(r"^[A-Z]*$", value)
     if matches is None:
         raise ValueError("This needs to be upper case "
-                         + name
+                         + value.__str__()
                          + ' ' + paramname)
-    else:
-        return name
 
 
-def default(ud_name='', def_val='', val_func=''):
-    name = res.default(ud_name, def_val)
-    paramname = ud_name[[m.start for m in re.finditer(r"/", ud_name)][0]:]
-    val_func(name, paramname)
-
+def default(ud_name='', def_val='', val_func=None):
+    """
+    This is a KAVE-specific wrapper/extension around the resource_management
+    default function which allows for a custom function validator of the result
+    ud_name: the configuration parameter to try and retrieve
+    def_val: the default to set if the vale cannot be retrieved
+    val_func: the validator to run on that, which should throw an exception in case of failure
+    """
+    value = res.default(ud_name, def_val)
+    paramname = '/'.join(ud_name.split('/')[-2:])
+    if val_func is not None:
+        val_func(value, paramname)
+    return value
 
 
 def install_epel(clean=True):

@@ -27,16 +27,13 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
+kaveganglia_username = kc.default('configurations/kaveganglia/kaveganglia_username', 'ganglia', kc.is_valid_username)
 
+kaveganglia_clustername = kc.default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE', kc.is_upper_case)
 
-kaveganglia_clustername = kc.default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE', 'is_upper_case')
+kaveganglia_gridname = kc.default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE', kc.is_upper_case)
 
-kaveganglia_gridname = kc.default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE', "is_upper_case")
-
-
-kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
-kc.is_valid_port(kaveganglia_port, "kaveganglia/kaveganglia_port")
+kaveganglia_port = kc.default('configurations/kaveganglia/kaveganglia_port', '8649', kc.is_valid_port)
 
 kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_xml_port', '8651')
 kc.is_valid_port(kaveganglia_xml_port, "kaveganglia/kaveganglia_xml_port")

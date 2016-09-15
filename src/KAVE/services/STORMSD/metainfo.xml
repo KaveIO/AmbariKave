@@ -6,7 +6,7 @@
             <name>STORMSD</name>
             <comment>StormSD - the KAVE version of storm, which can be used separate from YARN, SD-stands for 'SupervisorD', which wraps the storm daemons for fast-fail fast-restart operation</comment>
             <displayName>StormSD</displayName>
-            <version>0.10.0</version>
+            <version>1.0.2</version>
             <components>
                     <component>
                     <name>NIMBUS_SD_MASTER</name>

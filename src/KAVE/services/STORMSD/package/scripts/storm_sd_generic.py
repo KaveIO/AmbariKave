@@ -52,7 +52,7 @@ class StormGeneric(Script):
             # Execute('ln -s /usr/local/storm-0.10.0 /usr/local/storm')
             # Execute('ln -s /usr/local/storm/bin/storm /usr/local/bin/storm')
             Execute('wget http://www.us.apache.org/dist/storm/apache-storm-1.0.2/apache-storm-1.0.2.tar.gz')
-            Execute('tar -xvf apache-storm-1.0.2.tar.gz -d /usr/local')
+            Execute('tar -xvf apache-storm-1.0.2.tar.gz -C /usr/local')
             Execute('mv /usr/local/apache-storm-1.0.2* /usr/local/storm-1.0.2')
             Execute('chown -R storm:storm /usr/local/storm-1.0.2')
             Execute('ln -s /usr/local/storm-1.0.2 /usr/local/storm')

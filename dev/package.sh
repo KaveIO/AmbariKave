@@ -55,7 +55,7 @@ rm -rf $BUILD_DIR/*
 RELEASE_PACKAGE="ambarikave-package-$TAG.tar.gz"
 echo "Building $RELEASE_PACKAGE"
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/
-cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
+# cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/HDP
 cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.4.3.0.KAVE
 cp -r $SRC_DIR/common-services $BUILD_DIR/package/ambari-server/resources/common-services

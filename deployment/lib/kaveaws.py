@@ -154,6 +154,7 @@ def chooseinstancetype(instancetype):
                                        "c4.large": "c3.large", "c4.xlarge": "c3.xlarge",
                                        "c4.2xlarge": "c3.2xlarge", "m4.large": 'm3.large'},
                       "eu-west": {"m1.medium": "t2.small"},
+                      "ap-south": {"m1.medium": "c4.large", "m3.medium": "c4.large"},
                       "eu-central": {"m1.medium": "m3.medium"}}
     try:
         return regioninstdict[region][instancetype]

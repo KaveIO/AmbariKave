@@ -44,13 +44,13 @@ class StormGeneric(Script):
         storm_dir_present = os.path.isdir('/usr/local/storm')
         if not storm_dir_present:
             # download storm
-            #kc.copy_cache_or_repo('storm-10.0.zip', arch='noarch')
+            # kc.copy_cache_or_repo('storm-10.0.zip', arch='noarch')
             # http://ftp.riken.jp/net/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.zip
-            #Execute('unzip -o -q storm-10.0.zip -d /usr/local')
-            #Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')
-            #Execute('chown -R storm:storm /usr/local/storm-0.10.0')
-            #Execute('ln -s /usr/local/storm-0.10.0 /usr/local/storm')
-            #Execute('ln -s /usr/local/storm/bin/storm /usr/local/bin/storm')
+            # Execute('unzip -o -q storm-10.0.zip -d /usr/local')
+            # Execute('mv /usr/local/apache-storm-0.10.0* /usr/local/storm-0.10.0')
+            # Execute('chown -R storm:storm /usr/local/storm-0.10.0')
+            # Execute('ln -s /usr/local/storm-0.10.0 /usr/local/storm')
+            # Execute('ln -s /usr/local/storm/bin/storm /usr/local/bin/storm')
             Execute('wget http://www.us.apache.org/dist/storm/apache-storm-1.0.2/apache-storm-1.0.2.tar.gz')
             Execute('tar -xvf apache-storm-1.0.2.tar.gz -d/usr/local')
             Execute('mv /usr/local/apache-storm-1.0.2* /usr/local/storm-1.0.2')

@@ -42,7 +42,7 @@ if nimbus_host == hostname:
 if use_drpc:
     drpc_servers = [s if s != hostname else 'localhost' for s in drpc_servers]
 
-storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
+# storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts',
                            '-Xmx1024m -Djava.net.preferIPv4Stack=true')
 ui_port = default('configurations/stormsd/stormsd.ui.port', "8744")

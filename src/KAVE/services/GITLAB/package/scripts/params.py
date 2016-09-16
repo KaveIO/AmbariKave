@@ -23,9 +23,9 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 gitlab_conf_file = "/etc/gitlab/gitlab.rb"
-gitlab_port = default("configurations/gitlab/gitlab_port", "80")
+gitlab_port = kc.default("configurations/gitlab/gitlab_port", "80", kc.is_valid_port)
 gitlab_url = default("configurations/gitlab/gitlab_url", hostname)
-unicorn_port = default("configurations/gitlab/unicorn_port", "8080")
+unicorn_port = kc.default("configurations/gitlab/unicorn_port", "8080", kc.is_valid_port)
 unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
 
 if gitlab_url == 'hostname':

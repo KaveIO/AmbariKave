@@ -16,6 +16,7 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 storm_conf_file = "/usr/local/storm/conf/storm.yaml"
@@ -42,10 +43,10 @@ storm_zookeeper_servers = [s if s != hostname else 'localhost' for s in storm_zo
 if use_drpc:
     drpc_servers = [s if s != hostname else 'localhost' for s in drpc_servers]
 
-storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
+storm_zookeeper_port = kc.default('configurations/stormsd/stormsd.zookeeper.port', "2181", kc.is_valid_port)
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts',
                            '-Xmx1024m -Djava.net.preferIPv4Stack=true')
-ui_port = default('configurations/stormsd/stormsd.ui.port', "8744")
+ui_port = kc.default('configurations/stormsd/stormsd.ui.port', "8744", kc.is_valid_port)
 ui_childopts = default('configurations/stormsd/stormsd.ui.childopts', '-Xmx768m -Djava.net.preferIPv4Stack=true')
 supervisor_slots_ports = default('configurations/stormsd/stormsd.supervisor.slots.ports',
                                  '6700, 6701').replace(", ", " ").replace(",", " ").split()
@@ -56,8 +57,8 @@ drpc_childopts = default('configurations/stormsd/stormsd.drpc.childopts', '-Xmx7
 log_level = default('configurations/stormsd/stormsd.loglevel', 'WARN')
 logviewer_childopts = default('configurations/stormsd/stormsd.logviewer.childopts',
                               '-Xmx128m -Djava.net.preferIPv4Stack=true')
-logviewer_port = default('configurations/stormsd/stormsd.logviewer.port', '8013')
-childlogdir = default('configurations/stormsd/childlogdir', '/var/log/supervisord/child')
+logviewer_port = kc.default('configurations/stormsd/stormsd.logviewer.port', '8013', kc.is_valid_port)
+childlogdir = kc.default('configurations/stormsd/childlogdir', '/var/log/supervisord/child', kc.is_valid_directory)
 supervisor_logfile = default('configurations/stormsd/supervisor_logfile', '/var/log/supervisord.log')
 storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
 # Licensed to the Apache Software Foundation (ASF) under one

@@ -16,12 +16,13 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 
 hostname = config["hostname"]
 
-install_topdir = default('configurations/archiva/install_topdir', '/opt/')
+install_topdir = kc.default('configurations/archiva/install_topdir', '/opt/', kc.is_valid_directory)
 
 if len(install_topdir) < 4 or install_topdir.count('/') < 2 or not install_topdir.startswith('/'):
     raise ValueError('archiva/install_topdir must be a valid directory full path,'
@@ -30,12 +31,12 @@ if len(install_topdir) < 4 or install_topdir.count('/') < 2 or not install_topdi
 if not install_topdir.endswith('/'):
     install_topdir = install_topdir + '/'
 
-install_subdir = default('configurations/archiva/install_subdir', 'archiva')
+install_subdir = kc.default('configurations/archiva/install_subdir', 'archiva', kc.is_valid_directory)
 
 if not len(install_subdir) or install_subdir.count('/'):
     raise ValueError('archiva/install_subdir must be a simple string, with no "/"')
 
-archiva_jetty_port = default('configurations/archiva/archiva_jetty_port', '5050')
+archiva_jetty_port = kc.default('configurations/archiva/archiva_jetty_port', '5050', kc.is_valid_port)
 
 ARCHIVA_ADMIN = default("configurations/archiva/ARCHIVA_ADMIN", "admin")
 ARCHIVA_ADMIN_FULLNAME = default("configurations/archiva/ARCHIVA_ADMIN_FULLNAME", "administrator")

@@ -403,14 +403,6 @@ def is_valid_hostname(value, paramname=''):
                              + ' ' + paramname)
 
 
-def v1_is_upper_case(value, paramname=''):
-    matches = re.match(r"^[A-Z]*$", value)
-    if matches is None:
-        raise ValueError("This needs to be upper case "
-                         + value.__str__()
-                         + ' ' + paramname)
-
-
 def is_upper_case(value, paramname=''):
 
     matches = re.match(r"^[A-Z]*$", value)

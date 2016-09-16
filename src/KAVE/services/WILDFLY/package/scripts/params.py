@@ -16,10 +16,11 @@
 #
 ##############################################################################
 from resource_management import *
+import kavecommon as kc
 
 config = Script.get_config()
 
-log_dir = default('configurations/wildfly/log_dir', '/var/log/wildfly')
+log_dir = kc.default('configurations/wildfly/log_dir', '/var/log/wildfly', kc.is_valid_directory)
 
 if not len(log_dir) > 3 or '/' not in log_dir:
     raise ValueError("You have set a directory incorrectly! " + log_dir)
@@ -30,7 +31,7 @@ if not len(installation_dir) > 3 or '/' not in installation_dir:
 
 bin_dir = installation_dir + '/bin'
 
-config_dir = default('configurations/wildfly/config_dir', '/standalone/configuration/')
+config_dir = kc.default('configurations/wildfly/config_dir', '/standalone/configuration/', kc.is_valid_directory)
 if not len(config_dir) > 3 or '/' not in config_dir:
     raise ValueError("You have set a directory incorrectly! " + config_dir)
 
@@ -63,16 +64,16 @@ if management_password:
     management_connection = management_connection + ' --password=' +  management_password
 
 # Port configurations
-http_port = default('configurations/wildfly/http_port', "8080")
-https_port = default('configurations/wildfly/https_port', '8443')
-management_native_port = default('configurations/wildfly/management_native_port', '9999')
-management_http_port = default('configurations/wildfly/management_http_port', '9990')
-management_https_port = default('configurations/wildfly/management_https_port', '9443')
-ajp_port = default('configurations/wildfly/ajp_port', '8009')
-osgi_http_port = default('configurations/wildfly/osgi_http_port', '8090')
-remoting_port = default('configurations/wildfly/remoting_port', '4447')
-txn_recovery_environment_port = default('configurations/wildfly/txn_recovery_environment_port', '4712')
-txn_status_manager_port = default('configurations/wildfly/txn_status_manager_port', '4713')
+http_port = kc.default('configurations/wildfly/http_port', "8080", kc.is_valid_port)
+https_port = kc.default('configurations/wildfly/https_port', '8443', kc.is_valid_port)
+management_native_port = kc.default('configurations/wildfly/management_native_port', '9999', kc.is_valid_port)
+management_http_port = kc.default('configurations/wildfly/management_http_port', '9990', kc.is_valid_port)
+management_https_port = kc.default('configurations/wildfly/management_https_port', '9443', kc.is_valid_port)
+ajp_port = kc.default('configurations/wildfly/ajp_port', '8009', kc.is_valid_port)
+osgi_http_port = kc.default('configurations/wildfly/osgi_http_port', '8090', kc.is_valid_port)
+remoting_port = kc.default('configurations/wildfly/remoting_port', '4447', kc.is_valid_port)
+txn_recovery_environment_port = kc.default('configurations/wildfly/txn_recovery_environment_port', '4712', kc.is_valid_port)
+txn_status_manager_port = kc.default('configurations/wildfly/txn_status_manager_port', '4713', kc.is_valid_port)
 
 mail_server = default('configurations/wildfly/mail_server', 'localhost')
 mail_port = default('configurations/wildfly/mail_port', '25')

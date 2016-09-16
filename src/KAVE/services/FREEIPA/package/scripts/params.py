@@ -61,8 +61,8 @@ install_with_dns = default('configurations/freeipa/install_with_dns', True)
 install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 
-pki_insecure_port = default('configurations/freeipa/pki_insecure_port', '8081')
-pki_secure_port = default('configurations/freeipa/pki_secure_port', '8444')
+pki_insecure_port = kc.default('configurations/freeipa/pki_insecure_port', '8081', kc.is_valid_port)
+pki_secure_port = kc.default('configurations/freeipa/pki_secure_port', '8444', kc.is_valid_port)
 
 # Only except IPv4 for now
 forwarders = default('configurations/freeipa/forwarders', '8.8.8.8').split(',')
@@ -109,7 +109,7 @@ for user, passwd in initial_user_passwords.iteritems():
 searchpath = default('configurations/freeipa/searchpath',
                      '/usr/lib/jvm/java-1.8*:/usr/lib/jvm/java-1.7*:/usr/jdk64/jdk1.7*:/usr/jdk64/jdk1.8*')
 # folderpath="/jre/lib/security:/lib/security"
-folderpath = default('configurations/freeipa/folderpath', '/jre/lib/security:/lib/security')
+folderpath = kc.default('configurations/freeipa/folderpath', '/jre/lib/security:/lib/security', kc.is_valid_directory)
 
 long_domain_patch = default("configurations/freeipa/long_domain_patch", False)
 long_domain_patch = kc.trueorfalse(long_domain_patch)

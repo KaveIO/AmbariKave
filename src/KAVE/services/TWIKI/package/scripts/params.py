@@ -22,7 +22,7 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-www_folder = default('configurations/twiki/www_folder', '/var/www/html/')
+www_folder = kc.default('configurations/twiki/www_folder', '/var/www/html/', kc.is_valid_directory)
 install_dir = www_folder + "twiki/"
 PORT = default('configurations/twiki/PORT', '80')
 servername = default('configurations/twiki/servername', hostname)

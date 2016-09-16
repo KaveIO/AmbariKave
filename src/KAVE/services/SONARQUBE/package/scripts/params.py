@@ -19,6 +19,7 @@ import status_params
 
 from resource_management import *
 from ambari_commons.os_check import OSCheck
+import kavecommon as kc
 
 config = Script.get_config()
 tmp_dir = Script.get_tmp_dir()
@@ -27,9 +28,9 @@ hostname = config["hostname"]
 
 sonarqube_supported_plugins = ['sonar-python-plugin-1.5.jar']
 
-sonarqube_install_directory = default('configurations/sonarqube/sonarqube_install_directory', '/opt/sonarqube')
-sonarqube_runner_install_directory = default('configurations/sonarqube/sonarqube_runner_install_directory',
-                                             '/opt/sonarqube_runner')
+sonarqube_install_directory = kc.default('configurations/sonarqube/sonarqube_install_directory', '/opt/sonarqube', kc.is_valid_directory)
+sonarqube_runner_install_directory = kc.default('configurations/sonarqube/sonarqube_runner_install_directory',
+                                             '/opt/sonarqube_runner', kc.is_valid_directory)
 sonarqube_plugins = set()
 for plugin in default('configurations/sonarqube/sonarqube_plugins', 'sonar-python-plugin-1.5.jar').split(','):
     if plugin == '':
@@ -57,7 +58,7 @@ if sonar_host == hostname:
 if not sonar_host:
     raise ValueError("Could not locate sonar server, did you install it in the cluster?")
 
-sonar_web_port = default('configurations/sonarqube/sonar_web_port', '5051')
+sonar_web_port = kc.default('configurations/sonarqube/sonar_web_port', '5051', kc.is_valid_port)
 
 sonar_database_url = default('/clusterHostInfo/sonarqube_mysql_server_hosts', [None])[0]
 if sonar_database_url == hostname:

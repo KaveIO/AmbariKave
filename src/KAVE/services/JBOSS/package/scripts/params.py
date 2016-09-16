@@ -20,19 +20,11 @@ import kavecommon as kc
 
 config = Script.get_config()
 
-installation_dir = default('configurations/jboss/installation_dir', '/opt/jboss-as/')
-#if not len(installation_dir)>3 or '/' not in installation_dir:
-#    raise ValueError("You have set a directory incorrectly! " + installation_dir)
-kc.is_valid_directory(installation_dir, 'jboss/installation_dir')
+installation_dir = kc.default('configurations/jboss/installation_dir', '/opt/jboss-as/', kc.is_valid_directory)
 
+config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/', kc.is_valid_directory)
 
-config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/')
-#if not len(config_dir)>3 or '/' not in config_dir:
-#    raise ValueError("You have set a directory incorrectly! " + config_dir)
-kc.is_valid_directory(config_dir, "jboss/config_dir")
-
-service_user = default('configurations/jboss/service_user', 'jboss')
-kc.is_valid_username(service_user, "jboss/service_user")
+service_user = default('configurations/jboss/service_user', 'jboss', kc.is_valid_username)
 
 jboss_xmlconf_filename = default('configurations/jboss/jboss_xmlconf_filename', 'standalone.xml')
 jboss_management_filename = default('configurations/jboss/jboss_management_filename', 'mgmt-users.properties')
@@ -50,36 +42,34 @@ else:
     Logger.sensitive_strings[management_password] = "[PROTECTED]"
 
 # ip adresses the service will be listening on
-ip_address = default('configurations/jboss/ip_address', '0.0.0.0')
-kc.is_valid_ipv4_address(ip_address, "jboss/ip_address")
-ip_address_management = default('configurations/jboss/ip_address_management', '127.0.0.1')
-kc.is_valid_ipv4_address(ip_address_management, "jboss/ip_address_management")
+ip_address = kc.default('configurations/jboss/ip_address', '0.0.0.0', kc.is_valid_ipv4_address)
+
+ip_address_management = kc.default('configurations/jboss/ip_address_management', '127.0.0.1', kc.is_valid_ipv4_address)
 
 # Port configurations
-http_port = default('configurations/jboss/http_port', "8080")
-kc.is_valid_port(http_port, "jboss/http_port")
-https_port = default('configurations/jboss/https_port', '8443')
-kc.is_valid_port(https_port, "jboss/https_port")
-management_native_port = default('configurations/jboss/management_native_port', '9999')
-kc.is_valid_port(management_native_port, "jboss/management_native_port")
-management_http_port = default('configurations/jboss/management_http_port', '9990')
-kc.is_valid_port(management_http_port, "jboss/management_http_port")
-management_https_port = default('configurations/jboss/management_https_port', '9443')
-kc.is_valid_port(management_https_port, "jboss/management_https_port")
-ajp_port = default('configurations/jboss/ajp_port', '8009')
-kc.is_valid_port(ajp_port, "jboss/ajp_port")
-osgi_http_port = default('configurations/jboss/osgi_http_port', '8090')
-kc.is_valid_port(osgi_http_port, "jboss/osgi_http_port")
-remoting_port = default('configurations/jboss/remoting_port', '4447')
-kc.is_valid_port(remoting_port, "jboss/remoting_port")
-txn_recovery_environment_port = default('configurations/jboss/txn_recovery_environment_port', '4712')
-kc.is_valid_port(txn_recovery_environment_port, "jboss/txn_recovery_environment_port")
-txn_status_manager_port = default('configurations/jboss/txn_status_manager_port', '4713')
-kc.is_valid_port(txn_status_manager_port, "jboss/txn_status_manager_port")
+http_port = kc.default('configurations/jboss/http_port', "8080", kc.is_valid_port)
+
+https_port = kc.default('configurations/jboss/https_port', '8443', kc.is_valid_port)
+
+management_native_port = kc.default('configurations/jboss/management_native_port', '9999', kc.is_valid_port)
+
+management_http_port = kc.default('configurations/jboss/management_http_port', '9990', kc.is_valid_port)
+
+management_https_port = kc.default('configurations/jboss/management_https_port', '9443', kc.is_valid_port)
+
+ajp_port = kc.default('configurations/jboss/ajp_port', '8009', kc.is_valid_port)
+
+osgi_http_port = kc.default('configurations/jboss/osgi_http_port', '8090', kc.is_valid_port)
+
+remoting_port = kc.default('configurations/jboss/remoting_port', '4447', kc.is_valid_port)
+
+txn_recovery_environment_port = kc.default('configurations/jboss/txn_recovery_environment_port', '4712', kc.is_valid_port)
+
+txn_status_manager_port = kc.default('configurations/jboss/txn_status_manager_port', '4713', kc.is_valid_port)
 
 mail_server = default('configurations/jboss/mail_server', 'localhost')
-mail_port = default('configurations/jboss/mail_port', '25')
-kc.is_valid_port(mail_port, "jboss/mail_port")
+mail_port = kc.default('configurations/jboss/mail_port', '25', kc.is_valid_port)
+
 
 jbossxmlconfig =default('configurations/jboss/jbossxmlconfig',"""
 <?xml version='1.0' encoding='UTF-8'?>

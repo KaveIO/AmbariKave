@@ -27,8 +27,8 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 nagios_passwd_file = "/etc/nagios/passwd"
-www_folder = default('configurations/kavenagios/www_folder', '/var/www/html/')
-PORT = default('configurations/kavenagios/PORT', '80')
+www_folder = kc.default('configurations/kavenagios/www_folder', '/var/www/html/', kc.is_valid_directory)
+PORT = kc.default('configurations/kavenagios/PORT', '80', kc.is_valid_port)
 servername = default('configurations/kavenagios/servername', hostname)
 if servername == "hostname":
     servername = hostname

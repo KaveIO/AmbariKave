@@ -18,6 +18,7 @@
 from resource_management import *
 from resource_management.core.system import System
 import os
+import kavecommon as kc
 
 config = Script.get_config()
 hostname = config["hostname"]
@@ -25,7 +26,7 @@ hostname = config["hostname"]
 db_path = default('configurations/mongodb/db_path', '/var/lib/mongo')
 logpath = default('configurations/mongodb/logpath', '/var/log/mongodb/mongod.log')
 bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
-tcp_port = default('configurations/mongodb/tcp_port', '27017')
+tcp_port = kc.default('configurations/mongodb/tcp_port', '27017', kc.is_valid_port)
 setname = default('configurations/mongodb/setname', 'None')
 
 mongodb_baseurl = default('configurations/mongodb/mongodb_baseurl',

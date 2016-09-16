@@ -34,6 +34,9 @@
     <property require-input="true">
         <name>sonar_database_user_passwd</name>
         <property-type>PASSWORD</property-type>
+        <value-attributes>
+        	<type>password</type>
+        </value-attributes>
         <value></value>
         <description>
             Password of the database user.

@@ -57,7 +57,19 @@
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "KAVEGANGLIA_SERVER" },
         { "name" : "KAVEGANGLIA_MONITOR"},
-        { "name" : "FREEIPA_CLIENT"     }
+        { "name" : "FREEIPA_CLIENT"     },
+        { "name" : "YARN_CLIENT"        },
+	    { "name" : "MAPREDUCE2_CLIENT"  },
+        { "name" : "SLIDER" 		    },
+	    { "name" : "LOGSEARCH_SERVER"   },
+	    { "name" : "ZEPPELIN_MASTER"    },
+	    { "name" : "ACTIVITY_EXPLORER"  },
+	    { "name" : "INFRA_SOLR"         },
+        { "name" : "INFRA_SOLR_CLIENT"  },
+        { "name" : "LOGSEARCH_LOGFEEDER"},
+        { "name" : "ACTIVITY_ANALYZER"  },
+        { "name" : "HST_SERVER"         },
+        { "name" : "HST_AGENT"          }
       ],
       "cardinality" : "1"
     },
@@ -79,7 +91,13 @@
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "SONARQUBE_RUNNER"     }
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "SLIDER" 		      },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  },
+        { "name" : "HST_AGENT"            },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "ACTIVITY_ANALYZER"    }
 
       ],
       "cardinality" : "0-10"
@@ -109,7 +127,11 @@
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"    },
-        { "name" : "FREEIPA_CLIENT"         }
+        { "name" : "FREEIPA_CLIENT"         },
+        { "name" : "SLIDER" 		        },
+        { "name" : "HST_AGENT"              },
+        { "name" : "INFRA_SOLR_CLIENT"      },
+        { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
       "cardinality" : "1"
     },
@@ -121,7 +143,13 @@
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "FREEIPA_CLIENT"       }
+        { "name" : "FREEIPA_CLIENT"       },
+        { "name" : "SLIDER" 		      },
+        { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "HST_AGENT"            },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"
     },
@@ -134,7 +162,13 @@
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "FREEIPA_CLIENT"       }
+        { "name" : "FREEIPA_CLIENT"       },
+        { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "SLIDER" 		      },
+        { "name" : "HST_AGENT"            },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1+"
     },
@@ -162,7 +196,10 @@
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR"   },
-        { "name" : "FREEIPA_CLIENT"        }
+        { "name" : "FREEIPA_CLIENT"        },
+        { "name" : "SLIDER" 		       },
+        { "name" : "HST_AGENT"             },
+        { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"
     }

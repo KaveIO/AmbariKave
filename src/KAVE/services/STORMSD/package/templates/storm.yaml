@@ -1,3 +1,7 @@
+storm.zookeeper.servers:
+{% for server in storm_zookeeper_servers %}
+  - "{{server}}"
+{% endfor %}
 nimbus.host: "{{nimbus_host}}"
 nimbus.childopts: "{{nimbus_childopts}}"
 

@@ -37,12 +37,12 @@ if None in [nimbus_host]:
 # find/replace localhost
 if nimbus_host == hostname:
     nimbus_host = "localhost"
-# storm_zookeeper_servers = [s if s != hostname else 'localhost' for s in storm_zookeeper_servers]
+storm_zookeeper_servers = [s if s != hostname else 'localhost' for s in storm_zookeeper_servers]
 
 if use_drpc:
     drpc_servers = [s if s != hostname else 'localhost' for s in drpc_servers]
 
-# storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
+storm_zookeeper_port = default('configurations/stormsd/stormsd.zookeeper.port', "2181")
 nimbus_childopts = default('configurations/stormsd/stormsd.nimbus.childopts',
                            '-Xmx1024m -Djava.net.preferIPv4Stack=true')
 ui_port = default('configurations/stormsd/stormsd.ui.port', "8744")
@@ -85,19 +85,19 @@ java.library.path: "/usr/local/lib:/opt/local/lib:/usr/lib"
 ### storm.* configs are general configurations
 # the local dir is where jars are kept
 storm.local.dir: "storm-local"
-# storm.zookeeper.servers:
-# {% for server in storm_zookeeper_servers %}
-#  - "{{server}}"
-# {% endfor %}
-# storm.zookeeper.port: 2181
-# storm.zookeeper.root: "/storm"
-# storm.zookeeper.session.timeout: 20000
-# storm.zookeeper.connection.timeout: 15000
-# storm.zookeeper.retry.times: 5
-# storm.zookeeper.retry.interval: 1000
-# storm.zookeeper.retry.intervalceiling.millis: 30000
-# storm.zookeeper.auth.user: null
-# storm.zookeeper.auth.password: null
+storm.zookeeper.servers:
+ {% for server in storm_zookeeper_servers %}
+  - "{{server}}"
+ {% endfor %}
+storm.zookeeper.port: 2181
+storm.zookeeper.root: "/storm"
+storm.zookeeper.session.timeout: 20000
+storm.zookeeper.connection.timeout: 15000
+storm.zookeeper.retry.times: 5
+storm.zookeeper.retry.interval: 1000
+storm.zookeeper.retry.intervalceiling.millis: 30000
+storm.zookeeper.auth.user: null
+storm.zookeeper.auth.password: null
 storm.cluster.mode: "distributed" # can be distributed or local
 storm.local.mode.zmq: false
 storm.thrift.transport: "backtype.storm.security.auth.SimpleTransportPlugin"

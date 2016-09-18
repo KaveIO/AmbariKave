@@ -62,13 +62,9 @@
 	    { "name" : "MAPREDUCE2_CLIENT"  },
         { "name" : "SLIDER" 		    },
 	    { "name" : "LOGSEARCH_SERVER"   },
-	    { "name" : "ACTIVITY_EXPLORER"  },
 	    { "name" : "INFRA_SOLR"         },
         { "name" : "INFRA_SOLR_CLIENT"  },
-        { "name" : "LOGSEARCH_LOGFEEDER"},
-        { "name" : "ACTIVITY_ANALYZER"  },
-        { "name" : "HST_SERVER"         },
-        { "name" : "HST_AGENT"          }
+        { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
       "cardinality" : "1"
     },
@@ -95,9 +91,7 @@
         { "name" : "SLIDER" 		      },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
-        { "name" : "HST_AGENT"            },
-        { "name" : "INFRA_SOLR_CLIENT"    },
-        { "name" : "ACTIVITY_ANALYZER"    }
+        { "name" : "INFRA_SOLR_CLIENT"    }
 
       ],
       "cardinality" : "0-10"
@@ -129,7 +123,6 @@
         { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"         },
         { "name" : "SLIDER" 		        },
-        { "name" : "HST_AGENT"              },
         { "name" : "INFRA_SOLR_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
@@ -147,7 +140,6 @@
         { "name" : "SLIDER" 		      },
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
-        { "name" : "HST_AGENT"            },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
@@ -166,7 +158,6 @@
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "SLIDER" 		      },
-        { "name" : "HST_AGENT"            },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
@@ -198,7 +189,6 @@
         { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"        },
         { "name" : "SLIDER" 		       },
-        { "name" : "HST_AGENT"             },
         { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"

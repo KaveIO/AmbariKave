@@ -62,7 +62,6 @@
 	    { "name" : "MAPREDUCE2_CLIENT"  },
         { "name" : "SLIDER" 		    },
 	    { "name" : "LOGSEARCH_SERVER"   },
-	    { "name" : "ZEPPELIN_MASTER"    },
 	    { "name" : "ACTIVITY_EXPLORER"  },
 	    { "name" : "INFRA_SOLR"         },
         { "name" : "INFRA_SOLR_CLIENT"  },
@@ -79,6 +78,7 @@
       "components" : [
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
+	    { "name" : "ZEPPELIN_MASTER"      },
 		{ "name" : "SQOOP"                },
 	    { "name" : "HDFS_CLIENT"          },
 	    { "name" : "YARN_CLIENT"          },

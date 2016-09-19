@@ -85,6 +85,7 @@
       "components" : [
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
+	    { "name" : "ZEPPELIN_MASTER"      },
 		{ "name" : "SQOOP"                },
 	    { "name" : "HDFS_CLIENT"          },
 	    { "name" : "YARN_CLIENT"          },

@@ -27,9 +27,9 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 nagios_passwd_file = "/etc/nagios/passwd"
-www_folder = default('configurations/kavenagios/www_folder', '/var/www/html/')
-PORT = default('configurations/kavenagios/PORT', '80')
-servername = default('configurations/kavenagios/servername', hostname)
+www_folder = kc.default('configurations/kavenagios/www_folder', '/var/www/html/', kc.is_valid_directory)
+PORT = kc.default('configurations/kavenagios/PORT', '80', kc.is_valid_port)
+servername = kc.default('configurations/kavenagios/servername', hostname, kc.is_valid_hostname)
 if servername == "hostname":
     servername = hostname
 
@@ -59,6 +59,7 @@ Logger.sensitive_strings[nagios_admin_password] = "[PROTECTED]"
 nagios_admin_email = default('configurations/kavenagios/nagios_admin_email', 'default')
 if nagios_admin_email is None or not len(nagios_admin_email) or nagios_admin_email == 'default':
     nagios_admin_email = 'nagiosadmin@' + nagios_host
+kc.is_valid_emailid(nagios_admin_email, "kavenagios/nagios_admin_email")
 
 nagios_clients_file = default('configurations/kavenagios/nagios_clients_file', """
 {% for ahost, anip in nagios_slave_dict.iteritems() %}define host{

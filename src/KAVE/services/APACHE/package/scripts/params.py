@@ -24,15 +24,11 @@ import kavecommon as kc
 config = Script.get_config()
 
 hostname = config["hostname"]
-name = hostname
-kc.is_valid_hostname(name)
 
-www_folder = default('configurations/apache/www_folder', '/var/www/html/')
-dirname = www_folder
-kc.is_valid_directory(dirname)
+www_folder = kc.default('configurations/apache/www_folder', '/var/www/html/', kc.is_valid_directory)
 
-PORT = default('configurations/apache/PORT', '80')
-servername = default('configurations/apache/servername', hostname)
+PORT = kc.default('configurations/apache/PORT', '80', kc.is_valid_port)
+servername = kc.default('configurations/apache/servername', hostname, kc.is_valid_hostname)
 if servername == "hostname":
     servername = hostname
 

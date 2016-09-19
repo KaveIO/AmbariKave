@@ -31,14 +31,14 @@ if len(install_topdir) < 4 or install_topdir.count('/') < 2 or not install_topdi
 if not install_topdir.endswith('/'):
     install_topdir = install_topdir + '/'
 
-install_subdir = kc.default('configurations/archiva/install_subdir', 'archiva', kc.is_valid_directory)
+install_subdir = default('configurations/archiva/install_subdir', 'archiva')
 
 if not len(install_subdir) or install_subdir.count('/'):
     raise ValueError('archiva/install_subdir must be a simple string, with no "/"')
 
 archiva_jetty_port = kc.default('configurations/archiva/archiva_jetty_port', '5050', kc.is_valid_port)
 
-ARCHIVA_ADMIN = default("configurations/archiva/ARCHIVA_ADMIN", "admin")
+ARCHIVA_ADMIN = kc.default("configurations/archiva/ARCHIVA_ADMIN", "admin", kc.is_valid_username)
 ARCHIVA_ADMIN_FULLNAME = default("configurations/archiva/ARCHIVA_ADMIN_FULLNAME", "administrator")
 ARCHIVA_ADMIN_EMAIL = default("configurations/archiva/ARCHIVA_ADMIN_EMAIL", "default")
 ARCHIVA_ADMIN_PASSWORD = config['configurations']["archiva"]["ARCHIVA_ADMIN_PASSWORD"]
@@ -46,6 +46,8 @@ Logger.sensitive_strings[ARCHIVA_ADMIN_PASSWORD] = "[PROTECTED]"
 
 if ARCHIVA_ADMIN_EMAIL == 'default':
     ARCHIVA_ADMIN_EMAIL = ARCHIVA_ADMIN + '@' + '.'.join(hostname.split('.')[1:])
+
+kc.is_valid_emailid(ARCHIVA_ADMIN_EMAIL, "archiva/ARCHIVA_ADMIN_EMAIL")
 
 archiva_admin_dict = {"username": ARCHIVA_ADMIN, "password": ARCHIVA_ADMIN_PASSWORD,
                       "confirmPassword": ARCHIVA_ADMIN_PASSWORD, "fullName": ARCHIVA_ADMIN_FULLNAME,

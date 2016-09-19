@@ -22,9 +22,9 @@ config = Script.get_config()
 
 installation_dir = kc.default('configurations/jboss/installation_dir', '/opt/jboss-as/', kc.is_valid_directory)
 
-config_dir = default('configurations/jboss/config_dir', '/standalone/configuration/', kc.is_valid_directory)
+config_dir = kc.default('configurations/jboss/config_dir', '/standalone/configuration/', kc.is_valid_directory)
 
-service_user = default('configurations/jboss/service_user', 'jboss', kc.is_valid_username)
+service_user = kc.default('configurations/jboss/service_user', 'jboss', kc.is_valid_username)
 
 jboss_xmlconf_filename = default('configurations/jboss/jboss_xmlconf_filename', 'standalone.xml')
 jboss_management_filename = default('configurations/jboss/jboss_management_filename', 'mgmt-users.properties')

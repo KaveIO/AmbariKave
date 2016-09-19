@@ -28,7 +28,8 @@ hostname = config["hostname"]
 
 sonarqube_supported_plugins = ['sonar-python-plugin-1.5.jar']
 
-sonarqube_install_directory = kc.default('configurations/sonarqube/sonarqube_install_directory', '/opt/sonarqube', kc.is_valid_directory)
+sonarqube_install_directory = kc.default('configurations/sonarqube/sonarqube_install_directory',
+                                         '/opt/sonarqube', kc.is_valid_directory)
 sonarqube_runner_install_directory = kc.default('configurations/sonarqube/sonarqube_runner_install_directory',
                                              '/opt/sonarqube_runner', kc.is_valid_directory)
 sonarqube_plugins = set()

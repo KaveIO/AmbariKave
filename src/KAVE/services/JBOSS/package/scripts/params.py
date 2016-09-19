@@ -67,7 +67,7 @@ txn_recovery_environment_port = kc.default('configurations/jboss/txn_recovery_en
 
 txn_status_manager_port = kc.default('configurations/jboss/txn_status_manager_port', '4713', kc.is_valid_port)
 
-mail_server = default('configurations/jboss/mail_server', 'localhost')
+mail_server = kc.default('configurations/jboss/mail_server', 'localhost')
 mail_port = kc.default('configurations/jboss/mail_port', '25', kc.is_valid_port)
 
 

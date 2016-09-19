@@ -73,7 +73,7 @@ client_init_wait = default('configurations/freeipa/client_init_wait', 600)
 
 all_hosts = default("/clusterHostInfo/all_hosts", None)
 
-ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
+ldap_bind_user = kc.default('configurations/freeipa/ldap_bind_user', 'kave_bind_user', kc.is_valid_username)
 ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
 
 initial_users_and_groups = default('configurations/freeipa/initial_users_and_groups', '{"Users": [], "Groups" : {}}')
@@ -124,4 +124,4 @@ elif len(domain) < 20 and long_domain_patch:
     raise ValueError("This domain is less than 20 characters, and so the long_domain_patch "
                      + "is unecessary and potentially harmful.")
 
-admin_user_shell = default('configurations/freeipa/admin_user_shell', '/sbin/nologin')
+admin_user_shell = kc.default('configurations/freeipa/admin_user_shell', '/sbin/nologin', kc.is_valid_directory)

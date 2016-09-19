@@ -37,7 +37,7 @@ www_folder = kc.default('configurations/kavelanding/www_folder', '/var/www/html/
 customlinks = default('configurations/kavelanding/customlinks', '{}')
 PORT = kc.default('configurations/kavelanding/PORT', '80', kc.is_valid_port)
 AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
-servername = default('configurations/kavelanding/servername', hostname)
+servername = kc.default('configurations/kavelanding/servername', hostname, kc.is_valid_hostname)
 if servername == "default":
     servername = hostname
 

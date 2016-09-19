@@ -69,7 +69,8 @@ if sonar_database_url == hostname:
 if not sonar_database_url:
     raise ValueError("Could not locate sonarqube sql server, did you install it in the cluster?")
 
-sonar_database_user_name = default('configurations/sonarqube/sonar_database_user_name', 'sonarqube')
+sonar_database_user_name = kc.default(
+    'configurations/sonarqube/sonar_database_user_name', 'sonarqube', kc.is_valid_username)
 sonar_database_user_passwd = config['configurations']['sonarqube']['sonar_database_user_passwd']
 
 if not sonar_database_user_passwd:

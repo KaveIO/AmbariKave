@@ -59,7 +59,8 @@ logviewer_childopts = default('configurations/stormsd/stormsd.logviewer.childopt
                               '-Xmx128m -Djava.net.preferIPv4Stack=true')
 logviewer_port = kc.default('configurations/stormsd/stormsd.logviewer.port', '8013', kc.is_valid_port)
 childlogdir = kc.default('configurations/stormsd/childlogdir', '/var/log/supervisord/child', kc.is_valid_directory)
-supervisor_logfile = default('configurations/stormsd/supervisor_logfile', '/var/log/supervisord.log')
+supervisor_logfile = kc.default('configurations/stormsd/supervisor_logfile',
+                                '/var/log/supervisord.log', kc.is_valid_directory)
 storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file

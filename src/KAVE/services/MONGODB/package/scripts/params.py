@@ -23,9 +23,9 @@ import kavecommon as kc
 config = Script.get_config()
 hostname = config["hostname"]
 
-db_path = default('configurations/mongodb/db_path', '/var/lib/mongo')
-logpath = default('configurations/mongodb/logpath', '/var/log/mongodb/mongod.log')
-bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
+db_path = kc.default('configurations/mongodb/db_path', '/var/lib/mongo', kc.is_valid_directory)
+logpath = kc.default('configurations/mongodb/logpath', '/var/log/mongodb/mongod.log', kc.is_valid_directory)
+bind_ip = kc.default('configurations/mongodb/bind_ip', '0.0.0.0', kc.is_valid_ipv4_address)
 tcp_port = kc.default('configurations/mongodb/tcp_port', '27017', kc.is_valid_port)
 setname = default('configurations/mongodb/setname', 'None')
 

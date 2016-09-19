@@ -24,7 +24,7 @@ hostname = config["hostname"]
 
 gitlab_conf_file = "/etc/gitlab/gitlab.rb"
 gitlab_port = kc.default("configurations/gitlab/gitlab_port", "80", kc.is_valid_port)
-gitlab_url = default("configurations/gitlab/gitlab_url", hostname)
+gitlab_url = kc.default("configurations/gitlab/gitlab_url", hostname, kc.is_valid_hostname)
 unicorn_port = kc.default("configurations/gitlab/unicorn_port", "8080", kc.is_valid_port)
 unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
 

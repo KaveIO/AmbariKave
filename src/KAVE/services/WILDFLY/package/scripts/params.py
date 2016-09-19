@@ -22,20 +22,13 @@ config = Script.get_config()
 
 log_dir = kc.default('configurations/wildfly/log_dir', '/var/log/wildfly', kc.is_valid_directory)
 
-if not len(log_dir) > 3 or '/' not in log_dir:
-    raise ValueError("You have set a directory incorrectly! " + log_dir)
-
-installation_dir = default('configurations/wildfly/installation_dir', '/opt/wildfly/')
-if not len(installation_dir) > 3 or '/' not in installation_dir:
-    raise ValueError("You have set a directory incorrectly! " + installation_dir)
+installation_dir = kc.default('configurations/wildfly/installation_dir', '/opt/wildfly/', kc.is_valid_directory)
 
 bin_dir = installation_dir + '/bin'
 
 config_dir = kc.default('configurations/wildfly/config_dir', '/standalone/configuration/', kc.is_valid_directory)
-if not len(config_dir) > 3 or '/' not in config_dir:
-    raise ValueError("You have set a directory incorrectly! " + config_dir)
 
-service_user = default('configurations/wildfly/service_user', 'wildfly')
+service_user = kc.default('configurations/wildfly/service_user', 'wildfly', kc.is_valid_username)
 
 wildfly_xmlconf_filename = default('configurations/wildfly/wildfly_xmlconf_filename', 'standalone.xml')
 wildfly_management_filename = default('configurations/wildfly/wildfly_management_filename', 'mgmt-users.properties')
@@ -53,9 +46,9 @@ else:
     Logger.sensitive_strings[management_password] = "[PROTECTED]"
 
 # ip adresses the service will be listening on
-ip_address = default('configurations/wildfly/ip_address', '0.0.0.0')
-ip_address_management = default('configurations/wildfly/ip_address_management', '127.0.0.1')
-management_http_port = default('configurations/wildfly/management_http_port', '9990')
+ip_address = kc.default('configurations/wildfly/ip_address', '0.0.0.0', kc.is_valid_ipv4_address)
+ip_address_management = kc.default('configurations/wildfly/ip_address_management', '127.0.0.1', kc.is_valid_ipv4_address)
+management_http_port = kc.default('configurations/wildfly/management_http_port', '9990', kc.is_valid_port)
 
 management_connection = '--controller=' + ip_address_management + ':' + str(management_http_port)
 
@@ -75,7 +68,7 @@ remoting_port = kc.default('configurations/wildfly/remoting_port', '4447', kc.is
 txn_recovery_environment_port = kc.default('configurations/wildfly/txn_recovery_environment_port', '4712', kc.is_valid_port)
 txn_status_manager_port = kc.default('configurations/wildfly/txn_status_manager_port', '4713', kc.is_valid_port)
 
-mail_server = default('configurations/wildfly/mail_server', 'localhost')
+mail_server = kc.default('configurations/wildfly/mail_server', 'localhost', kc.is_valid_hostname)
 mail_port = default('configurations/wildfly/mail_port', '25')
 
 wildflyxmlconfig = default('configurations/wildfly/wildflyxmlconfig', """

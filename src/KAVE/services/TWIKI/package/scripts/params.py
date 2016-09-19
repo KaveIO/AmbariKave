@@ -25,12 +25,12 @@ hostname = config["hostname"]
 www_folder = kc.default('configurations/twiki/www_folder', '/var/www/html/', kc.is_valid_directory)
 install_dir = www_folder + "twiki/"
 PORT = default('configurations/twiki/PORT', '80')
-servername = default('configurations/twiki/servername', hostname)
+servername = kc.default('configurations/twiki/servername', hostname, kc.is_valid_hostname)
 if servername == "hostname":
     servername = hostname
-admin_user = default('configurations/twiki/admin_user', 'twiki-admin')
+admin_user = kc.default('configurations/twiki/admin_user', 'twiki-admin', kc.is_valid_username)
 
-ldap_group = default('configurations/twiki/ldap_group', 'twiki')
+ldap_group = kc.default('configurations/twiki/ldap_group', 'twiki', kc.is_valid_username)
 
 known_authentication_methods = ['HBAC', 'LDAP', 'NONE']
 authentication_method = default('configurations/twiki/authentication_method', 'HBAC')

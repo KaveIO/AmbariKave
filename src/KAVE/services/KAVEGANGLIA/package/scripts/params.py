@@ -58,11 +58,11 @@ if kaveganglia_host == hostname:
 else:
     kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', '0.0.0.0')
 
-kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0')
+kaveganglia_tcp_bind = kc.default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0', kc.is_valid_ipv4_address)
 
 www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
 PORT = default('configurations/kaveganglia/PORT', '80')
-servername = default('configurations/kaveganglia/servername', hostname)
+servername = kc.default('configurations/kaveganglia/servername', hostname, kc.is_valid_hostname)
 if servername == "hostname":
     servername = hostname
 

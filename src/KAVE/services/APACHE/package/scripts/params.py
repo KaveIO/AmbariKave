@@ -28,7 +28,7 @@ hostname = config["hostname"]
 www_folder = kc.default('configurations/apache/www_folder', '/var/www/html/', kc.is_valid_directory)
 
 PORT = kc.default('configurations/apache/PORT', '80', kc.is_valid_port)
-servername = default('configurations/apache/servername', hostname)
+servername = kc.default('configurations/apache/servername', hostname, kc.is_valid_hostname)
 if servername == "hostname":
     servername = hostname
 

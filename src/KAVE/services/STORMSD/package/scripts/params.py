@@ -22,7 +22,7 @@ storm_conf_file = "/usr/local/storm/conf/storm.yaml"
 hostname = config["hostname"]
 
 # config['configurations']['stormsd']['stormsd.zookeeper.servers'].replace(", "," ").replace(","," ").split()
-# storm_zookeeper_servers = default("/clusterHostInfo/zookeeper_hosts", None)
+storm_zookeeper_servers = default("/clusterHostInfo/zookeeper_hosts", None)
 nimbus_host = default("/clusterHostInfo/nimbus_sd_master_hosts", [None])[0]
 # config['configurations']['stormsd']['stormsd.drpc.servers'].replace(", "," ").replace(","," ").split()
 drpc_servers = default("/clusterHostInfo/stormsd_drpc_server_hosts", False)

@@ -40,6 +40,9 @@
         <name>ldap_bind_password</name>
         <value>0</value>
     	<property-type>PASSWORD</property-type>
+        <value-attributes>
+        	<type>password</type>
+        </value-attributes>
         <description>
             Password of the binding user. If using ldap this must also be set!
         </description>

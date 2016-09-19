@@ -18,6 +18,9 @@
             Please therefore use a very strong 8-character mix and do not expose as a public internet endpoint
         </description>
         <property-type>PASSWORD</property-type>
+        <value-attributes>
+        	<type>password</type>
+        </value-attributes>
     </property>
     <property>
         <name>install_topdir</name>

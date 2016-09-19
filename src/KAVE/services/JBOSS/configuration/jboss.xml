@@ -38,6 +38,9 @@
             there will be no admin user available.
         </description>
        <property-type>PASSWORD</property-type>
+       <value-attributes>
+       	<type>password</type>
+       </value-attributes>
     </property>
     <property>
         <name>service_user</name>

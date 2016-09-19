@@ -10,23 +10,19 @@
         "metrics_grafana_password" : "SnowCapMountainChap"
       }
     },
-    {
-      "jenkins" : {
-        "JENKINS_PORT" : 8888, "JENKINS_ADMIN_PASSWORD" : "ThisIsALongAndAnnoyingPasswordDontUseIt"
-      }
-    }
+    { "twiki" : { "ldap_bind_password": "testtestdirpass1234"} }
   ],
   "host_groups" : [
     {
       "name" : "admin",
-      "configurations" : [ ],
+      "configurations" : [  ],
       "components" : [
-        { "name" : "AMBARI_SERVER"       },
-        { "name" : "METRICS_COLLECTOR"   },
-        { "name" : "ZOOKEEPER_SERVER"    },
-        { "name" : "JENKINS_MASTER"      },
-        { "name" : "METRICS_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    }
+        { "name" : "AMBARI_SERVER"     },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "ZOOKEEPER_SERVER"  },
+        { "name" : "TWIKI_SERVER"      },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  }
       ],
       "cardinality" : "1"
     },
@@ -41,7 +37,7 @@
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "default",
+    "blueprint_name" : "twiki",
     "stack_name" : "HDP",
     "stack_version" : "2.5.3.0.KAVE"
   }

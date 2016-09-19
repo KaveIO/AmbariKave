@@ -55,7 +55,7 @@
     </property>
     <property>
         <name>mongodb_baseurl</name>
-        <value>https://repo.mongodb.org/yum/redhat/6/mongodb-org/stable/x86_64/</value>
+        <value>http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/</value>
         <description>
             Base URL of mongo repository.
         </description>

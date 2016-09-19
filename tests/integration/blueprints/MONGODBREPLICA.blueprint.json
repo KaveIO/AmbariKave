@@ -65,6 +65,6 @@
   "Blueprints" : {
     "blueprint_name" : "mongodbreplica",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.KAVE"
+    "stack_version" : "2.5.3.0.KAVE"
   }
 }

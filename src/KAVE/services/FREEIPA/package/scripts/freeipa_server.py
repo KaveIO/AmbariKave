@@ -136,8 +136,7 @@ class FreeipaServer(Script):
 
             # patch for long domain names!
             if params.long_domain_patch:
-                Execute("grep -IlR 'Certificate Authority' /usr/lib/python*/site-packages/ipa* "
-                        "| xargs sed -i 's/Certificate Authority/CA/g'")
+                freeipa.sed_ca_longdomain_patch()
 
             # This is a time-consuming command, better to log the output
             Execute(install_command, logoutput=True)

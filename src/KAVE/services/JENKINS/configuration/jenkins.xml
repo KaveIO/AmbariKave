@@ -17,6 +17,9 @@
     <value></value>
     <description>Which password to use?</description>
     <property-type>PASSWORD</property-type>
+    <value-attributes>
+    	<type>password</type>
+    </value-attributes>
   </property>
   <property>
     <name>JENKINS_ADMIN_EMAIL</name>

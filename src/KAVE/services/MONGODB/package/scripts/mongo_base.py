@@ -32,14 +32,11 @@ class MongoBase(Script):
 
         self.install_packages(env)
 
-        if os.path.exists(self.repos_file_path):
-            print "File exists"
-        else:
-            print "file not exists"
-            File(self.repos_file_path,
-                 content=Template("mongodb.repo"),
-                 mode=0644
-                 )
+        File(self.repos_file_path,
+             content=Template("mongodb.repo"),
+             mode=0644
+             )
+
         print "installing mongodb..."
         if self.mongo_packages is not None and len(self.mongo_packages):
             for pack in self.mongo_packages:

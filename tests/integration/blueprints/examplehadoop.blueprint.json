@@ -189,6 +189,7 @@
         { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"        },
         { "name" : "SLIDER" 		       },
+        { "name" : "INFRA_SOLR_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"

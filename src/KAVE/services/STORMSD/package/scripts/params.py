@@ -90,22 +90,22 @@ storm.zookeeper.servers:
 storm.zookeeper.port: 2181
 
 nimbus.host: "{{nimbus_host}}"
-nimbus.childopts: "{{nimbus_childopts}}"
+#nimbus.childopts: "{{nimbus_childopts}}"
 
 
-ui.port: {{ui_port}}
-ui.childopts: "{{ui_childopts}}"
+#ui.port: {{ui_port}}
+#ui.childopts: "{{ui_childopts}}"
 
-logviewer.port: {{logviewer_port}}
-logviewer.childopts: "{{logviewer_childopts}}"
-drpc.childopts: "{{drpc_childopts}}"
+#logviewer.port: {{logviewer_port}}
+#logviewer.childopts: "{{logviewer_childopts}}"
+#drpc.childopts: "{{drpc_childopts}}"
 
 
 supervisor.slots.ports:
 {% for port in supervisor_slots_ports %}
   - {{port}}
 {% endfor %}
-supervisor.childopts: "{{supervisor_childopts}}"
+#supervisor.childopts: "{{supervisor_childopts}}"
 """)
 storm_cluster_config = default('configurations/stormsd/storm_cluster_config',
                                """<?xml version="1.0" encoding="UTF-8"?>

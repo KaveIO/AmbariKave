@@ -110,7 +110,6 @@ in the ambari configuration web interface.
 ########### These all have default values as shown
 ########### Additional configuration goes into storm.yaml
 
-java.library.path: "/usr/local/lib:/opt/local/lib:/usr/lib"
 storm.local.dir: "storm-local"
 storm.zookeeper.servers:
  {% for server in storm_zookeeper_servers %}

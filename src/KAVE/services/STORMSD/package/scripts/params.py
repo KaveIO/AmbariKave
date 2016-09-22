@@ -80,9 +80,8 @@ storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
 ########### These all have default values as shown
 ########### Additional configuration goes into storm.yaml
 
-java.library.path: "/usr/local/lib:/opt/local/lib:/usr/lib"
 
-# the local dir is where jars are kept
+
 storm.local.dir: "storm-local"
 storm.zookeeper.servers:
  {% for server in storm_zookeeper_servers %}

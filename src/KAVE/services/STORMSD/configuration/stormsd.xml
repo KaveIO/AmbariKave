@@ -88,7 +88,7 @@ in the ambari configuration web interface.
 
     <property>
         <name>stormsd.yaml.config</name>
-        <description>yaml config file for Storm 0.10.</description>
+        <description>yaml config file for Storm 1.0.2</description>
         <value>#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -111,29 +111,19 @@ in the ambari configuration web interface.
 ########### Additional configuration goes into storm.yaml
 
 java.library.path: "/usr/local/lib:/opt/local/lib:/usr/lib"
-
-
-
 storm.local.dir: "storm-local"
 storm.zookeeper.servers:
  {% for server in storm_zookeeper_servers %}
    - "{{server}}"
  {% endfor %}
 storm.zookeeper.port: 2181
-
-
 nimbus.host: "{{nimbus_host}}"
 nimbus.childopts: "{{nimbus_childopts}}"
-
-
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
-
 logviewer.port: {{logviewer_port}}
 logviewer.childopts: "{{logviewer_childopts}}"
 drpc.childopts: "{{drpc_childopts}}"
-
-
 supervisor.slots.ports:
 {% for port in supervisor_slots_ports %}
   - {{port}}

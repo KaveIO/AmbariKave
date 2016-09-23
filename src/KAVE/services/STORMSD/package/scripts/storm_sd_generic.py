@@ -45,7 +45,7 @@ class StormGeneric(Script):
         if not storm_dir_present:
             # download storm
             kc.copy_cache_or_repo('apache-storm-1.0.2.tar.gz', arch='noarch')
-            #Execute('wget http://www.us.apache.org/dist/storm/apache-storm-1.0.2/apache-storm-1.0.2.tar.gz')
+            # Execute('wget http://www.us.apache.org/dist/storm/apache-storm-1.0.2/apache-storm-1.0.2.tar.gz')
             Execute('tar -xvf apache-storm-1.0.2.tar.gz -C /usr/local')
             Execute('mv /usr/local/apache-storm-1.0.2* /usr/local/storm-1.0.2')
             Execute('chown -R storm:storm /usr/local/storm-1.0.2')

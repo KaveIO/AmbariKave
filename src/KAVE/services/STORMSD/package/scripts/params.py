@@ -81,7 +81,7 @@ storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
 ########### Additional configuration goes into storm.yaml
 
 storm.local.dir: "storm-local"
-storm.log4j2.conf.dir: "log4j2"
+# storm.log4j2.conf.dir: "log4j2"
 storm.zookeeper.servers:
 {% for server in storm_zookeeper_servers %}
   - "{{server}}"

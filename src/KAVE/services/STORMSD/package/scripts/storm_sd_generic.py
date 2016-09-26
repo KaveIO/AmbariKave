@@ -51,12 +51,6 @@ class StormGeneric(Script):
             Execute('chown -R storm:storm /usr/local/storm-1.0.2')
             Execute('ln -s /usr/local/storm-1.0.2 /usr/local/storm')
             Execute('ln -s /usr/local/storm/bin/storm /usr/local/bin/storm')
-        storm_home_dir = os.path.isdir('/app/storm')
-        if not storm_home_dir:
-            # Creating local directory for storm
-            Execute('mkdir -p /app/storm')
-            Execute('chown -R storm:storm /app/storm')
-            Execute('chmod 750 /app/storm')
         storm_log_dir = os.path.isdir('/var/log/storm')
         if not storm_log_dir:
             # Creating local directory for storm

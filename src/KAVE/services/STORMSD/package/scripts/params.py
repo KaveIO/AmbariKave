@@ -262,17 +262,17 @@ zmq.hwm: 0
 storm.messaging.netty.server_worker_threads: 1
 storm.messaging.netty.client_worker_threads: 1
 storm.messaging.netty.buffer_size: 5242880 #5MB buffer
-# Since nimbus.task.launch.secs and supervisor.worker.start.timeout.secs are 120, other workers should also wait at least that long before giving up on connecting to the other worker. The reconnection period need also be bigger than storm.zookeeper.session.timeout(default is 20s), so that we can abort the reconnection when the target worker is dead.
+
 storm.messaging.netty.max_retries: 300
 storm.messaging.netty.max_wait_ms: 1000
 storm.messaging.netty.min_wait_ms: 100
 
-# If the Netty messaging layer is busy(netty internal buffer not writable), the Netty client will try to batch message as more as possible up to the size of storm.messaging.netty.transfer.batch.size bytes, otherwise it will try to flush message as soon as possible to reduce latency.
+
 storm.messaging.netty.transfer.batch.size: 262144
 # Sets the backlog value to specify when the channel binds to a local address
 storm.messaging.netty.socket.backlog: 500
 
-# By default, the Netty SASL authentication is set to false.  Users can override and set it true for a specific topology.
+
 storm.messaging.netty.authentication: false
 
 # Default plugin to use for automatic network topology discovery
@@ -324,7 +324,7 @@ topology.disable.loadaware: false
 topology.state.checkpoint.interval.ms: 1000
 
 # Configs for Resource Aware Scheduler
-# topology priority describing the importance of the topology in decreasing importance starting from 0 (i.e. 0 is the highest priority and the priority importance decreases as the priority number increases).
+
 # Recommended range of 0-29 but no hard limit set.
 topology.priority: 29
 topology.component.resources.onheap.memory.mb: 128.0
@@ -332,8 +332,10 @@ topology.component.resources.offheap.memory.mb: 0.0
 topology.component.cpu.pcore.percent: 10.0
 topology.worker.max.heap.size.mb: 768.0
 topology.scheduler.strategy: "org.apache.storm.scheduler.resource.strategies.scheduling.DefaultResourceAwareStrategy"
-resource.aware.scheduler.eviction.strategy: "org.apache.storm.scheduler.resource.strategies.eviction.DefaultEvictionStrategy"
-resource.aware.scheduler.priority.strategy: "org.apache.storm.scheduler.resource.strategies.priority.DefaultSchedulingPriorityStrategy"
+resource.aware.scheduler.eviction.strategy:
+"org.apache.storm.scheduler.resource.strategies.eviction.DefaultEvictionStrategy"
+resource.aware.scheduler.priority.strategy:
+"org.apache.storm.scheduler.resource.strategies.priority.DefaultSchedulingPriorityStrategy"
 
 dev.zookeeper.path: "/tmp/dev-storm-zookeeper"
 

@@ -10,7 +10,7 @@ ui.childopts: "{{ui_childopts}}"
 supervisor.childopts: "{{supervisor_childopts}}"
 worker.childopts: "{{worker_childopts}}"
 
-storm.local.dir : "/app/storm"
+storm.local.dir : "/app/home/storm"
 
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"

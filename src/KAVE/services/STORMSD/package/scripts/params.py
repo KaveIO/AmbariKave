@@ -80,23 +80,23 @@ storm_yaml_config = default('configurations/stormsd/stormsd.yaml.config', """#
 ########### These all have default values as shown
 ########### Additional configuration goes into storm.yaml
 
-
 storm.local.dir: "storm-local"
 storm.zookeeper.servers:
  {% for server in storm_zookeeper_servers %}
-   - "{{server}}"
+  - "{{server}}"
  {% endfor %}
 storm.zookeeper.port: 2181
 
-
+### nimbus.* configs are for the master
 nimbus.host: "{{nimbus_host}}"
-nimbus.childopts: "{{nimbus_childopts}}"
+
+### ui.* configs are for the master
 
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
+
 logviewer.port: {{logviewer_port}}
 logviewer.childopts: "{{logviewer_childopts}}"
-
 drpc.childopts: "{{drpc_childopts}}"
 
 supervisor.slots.ports:

@@ -118,7 +118,7 @@ storm.zookeeper.servers:
 storm.zookeeper.port: 2181
 
 nimbus.host: "{{nimbus_host}}"
-nimbus.childopts :"{{nimbus_childopts}}"
+nimbus.childopts : "{{nimbus_childopts}}"
 
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"

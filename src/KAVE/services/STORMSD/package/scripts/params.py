@@ -87,17 +87,20 @@ storm.zookeeper.servers:
  {% endfor %}
 storm.zookeeper.port: 2181
 
-### nimbus.* configs are for the master
 nimbus.host: "{{nimbus_host}}"
-
-### ui.* configs are for the master
+nimbus.childopts: "{{nimbus_childopts}}"
 
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"
 
 logviewer.port: {{logviewer_port}}
 logviewer.childopts: "{{logviewer_childopts}}"
+logviewer.cleanup.age.mins: 10080
+logviewer.appender.name: "A1"
+
 drpc.childopts: "{{drpc_childopts}}"
+
+worker.childopts: "{{worker_childopts}}"
 
 supervisor.slots.ports:
 {% for port in supervisor_slots_ports %}

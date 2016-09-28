@@ -125,8 +125,6 @@ ui.childopts: "{{ui_childopts}}"
 
 logviewer.port: {{logviewer_port}}
 logviewer.childopts: "{{logviewer_childopts}}"
-logviewer.cleanup.age.mins: 10080
-logviewer.appender.name: "A1"
 
 drpc.childopts: "{{drpc_childopts}}"
 

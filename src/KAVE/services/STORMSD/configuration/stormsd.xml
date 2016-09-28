@@ -17,7 +17,7 @@ in the ambari configuration web interface.
     </property>
     <property>
        <name>stormsd.nimbus.childopts</name>
-       <value>-Xmx1024m -Djava.net.preferIPv4Stack=true</value>
+       <value>-Xmx1024m</value>
        <description>This parameter is used by the storm-deploy project to configure the jvm options for the nimbus daemon.</description>
     </property>
     <property>
@@ -118,7 +118,7 @@ storm.zookeeper.servers:
 storm.zookeeper.port: 2181
 
 nimbus.host: "{{nimbus_host}}"
-nimbus.childopts: "{{nimbus_childopts}}"
+nimbus.childopts :"{{nimbus_childopts}}"
 
 ui.port: {{ui_port}}
 ui.childopts: "{{ui_childopts}}"

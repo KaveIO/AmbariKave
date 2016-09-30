@@ -50,6 +50,9 @@
         <name>directory_password</name>
         <value></value>
         <property-type>PASSWORD</property-type>
+        <value-attributes>
+          <type>password</type>
+        </value-attributes>
         <description>
             The directory_password will also be the ldap admin password. Must be at least 8
             characters long. This parameter will be used during the initial
@@ -61,6 +64,9 @@
         <name>ldap_bind_password</name>
         <value></value>
         <property-type>PASSWORD</property-type>
+        <value-attributes>
+          <type>password</type>
+        </value-attributes>
         <description>
             The password of the user created for binding services through LDAP. Must be at least 8
             characters long. This setting is not automatically picked up by the services which would

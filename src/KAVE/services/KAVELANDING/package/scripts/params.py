@@ -33,11 +33,11 @@ Logger.sensitive_strings[AMBARI_ADMIN_PASS] = "[PROTECTED]"
 
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')
-www_folder = default('configurations/kavelanding/www_folder', '/var/www/html/')
+www_folder = kc.default('configurations/kavelanding/www_folder', '/var/www/html/', kc.is_valid_directory)
 customlinks = default('configurations/kavelanding/customlinks', '{}')
-PORT = default('configurations/kavelanding/PORT', '80')
+PORT = kc.default('configurations/kavelanding/PORT', '80', kc.is_valid_port)
 AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
-servername = default('configurations/kavelanding/servername', hostname)
+servername = kc.default('configurations/kavelanding/servername', hostname, kc.is_valid_hostname)
 if servername == "default":
     servername = hostname
 

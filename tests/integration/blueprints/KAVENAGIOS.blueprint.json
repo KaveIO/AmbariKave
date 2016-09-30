@@ -56,6 +56,6 @@
   "Blueprints" : {
     "blueprint_name" : "kavenagios",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.3.0.KAVE"
+    "stack_version" : "2.5.3.0.KAVE"
   }
 }

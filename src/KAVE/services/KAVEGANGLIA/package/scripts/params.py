@@ -27,31 +27,23 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-kaveganglia_username = default('configurations/kaveganglia/kaveganglia_username', 'ganglia')
+kaveganglia_username = kc.default('configurations/kaveganglia/kaveganglia_username', 'ganglia', kc.is_valid_username)
 
-kaveganglia_clustername = default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE')
-kc.is_upper_case(kaveganglia_clustername, "kaveganglia/kaveganglia_clustername")
+kaveganglia_clustername = kc.default('configurations/kaveganglia/kaveganglia_clustername', 'KAVE', kc.is_upper_case)
 
-kaveganglia_gridname = default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE')
-kc.is_upper_case(kaveganglia_gridname, "kaveganglia/kaveganglia_gridname")
+kaveganglia_gridname = kc.default('configurations/kaveganglia/kaveganglia_gridname', 'KAVE', kc.is_upper_case)
 
-kaveganglia_port = default('configurations/kaveganglia/kaveganglia_port', '8649')
-kc.is_valid_port(kaveganglia_port, "kaveganglia/kaveganglia_port")
+kaveganglia_port = kc.default('configurations/kaveganglia/kaveganglia_port', '8649', kc.is_valid_port)
 
-kaveganglia_xml_port = default('configurations/kaveganglia/kaveganglia_xml_port', '8651')
-kc.is_valid_port(kaveganglia_xml_port, "kaveganglia/kaveganglia_xml_port")
+kaveganglia_xml_port = kc.default('configurations/kaveganglia/kaveganglia_xml_port', '8651', kc.is_valid_port)
 
-kaveganglia_interactive_port = default('configurations/kaveganglia/kaveganglia_interactive_port', '8652')
-kc.is_valid_port(kaveganglia_interactive_port, "kaveganglia/kaveganglia_interactive_port")
+kaveganglia_interactive_port = kc.default('configurations/kaveganglia/kaveganglia_interactive_port', '8652', kc.is_valid_port)
 
-kaveganglia_carbon_port = default('configurations/kaveganglia/kaveganglia_carbon_port', '2003')
-kc.is_valid_port(kaveganglia_carbon_port, "kaveganglia/kaveganglia_carbon_port")
+kaveganglia_carbon_port = kc.default('configurations/kaveganglia/kaveganglia_carbon_port', '2003', kc.is_valid_port )
 
-kaveganglia_riemann_port = default('configurations/kaveganglia/kaveganglia_riemann_port', '5555')
-kc.is_valid_port(kaveganglia_riemann_port, "kaveganglia/kaveganglia_riemann_port")
+kaveganglia_riemann_port = kc.default('configurations/kaveganglia/kaveganglia_riemann_port', '5555', kc.is_valid_port)
 
-kaveganglia_udp_port = default('configurations/kaveganglia/kaveganglia_udp_port', '6343')
-kc.is_valid_port(kaveganglia_udp_port, "kaveganglia/kaveganglia_udp_port")
+kaveganglia_udp_port = kc.default('configurations/kaveganglia/kaveganglia_udp_port', '6343', kc.is_valid_port)
 
 kaveganglia_monitor_hosts = default('/clusterHostInfo/kaveganglia_monitor_hosts', ['unknown'])
 kaveganglia_gmetad_uid = default('configurations/kaveganglia/kaveganglia_gmetad_uid', 'nobody')
@@ -66,11 +58,11 @@ if kaveganglia_host == hostname:
 else:
     kaveganglia_udp_bind = default('configurations/kaveganglia/kaveganglia_udp_bind', '0.0.0.0')
 
-kaveganglia_tcp_bind = default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0')
+kaveganglia_tcp_bind = kc.default('configurations/kaveganglia/kaveganglia_tcp_bind', '0.0.0.0', kc.is_valid_ipv4_address)
 
 www_folder = default('configurations/kaveganglia/www_folder', '/var/www/html/')
 PORT = default('configurations/kaveganglia/PORT', '80')
-servername = default('configurations/kaveganglia/servername', hostname)
+servername = kc.default('configurations/kaveganglia/servername', hostname, kc.is_valid_hostname)
 if servername == "hostname":
     servername = hostname
 

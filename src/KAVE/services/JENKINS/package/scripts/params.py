@@ -23,18 +23,16 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-JENKINS_HOME = default("configurations/jenkins/JENKINS_HOME", "/var/lib/jenkins")
-JENKINS_PORT = default("configurations/jenkins/JENKINS_PORT", "8080")
-JENKINS_USER = default("configurations/jenkins/JENKINS_USER", "jenkins")
-JENKINS_ADMIN = default("configurations/jenkins/JENKINS_ADMIN", "admin")
+JENKINS_HOME = kc.default("configurations/jenkins/JENKINS_HOME", "/var/lib/jenkins", kc.is_valid_directory)
+JENKINS_PORT = kc.default("configurations/jenkins/JENKINS_PORT", "8080", kc.is_valid_port)
+JENKINS_USER = kc.default("configurations/jenkins/JENKINS_USER", "jenkins", kc.is_valid_username)
+JENKINS_ADMIN = kc.default("configurations/jenkins/JENKINS_ADMIN", "admin", kc.is_valid_username)
 JENKINS_ADMIN_EMAIL = default("configurations/jenkins/JENKINS_ADMIN_EMAIL", "default")
 
 
 if JENKINS_ADMIN_EMAIL == 'default':
     JENKINS_ADMIN_EMAIL = JENKINS_ADMIN + '@' + '.'.join(hostname.split('.')[1:])
-
-kc.is_valid_emailid(JENKINS_ADMIN_EMAIL, 'jenkins/JENKINS_ADMIN_EMAIL')
-
+kc.is_valid_emailid(JENKINS_ADMIN_EMAIL, "jenkins/JENKINS_ADMIN_EMAIL")
 
 JENKINS_ADMIN_PASSWORD = config['configurations']['jenkins']['JENKINS_ADMIN_PASSWORD']
 Logger.sensitive_strings[JENKINS_ADMIN_PASSWORD] = "[PROTECTED]"

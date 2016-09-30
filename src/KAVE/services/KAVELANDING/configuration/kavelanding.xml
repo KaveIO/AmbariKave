@@ -12,6 +12,9 @@
         <value></value>
         <description>The password for the ambari admin (admin?)</description>
         <property-type>PASSWORD</property-type>
+        <value-attributes>
+        	<type>password</type>
+        </value-attributes>
     </property>
     <property>
         <name>PORT</name>

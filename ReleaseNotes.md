@@ -5,6 +5,8 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v3.0-Beta
+
 # v2.2-Beta
 
 This may be one of the last versions with centos6 support. More than 100 independent improvements made since 2.1

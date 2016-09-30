@@ -30,7 +30,7 @@ class TestVersions(unittest.TestCase):
     regex = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     restack = re.compile("([0-9]\.[0-9]\.[0-9]\.[0-9]\.KAVE)")
     ignore = ["ReleaseNotes.md"]
-    check_against = "3.0-Beta-Pre"
+    check_against = "3.0-Beta"
     check_against_stack = "2.5.3.0.KAVE"
 
     def findversion(self, fullpath, regex):

@@ -238,6 +238,7 @@ allremotes = ["ssh:root@" + remote.host for remote in instance_to_remote.values(
 allremotes = lD.multiremotes(list_of_hosts=allremotes, access_key=amazon_keyfile)
 print "test local PDSH, install pdcp"
 print allremotes.run("echo yes")
+allremotes.run("yum clean all")
 lD.install_pdsh(allremotes)
 
 print "===================================="

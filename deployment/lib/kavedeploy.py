@@ -709,7 +709,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "2.2-Beta"
+        version = "3.0-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -790,6 +790,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     # ignore errors with mirrors
                     cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
                     cat = cat.replace("[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
+                    cat = cat.replace("No errors were found.".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
                         raise SystemError("Failure in ambari server start server detected!")
         except ShellExecuteError:

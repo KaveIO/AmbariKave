@@ -11,19 +11,6 @@
     	}
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
-    { "core-site" : { "hadoop.proxyuser.hue.hosts"  : "*",
-    				  "hadoop.proxyuser.hue.groups" : "*",
-    				  "hadoop.proxyuser.hcat.groups": "*",
-    				  "hadoop.proxyuser.hcat.hosts" : "*"
-    				 } },
-    { "webhcat-site" : { "webhcat.proxyuser.hue.hosts"  : "*",
-    				     "webhcat.proxyuser.hue.groups" : "*"
-    				   } },
-    { "oozie-site" : { "oozie.service.ProxyUserService.proxyuser.hue.hosts"  : "*",
-    				   "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
-    				   } },
-    { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
-    { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
@@ -54,7 +41,7 @@
         { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR" },
+        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
@@ -69,8 +56,15 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "KAVEGANGLIA_SERVER" },
-        { "name" : "KAVEGANGLIA_MONITOR" },
-        { "name" : "FREEIPA_CLIENT"     }
+        { "name" : "KAVEGANGLIA_MONITOR"},
+        { "name" : "FREEIPA_CLIENT"     },
+        { "name" : "YARN_CLIENT"        },
+	    { "name" : "MAPREDUCE2_CLIENT"  },
+        { "name" : "SLIDER" 		    },
+	    { "name" : "LOGSEARCH_SERVER"   },
+	    { "name" : "INFRA_SOLR"         },
+        { "name" : "INFRA_SOLR_CLIENT"  },
+        { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
       "cardinality" : "1"
     },
@@ -80,6 +74,7 @@
       "components" : [
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
+	    { "name" : "ZEPPELIN_MASTER"      },
 		{ "name" : "SQOOP"                },
 	    { "name" : "HDFS_CLIENT"          },
 	    { "name" : "YARN_CLIENT"          },
@@ -92,7 +87,10 @@
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "SONARQUBE_RUNNER"     }
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "SLIDER" 		      },
+        { "name" : "LOGSEARCH_LOGFEEDER"  },
+        { "name" : "INFRA_SOLR_CLIENT"    }
 
       ],
       "cardinality" : "0-10"
@@ -122,7 +120,10 @@
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"    },
-        { "name" : "FREEIPA_CLIENT"         }
+        { "name" : "FREEIPA_CLIENT"         },
+        { "name" : "SLIDER" 		        },
+        { "name" : "INFRA_SOLR_CLIENT"      },
+        { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
       "cardinality" : "1"
     },
@@ -134,7 +135,12 @@
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "FREEIPA_CLIENT"       }
+        { "name" : "FREEIPA_CLIENT"       },
+        { "name" : "SLIDER" 		      },
+        { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"
     },
@@ -147,7 +153,12 @@
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "FREEIPA_CLIENT"       }
+        { "name" : "FREEIPA_CLIENT"       },
+        { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "SLIDER" 		      },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1+"
     },
@@ -175,7 +186,10 @@
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR"   },
-        { "name" : "FREEIPA_CLIENT"        }
+        { "name" : "FREEIPA_CLIENT"        },
+        { "name" : "SLIDER" 		       },
+        { "name" : "INFRA_SOLR_CLIENT"     },
+        { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"
     }
@@ -183,6 +197,6 @@
   "Blueprints" : {
     "blueprint_name" : "examplehadoop",
     "stack_name" : "HDP",
-    "stack_version" : "2.4.2.2.KAVE"
+    "stack_version" : "2.5.3.0.KAVE"
   }
 }

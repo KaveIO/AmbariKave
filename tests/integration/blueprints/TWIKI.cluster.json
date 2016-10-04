@@ -1,13 +1,13 @@
 {
-    "blueprint" : "hue",
+    "blueprint" : "twiki",
     "default_password" : "admin",
     "configurations" : [
     ],
     "host_groups" : [
 	{
 	    "name" : "admin",
-	    "configurations" : [   ],
+	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
 	}
-	]
+    ]
 }

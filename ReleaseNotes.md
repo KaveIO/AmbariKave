@@ -5,6 +5,95 @@ Contains a list of the released versions with a summary of the main changes in e
 
 # Beta Releases
 
+# v3.0-Beta
+
+**MAJOR RELEASE** not guaranteed backwards compatible
+
+**MAJOR CHANGES**
+
+**Important information:**
+
+* KaveToolbox 3.0: ROOT 6.04, Pentaho Kettle not installed by default, anaconda 4.1
+* HDP 2.5
+·         New Services:
+
+         o   SmartSense: SmartSense, which is a collection of tools and services that help Hortonworks
+         Data Platform’s operators quickly resolve issues, and also act on proactive recommendations
+         that help avoid future issues. This service has been added
+         as part of HDP 2.5 migration.
+
+         o   HDFS Log viewer: Log collection for HDFS client and server. This service has been added
+         as part of HDP 2.5 migration.
+
+         o   Zeppelin: Apache Zeppelin interpreter concept allows any language/data-processing-backend
+         to be plugged into Zeppelin. Currently Apache Zeppelin supports many interpreters such as
+         Apache Spark, Python, JDBC, Markdown and Shell. This service has been added as part
+         of HDP 2.5 migration.
+
+          §  Prerequisites:
+
+            ·         HDP 2.4.2 is installed
+
+            ·         The cluster contains Spark 1.6 or 1.5
+
+            ·         Git is installed on the node running Ambari Server
+
+            ·         You can install git as ‘ sudo yum install git’
+
+            ·         Java 8 is installed on the node where Zeppelin is installed
+
+
+
+        Minor improvements in existing services:
+
+         o   Ambari Metrics
+
+         §  role-command order fixes for more stable installation
+
+
+
+            ·         KAVE stack versioning change
+
+            ·         In 3.0 we are now including the KAVE version as well as the HDP version
+                      in the stack name
+
+            ·         So the stack now looks like 2.5.3.0.KAVE (HDP-version.KAVE-version.KAVE)
+
+            ·         KAVE is a as usual a small extension of HDP and this should improve the clarity
+
+            ·         Read more here about KAVE versioning:
+                      https://github.com/KaveIO/AmbariKave/wiki/kave-versioning
+
+* Storm 1.0.2
+ Migration from storm 0.10 to latest storm version 1.0.2
+
+         -Latest configuration file in the form of yaml file does not have certain configurations which were
+          present in the older version of storm such as
+          nimbus.impersonation.authorizer: "backtype.storm.security.auth.authorizer.ImpersonationAuthorizer"
+          has been removed
+
+
+         -For some of the configuration values which earlier began with "backtype.storm" they have now been
+          replaced with "org.apache"
+
+         -For example storm.thrift.transport: "backtype.storm.security.auth.SimpleTransportPlugin" is now
+         storm.thrift.transport: "org.apache.storm.security.auth.SimpleTransportPlugin"
+
+         -As a part of the configuration we have kept bare minimum
+         configurations which are absolutely required to run a storm cluster and those configurations which we
+         have overridden in our code.
+
+         -Pacemaker as a separate service has been incorporated in storm 1.0.2, however the implementation
+         would be part of the next release of KAVE.
+
+* Centos6 deprecated - We no longer run tests on Centos6. It does not mean that Centos6 will not work, but it's not tested or supported by us any longer.
+* HUE deprecated - HUE used to be the one place to go to get all databases interfaces within KAVE. However, it does not work in Centos7 and so, has been deprecated.- We notice that most of our users are switching to TEZ&Spark as default processors- Hortonworks HUE does not support Tez (now the default) or Centos7/Redhat7- So not only is the use case reduced but the compatibility is removed- We advise users familiar with Hue to switch to ipython notebooks and pyspark
+
+* Added validators for the params
+* Minor changes in the test scripts
+* Added the new example blueprints have new HDP 2.5 services
+
+
 # v2.2-Beta
 
 This may be one of the last versions with centos6 support. More than 100 independent improvements made since 2.1

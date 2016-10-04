@@ -206,7 +206,7 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
                     if servicename + '/' + defaultp in self.skip_prop:
                         continue
                     defaultvs = self.rm_unchecked_chars(defaultv)
-                    search_string = 'default(configurations/' + servicename + '/' + defaultp + ',' + defaultvs + ')'
+                    search_string = 'default(configurations/' + servicename + '/' + defaultp + ',' + defaultvs
                     if search_string not in all_params:
                         failingpyfiles[f + '/' + servicename + '/' + defaultp] = search_string
                         # If the default is longer than 80 characters it' very difficult to debug, and best if I return

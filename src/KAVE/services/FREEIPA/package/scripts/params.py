@@ -61,8 +61,8 @@ install_with_dns = default('configurations/freeipa/install_with_dns', True)
 install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 
-pki_insecure_port = default('configurations/freeipa/pki_insecure_port', '8081')
-pki_secure_port = default('configurations/freeipa/pki_secure_port', '8444')
+pki_insecure_port = kc.default('configurations/freeipa/pki_insecure_port', '8081', kc.is_valid_port)
+pki_secure_port = kc.default('configurations/freeipa/pki_secure_port', '8444', kc.is_valid_port)
 
 # Only except IPv4 for now
 forwarders = default('configurations/freeipa/forwarders', '8.8.8.8').split(',')
@@ -73,7 +73,7 @@ client_init_wait = default('configurations/freeipa/client_init_wait', 600)
 
 all_hosts = default("/clusterHostInfo/all_hosts", None)
 
-ldap_bind_user = default('configurations/freeipa/ldap_bind_user', 'kave_bind_user')
+ldap_bind_user = kc.default('configurations/freeipa/ldap_bind_user', 'kave_bind_user', kc.is_valid_username)
 ldap_bind_services = ['twiki', 'gitlab', 'jenkins']
 
 initial_users_and_groups = default('configurations/freeipa/initial_users_and_groups', '{"Users": [], "Groups" : {}}')
@@ -124,4 +124,4 @@ elif len(domain) < 20 and long_domain_patch:
     raise ValueError("This domain is less than 20 characters, and so the long_domain_patch "
                      + "is unecessary and potentially harmful.")
 
-admin_user_shell = default('configurations/freeipa/admin_user_shell', '/sbin/nologin')
+admin_user_shell = kc.default('configurations/freeipa/admin_user_shell', '/sbin/nologin', kc.is_valid_directory)

@@ -176,9 +176,7 @@ def parse_rhrelease(output):
     """
     Take a string and return a linux flavor
     """
-    if "centos" in output.lower() and "release 6" in output.lower():
-        return "Centos6"
-    elif "centos" in output.lower() and "release 7" in output.lower():
+    if "centos" in output.lower() and "release 7" in output.lower():
         return "Centos7"
     elif "red hat" in output.lower() and "release 7" in output.lower():
         return "Centos7"
@@ -188,8 +186,6 @@ def parse_rhrelease(output):
 
 
 def parse_uname(output):
-    if "el6" in output:
-        return "Centos6"
     if "el7" in output:
         return "Centos7"
     return None
@@ -912,19 +908,7 @@ def disable_security(remote, selinux=True, firewall=True, permanent=True):
     """
     Turn off firewall and selinux
     """
-    if remote.detect_linux_version() in ["Centos6"]:
-        if selinux:
-            if remote.multi:
-                remote.run("'echo 0 > /selinux/enforce'")
-            else:
-                remote.run("echo 0 > /selinux/enforce")
-            if permanent:
-                remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
-        if firewall:
-            remote.run("service iptables stop")
-            if permanent:
-                remote.run("chkconfig iptables off")
-    elif remote.detect_linux_version() in ["Centos7"]:
+    if remote.detect_linux_version() in ["Centos7"]:
         if selinux:
             remote.run("setenforce permissive")
             if permanent:
@@ -1117,10 +1101,7 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
 
 
 def install_epel(remote):
-    if remote.detect_linux_version() in ["Centos6"]:
-        remote.run("yum -y install epel-release")
-        remote.run("yum clean all")
-    elif remote.detect_linux_version() in ["Centos7"]:
+    if remote.detect_linux_version() in ["Centos7"]:
         remote.cp(os.path.dirname(__file__) + "/../remotescripts/install_epel.sh", 'install_epel.sh')
         remote.run("bash install_epel.sh")
 

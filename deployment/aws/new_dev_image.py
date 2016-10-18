@@ -180,8 +180,6 @@ if iid is None:
             iid, {"Mount": "/var/lib/ambari-agent", "Size": 1, "Attach": "/dev/sde"}, keyloc))
         vols.append(lA.add_new_ebs_vol(
             iid, {"Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdf"}, keyloc))
-    elif tos in ["Centos6"]:
-        vols.append(lA.add_new_ebs_vol(iid, {"Mount": "/var/lib", "Size": 4, "Attach": "/dev/sde"}, keyloc))
     remote.describe()
     if "Tags" in security_config:
         lA.tag_resources(vols, security_config["Tags"])

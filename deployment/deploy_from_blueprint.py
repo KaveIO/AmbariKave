@@ -271,9 +271,7 @@ except lD.ShellExecuteError:
     whole_cluster.register()
 
 # turn off se linux across the cluster ...
-if ambari.detect_linux_version() in ["Centos6"]:
-    whole_cluster.run("'echo 0 >/selinux/enforce'")
-elif ambari.detect_linux_version() in ["Centos7"]:
+if ambari.detect_linux_version() in ["Centos7"]:
     whole_cluster.run("setenforce permissive")
 
 # set the ambari node address with a sed/regex

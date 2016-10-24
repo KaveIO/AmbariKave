@@ -150,7 +150,8 @@ def proxopts(portop='-p'):
     if not detect_proxy():
         return []
     prnam = os.environ['http_proxy'].split('//')[-1].split(':')[0]
-    prhs = os.environ['http_proxy'].split('//')[-1].split(':')[-1].split('/')[0]
+    prhs = os.environ['http_proxy'].split(
+        '//')[-1].split(':')[-1].split('/')[0]
     return [portop, str(proxy_port), '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-o',
             "ProxyCommand=corkscrew " + prnam + ' ' + prhs + ' %h %p']
 
@@ -224,7 +225,8 @@ class remoteHost(object):
 
     def __init__(self, user, host, access_key="~/.ssh/id_rsa"):
         if user is None or host is None or access_key is None:
-            raise TypeError("None passed as argument to remoteHost" + str(user) + str(host) + str(access_key))
+            raise TypeError("None passed as argument to remoteHost" +
+                            str(user) + str(host) + str(access_key))
         self.user = user
         self.host = host
         self.gitprep = False
@@ -236,7 +238,8 @@ class remoteHost(object):
         if not os.path.exists(os.path.realpath(os.path.expanduser(access_key))):
             raise IOError("Key file does not exist! " + access_key)
         if "------" not in run_quiet("ls -l " + os.path.realpath(os.path.expanduser(access_key))):
-            raise IOError("Your private keyfile " + access_key + " needs to have X00 permissions (400 or 600).")
+            raise IOError("Your private keyfile " + access_key +
+                          " needs to have X00 permissions (400 or 600).")
         self.access_key = os.path.realpath(os.path.expanduser(access_key))
 
     def register(self):
@@ -319,7 +322,8 @@ class remoteHost(object):
         if firsttime:
             extrasshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
                             "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
-        out = self.run("echo Hello World from $HOSTNAME", extrasshopts=extrasshopts)
+        out = self.run("echo Hello World from $HOSTNAME",
+                       extrasshopts=extrasshopts)
         print out
         if "Hello World" not in out or "HOSTNAME" in out:
             raise ValueError(
@@ -349,13 +353,15 @@ class remoteHost(object):
         if el:
             self._lv = el
             return el
-        raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
+        raise SystemError(
+            "Cannot detect linux version, meaning this is not a compatible version")
 
     def prep_git(self, github_key_local, force=False, git_origin="git@gitlab-nl.dna.kpmglab.com"):
         """
         prepare the destination to be able to git clone
         """
-        # hardcoded because of need to use gitwrap.sh, not exactly 100% secure...
+        # hardcoded because of need to use gitwrap.sh, not exactly 100%
+        # secure...
         github_key_remote = "~/.rnadgithubnothingtoseehere"
         if self.gitprep and not force:
             return True
@@ -363,8 +369,10 @@ class remoteHost(object):
             raise IOError("git keyfile must exist " + github_key_local)
         if force:
             self.run("rm -f " + github_key_remote)
-        self.cp(os.path.realpath(os.path.expanduser(github_key_local)), github_key_remote)
-        self.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/gitwrap.sh", "~/gitwrap.sh")
+        self.cp(os.path.realpath(os.path.expanduser(
+            github_key_local)), github_key_remote)
+        self.cp(os.path.realpath(os.path.dirname(__file__)) +
+                "/../remotescripts/gitwrap.sh", "~/gitwrap.sh")
         self.github_script_remote = self.run("pwd") + "/gitwrap.sh"
         self.run("chmod 600 " + github_key_remote)
         self.run("chmod a+x ~/gitwrap.sh")
@@ -384,9 +392,11 @@ class remoteHost(object):
                     self.run("apt-get -y install git")
         except SystemError:
             print "Could not detect linux version, assuming git already installed"
-        self.run("ssh-keyscan -H " + ht_lc(git_origin) + " >> ~/.ssh/known_hosts")
+        self.run("ssh-keyscan -H " + ht_lc(git_origin) +
+                 " >> ~/.ssh/known_hosts")
         self.run("ssh-keygen -R " + ht_lc(git_origin) + " ")
-        self.run("ssh-keyscan -H " + ht_lc(git_origin) + " >> ~/.ssh/known_hosts")
+        self.run("ssh-keyscan -H " + ht_lc(git_origin) +
+                 " >> ~/.ssh/known_hosts")
         self.gitprep = True
         self.github_key_local = github_key_local
         self.github_key_remote = github_key_remote
@@ -396,7 +406,8 @@ class remoteHost(object):
         Run a git command remotely
         """
         if not self.gitprep:
-            raise RuntimeError("host must be prepared with the github access key and gitwrap, run prep_git first")
+            raise RuntimeError(
+                "host must be prepared with the github access key and gitwrap, run prep_git first")
         cmd = cmd.replace("'", "\'")
         return self.run(
             "bash -c 'export GIT_SSH=" + self.github_script_remote + " ; env | grep GIT_SSH; git " + cmd + " '")
@@ -442,7 +453,8 @@ class multiremotes(object):
             if not os.path.exists(os.path.realpath(os.path.expanduser(access_key))):
                 raise IOError("Key file does not exist! " + access_key)
             if "------" not in run_quiet("ls -l " + os.path.realpath(os.path.expanduser(access_key))):
-                raise IOError("Your private keyfile " + access_key + " needs to have X00 permissions (400 or 600).")
+                raise IOError("Your private keyfile " + access_key +
+                              " needs to have X00 permissions (400 or 600).")
             self.access_key = os.path.realpath(os.path.expanduser(access_key))
 
     def register(self):
@@ -454,7 +466,8 @@ class multiremotes(object):
                 remote.register()
             return
         self.jump.register()
-        # register remotes anyway, even though the strict checking is none for the local machine!
+        # register remotes anyway, even though the strict checking is none for
+        # the local machine!
         for host in self.host_names():
             self.jump.run("ssh-keyscan -H " + host + " >> ~/.ssh/known_hosts")
             self.jump.run("ssh-keygen -R " + host + "")
@@ -488,7 +501,8 @@ class multiremotes(object):
         versions = [v for v in versions if v is not None]
         versions = set(versions)
         if not len(versions):
-            raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
+            raise SystemError(
+                "Cannot detect linux version, meaning this is not a compatible version")
         if len(versions) == 1:
             self._lv = list(versions)[0]
             return list(versions)[0]
@@ -511,11 +525,13 @@ class multiremotes(object):
                             "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
         for host in self.host_names():
             out = self.jump.run(
-                "ssh " + ' '.join(extrasshopts) + " root@" + host + " echo Hello World from \\$HOSTNAME",
-                extrasshopts=extrasshopts)
+                "ssh " + ' '.join(extrasshopts) + " root@" +
+                host + " echo Hello World from \\$HOSTNAME",
+                extrasshopt848s=extrasshopts)
             print out
             if "Hello World" not in out or "HOSTNAME" in out:
-                raise ValueError("Unable to contact machine root@" + host + "! or machine did not respond correctly")
+                raise ValueError("Unable to contact machine root@" +
+                                 host + "! or machine did not respond correctly")
             return True
 
     def remotes(self):
@@ -534,7 +550,7 @@ class multiremotes(object):
         """
         Run command on all remote machines, either starting locally or starting on some remote jump server
         """
-        if self.jump is None:
+        if self.jump is None448:
             excmd = ""
             if detect_proxy():
                 propts = proxopts()
@@ -542,7 +558,8 @@ class multiremotes(object):
                 excmd = "export PDSH_SSH_ARGS_APPEND='" + propts + " " + ' '.join(
                     strictopts()) + " -i " + self.access_key + "'; "
             elif not self.strict:
-                excmd = "export PDSH_SSH_ARGS_APPEND=' " + ' '.join(strictopts()) + " -i " + self.access_key + " '; "
+                excmd = "export PDSH_SSH_ARGS_APPEND=' " + \
+                    ' '.join(strictopts()) + " -i " + self.access_key + " '; "
             else:
                 excmd = "export PDSH_SSH_ARGS_APPEND=' -i " + self.access_key + " '; "
             return run_quiet(excmd + "pdsh -S -w " + ','.join(self.hosts) + " -R ssh " + cmd, exit=exit)
@@ -553,13 +570,14 @@ class multiremotes(object):
         """
         Use pdcp if it exists, else use scp one-at-a-time
         """
-        directory = os.path.isdir(os.path.realpath(os.path.expanduser(localfile)))
+        directory = os.path.isdir(
+            os.path.realpath(os.path.expanduser(localfile)))
 
         # first detect if I am able to use pdcp or not
 
         pdcp = False
         if self.jump is None and which('pdcp'):
-            # local pdcp
+            # local pdcp848
             pdcp = True
 
         if self.jump is not None:
@@ -615,11 +633,11 @@ class multiremotes(object):
             else:
                 for host in self.hosts:
                     if host.split('@')[-1].split(':')[-1] != self.jump.host.split('@')[-1].split(':')[-1]:
-                        self.jump.run('scp ' + diropt + remotefile + " " + host.split(':')[-1] + ":" + remotefile)
+                        self.jump.run('scp ' + diropt + remotefile +
+                                      " " + host.split(':')[-1] + ":" + remotefile)
 
 
 # @TODO: Consolidate the two methods below!
-
 def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="workstation",
                         toolbox_proj=None, branch="", background=True):
     """
@@ -628,7 +646,8 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     if dest_type not in known_dest_types:
-        raise ValueError("dest_type can only be one of: " + known_dest_types.__str__() + " you asked for " + dest_type)
+        raise ValueError("dest_type can only be one of: " +
+                         known_dest_types.__str__() + " you asked for " + dest_type)
     if toolbox_proj is None:
         if "kavetoolbox" in git_origin.lower() and git_origin.startswith("git@"):
             toolbox_proj = git_origin.split(':')[-1]
@@ -641,7 +660,8 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
                                                              "KaveToolbox.git"
                                                              ).replace("ambarikave.git", "kavetoolbox.git")
         else:
-            raise NameError("Cannot guess the toolbox project name from " + git_origin)
+            raise NameError(
+                "Cannot guess the toolbox project name from " + git_origin)
     remote.check()
     installcmd = "./" + pr_lc(toolbox_proj) + '/scripts/KaveInstall --quiet'
     if dest_type == "workstation":
@@ -655,11 +675,13 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
     br = ""
     if len(branch) and branch != "HEAD" and branch != "head" and branch != "master":
         br = "-b " + branch
-    remote.git("clone " + br + " " + git_origin.split(':')[0] + ":" + toolbox_proj)
+    remote.git("clone " + br + " " + git_origin.split(':')
+               [0] + ":" + toolbox_proj)
     if not background:
         remote.run(installcmd)
     else:
-        remote.run("nohup " + installcmd + " < /dev/null > inst.stdout 2> inst.stderr &")
+        remote.run("nohup " + installcmd +
+                   " < /dev/null > inst.stdout 2> inst.stderr &")
         print "installing toolbox in background process (check before bringing down the machine)"
         # remote.clean_git()
 
@@ -682,7 +704,8 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     if not background:
         remote.run(installcmd)
     else:
-        remote.run("nohup " + installcmd + " < /dev/null > inst.stdout 2> inst.stderr &")
+        remote.run("nohup " + installcmd +
+                   " < /dev/null > inst.stdout 2> inst.stderr &")
         print "installing ambari in background process (check before bringing down the machine)"
 
 
@@ -707,11 +730,14 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest":
         version = "3.0-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
-        raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
+        raise ValueError(
+            "master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
-        raise ValueError("deploy from local does not make sense when you've specified to also use git!")
+        raise ValueError(
+            "deploy from local does not make sense when you've specified to also use git!")
     if pack.lower() not in ["ambarikave", "kavetoolbox"]:
-        raise ValueError("Unknown package " + pack + " I knew " + ["ambarikave", "kavetoolbox"].__str())
+        raise ValueError("Unknown package " + pack +
+                         " I knew " + ["ambarikave", "kavetoolbox"].__str())
     pack = pack.lower()
     remote.check()
     # get directly from repo
@@ -731,12 +757,14 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
             archtag = '-' + arch
         # name of file depends on version
         dfile = pack + "-installer" + archtag + "-" + version + ".sh"
-        remote.run("wget " + repo + "/" + arch + "/" + dire + "/" + version + "/" + dfile)
+        remote.run("wget " + repo + "/" + arch + "/" +
+                   dire + "/" + version + "/" + dfile)
         if not background:
             remote.run("bash " + dfile + " " + options)
             return
         else:
-            remote.run("nohup bash " + dfile + " " + options + " < /dev/null > inst.stdout 2> inst.stderr &")
+            remote.run("nohup bash " + dfile + " " + options +
+                       " < /dev/null > inst.stdout 2> inst.stderr &")
             print "installing " + pack + " in background process (check before bringing down the machine)"
             return
             # return True
@@ -762,7 +790,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
 
 def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
     """
-    Wait until ambari server is up and running, error if it doesn't appear!
+    Wait until ambari serve848r is up and running, error if it doesn't appear!
     Also check if a list of files, e.g. inst.stdout or inst.stderr contains errors
     """
     # wait until ambari server is up
@@ -772,28 +800,33 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
               + "/../remotescripts/default.netrc",
               "~/.netrc")
     while rounds <= maxrounds:
-        # ignore failures here for now, since iptables does not exist on centos7
+        # ignore failures here for now, since iptables does not exist on
+        # centos7
         try:
             # modify iptables, only in case of Centos6
             disable_security(ambari)
         except ShellExecuteError:
             pass
-        # check file pointed to for failures
+        # check file pointed to for failureReleaseNotes.mds
         try:
             if check_inst:
                 for afile in check_inst:
                     cat = ambari.run("cat " + afile).strip().lower()
                     # ignore errors with mirrors
-                    cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
-                    cat = cat.replace("[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
+                    cat = cat.replace(
+                        "[Errno 14] HTTP Error 404 - Not Found".lower(), '')
+                    cat = cat.replace(
+                        "[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
                     cat = cat.replace("No errors were found.".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
-                        raise SystemError("Failure in ambari server start server detected!")
+                        raise SystemError(
+                            "Failure in ambari server start server detected!")
         except ShellExecuteError:
             pass
 
         try:
-            ambari.run("curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
+            ambari.run(
+                "curl --retry 5 --netrc http://localhost:8080/api/v1/clusters")
             flag = True
             break
         except ShellExecuteError:
@@ -801,7 +834,8 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
         time.sleep(60)
         rounds = rounds + 1
     if not flag:
-        raise IOError("ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        raise IOError(
+            "ambari server not contactable after 10 minutes (" + ' '.join(ambari.sshcmd()) + ")")
     return True
 
 
@@ -825,14 +859,16 @@ def waitforrequest(ambari, clustername, request, timeout=10):
             time.sleep(3)
             stdout = ambari.run(cmd)
         if '"request_status" : "FAILED"' in stdout:
-            raise ValueError("request from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
+            raise ValueError(
+                "request from blueprint failed (" + ' '.join(ambari.sshcmd()) + ")")
         if '"request_status" : "COMPLETED"' in stdout:
             flag = True
             break
         time.sleep(60)
         rounds = rounds + 1
     if not flag:
-        raise ValueError("request not complete after " + timeout + " minutes (" + ' '.join(ambari.sshcmd()) + ")")
+        raise ValueError("request not complete after " + timeout +
+                         " minutes (" + ' '.join(ambari.sshcmd()) + ")")
     return True
 
 
@@ -845,17 +881,19 @@ def confremotessh(remote, port=443):
     remote.run("yum -y install policycoreutils-python")
     remote.run("semanage port -m -t ssh_port_t -p tcp " + str(port))
     # modify iptables, only in case of Centos6
-    if remote.detect_linux_version() in ["Centos6"]:
-        remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
-        remote.run("python add_incoming_port.py " + str(port))
+    # if remote.detect_linux_version() in ["Centos6"]:
+    # remote.cp(os.path.dirname(__file__) + "/../remotescripts/add_incoming_port.py", "~/add_incoming_port.py")
+    # remote.run("python add_incoming_port.py " + str(port))
     # modify sshconfig
     pre = ''
     if hasattr(remote, 'hosts'):
         pre = '"'
     remote.run(pre + "echo >> /etc/ssh/sshd_config" + pre)
-    remote.run(pre + "echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config" + pre)
+    remote.run(
+        pre + "echo \"GatewayPorts clientspecified\" >> /etc/ssh/sshd_config" + pre)
     remote.run(pre + "echo \"Port 22\" >> /etc/ssh/sshd_config" + pre)
-    remote.run(pre + "echo \"Port " + str(port) + "\" >> /etc/ssh/sshd_config" + pre)
+    remote.run(pre + "echo \"Port " + str(port) +
+               "\" >> /etc/ssh/sshd_config" + pre)
     # restart services
     try:
         remote.run("service sshd restart")
@@ -863,9 +901,9 @@ def confremotessh(remote, port=443):
         remote.run("service ssh restart")
     time.sleep(2)
     # modify iptables, only in case of Centos6
-    if remote.detect_linux_version() in ["Centos6"]:
-        remote.run("service iptables restart")
-        time.sleep(1)
+    # if remote.detect_linux_version() in ["Centos6"]:
+    # remote.run("service iptables restart")
+    # time.sleep(1)
     try:
         remote.run("service sshd restart")
     except ShellExecuteError:
@@ -880,7 +918,8 @@ def confallssh(remote, restart=True):
     remote.run("bash -c 'echo >> /etc/ssh/sshd_config'")
     remote.run("bash -c 'echo \"Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128\" "
                + " >> /etc/ssh/sshd_config'")
-    remote.run("bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
+    remote.run(
+        "bash -c 'echo \"MACs hmac-sha1,umac-64@openssh.com,hmac-ripemd160\" >> /etc/ssh/sshd_config'")
     if restart:
         try:
             remote.run("service sshd restart")
@@ -894,8 +933,10 @@ def confsshpermissions(remote, restart=True):
     Common sshd_config for all machines upped with these scripts
     Allow login with password so long as it is not root.
     """
-    remote.run('sed -i \'s/PasswordAuthentication\\ no/PasswordAuthentication\\ yes/\' /etc/ssh/sshd_config')
-    remote.run('sed -i \'s/#PermitRootLogin\\ yes/PermitRootLogin\\ without-password/\' /etc/ssh/sshd_config')
+    remote.run(
+        'sed -i \'s/PasswordAuthentication\\ no/PasswordAuthentication\\ yes/\' /etc/ssh/sshd_config')
+    remote.run(
+        'sed -i \'s/#PermitRootLogin\\ yes/PermitRootLogin\\ without-password/\' /etc/ssh/sshd_config')
     if restart:
         try:
             remote.run("service sshd restart")
@@ -912,7 +953,8 @@ def disable_security(remote, selinux=True, firewall=True, permanent=True):
         if selinux:
             remote.run("setenforce permissive")
             if permanent:
-                remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
+                remote.run(
+                    "sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
         if firewall:
             try:
                 remote.run("systemctl stop firewalld")
@@ -971,7 +1013,8 @@ def getsshid(remote, saveas, retry=0):
     """
     output = remote.run("ls -al .ssh")
     if retry >= 3:
-        raise RuntimeError("Did not manage to copy ssh key after three retries!")
+        raise RuntimeError(
+            "Did not manage to copy ssh key after three retries!")
     if "id_rsa.pub" not in output:
         remote.run("ssh-keygen -t rsa -f .ssh/id_rsa -P \"\"")
         remote.run("chmod 600 .ssh/id_rsa")
@@ -1000,8 +1043,10 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
     if os.path.exists(localcopy):
         run_quiet("rm -rf " + localcopy)
     # append to authorized_keys
-    destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys")
-    destination.run("cat ~/.ssh/" + source.host + ".pub >> .ssh/authorized_keys2")
+    destination.run("cat ~/.ssh/" + source.host +
+                    ".pub >> .ssh/authorized_keys")
+    destination.run("cat ~/.ssh/" + source.host +
+                    ".pub >> .ssh/authorized_keys2")
     # ensure no prompt because of the silly not recognised host thingy
 
     def scan_and_store_key(remote, host_to_scan):
@@ -1020,7 +1065,8 @@ def configure_keyless(source, destination, dest_internal_ip=None, preservehostna
         scan_and_store_key(source, destination.run("hostname -s"))
         scan_and_store_key(source, destination.run("hostname"))
     # test access by trying a double-hopping ssh
-    output = source.run("ssh " + destination.user + "@" + dest_internal_ip + " echo Hello friend from \\$HOSTNAME")
+    output = source.run("ssh " + destination.user + "@" +
+                        dest_internal_ip + " echo Hello friend from \\$HOSTNAME")
     # will fail if the machine has the work HOST in the name, or could give false positive
     # if the local machine has the word friend in the name
     if "friend" not in output or "HOST" in output:
@@ -1039,7 +1085,8 @@ def rename_remote_host(remote, new_name, newdomain=None, skip_cp=False):
     If newdomain is given, also add the new domain, if not given, use localdomain
     """
     if not skip_cp:
-        remote.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "~/rename_me.py")
+        remote.cp(os.path.realpath(os.path.dirname(__file__)) +
+                  "/../remotescripts/rename_me.py", "~/rename_me.py")
     cmd = "python rename_me.py " + new_name.lower()
     if newdomain is not None:
         cmd = cmd + " " + newdomain.lower()
@@ -1053,13 +1100,16 @@ def rename_remote_hosts(remotes_to_name, newdomain=None):
     """
     remotes = remotes_to_name.keys()
     mremotes = ["ssh:root@" + remote.host for remote in remotes]
-    mremotes = multiremotes(list_of_hosts=mremotes, access_key=remotes[0].access_key)
-    mremotes.cp(os.path.realpath(os.path.dirname(__file__)) + "/../remotescripts/rename_me.py", "rename_me.py")
+    mremotes = multiremotes(list_of_hosts=mremotes,
+                            access_key=remotes[0].access_key)
+    mremotes.cp(os.path.realpath(os.path.dirname(__file__)) +
+                "/../remotescripts/rename_me.py", "rename_me.py")
     for remote, name in remotes_to_name.iteritems():
         rename_remote_host(remote, name, newdomain, skip_cp=True)
 
 
-def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):  # ["localdomain"]):
+# ["localdomain"]):
+def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]):
     """
     will add 'ip hostname' of add_remote as a host shortcut in edit_remote
 
@@ -1095,14 +1145,17 @@ def add_as_host(edit_remote, add_remote, dest_internal_ip=None, extra_domains=[]
     pre = ''
     if hasattr(edit_remote, 'hosts'):
         pre = '"'
-    edit_remote.run(pre + "grep -v '" + dest_internal_ip + "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
+    edit_remote.run(pre + "grep -v '" + dest_internal_ip +
+                    "' /etc/hosts | grep -v '" + hostname + "' > tmpfile " + pre)
     edit_remote.run("mv -f tmpfile /etc/hosts")
-    edit_remote.run(pre + "echo '" + dest_internal_ip + " " + all_domains + "' >> /etc/hosts " + pre)
+    edit_remote.run(pre + "echo '" + dest_internal_ip + " " +
+                    all_domains + "' >> /etc/hosts " + pre)
 
 
 def install_epel(remote):
     if remote.detect_linux_version() in ["Centos7"]:
-        remote.cp(os.path.dirname(__file__) + "/../remotescripts/install_epel.sh", 'install_epel.sh')
+        remote.cp(os.path.dirname(__file__) +
+                  "/../remotescripts/install_epel.sh", 'install_epel.sh')
         remote.run("bash install_epel.sh")
 
 

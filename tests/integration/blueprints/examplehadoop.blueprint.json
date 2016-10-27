@@ -11,8 +11,8 @@
     	}
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
-    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "hdfs-log4j" : { "log4j.appender.RFA.MaxFileSize" : "128MB", "log4j.appender.RFA.MaxBackupIndex" : "5" } },
+    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",

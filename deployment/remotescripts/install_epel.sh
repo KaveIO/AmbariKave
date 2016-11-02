@@ -36,8 +36,6 @@ if [[ "$os" == *"el7"* ]]; then
 			fi
 		fi
 	fi
-elif [[ "$os" == *"el6"* ]]; then
-	os="centos6"
 else
 	echo "This script is not tested/ready for this operating system"
 fi

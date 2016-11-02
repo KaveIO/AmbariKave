@@ -118,8 +118,6 @@ class FreeipaServer(Script):
         # of some anoying centos6.5 problems. The underling installer uses an
         # outdated method for the dogtag system which fails.
         # however, on centos7, this option does not exist!
-        if tos.lower() in ["centos6"]:
-            install_command += " --selfsign"
 
         if params.install_with_dns:
             if tos.lower() in ["centos7"]:

@@ -41,7 +41,7 @@
     },
     {
       "name" : "replica",
-      "configurations" : [ { "mongodb" : {"tcp_port" : 27018, "setname" : "rs0","db_path" : "/var/lib/mongo/data" } } ],
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0","db_path" : "/var/lib/mongo/data" } } ],
       "components" : [
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },

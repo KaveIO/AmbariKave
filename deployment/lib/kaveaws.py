@@ -243,7 +243,7 @@ def find_all_child_resources(resource):
     return list(set(resources + volumes))
 
 
-def killinstaneuce(iid, state="terminate"):
+def killinstance(iid, state="terminate"):
     try:
         i = desc_instance(iid)
     except lD.ShellExecuteError:

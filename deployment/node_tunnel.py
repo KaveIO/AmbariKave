@@ -21,7 +21,7 @@ from resource_management import *
 from subprocess import Popen, PIPE
 
 
-def node_tunnelling(gateport, node, nodeport, pub_key_path,user):
+def node_tunneling(gateport, node, nodeport, pub_key_path,user):
 
     process = Popen(['ssh', '-i', pub_key_path, '-L', gateport, ':', node, ':', nodeport, user ,'@', node], stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()

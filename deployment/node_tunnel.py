@@ -21,7 +21,7 @@ from resource_management import *
 from subprocess import Popen, PIPE
 
 
-def node_tunneling(gateport, node, nodeport, pub_key_path,user):
+def node_tunneling(gateport, node, nodeport, pub_key_path, user):
 
     process = Popen(['ssh', '-i', pub_key_path, '-L', gateport, ':', node, ':', nodeport, user ,'@', node], stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     user = sys.argv[5]
 
     if len(sys.argv) >= 5:
-        node_tunnelling(gateport, node, nodeport, pub_key_path, user)
+        node_tunneling(gateport, node, nodeport, pub_key_path, user)
     else:
         raise KeyError("You must specify all the parameters")
 

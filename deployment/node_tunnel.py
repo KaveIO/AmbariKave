@@ -23,7 +23,8 @@ from subprocess import Popen, PIPE
 
 def node_tunneling(gateport, node, nodeport, pub_key_path, user):
 
-    process = Popen(['ssh', '-i', pub_key_path, '-L', gateport, ':', node, ':', nodeport, user ,'@', node], stdout=PIPE, stderr=PIPE)
+    process = Popen(['ssh', '-i', pub_key_path, '-L', gateport, ':', node, ':',
+                    nodeport, user, '@', node], stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
 
     if stderr:
@@ -45,12 +46,12 @@ if __name__ == "__main__":
     if "--this-branch" in sys.argv:
         branch = "__local__"
         sys.argv = [s for s in sys.argv if s != "--this-branch"]
-    #if "--gateport" in sys.argv:
-    #    sys.argv = [s for s in sys.argv if s != "--gateport"]
-    #if "--node" in sys.argv:
-    #    sys.argv = [s for s in sys.argv if s != "--node"]
-    #if "--nodeport" in sys.argv:
-    #    sys.argv = [s for s in sys.argv if s != "--nodeport"]
+    # if "--gateport" in sys.argv:
+    #     sys.argv = [s for s in sys.argv if s != "--gateport"]
+    # if "--node" in sys.argv:
+    #     sys.argv = [s for s in sys.argv if s != "--node"]
+    # if "--nodeport" in sys.argv:
+    #     sys.argv = [s for s in sys.argv if s != "--nodeport"]
     if len(sys.argv) < 2:
         raise KeyError("You must specify which service to test")
 
@@ -64,5 +65,3 @@ if __name__ == "__main__":
         node_tunneling(gateport, node, nodeport, pub_key_path, user)
     else:
         raise KeyError("You must specify all the parameters")
-
-

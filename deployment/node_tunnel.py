@@ -35,8 +35,8 @@ def node_tunneling(gateport, node, nodeport, pub_key_path, user):
     return
 
 
-def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+# def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
+#     return ''.join(random.choice(chars) for _ in range(size))
 
 
 if __name__ == "__main__":
@@ -69,12 +69,20 @@ if __name__ == "__main__":
 
     if user not in ['centos', 'root']:
         new_user = input('Enter the username:')
-        random_password = password_generator()
+        # random_password = password_generator()
+
+        process = Popen(['useradd', new_user])
+        stdout, stderr = process.communicate()
+
+        Execute('ssh-keygen -t rsa')
+        process = Popen(['ssh-copy-id', node])
+
+        new_user_pub_key_path = '/home/' + new_user + '/.ssh/id_rsa.pub'
 
     if len(sys.argv) >= 5:
         if pub_key_path and user in ['centos', 'root']:
             node_tunneling(gateport, node, nodeport, pub_key_path, user)
         else:
-            node_tunneling(gateport, node, nodeport, random_password, new_user)
+            node_tunneling(gateport, node, nodeport, new_user_pub_key_path, new_user)
     else:
         raise KeyError("You must specify all the parameters")

@@ -19,6 +19,8 @@ import base
 import os
 from resource_management import *
 from subprocess import Popen, PIPE
+import string
+import random
 
 
 def node_tunneling(gateport, node, nodeport, pub_key_path, user):
@@ -31,6 +33,10 @@ def node_tunneling(gateport, node, nodeport, pub_key_path, user):
         print "Please check the bash command"
 
     return
+
+
+def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 if __name__ == "__main__":
@@ -61,7 +67,14 @@ if __name__ == "__main__":
     pub_key_path = sys.argv[4]
     user = sys.argv[5]
 
+    if user not in ['centos', 'root']:
+        new_user = input('Enter the username:')
+        random_password = password_generator()
+
     if len(sys.argv) >= 5:
-        node_tunneling(gateport, node, nodeport, pub_key_path, user)
+        if pub_key_path and user in ['centos', 'root']:
+            node_tunneling(gateport, node, nodeport, pub_key_path, user)
+        else:
+            node_tunneling(gateport, node, nodeport, random_password, new_user)
     else:
         raise KeyError("You must specify all the parameters")

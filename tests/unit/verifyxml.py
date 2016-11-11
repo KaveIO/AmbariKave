@@ -35,28 +35,6 @@ def parsefile(file):
     return parsed
 
 
-class TestXMLCompleteness(unittest.TestCase):
-
-    def runTest(self):
-        """Test that we have only valid xml, based upon the example
-        found here: http://code.activestate.com/recipes/52256-check-xml-well-formedness/"""
-        import os
-        import string
-        failingfiles = {}
-        for root, dirs, files in os.walk(os.path.dirname(__file__) + '/../../src'):
-            for f in [os.path.join(root, f) for f in files if f.endswith('.xml')]:
-                try:
-                    parsefile(f)
-                except Exception, e:
-                    failingfiles[f] = e
-        self.assertEqual(len(failingfiles), 0,
-                         "Found " + str(len(failingfiles))
-                         + " xml errors "
-                         + str(failingfiles.keys())
-                         + " \n" + str(failingfiles)
-                         )
-
-
 class TestXMLContent(unittest.TestCase):
     prop_dict_struct = {"name": [], "value": [], 'final': [],
                         "display-name": [],

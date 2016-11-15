@@ -18,7 +18,7 @@
 import base
 import os
 from resource_management import *
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, call
 import string
 import random
 
@@ -67,15 +67,27 @@ if __name__ == "__main__":
     pub_key_path = sys.argv[4]
     user = sys.argv[5]
 
+    cmd = "chmod u+x user_check.sh"
+    p = subprocess.Popen(cmd , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p.wait()
+
     if user not in ['centos', 'root']:
         new_user = input('Enter the username:')
         # random_password = password_generator()
 
-        process = Popen(['useradd', new_user])
-        stdout, stderr = process.communicate()
+        cmd = "user_check.sh" + new_user
+        p = subprocess.Popen(cmd , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
 
-        Execute('ssh-keygen -t rsa')
-        process = Popen(['ssh-copy-id', node])
+        if not stdout:
+            process = Popen(['useradd', new_user])
+            stdout, stderr = process.communicate()
+
+            Execute('ssh-keygen -t rsa')
+            process = Popen(['ssh-copy-id', node])
+
+        else:
+            raise KeyError("User exist")
 
         new_user_pub_key_path = '/home/' + new_user + '/.ssh/id_rsa.pub'
 

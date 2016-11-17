@@ -68,7 +68,7 @@ if __name__ == "__main__":
     user = sys.argv[5]
 
     cmd = "chmod u+x user_check.sh"
-    p = subprocess.Popen(cmd , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
 
     if user not in ['centos', 'root']:
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         # random_password = password_generator()
 
         cmd = "user_check.sh" + new_user
-        p = subprocess.Popen(cmd , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
         if not stdout:

@@ -132,6 +132,10 @@ rm -f ~/.pgpass
 if [ -e ~/.pgpass_blacp ]; then
 	mv ~/.pgpass_blacp ~/.pgpass
 fi
+
+if [[ "$os" == *"7" ]]; then
+yum install fish
+fi
 ##########################################################
 # end of install snippet file
 ##########################################################

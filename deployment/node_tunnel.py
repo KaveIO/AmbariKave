@@ -46,18 +46,18 @@ if __name__ == "__main__":
     if "--verbose" in sys.argv:
         verbose = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
-    if "--branch" in sys.argv:
-        branch = "__service__"
-        sys.argv = [s for s in sys.argv if s != "--branch"]
-    if "--this-branch" in sys.argv:
-        branch = "__local__"
-        sys.argv = [s for s in sys.argv if s != "--this-branch"]
-    # if "--gateport" in sys.argv:
-    #     sys.argv = [s for s in sys.argv if s != "--gateport"]
-    # if "--node" in sys.argv:
-    #     sys.argv = [s for s in sys.argv if s != "--node"]
-    # if "--nodeport" in sys.argv:
-    #     sys.argv = [s for s in sys.argv if s != "--nodeport"]
+    # if "--branch" in sys.argv:
+    #     branch = "__service__"
+    #     sys.argv = [s for s in sys.argv if s != "--branch"]
+    # if "--this-branch" in sys.argv:
+    #     branch = "__local__"
+    #     sys.argv = [s for s in sys.argv if s != "--this-branch"]
+    if "--gateport" in sys.argv:
+        sys.argv = [s for s in sys.argv if s != "--gateport"]
+    if "--node" in sys.argv:
+        sys.argv = [s for s in sys.argv if s != "--node"]
+    if "--nodeport" in sys.argv:
+        sys.argv = [s for s in sys.argv if s != "--nodeport"]
     if len(sys.argv) < 2:
         raise KeyError("You must specify which service to test")
 

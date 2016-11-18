@@ -66,6 +66,8 @@ pip install --upgrade requests
 
 if [[ "$os" == *"7" ]]; then
 	yum install -y pdsh-mod-dshgroup
+	wget http://download.opensuse.org/repositories/shells:fish:release:2/CentOS_7/shells:fish:release:2.repo
+	yum -y install fish
 fi
 
 encrypt_number="4"
@@ -130,6 +132,7 @@ rm -f ~/.pgpass
 if [ -e ~/.pgpass_blacp ]; then
 	mv ~/.pgpass_blacp ~/.pgpass
 fi
+
 ##########################################################
 # end of install snippet file
 ##########################################################

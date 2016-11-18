@@ -134,7 +134,8 @@ if [ -e ~/.pgpass_blacp ]; then
 fi
 
 if [[ "$os" == *"7" ]]; then
-yum install fish
+	wget http://download.opensuse.org/repositories/shells:fish:release:2/CentOS_7/shells:fish:release:2.repo
+	yum install fish
 fi
 ##########################################################
 # end of install snippet file

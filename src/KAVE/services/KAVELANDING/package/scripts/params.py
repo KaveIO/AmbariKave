@@ -19,6 +19,7 @@ from resource_management import *
 from resource_management.core.system import System
 import os
 import kavecommon as kc
+import socket
 
 
 config = Script.get_config()
@@ -37,6 +38,10 @@ www_folder = kc.default('configurations/kavelanding/www_folder', '/var/www/html/
 customlinks = default('configurations/kavelanding/customlinks', '{}')
 PORT = kc.default('configurations/kavelanding/PORT', '80', kc.is_valid_port)
 AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
+
+short_host_address = socket.gethostbyname(short_host)
+AMBARI_SHORT_HOST_ADDRESS = socket.gethostbyname(AMBARI_SHORT_HOST)
+
 servername = kc.default('configurations/kavelanding/servername', hostname, kc.is_valid_hostname)
 if servername == "default":
     servername = hostname

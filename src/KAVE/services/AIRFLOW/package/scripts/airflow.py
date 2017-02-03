@@ -23,7 +23,7 @@ import kavecommon as kc
 #from resource_management.core.exceptions import ComponentIsNotRunning
 
 
-class Airflow():
+class Airflow(kc.ApacheScript):
     # status file is needed to know if this service was started, stores the name of the index file
     #status_file = '/etc/kave/kavelanding_started'
     airflow_config_path = "/root/airflow/airflow.cfg"
@@ -104,4 +104,4 @@ class Airflow():
 
 
 if __name__ == "__main__":
-    KaveLanding().execute()
+    Airflow().execute()

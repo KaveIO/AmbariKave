@@ -65,6 +65,10 @@ if __name__ == "__main__":
         sys.argv = [s for s in sys.argv if s != "--this-branch"]
     service = sys.argv[1]
     test = TestBlueprint()
+    if service == "KAVELANDING":
+        test = TestServiceKaveLanding()
+    if service == "FREEIPA":
+        test = TestServiceFreeIPA()
     test.service = service
     test.debug = verbose
     test.branch = branch

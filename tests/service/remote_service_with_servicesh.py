@@ -75,6 +75,10 @@ if __name__ == "__main__":
         raise KeyError("You must specify which service to test")
     service = sys.argv[1]
     test = TestAService()
+    if service == "KAVELANDING":
+        test = TestServiceKaveLanding()
+    if service == "FREEIPA":
+        test = TestServiceFreeIPA()
     test.service = service
     test.branch = branch
     test.debug = verbose

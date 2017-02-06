@@ -15,7 +15,7 @@
         { "name" : "ZOOKEEPER_SERVER"  },
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
-        { "name" : "AMBARI_SERVER"    }
+        { "name" : "AIRFLOW_SERVER"    }
       ],
       "cardinality" : "1"
     }

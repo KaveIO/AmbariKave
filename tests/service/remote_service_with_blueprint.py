@@ -35,7 +35,6 @@ class TestServiceBlueprint(base.LDTest):
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         # bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
-        bp = os.path.dirname(__file__) + "/blueprints/" + "AIRFLOW" + ".blueprint.json"
         cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
         af = os.path.dirname(__file__) + "/blueprints/default.aws.json"
         if not os.path.exists(bp):

@@ -29,8 +29,8 @@ import grp
 def sed_ca_longdomain_patch():
     from resource_management import Execute
     Execute("grep -IlR 'Certificate Authority' /usr/lib/python*/site-packages/ipa* "
-            "| xargs sed -i 's/Certificate Authority/CA/g'")
-
+            # "| xargs sed -i 's/Certificate Authority/CA/g'")
+            "| xargs -r sed -i 's/Certificate Authority/CA/g'")
 
 def protect(apass):
     try:

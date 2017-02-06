@@ -56,7 +56,7 @@ class TestAService(base.LDTest):
         self.wait_for_service(ambari)
         return self.check(ambari)
 
-class TestServiceKaveLanding(TestServiceBlueprint):
+class TestServiceKaveLanding(TestAService):
 
     def check(self, ambari):
         super(TestServiceKaveLanding, self).check(ambari)
@@ -73,7 +73,7 @@ class TestServiceKaveLanding(TestServiceBlueprint):
         self.assertTrue(nowhite(__kavelanding_html__) in nowhite(pph2), "KaveLanding page is incomplete")
 
 
-class TestServiceFreeIPA(TestServiceBlueprint):
+class TestServiceFreeIPA(TestAService):
 
     def check(self, ambari):
         super(TestServiceFreeIPA, self).check(ambari)

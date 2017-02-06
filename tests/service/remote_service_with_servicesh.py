@@ -56,6 +56,49 @@ class TestAService(base.LDTest):
         self.wait_for_service(ambari)
         return self.check(ambari)
 
+class TestServiceKaveLanding(TestServiceBlueprint):
+
+    def check(self, ambari):
+        super(TestServiceKaveLanding, self).check(ambari)
+        ppp = ambari.run("./[a,A]mbari[k,K]ave/dev/scan.sh")
+        pph = ambari.run("./[a,A]mbari[k,K]ave/dev/scan.sh localhost html")
+        self.assertTrue(nowhite(__kavelanding_plain__) == nowhite(ppp),
+                        "Incorrect response from KaveLanding, scan.sh \n" + __kavelanding_plain__ +
+                        "\n-----------\nnot equal to\n-------\n" + ppp)
+        self.assertTrue(nowhite(__kavelanding_html__) in nowhite(pph),
+                        "Incorrect response from KaveLanding, scan.sh" + __kavelanding_html__ + "\n-----------\nnot "
+                                                                                                "equal to\n-------\n"
+                        + pph)
+        pph2 = ambari.run("curl --retry 5  -X GET http://localhost/", exit=False)
+        self.assertTrue(nowhite(__kavelanding_html__) in nowhite(pph2), "KaveLanding page is incomplete")
+
+
+class TestServiceFreeIPA(TestServiceBlueprint):
+
+    def check(self, ambari):
+        super(TestServiceFreeIPA, self).check(ambari)
+        # Check kerberos
+        import subprocess as sub
+        import os
+        pwd = ambari.run("cat admin-password")
+        proc = sub.Popen(ambari.sshcmd() + ['kinit admin'], shell=False,
+                         stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
+        output, err = proc.communicate(input=pwd + '\n')
+        self.assertFalse(proc.returncode, "Failed to kinit admin on this node "
+                         + ' '.join(ambari.sshcmd())
+                         + output + " " + err
+                         )
+        ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
+        ambari.run("./createkeytabs.py ./kerberostest.csv")
+        # check port number patching still applies correctly
+        ambari.run("python "
+                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                   " --test /etc/kave/portchanges_static.json --debug")
+        ambari.run("python "
+                   "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+                   " --test /etc/kave/portchanges_new.json --debug")
+
+
 
 if __name__ == "__main__":
     import sys

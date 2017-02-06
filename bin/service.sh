@@ -145,9 +145,6 @@ function runConfigureService {
     KAVENAGIOS)
 	buildConfiguration kavenagios nagios_admin_password
       ;;
-    AIRFLOW)
-	buildConfiguration airflow AMBARI_ADMIN AMBARI_ADMIN_PASS
-      ;;
   esac
 }
 
@@ -193,7 +190,6 @@ function runList {
   echo "	STORMSD_DRPC_SERVER"
   echo "	STORMSD_CLIENT"
   echo "	TWIKI"
-  echo "	AIRFLOW"
   echo ""
 }
 
@@ -319,8 +315,6 @@ elif [ $service = "METRICS" ]; then
 elif [ $service = "METRICS_MONITOR" ]; then
   service="AMBARI_METRICS"
   component="METRICS_MONITOR"
-elif [ $service = "AIRFLOW" ]; then
-  component="AIRFLOW_SERVER"
 else
   echo "ERROR: unknown service caught: $service"
   runHelp

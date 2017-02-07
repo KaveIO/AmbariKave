@@ -18,10 +18,7 @@
 from resource_management import *
 from resource_management.core.system import System
 import os
-<<<<<<< HEAD
 import string
-=======
->>>>>>> 98254f88e398bba8fe9772ff25df5423508bc78c
 import kavecommon as kc
 
 
@@ -29,7 +26,6 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-<<<<<<< HEAD
 airflow_home = default('configurations/airflow/airflow_home', '/root/airflow')
 
 airflow_dags_folder = default('configurations/airflow/airflow_dags_folder', '/root/airflow')
@@ -86,46 +82,12 @@ airflow_job_heartbeat_sec = default('configurations/airflow/airflow_filter_by_ow
 
 airflow_max_threads = default('configurations/airflow/airflow_max_threads', '2')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-kaveganglia_host = default("/clusterHostInfo/kaveganglia_server_hosts", [False])[0]
-
-ipa_host = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
-
-
-
-=======
-short_host = config["hostname"].split('.')[0]
->>>>>>> 98254f88e398bba8fe9772ff25df5423508bc78c
-
 AMBARI_ADMIN = config['configurations']['airflow']['AMBARI_ADMIN']
 AMBARI_ADMIN_PASS = config['configurations']['airflow']['AMBARI_ADMIN_PASS']
 Logger.sensitive_strings[AMBARI_ADMIN_PASS] = "[PROTECTED]"
 
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')
-<<<<<<< HEAD
-#www_folder = kc.default('configurations/kavelanding/www_folder', '/var/www/html/', kc.is_valid_directory)
-=======
-www_folder = kc.default('configurations/kavelanding/www_folder', '/var/www/html/', kc.is_valid_directory)
->>>>>>> 98254f88e398bba8fe9772ff25df5423508bc78c
 
 PORT = kc.default('configurations/airflow/PORT', '80', kc.is_valid_port)
 AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
@@ -133,8 +95,6 @@ servername = kc.default('configurations/airflow/servername', hostname, kc.is_val
 if servername == "default":
     servername = hostname
 
-
-<<<<<<< HEAD
 airflow_conf = default('configurations/kaveganglia/airflow_config_path',
                           """[core]
 # The home folder for airflow, default is ~/airflow
@@ -397,8 +357,6 @@ authenticate = False
  """)
 
 
-=======
->>>>>>> 98254f88e398bba8fe9772ff25df5423508bc78c
 #template_000_default = default('configurations/kavelanding/template_000_default', """# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
 # Edit the template through the Ambari interface instead

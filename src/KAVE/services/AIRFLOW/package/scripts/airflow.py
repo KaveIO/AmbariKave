@@ -91,12 +91,12 @@ class Airflow(kc.ApacheScript):
     # def status(self, env):
         # Read from the status file, and check the index exists
         # if not os.path.exists(self.status_file):
-            # raise ComponentIsNotRunning()
+        # raise ComponentIsNotRunning()
         # klfile = None
         # with open(self.status_file) as fp:
-            # klfile = fp.read().split()[0].strip()
+        # klfile = fp.read().split()[0].strip()
         # if len(klfile) < 5 or (not os.path.exists(klfile)):
-            # raise ComponentIsNotRunning()
+        # raise ComponentIsNotRunning()
         # super(KaveLanding, self).status(env)
 
 

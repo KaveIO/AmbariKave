@@ -4,12 +4,12 @@
 <configuration>
     <property require-input = "true">
         <name>AMBARI_ADMIN</name>
-        <value>admin</value>
+        <value>"admin"</value>
         <description>the name of the ambari admin user (admin?)</description>
     </property>
     <property require-input = "true">
         <name>AMBARI_ADMIN_PASS</name>
-        <value>admin</value>
+        <value>"admin"</value>
         <description>The password for the ambari admin (admin?)</description>
         <property-type>PASSWORD</property-type>
         <value-attributes>

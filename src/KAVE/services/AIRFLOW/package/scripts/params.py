@@ -355,4 +355,3 @@ authenticate = False
 # default_principal = admin
 # default_secret = admin
  """)
-

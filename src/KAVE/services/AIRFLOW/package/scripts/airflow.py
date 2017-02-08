@@ -22,9 +22,10 @@ import kavecommon as kc
 from kavecommon import ApacheScript
 from resource_management.core.exceptions import ComponentIsNotRunning
 
+
 class Airflow(kc.ApacheScript):
     # status file is needed to know if this service was started, stores the name of the index file
-    #status_file = '/etc/kave/kavelanding_started'
+    # status_file = '/etc/kave/kavelanding_started'
     airflow_config_path = "/root/airflow/airflow.cfg"
     airflow_webserver_pidfile_path = "/root/airflow/airflow-webserver.pid"
 
@@ -40,8 +41,8 @@ class Airflow(kc.ApacheScript):
         Execute('sudo yum install -y postgresql-devel')
         Execute('yum install -y python-devel mysql-devel')
 
-        #Package('python-devel')
-        #Package('python-pip')
+        # Package('python-devel')
+        # Package('python-pip')
 
         Execute('sudo yum -y install gcc gcc-c++ libffi-devel mariadb-devel cyrus-sasl-devel')
 
@@ -87,17 +88,16 @@ class Airflow(kc.ApacheScript):
         Execute('cat $AIRFLOW_HOME/airflow-webserver.pid | xargs kill -9')
         super(Airflow, self).stop(env)
 
-
-    #def status(self, env):
+    # def status(self, env):
         # Read from the status file, and check the index exists
-        #if not os.path.exists(self.status_file):
-            #raise ComponentIsNotRunning()
-        #klfile = None
-        #with open(self.status_file) as fp:
-            #klfile = fp.read().split()[0].strip()
-        #if len(klfile) < 5 or (not os.path.exists(klfile)):
-            #raise ComponentIsNotRunning()
-        #super(KaveLanding, self).status(env)
+        # if not os.path.exists(self.status_file):
+            # raise ComponentIsNotRunning()
+        # klfile = None
+        # with open(self.status_file) as fp:
+            # klfile = fp.read().split()[0].strip()
+        # if len(klfile) < 5 or (not os.path.exists(klfile)):
+            # raise ComponentIsNotRunning()
+        # super(KaveLanding, self).status(env)
 
 
 if __name__ == "__main__":

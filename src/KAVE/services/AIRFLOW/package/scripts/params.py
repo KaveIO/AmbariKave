@@ -21,7 +21,6 @@ import os
 import string
 import kavecommon as kc
 
-
 config = Script.get_config()
 
 hostname = config["hostname"]
@@ -34,7 +33,8 @@ airflow_base_log_folder = default('configurations/airflow/airflow_base_log_folde
 
 airflow_executor = default('configurations/airflow/airflow_executor', 'SequentialExecutor')
 
-airflow_sql_alchemy_conn = default('configurations/airflow/airflow_sql_alchemy_conn', 'sqlite:////root/airflow/airflow.db')
+airflow_sql_alchemy_conn = default('configurations/airflow/airflow_sql_alchemy_conn',
+                                   'sqlite:////root/airflow/airflow.db')
 
 airflow_sql_alchemy_pool_size = default('configurations/airflow/airflow_sql_alchemy_pool_size', '5')
 
@@ -48,13 +48,14 @@ airflow_dags_are_paused_at_creation = default('configurations/airflow/airflow_da
 
 airflow_non_pooled_task_slot_count = default('configurations/airflow/airflow_non_pooled_task_slot_count', '128')
 
-airflow_max_active_runs_per_dag = default('configurations/airflow/airflow_max_active_runs_per_dag','16')
+airflow_max_active_runs_per_dag = default('configurations/airflow/airflow_max_active_runs_per_dag', '16')
 
-airflow_load_examples = default('configurations/airflow/airflow_load_examples','True')
+airflow_load_examples = default('configurations/airflow/airflow_load_examples', 'True')
 
 airflow_plugins_folder = default('configurations/airflow/airflow_plugins_folder', '/root/airflow/plugins')
 
-airflow_fernet_key = default('configurations/airflow/airflow_fernet_key', '2IT-D1Z4DV7P_uirajSKwixBUepSYB8mwZycWQDeMdI=')
+airflow_fernet_key = default('configurations/airflow/airflow_fernet_key',
+                             '2IT-D1Z4DV7P_uirajSKwixBUepSYB8mwZycWQDeMdI=')
 
 airflow_donot_pickle = default('configurations/airflow/airflow_donot_pickle', 'False')
 
@@ -95,8 +96,8 @@ servername = kc.default('configurations/airflow/servername', hostname, kc.is_val
 if servername == "default":
     servername = hostname
 
-airflow_conf = default('configurations/kaveganglia/airflow_config_path',
-                          """[core]
+airflow_conf = default('configurations/kaveganglia/airflow_config_path', """
+[core]
 # The home folder for airflow, default is ~/airflow
 # default: /root/airflow
 airflow_home {{airflow_home}}
@@ -353,16 +354,5 @@ authenticate = False
 # Mesos credentials, if authentication is enabled
 # default_principal = admin
 # default_secret = admin
-
  """)
 
-
-#template_000_default = default('configurations/kavelanding/template_000_default', """# Created automatically with Ambari
-# All manual changes will be undone in the case of a server restart
-# Edit the template through the Ambari interface instead
-#TraceEnable Off
-#RequestHeader unset Proxy early
-#Listen {{PORT}}
-#ServerName "{{servername}}"
-#DocumentRoot "{{www_folder}}"
-#""")

@@ -83,8 +83,8 @@ airflow_job_heartbeat_sec = default('configurations/airflow/airflow_filter_by_ow
 
 airflow_max_threads = default('configurations/airflow/airflow_max_threads', '2')
 
-AMBARI_ADMIN = config['configurations']['airflow']['AMBARI_ADMIN']
-AMBARI_ADMIN_PASS = config['configurations']['airflow']['AMBARI_ADMIN_PASS']
+AMBARI_ADMIN = config['configurations']['airflow']['admin']
+AMBARI_ADMIN_PASS = config['configurations']['airflow']['admin']
 Logger.sensitive_strings[AMBARI_ADMIN_PASS] = "[PROTECTED]"
 
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]

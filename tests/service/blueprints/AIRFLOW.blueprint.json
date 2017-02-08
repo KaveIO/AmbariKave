@@ -1,9 +1,7 @@
 {
   "configurations" : [
     {
-      "ams-site" : {
-        "timeline.metrics.service.operation.mode" : "embedded"
-      }
+    	{'airflow': ['AMBARI_ADMIN', 'AMBARI_ADMIN_PASS']}
     }
   ],
   "host_groups" : [

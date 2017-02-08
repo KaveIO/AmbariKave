@@ -9,11 +9,7 @@
             <version>1.7</version>
             <components>
                     <component>
-<<<<<<< HEAD
                     <name>AIRFLOW_SERVER</name>
-=======
-                    <name>AIRFLOW</name>
->>>>>>> 98254f88e398bba8fe9772ff25df5423508bc78c
                     <displayName>Airflow</displayName>
                     <category>MASTER</category>
                     <cardinality>1+</cardinality>

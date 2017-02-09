@@ -85,7 +85,6 @@ airflow_max_threads = default('configurations/airflow/airflow_max_threads', '2')
 
 AMBARI_ADMIN = config['configurations']['airflow']['admin']
 AMBARI_ADMIN_PASS = config['configurations']['airflow']['admin']
-Logger.sensitive_strings[AMBARI_ADMIN_PASS] = "[PROTECTED]"
 
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')

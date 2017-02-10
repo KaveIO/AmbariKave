@@ -32,6 +32,7 @@ def sed_ca_longdomain_patch():
             # "| xargs sed -i 's/Certificate Authority/CA/g'")
             "| xargs -r sed -i 's/Certificate Authority/CA/g'")
 
+
 def protect(apass):
     try:
         from resource_management import Logger

@@ -33,18 +33,24 @@ class TestBlueprint(base.LDTest):
 
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        af = os.path.dirname(__file__) + "/blueprints/default.aws.json"
         bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
         cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
+        af = os.path.dirname(__file__) + "/blueprints/default.aws.json"
         if not os.path.exists(bp):
             raise ValueError("No blueprint with which to install " + self.service)
         self.verify_blueprint(af, bp, cf)
-        ambari, iid = self.deploy_dev("c4.2xlarge")  # 2xlarge needed for single node hadoop!
+        if self.service not in [s for s, d in base.find_services()]:
+            raise ValueError(
+                "This test can only work for blueprints where the name of the blueprint matches a known service. Else "
+                "try remote_blueprint.py")
+        ambari, iid = self.deploy_dev()
         # clean the existing blueprint ready for re-install
         self.pull(ambari)
         self.resetambari(ambari)
         self.deploy_blueprint(ambari, bp, cf)
-        return self.check(ambari)
+        # wait for the install and then check if the directories etc. are there
+        self.wait_for_service(ambari)
+        self.check(ambari)
 
 
 #####
@@ -77,6 +83,13 @@ __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 </ul><p><b>Clients</b><p><ul>
   <li>ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']</li>
 </ul>"""
+
+
+def nowhite(astring):
+    """
+    return a string with no whitespace
+    """
+    return ''.join(astring.split())
 
 
 class TestServiceKaveLanding(TestBlueprint):

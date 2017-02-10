@@ -31,30 +31,28 @@ class TestAService(base.LDTest):
         # create remote machine
         import os
         import sys
+        import json
 
         lD = self.pre_check()
-        known = [s for s, d in base.find_services()]
-        self.assertTrue(self.service in known, "The service " + self.service + " is unknown, check the case")
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+        bp = os.path.dirname(__file__) + "/blueprints/" + self.service + ".blueprint.json"
+        cf = os.path.dirname(__file__) + "/blueprints/default.cluster.json"
+        af = os.path.dirname(__file__) + "/blueprints/default.aws.json"
+        if not os.path.exists(bp):
+            raise ValueError("No blueprint with which to install " + self.service)
+        self.verify_blueprint(af, bp, cf)
+        if self.service not in [s for s, d in base.find_services()]:
+            raise ValueError(
+                "This test can only work for blueprints where the name of the blueprint matches a known service. Else "
+                "try remote_blueprint.py")
         ambari, iid = self.deploy_dev()
+        # clean the existing blueprint ready for re-install
         self.pull(ambari)
-        # restart ganglia and nagios
-        if self.branch:
-            abranch = self.service
-        for restart in ["METRICS_MONITOR", "AMBARI_METRICS", "ZOOKEEPER"]:
-            stdout = self.servicesh(ambari, "stop", restart)
-        for restart in ["ZOOKEEPER", "AMBARI_METRICS", "METRICS_MONITOR"]:
-            self.wait_for_service(ambari, restart)
-        import time
-
-        time.sleep(15)
-        # install the component on top of the blueprint
-        stdout = self.servicesh(ambari, "install", self.service)
-        self.assertTrue("IN_PROGRESS" in stdout or "InProgress" in stdout or "status\" : \"Accepted" in stdout,
-                        "Was unable to install " + self.service + " through service.sh, (" + ' '.join(
-                            ambari.sshcmd()) + ")")
+        self.resetambari(ambari)
+        self.deploy_blueprint(ambari, bp, cf)
+        # wait for the install and then check if the directories etc. are there
         self.wait_for_service(ambari)
-        return self.check(ambari)
+        self.check(ambari)
 
 
 #####
@@ -87,6 +85,13 @@ __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
 </ul><p><b>Clients</b><p><ul>
   <li>ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']</li>
 </ul>"""
+
+
+def nowhite(astring):
+    """
+    return a string with no whitespace
+    """
+    return ''.join(astring.split())
 
 
 class TestServiceKaveLanding(TestAService):

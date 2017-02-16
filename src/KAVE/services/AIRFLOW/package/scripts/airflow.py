@@ -35,9 +35,11 @@ class Airflow(kc.ApacheScript):
         import os
         super(Airflow, self).install(env)
         kc.install_epel()
-        Execute('curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
-        Package('python get-pip.py')
+
+        #Execute('curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
+        #Package('python get-pip.py')
         Execute('yum -y update')
+        Execute('yum -y install python-pip')
         Execute('sudo yum install -y postgresql-devel')
         Execute('yum install -y python-devel mysql-devel')
 

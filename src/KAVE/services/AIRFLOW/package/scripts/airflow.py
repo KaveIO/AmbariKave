@@ -49,6 +49,7 @@ class Airflow(kc.ApacheScript):
         Execute('sudo yum -y install gcc gcc-c++ libffi-devel mariadb-devel cyrus-sasl-devel')
 
         Execute('pip install airflow')
+        Execute('airflow')
 
         self.configure(env)
 

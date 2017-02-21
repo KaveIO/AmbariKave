@@ -95,7 +95,7 @@ servername = kc.default('configurations/airflow/servername', hostname, kc.is_val
 if servername == "default":
     servername = hostname
 
-airflow_conf = default('configurations/kaveganglia/airflow_config_path', """
+airflow_conf = default('configurations/airflow/airflow_config_path', """
 [core]
 # The home folder for airflow, default is ~/airflow
 # default: /root/airflow

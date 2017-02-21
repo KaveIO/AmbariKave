@@ -90,6 +90,20 @@ AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')
 
 PORT = kc.default('configurations/airflow/PORT', '80', kc.is_valid_port)
+
+template_000_default = default('configurations/apache/template_000_default', """# Created automatically with Ambari
+# All manual changes will be undone in the case of a server restart
+# Edit the template through the Ambari interface instead
+TraceEnable Off
+RequestHeader unset Proxy early
+ServerSignature Off
+ServerTokens Prod
+Options -Multiviews
+Listen {{PORT}}
+ServerName "{{servername}}"
+DocumentRoot "{{www_folder}}"
+""")
+
 AMBARI_SHORT_HOST = AMBARI_SERVER.split('.')[0]
 servername = kc.default('configurations/airflow/servername', hostname, kc.is_valid_hostname)
 if servername == "default":

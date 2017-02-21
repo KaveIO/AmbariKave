@@ -72,16 +72,12 @@ class Airflow(kc.ApacheScript):
             os.makedirs(os.path.dirname(self.status_file))
         import params
         import os
+
+        self.configure(env)
         Execute('airflow initdb')
         Execute('airflow webserver -p 8080')
         Execute('airflow scheduler')
 
-        self.configure(env)
-        super(KaveLanding, self).start(env)
-        # Write the location of the index file into the status file
-        if os.path.exists(params.www_folder + '/index.html'):
-            with open(self.status_file, 'w') as fp:
-                fp.write(params.www_folder + '/index.html')
 
     def stop(self, env):
         import params

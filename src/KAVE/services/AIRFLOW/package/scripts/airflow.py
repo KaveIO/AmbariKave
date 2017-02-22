@@ -68,10 +68,12 @@ class Airflow(kc.ApacheScript):
         super(Airflow, self).configure(env)
 
     def start(self, env):
-        if not os.path.exists(os.path.dirname(self.status_file)):
-            os.makedirs(os.path.dirname(self.status_file))
         import params
         import os
+
+        if not os.path.exists(os.path.dirname(self.status_file)):
+            os.makedirs(os.path.dirname(self.status_file))
+
 
         self.configure(env)
         Execute('airflow initdb')

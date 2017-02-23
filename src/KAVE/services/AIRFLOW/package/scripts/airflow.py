@@ -71,10 +71,6 @@ class Airflow(kc.ApacheScript):
         import params
         import os
 
-        if not os.path.exists(os.path.dirname(self.status_file)):
-            os.makedirs(os.path.dirname(self.status_file))
-
-
         self.configure(env)
         Execute('airflow initdb')
         Execute('airflow webserver -p 8080')

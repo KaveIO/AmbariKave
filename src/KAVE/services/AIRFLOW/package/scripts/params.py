@@ -25,7 +25,7 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-airflow_home = default('configurations/airflow/airflow_home', '/root/airflow')
+airflow_home = kc.default('configurations/airflow/airflow_home', '/root/airflow', kc.is_valid_directory)
 
 airflow_dags_folder = default('configurations/airflow/airflow_dags_folder', '/root/airflow')
 
@@ -63,9 +63,9 @@ airflow_dagbag_import_timeout = default('configurations/airflow/airflow_dagbag_i
 
 airflow_default_owner = default('configurations/airflow/airflow_default_owner', 'Airflow')
 
-airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8080')
+airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8082')
 
-airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8080')
+airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8082')
 
 airflow_web_server_worker_timeout = default('configurations/airflow/airflow_web_server_worker_timeout', '120')
 
@@ -89,7 +89,7 @@ www_folder = kc.default('configurations/airflow/www_folder', '/var/www/html/', k
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
 # default('configurations/kavelanding/AMBARI_SERVER','ambari')
 
-PORT = kc.default('configurations/airflow/PORT', '80', kc.is_valid_port)
+PORT = kc.default('configurations/airflow/PORT', '82', kc.is_valid_port)
 
 template_000_default = default('configurations/apache/template_000_default', """# Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart

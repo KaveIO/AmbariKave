@@ -4,7 +4,7 @@
 <configuration>
     <property>
         <name>PORT</name>
-        <value>80</value>
+        <value>82</value>
         <description>HTTP PORT</description>
     </property>
     <property>

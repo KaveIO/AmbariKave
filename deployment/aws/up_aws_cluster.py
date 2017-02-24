@@ -417,9 +417,9 @@ for instancegroup in cluster_config["InstanceGroups"]:
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"
 print "=============================================="
-#allremotes.run("yum install -y firewalld")
-#allremotes.run("systemctl enable firewalld")
-#allremotes.run("systemctl restart firewalld")
+allremotes.run("yum install -y firewalld")
+allremotes.run("systemctl enable firewalld")
+allremotes.run("systemctl restart firewalld")
 lD.disable_security(allremotes)
 
 print "==================================="

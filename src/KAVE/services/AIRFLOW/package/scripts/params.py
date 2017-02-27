@@ -113,16 +113,16 @@ airflow_conf = default('configurations/airflow/airflow_config_path', """
 [core]
 # The home folder for airflow, default is ~/airflow
 # default: /root/airflow
-airflow_home {{airflow_home}}
+airflow_home = {{airflow_home}}
 
 # The folder where your airflow pipelines live, most likely a
 # subfolder in a code repository
 # default: /root/airflow/dags
-dags_folder {{airflow_dags_folder}}
+dags_folder = {{airflow_dags_folder}}
 
 # The folder where airflow should store its log files. This location
 # default: /root/airflow/logs
-base_log_folder {{airflow_base_log_folder}}
+base_log_folder = {{airflow_base_log_folder}}
 
 # Airflow can store logs remotely in AWS S3 or Google Cloud Storage. Users
 # must supply a remote location URL (starting with either 's3://...' or
@@ -138,77 +138,77 @@ encrypt_s3_logs = False
 # The executor class that airflow should use. Choices include
 # SequentialExecutor, LocalExecutor, CeleryExecutor
 # default: SequentialExecutor
-executor {{airflow_executor}}
+executor = {{airflow_executor}}
 
 
 # The SqlAlchemy connection string to the metadata database.
 # SqlAlchemy supports many different database engine, more information
 # their website
 # default: sqlite:////root/airflow/airflow.db
-sql_alchemy_conn {{airflow_sql_alchemy_conn}}
+sql_alchemy_conn = {{airflow_sql_alchemy_conn}}
 
 # The SqlAlchemy pool size is the maximum number of database connections
 # in the pool.
 # default: 5
-sql_alchemy_pool_size {{airflow_sql_alchemy_pool_size}}
+sql_alchemy_pool_size = {{airflow_sql_alchemy_pool_size}}
 
 # The SqlAlchemy pool recycle is the number of seconds a connection
 # can be idle in the pool before it is invalidated. This config does
 # not apply to sqlite.
 # default: 3600
-sql_alchemy_pool_recycle {{airflow_sql_alchemy_pool_recycle}}
+sql_alchemy_pool_recycle = {{airflow_sql_alchemy_pool_recycle}}
 
 # The amount of parallelism as a setting to the executor. This defines
 # the max number of task instances that should run simultaneously
 # on this airflow installation
 # default: 32
-parallelism {{airflow_parallelism}}
+parallelism = {{airflow_parallelism}}
 
 # The number of task instances allowed to run concurrently by the scheduler
 # default: 16
-dag_concurrency {{airflow_dag_concurrency}}
+dag_concurrency = {{airflow_dag_concurrency}}
 
 # Are DAGs paused by default at creation
 # default: True
-dags_are_paused_at_creation {{airflow_dags_are_paused_at_creation}}
+dags_are_paused_at_creation = {{airflow_dags_are_paused_at_creation}}
 
 # When not using pools, tasks are run in the "default pool",
 # whose size is guided by this config element
 # default: 128
-non_pooled_task_slot_count {{airflow_non_pooled_task_slot_count}}
+non_pooled_task_slot_count = {{airflow_non_pooled_task_slot_count}}
 
 # The maximum number of active DAG runs per DAG
 # default: 16
-max_active_runs_per_dag {{airflow_max_active_runs_per_dag}}
+max_active_runs_per_dag = {{airflow_max_active_runs_per_dag}}
 
 # Whether to load the examples that ship with Airflow. It's good to
 # get started, but you probably want to set this to False in a production
 # environment
 # default: True
-load_examples {{airflow_load_examples}}
+load_examples = {{airflow_load_examples}}
 
 # Where your Airflow plugins are stored
 # default: /root/airflow/plugins
-plugins_folder {{airflow_plugins_folder}}
+plugins_folder = {{airflow_plugins_folder}}
 
 # Secret key to save connection passwords in the db
 # default: 2IT-D1Z4DV7P_uirajSKwixBUepSYB8mwZycWQDeMdI=
-fernet_key {{airflow_fernet_key}}
+fernet_key = {{airflow_fernet_key}}
 
 # Whether to disable pickling dags
 # default: False
-donot_pickle {{airflow_donot_pickle}}
+donot_pickle = {{airflow_donot_pickle}}
 
 # How long before timing out a python file import while filling the DagBag
 # default: 30
-dagbag_import_timeout {{airflow_dagbag_import_timeout}}
+dagbag_import_timeout = {{airflow_dagbag_import_timeout}}
 
 
 [operators]
 # The default owner assigned to each new operator, unless
 # provided explicitly or passed via `default_args`
 # default: Airflow
-default_owner {{airflow_default_owner}}
+default_owner = {{airflow_default_owner}}
 
 
 [webserver]
@@ -216,7 +216,7 @@ default_owner {{airflow_default_owner}}
 # cname you are using. This is used in automated emails that
 # airflow sends to point links to the right web server
 # default: http://localhost:8080
-base_url {{airflow_base_url}}
+base_url = {{airflow_base_url}}
 
 # The ip specified when starting the web server
 # default:
@@ -228,33 +228,33 @@ web_server_port {{airflow_web_server_port}}
 
 # The time the gunicorn webserver waits before timing out on a worker
 # default: 120
-web_server_worker_timeout {{airflow_web_server_worker_timeout}}
+web_server_worker_timeout = {{airflow_web_server_worker_timeout}}
 
 # Secret key used to run your flask app
 # default: temporary_key
-secret_key {{airflow_secret_key}}
+secret_key = {{airflow_secret_key}}
 
 # Number of workers to run the Gunicorn web server
 # default: 4
-workers {{airflow_workers}}
+workers = {{airflow_workers}}
 
 # The worker class gunicorn should use. Choices include
 # sync (default), eventlet, gevent
 # default: sync
-worker_class {{airflow_worker_class}}
+worker_class = {{airflow_worker_class}}
 
 # Expose the configuration file in the web server
 # default: true
-expose_config {{airflow_expose_config}}
+expose_config = {{airflow_expose_config}}
 
 # Set to true to turn on authentication:
 # http://pythonhosted.org/airflow/installation.html#web-authentication
 # default: False
-authenticate {{airflow_authenticate}}
+authenticate = {{airflow_authenticate}}
 
 # Filter the list of dags by owner name (requires authentication to be enabled)
 # default: False
-filter_by_owner {{airflow_filter_by_owner}}
+filter_by_owner = {{airflow_filter_by_owner}}
 
 [email]
 email_backend = airflow.utils.email.send_email_smtp
@@ -311,13 +311,13 @@ default_queue = default
 # from the CLI or the UI), this defines the frequency at which they should
 # listen (in seconds).
 # default: 5
-job_heartbeat_sec {{airflow_job_heartbeat_sec}}
+job_heartbeat_sec = {{airflow_job_heartbeat_sec}}
 
 # The scheduler constantly tries to trigger new tasks (look at the
 # scheduler section in the docs for more information). This defines
 # how often the scheduler should run (in seconds).
 # default: 5
-scheduler_heartbeat_sec {{airflow_scheduler_heartbeat_sec}}
+scheduler_heartbeat_sec = {{airflow_scheduler_heartbeat_sec}}
 
 # Statsd (https://github.com/etsy/statsd) integration settings
 # statsd_on =  False
@@ -329,7 +329,7 @@ scheduler_heartbeat_sec {{airflow_scheduler_heartbeat_sec}}
 # This defines how many threads will run. However airflow will never
 # use more threads than the amount of cpu cores available.
 # default: 2
-max_threads {{airflow_max_threads}}
+max_threads = {{airflow_max_threads}}
 
 [mesos]
 # Mesos master address which MesosExecutor will connect to.

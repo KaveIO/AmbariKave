@@ -224,7 +224,7 @@ web_server_host = 0.0.0.0
 
 # The port on which to run the web server
 # default: 8080
-web_server_port {{airflow_web_server_port}}
+web_server_port = {{airflow_web_server_port}}
 
 # The time the gunicorn webserver waits before timing out on a worker
 # default: 120

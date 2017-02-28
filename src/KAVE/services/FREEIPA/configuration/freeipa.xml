@@ -12,7 +12,7 @@
     </property>
     <property>
         <name>pki_insecure_port</name>
-        <value>8081</value>
+        <value>8080</value>
         <description>
             FreeIPA needs a lot of ports available, 80, 443, 8080, and 8443 are the defaults.
             We provide a method to change 8080 and 8443.
@@ -20,7 +20,7 @@
     </property>
     <property>
         <name>pki_secure_port</name>
-        <value>8444</value>
+        <value>8443</value>
         <description>
             FreeIPA needs a lot of ports available, 80, 443, 8080, and 8443 are the defaults.
             We provide a method to change 8080 and 8443, used for PKI and dogtags.

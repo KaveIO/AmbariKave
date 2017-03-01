@@ -72,8 +72,8 @@ class FreeipaServer(Script):
         import params
         env.set_params(params)
 
-        Execute('/etc/init.d/ambari-server stop')
-        Execute('yum -y remove ambari-server')
+        # Execute('/etc/init.d/ambari-server stop')
+        # Execute('yum -y remove ambari-server')
 
         import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)

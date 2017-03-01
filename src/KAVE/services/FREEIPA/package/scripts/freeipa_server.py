@@ -72,6 +72,9 @@ class FreeipaServer(Script):
         import params
         env.set_params(params)
 
+        Execute('/etc/init.d/ambari-server stop')
+        Execute('yum -y remove ambari-server')
+
         import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()
@@ -124,15 +127,15 @@ class FreeipaServer(Script):
         if params.install_with_dns:
             if tos.lower() in ["centos7"]:
                 Package("ipa-server-dns")
-            # install_command += ' --setup-dns --domain="%s"' % params.domain
-            install_command += ' --domain="%s"' % params.domain
+            install_command += ' --setup-dns --domain="%s"' % params.domain
+            # install_command += ' --domain="%s"' % params.domain
 
             # Forwarder has been commented out as it create issue for installation of ipa-server
-            # if params.forwarders:
-            #     for forwarder in params.forwarders:
-            #         install_command += ' --forwarder="%s"' % forwarder
-            # else:
-            #     install_command += ' --no-forwarders'
+            if params.forwarders:
+                for forwarder in params.forwarders:
+                    install_command += ' --forwarder="%s"' % forwarder
+            else:
+                install_command += ' --no-forwarders'
 
         # Crude check to avoid reinstalling during debugging
         if not os.path.exists(self.admin_password_file):

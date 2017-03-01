@@ -16,7 +16,7 @@
 #
 ##############################################################################
 import re
-import socket
+# import socket
 import json
 import kavecommon as kc
 
@@ -34,9 +34,9 @@ if not ipa_server:
     raise KeyError('ipa_server could not be found in this cluster, this is strange and indicates much worse problems'
                    ' FreeIPA Client is the client partner of the server, so cannot install without its mommy')
 
-ipa_server_ip_address = socket.gethostbyname(ipa_server)
-if not ipa_server_ip_address:
-    raise Exception('ipa_server_ip_address couldn\'t be determined')
+# ipa_server_ip_address = socket.gethostbyname(ipa_server)
+# if not ipa_server_ip_address:
+#     raise Exception('ipa_server_ip_address couldn\'t be determined')
 
 directory_password = default('configurations/freeipa/directory_password', False)
 if not directory_password or len(directory_password) < 8:

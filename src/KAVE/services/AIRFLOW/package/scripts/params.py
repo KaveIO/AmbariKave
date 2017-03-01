@@ -73,7 +73,9 @@ airflow_secret_key = default('configurations/airflow/airflow_secret_key', 'tempo
 
 airflow_workers = default('configurations/airflow/airflow_workers', '4')
 
-airflow_worker_class = default('configurations/airflow/airflow_workers', 'sync')
+airflow_worker_class = default('configurations/airflow/airflow_worker_class', 'sync')
+
+airflow_authenticate = default('configurations/airflow/airflow_authenticate', 'False')
 
 airflow_expose_config = default('configurations/airflow/airflow_expose_config', 'True')
 

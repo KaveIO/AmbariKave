@@ -127,15 +127,15 @@ class FreeipaServer(Script):
         if params.install_with_dns:
             if tos.lower() in ["centos7"]:
                 Package("ipa-server-dns")
-            install_command += ' --setup-dns --domain="%s"' % params.domain
-            # install_command += ' --domain="%s"' % params.domain
+            #install_command += ' --setup-dns --domain="%s"' % params.domain
+            install_command += ' --domain="%s"' % params.domain
 
             # Forwarder has been commented out as it create issue for installation of ipa-server
-            if params.forwarders:
-                for forwarder in params.forwarders:
-                    install_command += ' --forwarder="%s"' % forwarder
-            else:
-                install_command += ' --no-forwarders'
+            # if params.forwarders:
+            #    for forwarder in params.forwarders:
+            #         install_command += ' --forwarder="%s"' % forwarder
+            # else:
+            #    install_command += ' --no-forwarders'
 
         # Crude check to avoid reinstalling during debugging
         if not os.path.exists(self.admin_password_file):

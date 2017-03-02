@@ -400,7 +400,7 @@ if len(gateways):
     lD.confremotessh(gateways)
 
 print "=============================================="
-print "Configure the admin to have keys to the rest"
+print "Configure the admin and freeipa to have keys to the rest"
 print "=============================================="
 sys.stdout.flush()
 for instancegroup in cluster_config["InstanceGroups"]:

@@ -95,20 +95,20 @@ class FreeipaServer(Script):
         for package in self.packages:
             Package(package)
 
-        # Always generate new portchanges file for automated tests
-        if not os.path.exists('/etc/kave'):
-            Execute('mkdir -p /etc/kave')
-        if not os.path.exists('/etc/kave/portchanges_new.json'):
-            Execute('python ' + os.path.dirname(__file__) +
-                    '/sed_ports.py --create /etc/kave/portchanges_new.json --debug')
-
-        File("/etc/kave/portchanges_static.json",
-             content=Template(tos.lower() + "_server.json.j2"),
-             mode=0600
-             )
-        # Always use static file
-        Execute('python ' + os.path.dirname(__file__)
-                + '/sed_ports.py --apply /etc/kave/portchanges_static.json --debug')
+#        # Always generate new portchanges file for automated tests
+#        if not os.path.exists('/etc/kave'):
+#            Execute('mkdir -p /etc/kave')
+#        if not os.path.exists('/etc/kave/portchanges_new.json'):
+#            Execute('python ' + os.path.dirname(__file__) +
+#                    '/sed_ports.py --create /etc/kave/portchanges_new.json --debug')
+#
+#        File("/etc/kave/portchanges_static.json",
+#             content=Template(tos.lower() + "_server.json.j2"),
+#             mode=0600
+#             )
+#        # Always use static file
+#        Execute('python ' + os.path.dirname(__file__)
+#                + '/sed_ports.py --apply /etc/kave/portchanges_static.json --debug')
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
@@ -127,7 +127,7 @@ class FreeipaServer(Script):
         if params.install_with_dns:
             if tos.lower() in ["centos7"]:
                 Package("ipa-server-dns")
-            #install_command += ' --setup-dns --domain="%s"' % params.domain
+            # install_command += ' --setup-dns --domain="%s"' % params.domain
             install_command += ' --domain="%s"' % params.domain
 
             # Forwarder has been commented out as it create issue for installation of ipa-server

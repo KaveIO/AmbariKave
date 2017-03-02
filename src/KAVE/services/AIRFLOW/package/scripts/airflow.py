@@ -60,10 +60,6 @@ class Airflow(kc.ApacheScript):
              content=InlineTemplate(params.airflow_conf),
              mode=0755
              )
-        File(self.airflow_webserver_pidfile_path,
-             content=Template("airflow.j2"),
-             mode=0755
-             )
 
         super(Airflow, self).configure(env)
 

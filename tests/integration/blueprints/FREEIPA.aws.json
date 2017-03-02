@@ -15,10 +15,10 @@
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
-  { "Name" : "test",
+  { "Name" : "freeipa",
     "Count" : 1,
     "InstanceType" : "t2.medium",
-    "AccessType" : "admin",
+    "AccessType" : "freeipa",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
   }

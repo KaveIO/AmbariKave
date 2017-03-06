@@ -83,6 +83,8 @@ airflow_filter_by_owner = default('configurations/airflow/airflow_filter_by_owne
 
 airflow_job_heartbeat_sec = default('configurations/airflow/airflow_job_heartbeat_sec', '5')
 
+airflow_scheduler_heartbeat_sec = default('configurations/airflow/airflow_scheduler_heartbeat_sec', '5')
+
 airflow_max_threads = default('configurations/airflow/airflow_max_threads', '2')
 
 AMBARI_ADMIN = config['configurations']['airflow']['admin']

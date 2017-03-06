@@ -81,7 +81,7 @@ airflow_expose_config = default('configurations/airflow/airflow_expose_config', 
 
 airflow_filter_by_owner = default('configurations/airflow/airflow_filter_by_owner', 'False')
 
-airflow_job_heartbeat_sec = default('configurations/airflow/airflow_filter_by_owner', '5')
+airflow_job_heartbeat_sec = default('configurations/airflow/airflow_job_heartbeat_sec', '5')
 
 airflow_max_threads = default('configurations/airflow/airflow_max_threads', '2')
 

@@ -70,7 +70,7 @@ class Airflow(kc.ApacheScript):
         self.configure(env)
         Execute('airflow initdb')
         Execute('airflow "webserver -p 8082"&')
-        Execute('airflow scheduler')
+        Execute('airflow scheduler &')
 
 
     def stop(self, env):

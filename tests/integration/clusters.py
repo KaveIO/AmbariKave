@@ -93,12 +93,12 @@ class TestFreeIPACluster(TestCluster):
 #                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
-    def check(self, ambari):
-        super(TestFreeIPACluster, self).check(ambari)
-        if 'ipa' in self.mdict:
-            self.checkipaserver(self.mdict['ipa'])
-        else:
-            self.checkipaserver(ambari)
+#    def check(self, ambari):
+#        super(TestFreeIPACluster, self).check(ambari)
+#        if 'ipa' in self.mdict:
+#            self.checkipaserver(self.mdict['ipa'])
+#        else:
+#            self.checkipaserver(ambari)
 
 
 if __name__ == "__main__":

@@ -65,7 +65,7 @@ class TestFreeIPACluster(TestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
-    mach_list = ["ambari", "ipa"]
+    mach_list = ["ambari", "ipa","freeipa"]
 
     def checkipaserver(self, ipaserver):
         import time
@@ -93,10 +93,10 @@ class TestFreeIPACluster(TestCluster):
 #                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
-#    def check(self, ambari):
-#        super(TestFreeIPACluster, self).check(ambari)
-#        if 'ipa' in self.mdict:
-#            self.checkipaserver(self.mdict['ipa'])
+    def check(self, ambari):
+        super(TestFreeIPACluster, self).check(ambari)
+        if 'freeipa' in self.mdict:
+            self.checkipaserver(self.mdict['freeipa'])
 #        else:
 #            self.checkipaserver(ambari)
 

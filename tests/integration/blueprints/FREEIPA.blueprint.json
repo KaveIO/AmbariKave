@@ -52,7 +52,7 @@
       "cardinality" : "1+"
     },
     {
-      "name" : "test",
+      "name" : "freeipa",
       "configurations" : [ ],
       "components" : [
         { "name" : "METRICS_MONITOR"       },

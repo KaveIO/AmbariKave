@@ -400,11 +400,12 @@ if len(gateways):
     lD.confremotessh(gateways)
 
 print "=============================================="
-print "Configure the admin to have keys to the rest"
+print "Configure the admin and freeipa to have keys to the rest"
 print "=============================================="
 sys.stdout.flush()
 for instancegroup in cluster_config["InstanceGroups"]:
-    if instancegroup["AccessType"] == "admin":
+    # if instancegroup["AccessType"] == "admin":
+    if instancegroup["AccessType"] in ["admin","freeipa"]:
         # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
             # print "found instance"+instance
@@ -417,6 +418,9 @@ for instancegroup in cluster_config["InstanceGroups"]:
 print "=============================================="
 print "Turn off SE linux and IPTables (yeah, I know)"
 print "=============================================="
+allremotes.run("yum install -y firewalld")
+allremotes.run("systemctl enable firewalld")
+allremotes.run("systemctl restart firewalld")
 lD.disable_security(allremotes)
 
 print "==================================="

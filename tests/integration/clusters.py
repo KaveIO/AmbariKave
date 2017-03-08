@@ -20,7 +20,7 @@ import unittest
 
 
 class TestCluster(base.LDTest):
-    mach_list = ["ambari", "ipa", "freeipa"]
+    mach_list = ["ambari"]
 
     def runTest(self):
         """
@@ -52,7 +52,7 @@ class TestCluster(base.LDTest):
                 self.mdict[mname] = remote
             except KeyError:
                 continue
-        ambari = self.mdict['freeipa']
+        ambari = self.mdict['ambari']
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
         self.pull(ambari)

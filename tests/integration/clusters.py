@@ -52,7 +52,7 @@ class TestCluster(base.LDTest):
                 self.mdict[mname] = remote
             except KeyError:
                 continue
-        ambari = self.mdict['ambari']
+        ambari = self.mdict['freeipa']
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
         self.pull(ambari)

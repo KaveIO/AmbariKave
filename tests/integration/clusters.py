@@ -20,7 +20,7 @@ import unittest
 
 
 class TestCluster(base.LDTest):
-    mach_list = ["ambari"]
+    mach_list = ["ambari", "ipa", "freeipa"]
 
     def runTest(self):
         """
@@ -65,7 +65,7 @@ class TestFreeIPACluster(TestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
-    mach_list = ["ipa","freeipa"]
+    mach_list = ["ipa", "freeipa"]
 
     def checkipaserver(self, ipaserver):
         import time

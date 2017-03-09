@@ -17,6 +17,7 @@
 ##############################################################################
 import base
 import unittest
+import kavedeploy as kD
 
 
 class TestCluster(base.LDTest):
@@ -79,6 +80,7 @@ class CustomFreeIPATestCluster(base.LDTest):
         import sys
         import json
 
+
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         pref = os.path.dirname(__file__) + "/blueprints/" + self.service
@@ -95,6 +97,7 @@ class CustomFreeIPATestCluster(base.LDTest):
             except KeyError:
                 continue
         freeipa = self.mdict['freeipa']
+        kD.disable_security(freeipa)
         freeipa.register()
         self.wait_for_ambari(freeipa, check_inst=["inst.stdout", "inst.stderr"])
         self.pull(freeipa)
@@ -165,12 +168,13 @@ if __name__ == "__main__":
         raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
 #    test = TestCluster()
-    test = CustomFreeIPATestCluster()
+    if service.startswith("FREEIPA"):
+        test = CustomFreeIPATestCluster()
+    else:
+        test = TestCluster()
     if service.startswith("FREEIPA"):
 #        test = CustomFreeIPATestCluster()
         test = TestFreeIPACluster()
-    else:
-        test = TestCluster()
     test.service = service
     test.debug = verbose
     test.clustername = clustername

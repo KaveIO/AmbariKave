@@ -117,7 +117,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
         import os
         import subprocess as sub
         # Check kerberos
-        if 'yes' not in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
+        if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
         import subprocess as sub
         pwd = ipaserver.run("cat admin-password")
@@ -139,7 +139,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
     def check(self, ipaserver):
-        super(TestFreeIPACluster, self).check(ipaserver)
+        super(CustomFreeIPATestCluster, self).check(ipaserver)
         if 'freeipa' in self.mdict:
             self.checkipaserver(self.mdict['freeipa'])
 #        else:

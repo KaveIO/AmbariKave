@@ -79,7 +79,7 @@ class KaveToolbox(Script):
         Execute('chmod -R a+r /etc/kave')
         Execute('yum -y install python-pip')
         Execute('pip install --upgrade pip')
-        Execute('sudo pip install lightning-python')
+        Execute('pip install lightning-python')
 
     def configure(self, env):
         import params

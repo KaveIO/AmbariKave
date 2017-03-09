@@ -77,6 +77,8 @@ class KaveToolbox(Script):
         Execute("mkdir -p /etc/kave")
         Execute('touch /etc/kave/toolbox_ok')
         Execute('chmod -R a+r /etc/kave')
+        Execute('yum -y install python-pip')
+        Execute('sudo pip install lightning-python')
 
     def configure(self, env):
         import params

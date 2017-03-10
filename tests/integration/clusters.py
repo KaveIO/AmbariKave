@@ -120,6 +120,8 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
         import subprocess as sub
+        print "Ipa server type:",type(ipaserver)
+        print "ipaserver:", ipaserver
         pwd = ipaserver.run("cat admin-password")
         proc = sub.Popen(ipaserver.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
@@ -138,8 +140,8 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 #                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
-    def check(self, ipaserver):
-#        super(CustomFreeIPATestCluster, self).check(ipaserver)
+    def check(self, ambari):
+        super(CustomFreeIPATestCluster, self).check(ambari)
         if 'ipa' in self.mdict:
             self.checkipaserver(self.mdict['ipa'])
 #        else:

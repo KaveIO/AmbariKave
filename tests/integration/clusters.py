@@ -63,7 +63,7 @@ class TestCluster(base.LDTest):
 
 
 class CustomFreeIPATestCluster(base.LDTest):
-    mach_list = ["ipa", "freeipa"]
+    mach_list = ["ipa"]
 
     def runTest(self):
         """
@@ -96,7 +96,7 @@ class CustomFreeIPATestCluster(base.LDTest):
                 self.mdict[mname] = remote
             except KeyError:
                 continue
-        freeipa = self.mdict['freeipa']
+        freeipa = self.mdict['ipa']
         kD.disable_security(freeipa)
         freeipa.register()
         self.wait_for_ambari(freeipa, check_inst=["inst.stdout", "inst.stderr"])
@@ -110,7 +110,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
-    mach_list = ["ipa", "freeipa"]
+    mach_list = ["ipa"]
 
     def checkipaserver(self, ipaserver):
         import time
@@ -140,8 +140,8 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 
     def check(self, ipaserver):
         super(CustomFreeIPATestCluster, self).check(ipaserver)
-        if 'freeipa' in self.mdict:
-            self.checkipaserver(self.mdict['freeipa'])
+        if 'ipa' in self.mdict:
+            self.checkipaserver(self.mdict['ipa'])
 #        else:
 #            self.checkipaserver(ambari)
 

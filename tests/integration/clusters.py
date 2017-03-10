@@ -139,7 +139,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
     def check(self, ipaserver):
-        super(CustomFreeIPATestCluster, self).check(ipaserver)
+#        super(CustomFreeIPATestCluster, self).check(ipaserver)
         if 'ipa' in self.mdict:
             self.checkipaserver(self.mdict['ipa'])
 #        else:

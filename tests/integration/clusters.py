@@ -120,8 +120,6 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
         import subprocess as sub
-        print "Ipa server type:",type(ipaserver)
-        print "ipaserver:", ipaserver
         pwd = ipaserver.run("cat admin-password")
         proc = sub.Popen(ipaserver.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)

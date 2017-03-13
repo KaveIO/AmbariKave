@@ -9,7 +9,7 @@
             <version>1.7</version>
             <components>
                     <component>
-                    <name>AIRFLOW_SCHEDULER</name>
+                    <name>AIRFLOW</name>
                     <displayName>Airflow</displayName>
                     <category>MASTER</category>
                     <cardinality>1+</cardinality>
@@ -18,18 +18,7 @@
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>
-                </component>
-                    <component>
-                    <name>AIRFLOW_WEBSERVER</name>
-                    <displayName>AirflowUI</displayName>
-                    <category>SLAVE</category>
-                    <cardinality>1+</cardinality>
-                    <commandScript>
-                        <script>scripts/airflow_webserver.py</script>
-                        <scriptType>PYTHON</scriptType>
-                        <timeout>6000</timeout>
-                    </commandScript>
-                </component>
+                    </component>
             </components>
            <osSpecifics>
                 <osSpecific>

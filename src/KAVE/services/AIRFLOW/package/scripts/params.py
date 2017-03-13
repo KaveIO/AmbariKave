@@ -25,11 +25,11 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-airflow_home = kc.default('configurations/airflow/airflow_home', '/root/airflow', kc.is_valid_directory)
+airflow_home = kc.default('configurations/airflow/airflow_home', '/usr/opt/local/airflow', kc.is_valid_directory)
 
-airflow_dags_folder = default('configurations/airflow/airflow_dags_folder', '/root/airflow')
+airflow_dags_folder = default('configurations/airflow/airflow_dags_folder', '/usr/opt/local/airflow/dags')
 
-airflow_base_log_folder = default('configurations/airflow/airflow_base_log_folder', '/root/airflow/logs')
+airflow_base_log_folder = default('configurations/airflow/airflow_base_log_folder', '/usr/opt/local/airflow/logs')
 
 airflow_executor = default('configurations/airflow/airflow_executor', 'SequentialExecutor')
 
@@ -52,7 +52,7 @@ airflow_max_active_runs_per_dag = default('configurations/airflow/airflow_max_ac
 
 airflow_load_examples = default('configurations/airflow/airflow_load_examples', 'True')
 
-airflow_plugins_folder = default('configurations/airflow/airflow_plugins_folder', '/root/airflow/plugins')
+airflow_plugins_folder = default('configurations/airflow/airflow_plugins_folder', '/usr/opt/local/airflow/plugins/plugins')
 
 airflow_fernet_key = default('configurations/airflow/airflow_fernet_key',
                              '2IT-D1Z4DV7P_uirajSKwixBUepSYB8mwZycWQDeMdI=')

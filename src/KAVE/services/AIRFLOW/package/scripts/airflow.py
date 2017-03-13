@@ -46,7 +46,7 @@ class Airflow(kc.ApacheScript):
         Execute('yum -y update')
         Execute('sudo yum install -y postgresql-devel python-devel mysql-devel')
         Execute('sudo yum -y install gcc gcc-c++ libffi-devel mariadb-devel cyrus-sasl-devel')
-        Execute('install -U pip setuptools')
+        Execute('pip install -U pip setuptools')
         Execute('useradd -r -s /sbin/nologin airflow')
         Execute('mkdir -p /usr/opt/local/airflow')
         Execute('chown airflow:root /usr/opt/local/airflow')

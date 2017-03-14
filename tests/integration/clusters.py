@@ -62,50 +62,50 @@ class TestCluster(base.LDTest):
         return self.check(ambari)
 
 
-class CustomFreeIPATestCluster(base.LDTest):
-    mach_list = ["ambari", "freeipa"]
+#class CustomFreeIPATestCluster(base.LDTest):
+#    mach_list = ["ambari", "freeipa"]
+#
+#    def runTest(self):
+#        """
+#        A complete integration test.
+#        Providing that the files X.aws.json, X.cluster.json and X.blueprint.json exist
+#        this test will check that the files make sense, and then create a cluster.
+#        After the cluster is ready, the blueprint and clusterfile will be submitted
+#        and the installation will be monitored to completion.
+#
+#        Common problems are fixed with service restarts
+#        """
+#        # create remote machine
+#        import os
+#        import sys
+#        import json
+#
+#        lD = self.pre_check()
+#        deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+#        pref = os.path.dirname(__file__) + "/blueprints/" + self.service
+#        self.verify_blueprint(pref + ".aws.json", pref + ".blueprint.json", pref + ".cluster.json")
+#        # Deploy the cluster
+#        if self.clustername == 'prod':
+#            self.clustername = self.service
+#        stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
+#        self.mdict = {}
+#        for mname in self.mach_list:
+#            try:
+#                remote, _iid = self.remote_from_cluster_stdout(stdout, mname=mname)
+#                self.mdict[mname] = remote
+#            except KeyError:
+#                continue
+#        freeipa = self.mdict['freeipa']
+#        kD.disable_security(freeipa)
+#        freeipa.register()
+#        self.wait_for_ambari(freeipa, check_inst=["inst.stdout", "inst.stderr"])
+#        self.pull(freeipa)
+#        self.wait_for_ambari(freeipa)
+#        self.deploy_blueprint(freeipa, pref + ".blueprint.json", pref + ".cluster.json")
+#        return self.check(freeipa)
 
-    def runTest(self):
-        """
-        A complete integration test.
-        Providing that the files X.aws.json, X.cluster.json and X.blueprint.json exist
-        this test will check that the files make sense, and then create a cluster.
-        After the cluster is ready, the blueprint and clusterfile will be submitted
-        and the installation will be monitored to completion.
 
-        Common problems are fixed with service restarts
-        """
-        # create remote machine
-        import os
-        import sys
-        import json
-
-        lD = self.pre_check()
-        deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-        pref = os.path.dirname(__file__) + "/blueprints/" + self.service
-        self.verify_blueprint(pref + ".aws.json", pref + ".blueprint.json", pref + ".cluster.json")
-        # Deploy the cluster
-        if self.clustername == 'prod':
-            self.clustername = self.service
-        stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        self.mdict = {}
-        for mname in self.mach_list:
-            try:
-                remote, _iid = self.remote_from_cluster_stdout(stdout, mname=mname)
-                self.mdict[mname] = remote
-            except KeyError:
-                continue
-        freeipa = self.mdict['freeipa']
-        kD.disable_security(freeipa)
-        freeipa.register()
-        self.wait_for_ambari(freeipa, check_inst=["inst.stdout", "inst.stderr"])
-        self.pull(freeipa)
-        self.wait_for_ambari(freeipa)
-        self.deploy_blueprint(freeipa, pref + ".blueprint.json", pref + ".cluster.json")
-        return self.check(freeipa)
-
-
-class TestFreeIPACluster(CustomFreeIPATestCluster):
+class TestFreeIPACluster(TestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
@@ -115,6 +115,14 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
         import time
         import os
         import subprocess as sub
+
+        self.mdict = {}
+        for mname in self.mach_list:
+            try:
+                remote, _iid = self.remote_from_cluster_stdout(stdout, mname = mname)
+                self.mdict[mname] = remote
+            except KeyError:
+                continue
         # Check kerberos
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
@@ -124,7 +132,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)
         output, err = proc.communicate(input=pwd + '\n')
         self.assertFalse(proc.returncode, "Failed to kinit admin on this node "
-                         + ' '.join(ambari.sshcmd())
+                         + ' '.join(ipaserver.sshcmd())
                          + output + " " + err
                          )
         ipaserver.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
@@ -137,8 +145,8 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 #                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
-    def check(self, ambari):
-        super(CustomFreeIPATestCluster, self).check(freeipa)
+#    def check(self, ambari):
+#        super(TestCluster, self).check(freeipa)
         if 'freeipa' in self.mdict:
             self.checkipaserver(self.mdict['freeipa'])
 #        else:
@@ -166,11 +174,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
-#    test = TestCluster()
-    if service.startswith("FREEIPA"):
-        test = CustomFreeIPATestCluster()
-    else:
-        test = TestCluster()
+    test = TestCluster()
+
     if service.startswith("FREEIPA"):
         test = TestFreeIPACluster()
     test.service = service

@@ -92,7 +92,7 @@ class CustomFreeIPATestCluster(base.LDTest):
         self.mdict = {}
         for mname in self.mach_list:
             try:
-                remote, _iid = self.remote_from_cluster_stdout(stdout)
+                remote, _iid = self.remote_from_cluster_stdout(stdout, mname=mname)
                 self.mdict[mname] = remote
             except KeyError:
                 continue
@@ -139,7 +139,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
     def check(self, ambari):
-        super(CustomFreeIPATestCluster, self).check(ambari)
+        super(CustomFreeIPATestCluster, self).check(freeipa)
         if 'ipa' in self.mdict:
             self.checkipaserver(self.mdict['ipa'])
 #        else:

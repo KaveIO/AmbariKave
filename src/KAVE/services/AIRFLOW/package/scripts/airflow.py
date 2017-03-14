@@ -52,7 +52,7 @@ class Airflow(kc.ApacheScript):
         Execute('chown airflow:root /usr/opt/local/airflow')
         Execute('mkdir /run/airflow')
         Execute('chown airflow:root /run/airflow')
-        Execute('"echo AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
+        Execute('echo "AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
 
         Execute('pip install airflow')
         Execute('pip install airflow[hive]')

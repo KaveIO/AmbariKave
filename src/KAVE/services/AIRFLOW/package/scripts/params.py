@@ -63,9 +63,11 @@ airflow_dagbag_import_timeout = default('configurations/airflow/airflow_dagbag_i
 
 airflow_default_owner = default('configurations/airflow/airflow_default_owner', 'Airflow')
 
-airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8082')
+#airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8082')
+airflow_base_url = 'http://localhost:8082'
 
-airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8082')
+#airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8082')
+airflow_web_server_port=8082
 
 airflow_web_server_worker_timeout = default('configurations/airflow/airflow_web_server_worker_timeout', '120')
 

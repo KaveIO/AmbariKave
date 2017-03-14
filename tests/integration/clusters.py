@@ -80,7 +80,6 @@ class CustomFreeIPATestCluster(base.LDTest):
         import sys
         import json
 
-
         lD = self.pre_check()
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         pref = os.path.dirname(__file__) + "/blueprints/" + self.service
@@ -173,7 +172,6 @@ if __name__ == "__main__":
     else:
         test = TestCluster()
     if service.startswith("FREEIPA"):
-#        test = CustomFreeIPATestCluster()
         test = TestFreeIPACluster()
     test.service = service
     test.debug = verbose

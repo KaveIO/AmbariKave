@@ -63,7 +63,7 @@ class TestCluster(base.LDTest):
 
 
 class CustomFreeIPATestCluster(base.LDTest):
-    mach_list = ["ipa", "freeipa"]
+    mach_list = ["ambari", "freeipa"]
 
     def runTest(self):
         """
@@ -109,7 +109,7 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
-    mach_list = ["ipa", "freeipa"]
+    mach_list = ["freeipa"]
 
     def checkipaserver(self, ipaserver):
         import time
@@ -139,8 +139,8 @@ class TestFreeIPACluster(CustomFreeIPATestCluster):
 
     def check(self, ambari):
         super(CustomFreeIPATestCluster, self).check(freeipa)
-        if 'ipa' in self.mdict:
-            self.checkipaserver(self.mdict['ipa'])
+        if 'freeipa' in self.mdict:
+            self.checkipaserver(self.mdict['freeipa'])
 #        else:
 #            self.checkipaserver(ambari)
 

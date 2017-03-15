@@ -26,7 +26,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 class Airflow(kc.ApacheScript):
     # status file is needed to know if this service was started, stores the name of the index file
     # status_file = '/etc/kave/kavelanding_started'
-    airflow_config_path = "/usr/opt/local/airflow.cfg"
+    airflow_config_path = "/usr/opt/local/airflow/airflow.cfg"
     airflow_webserver_pidfile_path = "/run/airflow/webserver.pid"
     systemd_env_init_path = "/etc/sysconfig/airflow"
     systemd_schd_unitfile_path = "/usr/lib/systemd/system/airflow-scheduler.service"

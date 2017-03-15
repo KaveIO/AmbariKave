@@ -21,13 +21,13 @@ import kavedeploy as kD
 
 
 class TestCluster(base.LDTest):
-    mach_list = ["ambari"]
+    mach_list = ["ambari", "freeipa"]
 
     def resolve_machine_host(self, hname):
         self.mdict = {}
         for hname in self.mach_list:
             try:
-                remote, _iid = self.remote_from_cluster_stdout(stdout, mname = hname)
+                remote, _ = self.remote_from_cluster_stdout(stdout, mname = hname)
                 self.mdict[hname] = remote
             except KeyError:
                 continue
@@ -70,7 +70,6 @@ class TestFreeIPACluster(TestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
-    mach_list = ["ambari", "freeipa"]
 
     def checkipaserver(self, ipaserver):
         import time
@@ -101,11 +100,8 @@ class TestFreeIPACluster(TestCluster):
 
     def check(self, ambari):
         super(TestCluster, self).check(ipaserver)
-        if 'freeipa' in self.resolve_machine_host(hname = 'freeipa'):
-            hostname = self.resolve_machine_host(hname = 'freeipa')
-            self.checkipaserver(hostname['freeipa'])
-#        else:
-#            self.checkipaserver(ambari)
+        hostname = self.resolve_machine_host(hname = 'freeipa')
+        self.checkipaserver(hostname['freeipa'])
 
 
 if __name__ == "__main__":

@@ -34,7 +34,7 @@ airflow_base_log_folder = default('configurations/airflow/airflow_base_log_folde
 airflow_executor = default('configurations/airflow/airflow_executor', 'SequentialExecutor')
 
 airflow_sql_alchemy_conn = default('configurations/airflow/airflow_sql_alchemy_conn',
-                                   'sqlite:////root/airflow/airflow.db')
+                                   'sqlite:////usr/opt/local/airflow/airflow.db')
 
 airflow_sql_alchemy_pool_size = default('configurations/airflow/airflow_sql_alchemy_pool_size', '5')
 

@@ -80,7 +80,6 @@ class TestFreeIPACluster(TestCluster):
         # Check kerberos
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
-        import subprocess as sub
         pwd = ipaserver.run("cat admin-password")
         proc = sub.Popen(ipaserver.sshcmd() + ['kinit admin'], shell=False,
                          stdout=sub.PIPE, stderr=sub.PIPE, stdin=sub.PIPE)

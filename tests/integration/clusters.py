@@ -98,14 +98,14 @@ class CustomFreeIPATestCluster(base.LDTest):
         freeipa = self.mdict['freeipa']
         kD.disable_security(freeipa)
         freeipa.register()
-        self.wait_for_ambari(freeipa, check_inst=["inst.stdout", "inst.stderr"])
+        self.wait_for_service(freeipa, service = 'FREEIPA')
         self.pull(freeipa)
         self.wait_for_ambari(freeipa)
         self.deploy_blueprint(freeipa, pref + ".blueprint.json", pref + ".cluster.json")
         return self.check(freeipa)
 
 
-class TestFreeIPACluster(TestCluster):
+class TestFreeIPACluster(CustomFreeIPATestCluster):
     """
     Add test of the createkeytabs script to the test of the FreeIPA cluster installation
     """
@@ -145,10 +145,10 @@ class TestFreeIPACluster(TestCluster):
 #                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
-#    def check(self, ambari):
-#        super(TestCluster, self).check(ambari)
-#        if 'ipa' in self.mdict:
-#            self.checkipaserver(self.mdict['ipa'])
+    def check(self, ambari):
+        super(CustomFreeIPATestCluster, self).check(ipaserver)
+        if 'freeipa' in self.mdict:
+            self.checkipaserver(self.mdict['freeipa'])
 #        else:
 #            self.checkipaserver(ambari)
 
@@ -174,7 +174,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise KeyError("You must specify which blueprint/cluster to test")
     service = sys.argv[1]
-    test = TestCluster()
+#    test = TestCluster()
+    test = CustomFreeIPATestCluster()
 
     if service.startswith("FREEIPA"):
         test = TestFreeIPACluster()

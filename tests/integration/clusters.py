@@ -100,7 +100,7 @@ class CustomFreeIPATestCluster(base.LDTest):
         freeipa.register()
         self.wait_for_service(freeipa, service = 'FREEIPA')
         self.pull(freeipa)
-        self.wait_for_ambari(freeipa)
+        self.wait_for_service(freeipa)
         self.deploy_blueprint(freeipa, pref + ".blueprint.json", pref + ".cluster.json")
         return self.check(freeipa)
 

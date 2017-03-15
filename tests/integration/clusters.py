@@ -100,7 +100,7 @@ class TestFreeIPACluster(TestCluster):
 #                      " --test /etc/kave/portchanges_new.json --debug")
 
     def check(self, ambari):
-        super(TestCluster, self).check(ipaserver)
+        super(TestCluster, self).check(ambari)
         hostname = self.resolve_machine_host(hname = 'freeipa', out = stdout)
         self.checkipaserver(hostname['freeipa'])
 

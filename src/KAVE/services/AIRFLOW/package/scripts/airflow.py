@@ -31,6 +31,7 @@ class Airflow(kc.ApacheScript):
     systemd_env_init_path = "/etc/sysconfig/airflow"
     systemd_schd_unitfile_path = "/usr/lib/systemd/system/airflow-scheduler.service"
     systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
+    quote_fix = 'sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c\MARKER_EXPR = originalTextFor(MARKER_EXPR("""))("marker")\'/usr/lib/python2.7/site-packages/packaging/requirements.py'
 
     def install(self, env):
         print "Installing Airflow"
@@ -54,7 +55,6 @@ class Airflow(kc.ApacheScript):
 
         Execute('pip install airflow')
         Execute('pip install airflow[hive]')
-        # Execute('airflow | exit 0')
 
         self.configure(env)
 
@@ -80,6 +80,7 @@ class Airflow(kc.ApacheScript):
              )
         super(Airflow, self).configure(env)
 
+        Execute(quote_fix)
         Execute('sudo -u airflow airflow initdb')
 
     def start(self, env):

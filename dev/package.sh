@@ -57,7 +57,7 @@ echo "Building $RELEASE_PACKAGE"
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/
 # cp -r $SRC_DIR/HDP $BUILD_DIR/package/ambari-server/resources/stacks/
 mkdir -p $BUILD_DIR/package/ambari-server/resources/stacks/HDP
-cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.5.3.0.KAVE
+cp -r $SRC_DIR/KAVE $BUILD_DIR/package/ambari-server/resources/stacks/HDP/2.5.3.1.KAVE
 cp -r $SRC_DIR/common-services $BUILD_DIR/package/ambari-server/resources/common-services
 cp $PROJECT_DIR/LICENSE $PROJECT_DIR/NOTICE $PROJECT_DIR/README.md $PROJECT_DIR/ReleaseNotes.md $BUILD_DIR/package/ambari-server/
 

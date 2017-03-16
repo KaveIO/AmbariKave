@@ -4,6 +4,7 @@ Contains a list of the released versions with a summary of the main changes in e
 
 
 # Beta Releases
+# v3.1-Beta-Pre
 
 # v3.0-Beta
 
@@ -57,7 +58,7 @@ Contains a list of the released versions with a summary of the main changes in e
             ·         In 3.0 we are now including the KAVE version as well as the HDP version
                       in the stack name
 
-            ·         So the stack now looks like 2.5.3.0.KAVE (HDP-version.KAVE-version.KAVE)
+            ·         So the stack now looks like 2.5.3.1.KAVE (HDP-version.KAVE-version.KAVE)
 
             ·         KAVE is a as usual a small extension of HDP and this should improve the clarity
 

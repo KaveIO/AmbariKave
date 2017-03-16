@@ -127,7 +127,7 @@ class FreeipaServer(Script):
         if params.install_with_dns:
             if tos.lower() in ["centos7"]:
                 Package("ipa-server-dns")
-            #install_command += ' --setup-dns --domain="%s"' % params.domain
+            # install_command += ' --setup-dns --domain="%s"' % params.domain
             install_command += ' --domain="%s"' % params.domain
 
             # Forwarder has been commented out as it create issue for installation of ipa-server

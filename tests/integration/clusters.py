@@ -76,6 +76,8 @@ class TestFreeIPACluster(TestCluster):
         import time
         import os
         import subprocess as sub
+        
+        global stdout
 
         # Check kerberos
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):

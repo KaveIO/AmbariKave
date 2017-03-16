@@ -18,11 +18,11 @@
 import base
 import unittest
 import kavedeploy as kD
+from sys import stdout
 
 
 class TestCluster(base.LDTest):
     mach_list = ["ambari", "freeipa"]
-    global stdout
 
     def resolve_machine_host(self, hname, out = 'none'):
         self.mdict = {}
@@ -56,8 +56,8 @@ class TestCluster(base.LDTest):
         # Deploy the cluster
         if self.clustername == 'prod':
             self.clustername = self.service
-        stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        hostname = self.resolve_machine_host(hname = 'ambari', out = stdout)
+        self.stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
+        hostname = self.resolve_machine_host(hname = 'ambari', out = self.stdout)
         ambari = hostname['ambari']
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
@@ -77,8 +77,6 @@ class TestFreeIPACluster(TestCluster):
         import os
         import subprocess as sub
         
-        global stdout
-
         # Check kerberos
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
@@ -102,7 +100,7 @@ class TestFreeIPACluster(TestCluster):
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)
-        hostname = self.resolve_machine_host(hname = 'freeipa', out = stdout)
+        hostname = self.resolve_machine_host(hname = 'freeipa', out = self.stdout)
         self.checkipaserver(hostname['freeipa'])
 
 

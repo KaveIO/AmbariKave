@@ -32,8 +32,6 @@ class Airflow(kc.ApacheScript):
     systemd_schd_unitfile_path = "/usr/lib/systemd/system/airflow-scheduler.service"
     systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
 
-
-
     def install(self, env):
         print "Installing Airflow"
         import params
@@ -56,7 +54,7 @@ class Airflow(kc.ApacheScript):
 
         Execute('pip install airflow')
         Execute('pip install airflow[hive]')
-        #Execute('airflow | exit 0')
+        # Execute('airflow | exit 0')
 
         self.configure(env)
 
@@ -91,7 +89,6 @@ class Airflow(kc.ApacheScript):
         self.configure(env)
         Execute('systemctl start airflow-webserver')
         Execute('systemctl start airflow-scheduler')
-
 
     def stop(self, env):
         import params

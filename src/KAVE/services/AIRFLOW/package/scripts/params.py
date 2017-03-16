@@ -52,7 +52,8 @@ airflow_max_active_runs_per_dag = default('configurations/airflow/airflow_max_ac
 
 airflow_load_examples = default('configurations/airflow/airflow_load_examples', 'True')
 
-airflow_plugins_folder = default('configurations/airflow/airflow_plugins_folder', '/usr/opt/local/airflow/plugins/plugins')
+airflow_plugins_folder = default('configurations/airflow/airflow_plugins_folder',
+                                 '/usr/opt/local/airflow/plugins/plugins')
 
 airflow_fernet_key = default('configurations/airflow/airflow_fernet_key',
                              '2IT-D1Z4DV7P_uirajSKwixBUepSYB8mwZycWQDeMdI=')
@@ -63,11 +64,11 @@ airflow_dagbag_import_timeout = default('configurations/airflow/airflow_dagbag_i
 
 airflow_default_owner = default('configurations/airflow/airflow_default_owner', 'Airflow')
 
-#airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8082')
-airflow_base_url = 'http://localhost:8082'
+airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8082')
+# airflow_base_url = 'http://localhost:8082'
 
-#airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8082')
-airflow_web_server_port = '8082'
+airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8082')
+# airflow_web_server_port = '8082'
 
 airflow_web_server_worker_timeout = default('configurations/airflow/airflow_web_server_worker_timeout', '120')
 

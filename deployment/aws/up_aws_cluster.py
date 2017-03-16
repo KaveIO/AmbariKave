@@ -405,7 +405,7 @@ print "=============================================="
 sys.stdout.flush()
 for instancegroup in cluster_config["InstanceGroups"]:
     # if instancegroup["AccessType"] == "admin":
-    if instancegroup["AccessType"] in ["admin","freeipa"]:
+    if instancegroup["AccessType"] in ["admin", "freeipa"]:
         # print "found group", instancegroup["Name"]
         for instance in instancegroups[instancegroup["Name"]]:
             # print "found instance"+instance

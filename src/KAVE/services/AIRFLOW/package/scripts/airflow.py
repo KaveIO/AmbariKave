@@ -80,7 +80,7 @@ class Airflow(kc.ApacheScript):
              )
         super(Airflow, self).configure(env)
 
-        Execute(quote_fix)
+        Execute(self.quote_fix)
         Execute('sudo -u airflow airflow initdb')
 
     def start(self, env):

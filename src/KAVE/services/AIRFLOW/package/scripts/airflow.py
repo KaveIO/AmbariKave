@@ -78,10 +78,6 @@ class Airflow(kc.ApacheScript):
              content=Template("airflow-webserver.service"),
              mode=0755
              )
-        File(self.systemd_airflow_markerfix_path,
-             content=Template("markerfix"),
-             mode=0755
-             )
 
         super(Airflow, self).configure(env)
 

@@ -9,12 +9,6 @@
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" }]
   },
-  { "Name" : "gate",
-    "Count" : 1,
-    "InstanceType" : "t2.small",
-    "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
-  },
   { "Name" : "airflow",
     "Count" : -1,
     "InstanceType" : "t2.medium",

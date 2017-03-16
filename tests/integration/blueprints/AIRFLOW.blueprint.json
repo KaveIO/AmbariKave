@@ -31,16 +31,6 @@
       "cardinality" : "1"
     },
     {
-      "name" : "gateway",
-      "configurations" : [      ],
-      "components" : [
-        { "name" : "KAVELANDING"          },
-        { "name" : "METRICS_MONITOR"      },
-        { "name" : "ZOOKEEPER_CLIENT"     }
-      ],
-      "cardinality" : "1+"
-    },
-    {
       "name" : "airflow",
       "configurations" : [ ],
       "components" : [

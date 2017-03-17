@@ -33,7 +33,7 @@ class Airflow(kc.ApacheScript):
     systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
     quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
                     '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
-                    '/usr/lib/python2.7/site-packages/packaging/requirements.py'
+                    ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
                 )
 
     def install(self, env):

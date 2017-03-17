@@ -368,7 +368,7 @@ ns     IN      A       %PRIVATE%
     dnsserv.run("service named restart")
     #Setting resolv.conf to point to the deployed DNS server.
     if cluster_name == "Test-FREEIPA":
-        allremotes.run('echo -e "search ' + domain_name + '\nnameserver ' + priv_ip + '\"> /etc/resolv.conf')
+        allremotes.run('\'echo -e "search ' + domain_name + '\nnameserver ' + priv_ip + '\"> /etc/resolv.conf\'')
       
 print "=============================================="
 print "Configure /etc/hosts ",

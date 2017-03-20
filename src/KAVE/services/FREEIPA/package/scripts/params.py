@@ -53,8 +53,12 @@ else:
 hostname_components = config["hostname"].split('.')
 if len(hostname_components) < 3:
     raise Exception('FreeIPA hostname is not a FQDN. installation not possible')
-domain = '.'.join(hostname_components[1:])
-realm = '.'.join(hostname_components[1:]).upper()
+# Temporary commenting out domain assignment to check if FreeIPA will install
+#domain = '.'.join(hostname_components[1:])
+#realm = '.'.join(hostname_components[1:]).upper()
+domain = 'kavelocal.io'
+realm = 'KAVELOCAL.IO'
+
 realm_ldap = 'dc=' + ',dc='.join(hostname_components[1:])
 
 install_with_dns = default('configurations/freeipa/install_with_dns', True)

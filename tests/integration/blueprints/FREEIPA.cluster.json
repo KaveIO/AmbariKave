@@ -7,17 +7,17 @@
 	{
 	    "name" : "admin",
 	    "configurations" : [  ],
-	    "hosts" : [ { "fqdn" : "ambari.kavelocal.io" } ]
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
 	},
 	{
 	    "name" : "gateway",
 	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } } ],
-	    "hosts" : [ { "fqdn" : "gate-001.kavelocal.io" } ]
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
 	},
 	{
 	    "name" : "freeipa",
 	    "configurations" : [   ],
-	    "hosts" : [ { "fqdn" : "freeipa.kavelocal.io" } ]
+	    "hosts" : [ { "fqdn" : "freeipa.kave.io" } ]
 	}
     ]
 }

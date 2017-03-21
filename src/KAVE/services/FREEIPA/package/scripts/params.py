@@ -62,7 +62,7 @@ else:
 #realm = '.'.join(hostname_components[1:]).upper()
 
 #realm_ldap = 'dc=' + ',dc='.join(hostname_components[1:])
-domain_components = ipa_domain.split('.')
+domain_components = re.split('.',ipa_domain)
 if len(domain_components) < 2:
     raise Exception('FreeIPA domain is not a FQDN. installation not possible')
 

@@ -3,6 +3,13 @@
 
 <configuration>
     <property>
+        <name>ipa_domain</name>
+        <value>kavelocal.io</value>
+        <description>
+            Domain name to be used by FreeIPA. Kerberos realm and ldap realm are derived from this value.
+        </description>
+    </property>
+    <property>
         <name>client_init_wait</name>
         <value>600</value>
         <description>

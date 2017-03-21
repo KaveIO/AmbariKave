@@ -33,6 +33,10 @@ ipa_server = default("/clusterHostInfo/freeipa_server_hosts", [False])[0]
 if not ipa_server:
     raise KeyError('ipa_server could not be found in this cluster, this is strange and indicates much worse problems'
                    ' FreeIPA Client is the client partner of the server, so cannot install without its mommy')
+    
+ipa_domain = ('configurations/freeipa/ipa_domain', 'kavelocal.io')
+if not ipa_domain:
+    raise Exception('ipa_domain couldn\'t be determined')
 
 ipa_server_ip_address = socket.gethostbyname(ipa_server)
 if not ipa_server_ip_address:
@@ -50,17 +54,21 @@ if not ldap_bind_password or len(ldap_bind_password) < 8:
 else:
     Logger.sensitive_strings[ldap_bind_password] = "[PROTECTED]"
 
-hostname_components = config["hostname"].split('.')
-if len(hostname_components) < 3:
-    raise Exception('FreeIPA hostname is not a FQDN. installation not possible')
+#hostname_components = config["hostname"].split('.')
+#if len(hostname_components) < 3:
+#    raise Exception('FreeIPA hostname is not a FQDN. installation not possible')
 
 #domain = '.'.join(hostname_components[1:])
 #realm = '.'.join(hostname_components[1:]).upper()
 
 #realm_ldap = 'dc=' + ',dc='.join(hostname_components[1:])
-domain = 'kavelocal.io'
-realm = 'KAVELOCAL.IO'
-realm_ldap = 'dc=kavelocal,dc=io'
+domain_components = ipa_domain.split('.')
+if len(domain_components) < 2:
+    raise Exception('FreeIPA domain is not a FQDN. installation not possible')
+
+domain = ipa_domain.lower()
+realm = ipa_domain.upper()
+realm_ldap = 'dc=' + ',dc='.join(domain_components)
 
 install_with_dns = default('configurations/freeipa/install_with_dns', True)
 install_with_dns = kc.trueorfalse(install_with_dns)

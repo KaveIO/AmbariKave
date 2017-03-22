@@ -54,14 +54,6 @@ if not ldap_bind_password or len(ldap_bind_password) < 8:
 else:
     Logger.sensitive_strings[ldap_bind_password] = "[PROTECTED]"
 
-# hostname_components = config["hostname"].split('.')
-# if len(hostname_components) < 3:
-#    raise Exception('FreeIPA hostname is not a FQDN. installation not possible')
-
-# domain = '.'.join(hostname_components[1:])
-# realm = '.'.join(hostname_components[1:]).upper()
-
-# realm_ldap = 'dc=' + ',dc='.join(hostname_components[1:])
 domain_components = ipa_domain.split('.')
 if len(domain_components) < 2:
     raise Exception('FreeIPA domain is not a FQDN. installation not possible')

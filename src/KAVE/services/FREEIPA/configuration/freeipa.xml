@@ -17,23 +17,6 @@
             admin password file.
         </description>
     </property>
-<!--     <property>
-        <name>pki_insecure_port</name>
-        <value>8080</value>
-        <description>
-            FreeIPA needs a lot of ports available, 80, 443, 8080, and 8443 are the defaults.
-            We provide a method to change 8080 and 8443.
-        </description>
-    </property>
-    <property>
-        <name>pki_secure_port</name>
-        <value>8443</value>
-        <description>
-            FreeIPA needs a lot of ports available, 80, 443, 8080, and 8443 are the defaults.
-            We provide a method to change 8080 and 8443, used for PKI and dogtags.
-            This is particulary important when the FreeIPA server is installed on the ambari node.
-        </description>
-    </property> -->
     <property>
         <name>long_domain_patch</name>
         <value>False</value>

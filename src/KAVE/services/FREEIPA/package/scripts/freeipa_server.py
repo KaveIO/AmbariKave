@@ -128,12 +128,11 @@ class FreeipaServer(Script):
             if tos.lower() in ["centos7"]:
                 Package("ipa-server-dns")
             install_command += ' --setup-dns --domain="%s"' % params.domain
-            #install_command += ' --domain="%s"' % params.domain
+            # install_command += ' --domain="%s"' % params.domain
 
-            
             if params.forwarders:
                 for forwarder in params.forwarders:
-                     install_command += ' --forwarder="%s"' % forwarder
+                    install_command += ' --forwarder="%s"' % forwarder
             else:
                 install_command += ' --no-forwarders'
 

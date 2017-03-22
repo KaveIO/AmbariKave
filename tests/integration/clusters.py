@@ -24,11 +24,11 @@ from sys import stdout
 class TestCluster(base.LDTest):
     mach_list = ["ambari", "freeipa"]
 
-    def resolve_machine_host(self, hname, out = 'none'):
+    def resolve_machine_host(self, hname, out='none'):
         self.mdict = {}
         for hname in self.mach_list:
             try:
-                remote, _ = self.remote_from_cluster_stdout(stdout = out, mname = hname)
+                remote, _ = self.remote_from_cluster_stdout(stdout=out, mname=hname)
                 self.mdict[hname] = remote
             except KeyError:
                 continue
@@ -57,7 +57,7 @@ class TestCluster(base.LDTest):
         if self.clustername == 'prod':
             self.clustername = self.service
         self.stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        hostname = self.resolve_machine_host(hname = 'ambari', out = self.stdout)
+        hostname = self.resolve_machine_host(hname='ambari', out=self.stdout)
         ambari = hostname['ambari']
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
@@ -76,7 +76,7 @@ class TestFreeIPACluster(TestCluster):
         import time
         import os
         import subprocess as sub
-        
+
         # Check kerberos
         if 'yes' in ipaserver.run('bash -c "if [ -e createkeytabs.py ]; then echo \"yes\"; fi ;"'):
             time.sleep(60)
@@ -100,7 +100,7 @@ class TestFreeIPACluster(TestCluster):
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)
-        hostname = self.resolve_machine_host(hname = 'freeipa', out = self.stdout)
+        hostname = self.resolve_machine_host(hname='freeipa', out=self.stdout)
         self.checkipaserver(hostname['freeipa'])
 
 

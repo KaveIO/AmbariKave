@@ -366,10 +366,10 @@ ns     IN      A       %PRIVATE%
     lD.run_quiet("rm -rf /tmp/reverse" + domain_name + dnsiid)
     lD.run_quiet("rm -rf /tmp/forward" + domain_name + dnsiid)
     dnsserv.run("service named restart")
-    #Setting resolv.conf to point to the deployed DNS server.
+    # Setting resolv.conf to point to the deployed DNS server.
     if cluster_name == "Test-FREEIPA":
         allremotes.run('\'echo -e "search ' + domain_name + '\nnameserver ' + priv_ip + '\"> /etc/resolv.conf\'')
-      
+
 print "=============================================="
 print "Configure /etc/hosts ",
 if dnsiid is None:

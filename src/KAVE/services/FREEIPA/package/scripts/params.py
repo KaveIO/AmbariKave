@@ -1,6 +1,3 @@
-
-
-
 ##############################################################################
 #
 # Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
@@ -63,11 +60,6 @@ realm_ldap = 'dc=' + ',dc='.join(hostname_components[1:])
 install_with_dns = default('configurations/freeipa/install_with_dns', True)
 install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
-
-
-
-
-
 
 pki_insecure_port = kc.default('configurations/freeipa/pki_insecure_port', '8081', kc.is_valid_port)
 pki_secure_port = kc.default('configurations/freeipa/pki_secure_port', '8444', kc.is_valid_port)

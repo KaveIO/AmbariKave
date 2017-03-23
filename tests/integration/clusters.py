@@ -85,13 +85,13 @@ class TestFreeIPACluster(TestCluster):
                          )
         ipaserver.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ipaserver.run("./createkeytabs.py ./kerberostest.csv")
-        # check port number patching still applies correctly
-        ipaserver.run("python "
-                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
-                      " --test /etc/kave/portchanges_static.json --debug")
-        ipaserver.run("python "
-                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
-                      " --test /etc/kave/portchanges_new.json --debug")
+#        # check port number patching still applies correctly
+#        ipaserver.run("python "
+#                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+#                      " --test /etc/kave/portchanges_static.json --debug")
+#        ipaserver.run("python "
+#                      "/var/lib/ambari-server/resources/stacks/HDP/*.KAVE/services/FREEIPA/package/scripts/sed_ports.py"
+#                      " --test /etc/kave/portchanges_new.json --debug")
 
 #    def check(self, ambari):
 #        super(TestFreeIPACluster, self).check(ambari)

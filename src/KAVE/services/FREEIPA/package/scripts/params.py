@@ -1,3 +1,6 @@
+
+
+
 ##############################################################################
 #
 # Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
@@ -61,8 +64,13 @@ install_with_dns = default('configurations/freeipa/install_with_dns', True)
 install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 
-pki_insecure_port = kc.default('configurations/freeipa/pki_insecure_port', '8080', kc.is_valid_port)
-pki_secure_port = kc.default('configurations/freeipa/pki_secure_port', '8443', kc.is_valid_port)
+
+
+
+
+
+pki_insecure_port = kc.default('configurations/freeipa/pki_insecure_port', '8081', kc.is_valid_port)
+pki_secure_port = kc.default('configurations/freeipa/pki_secure_port', '8444', kc.is_valid_port)
 
 # Only except IPv4 for now
 forwarders = default('configurations/freeipa/forwarders', '8.8.8.8').split(',')

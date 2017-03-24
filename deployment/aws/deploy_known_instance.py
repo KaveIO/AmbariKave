@@ -20,7 +20,7 @@
 up one instance from the amiids stored in kaveaws
 
 usage deploy_known_instance.py os hostname [security_config.json] [instance_type] [--verbose] [--ambari-dev]
-    os: Choose from known os-es, Centos6, Centos7 and Ubuntu14
+    os: Choose from known os-es, Centos7 and Ubuntu14
     hostname:     hostname to apply to the machine (currently you cannot specify the domain here)
     security_config.json : a json file with the security group/subnet-id keypair/keyfile (see readme for details)
 

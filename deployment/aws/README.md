@@ -11,7 +11,7 @@ If you have an Amazon EC2 account, upping a whole new cluster takes only minutes
 ## Tools
 
 * aws/deploy\_one\_centos\_instance.py: Adds a Centos 6 instance to a pre-existing security group
-* aws/up\_aws\_cluster.py: Creates and configures an entire new cluster of Centos6 machines based upon a json config file
+* aws/up\_aws\_cluster.py: Creates and configures an entire new cluster of Centos7 machines based upon a json config file
 * aws/add\_ebs\_vol\_to\_instance.py: create a new ebs volume and mount it on a pre-existing instance.
 
 Try their own in-built help for more information on how to use these. There are also several other small management scripts in the aws subdirectory, take a look!

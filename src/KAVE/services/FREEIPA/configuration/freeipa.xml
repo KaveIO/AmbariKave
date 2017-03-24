@@ -3,28 +3,18 @@
 
 <configuration>
     <property>
+        <name>ipa_domain</name>
+        <value>kavelocal.io</value>
+        <description>
+            Domain name to be used by FreeIPA. Kerberos realm and ldap realm are derived from this value.
+        </description>
+    </property>
+    <property>
         <name>client_init_wait</name>
         <value>600</value>
         <description>
             The time in seconds the client installation process will wait for a
             admin password file.
-        </description>
-    </property>
-    <property>
-        <name>pki_insecure_port</name>
-        <value>8081</value>
-        <description>
-            FreeIPA needs a lot of ports available, 80, 443, 8080, and 8443 are the defaults.
-            We provide a method to change 8080 and 8443.
-        </description>
-    </property>
-    <property>
-        <name>pki_secure_port</name>
-        <value>8444</value>
-        <description>
-            FreeIPA needs a lot of ports available, 80, 443, 8080, and 8443 are the defaults.
-            We provide a method to change 8080 and 8443, used for PKI and dogtags.
-            This is particulary important when the FreeIPA server is installed on the ambari node.
         </description>
     </property>
     <property>
@@ -40,7 +30,7 @@
     </property>
     <property>
         <name>forwarders</name>
-        <value>8.8.8.8</value>
+        <value>10.0.0.10</value>
         <description>
             The IP address of the DNS server to whom FreeIPA should first forward requests.
             Usually this is specific to your datacenter. This can be a comma-separated list.

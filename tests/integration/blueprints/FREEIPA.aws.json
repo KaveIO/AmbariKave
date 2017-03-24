@@ -16,7 +16,7 @@
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "freeipa",
-    "Count" : 1,
+    "Count" : -1,
     "InstanceType" : "t2.medium",
     "AccessType" : "freeipa",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },

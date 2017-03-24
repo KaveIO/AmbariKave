@@ -22,7 +22,6 @@ import scan
 import license
 import pyfilenames
 import testversion
-import ipaportsed
 import testpythonimport
 import verifyxml
 import checkpep8
@@ -38,7 +37,7 @@ import sys
 mods = [testresourcewizard, checkpep8, testpythonimport, testversion,
         pep8functions, deploylib, kclib, servicesh, scan, license, repoimports,
         pyfilenames, pep8variables, jsonbpchecks, verifyxml,
-        ipaportsed, checkdistkclib]
+        checkdistkclib]
 
 if __name__ == "__main__":
     # Repo imports does not work on jenkins, no idea why ... perhaps memory usage?

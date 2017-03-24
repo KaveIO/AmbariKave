@@ -84,9 +84,7 @@ class FreeipaServer(Script):
         import kavecommon as kc
         tos = kc.detect_linux_version()
         # Check that all known FreeIPA ports are available
-        needed_ports = [88, 123, 389, 464, 636]
-        if tos.lower() in ["centos7"]:
-            needed_ports = [params.pki_secure_port, params.pki_insecure_port] + needed_ports
+        needed_ports = [88, 123, 389, 464, 636, 8080, 8443]
         for port in needed_ports:
             self.checkport(port)
 
@@ -94,21 +92,6 @@ class FreeipaServer(Script):
 
         for package in self.packages:
             Package(package)
-
-#        # Always generate new portchanges file for automated tests
-#        if not os.path.exists('/etc/kave'):
-#            Execute('mkdir -p /etc/kave')
-#        if not os.path.exists('/etc/kave/portchanges_new.json'):
-#            Execute('python ' + os.path.dirname(__file__) +
-#                    '/sed_ports.py --create /etc/kave/portchanges_new.json --debug')
-#
-#        File("/etc/kave/portchanges_static.json",
-#             content=Template(tos.lower() + "_server.json.j2"),
-#             mode=0600
-#             )
-#        # Always use static file
-#        Execute('python ' + os.path.dirname(__file__)
-#                + '/sed_ports.py --apply /etc/kave/portchanges_static.json --debug')
 
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
@@ -127,15 +110,13 @@ class FreeipaServer(Script):
         if params.install_with_dns:
             if tos.lower() in ["centos7"]:
                 Package("ipa-server-dns")
-            # install_command += ' --setup-dns --domain="%s"' % params.domain
-            install_command += ' --domain="%s"' % params.domain
+            install_command += ' --setup-dns --domain="%s"' % params.domain
 
-            # Forwarder has been commented out as it create issue for installation of ipa-server
-            # if params.forwarders:
-            #    for forwarder in params.forwarders:
-            #         install_command += ' --forwarder="%s"' % forwarder
-            # else:
-            #    install_command += ' --no-forwarders'
+            if params.forwarders:
+                for forwarder in params.forwarders:
+                    install_command += ' --forwarder="%s"' % forwarder
+            else:
+                install_command += ' --no-forwarders'
 
         # Crude check to avoid reinstalling during debugging
         if not os.path.exists(self.admin_password_file):

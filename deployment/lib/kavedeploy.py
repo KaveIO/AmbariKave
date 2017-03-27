@@ -330,45 +330,30 @@ class remoteHost(object):
                 "Unable to contact machine " + self.user + "@" + self.host + "! or machine did not respond correctly")
         return True
 
-# taken from KTBox which works @ jenkins
     def detect_linux_version(self):
-        try:
-            status2, output2, err = self.run("cat /etc/issue")
-            if not status2 and "Ubuntu" in output2:
-                if " 14." in output2:
-                    return "Ubuntu14"
-                if " 16." in output2:
-                    return "Ubuntu16"
-        except:
-            pass
-        try:
-            status2, output2, err = self.run("lsb_release -a")
-            if not status2 and "Ubuntu" in output2:
-                if " 14." in output2:
-                    return "Ubuntu14"
-                if " 16." in output2:
-                    return "Ubuntu16"
-        except:
-            pass
-        try:
-            status3, output3, err = self.run("cat /etc/redhat-release")
-            if not status3 and "CentOS" in output3:
-                if "release 6" in output3.lower():
-                    return "Centos6"
-                if "release 7" in output3.lower():
-                    return "Centos7"
-        except:
-            pass
-        status, output, err = self.run("uname -r")
-        if status:
-            raise RuntimeError("Problem detecting linux version: uname -r got:\n\t" + str(
-                status) + "\n from: \n" + output + " stderr: \n" + err)
-        if "el6" in output:
-            return "Centos6"
-        elif "el7" in output:
-            return "Centos7"
-        return output
-    #
+        """
+        Which flavour of linux is running?
+        """
+        if hasattr(self, '_lv') and self._lv is not None:
+            return self._lv
+
+        # try commands first...
+        for cmd in ["cat /etc/redhat-release", "lsb_release -a"]:
+            try:
+                output = self.run(cmd)
+                v = parse_rhrelease(output)
+                if v:
+                    self._lv = v
+                    return v
+            except ShellExecuteError:
+                pass
+        # then try running uname
+        output = self.run("uname -r")
+        el = parse_uname(output)
+        if el:
+            self._lv = el
+            return el
+        raise SystemError("Cannot detect linux version, meaning this is not a compatible version")
 
     def prep_git(self, github_key_local, force=False, git_origin="git@gitlab-nl.dna.kpmglab.com"):
         """

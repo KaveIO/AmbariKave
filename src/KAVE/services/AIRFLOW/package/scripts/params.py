@@ -65,10 +65,8 @@ airflow_dagbag_import_timeout = default('configurations/airflow/airflow_dagbag_i
 airflow_default_owner = default('configurations/airflow/airflow_default_owner', 'Airflow')
 
 airflow_base_url = default('configurations/airflow/airflow_base_url', 'http://localhost:8082')
-# airflow_base_url = 'http://localhost:8082'
 
 airflow_web_server_port = default('configurations/airflow/airflow_web_server_port', '8082')
-# airflow_web_server_port = '8082'
 
 airflow_web_server_worker_timeout = default('configurations/airflow/airflow_web_server_worker_timeout', '120')
 
@@ -94,7 +92,6 @@ AMBARI_ADMIN = config['configurations']['airflow']['admin']
 AMBARI_ADMIN_PASS = config['configurations']['airflow']['admin']
 www_folder = kc.default('configurations/airflow/www_folder', '/var/www/html/', kc.is_valid_directory)
 AMBARI_SERVER = default("/clusterHostInfo/ambari_server_host", ['ambari'])[0]
-# default('configurations/kavelanding/AMBARI_SERVER','ambari')
 
 PORT = kc.default('configurations/airflow/PORT', '82', kc.is_valid_port)
 

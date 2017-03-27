@@ -24,13 +24,13 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class Airflow(kc.ApacheScript):
-    # status file is needed to know if this service was started, stores the name of the index file
-    # status_file = '/etc/kave/kavelanding_started'
     airflow_config_path = "/usr/opt/local/airflow/airflow.cfg"
     airflow_webserver_pidfile_path = "/run/airflow/webserver.pid"
     systemd_env_init_path = "/etc/sysconfig/airflow"
     systemd_schd_unitfile_path = "/usr/lib/systemd/system/airflow-scheduler.service"
     systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
+    # This is a hack to overcome a certain restriction in airflow which requires
+    # the argument to be quoted
     quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
                     '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
                     ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
@@ -49,14 +49,20 @@ class Airflow(kc.ApacheScript):
         Execute('sudo yum install -y postgresql-devel python-devel mysql-devel')
         Execute('sudo yum -y install gcc gcc-c++ libffi-devel mariadb-devel cyrus-sasl-devel')
         Execute('pip install -U pip setuptools')
+        # Create airflow config/home dir and set permissions
         Execute('id -u airflow &>/dev/null || useradd -r -s /sbin/nologin airflow')
         Execute('mkdir -p /usr/opt/local/airflow')
         Execute('chown airflow:root /usr/opt/local/airflow')
+        # Create directory to store the pid file and set permissions:
         Execute('mkdir /run/airflow')
         Execute('chown airflow:root /run/airflow')
+        # Set the AIRFLOW_HOME environment variable. Echoing it at the end of /etc/environment
+        # is just one of the possible approaches.
         Execute('echo "AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
-
+        # Install base airflow
         Execute('pip install airflow')
+        # Add Airflow Hive operatiors. We should consider installing "airflow[all]"
+        # for getting all possible features
         Execute('pip install airflow[hive]')
 
         self.configure(env)

@@ -18,6 +18,7 @@
       "components" : [
         { "name" : "AMBARI_SERVER"     },
         { "name" : "ZOOKEEPER_SERVER"  },
+        { "name" : "METRICS_COLLECTOR" },
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
         { "name" : "AIRFLOW_SERVER"    }

@@ -24,7 +24,7 @@ import base
 mods = [micro_cluster, single_machine_cluster, knownami, one_centos_dev]
 
 
-modargs = {knownami: ['Centos6', 'Centos7', 'Redhat7']}
+modargs = {knownami: ['Centos7', 'Redhat7']}
 
 if __name__ == "__main__":
     base.parallel(mods, modargs)

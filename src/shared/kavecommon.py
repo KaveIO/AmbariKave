@@ -73,14 +73,10 @@ def detect_linux_version():
     """
     # first look into the redhat release
     def find_return(output):
-        if "CentOS" in output.lower() and "release 6" in output.lower():
-            return "Centos6"
-        elif "CentOS" in output.lower() and "release 7" in output.lower():
+        if "centos" in output.lower() and "release 7" in output.lower():
             return "Centos7"
         elif "Ubuntu" in output:
             return "Ubuntu"
-        elif "el6" in output:
-            return "Centos6"
         elif "el7" in output:
             return "Centos7"
         return None

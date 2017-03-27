@@ -28,6 +28,11 @@
         <description>server name. if blank or set to 'hostname', use the evaluated hostname (probably fqdn)</description>
     </property>
     <property>
+        <name>server_port</name>
+        <value>5666</value>
+        <description>Port number of the server</description>
+    </property>
+    <property>
         <name>www_folder</name>
         <value>/var/www/html/</value>
         <description>Where to put the web files?</description>
@@ -116,7 +121,7 @@ pid_file=/var/run/nrpe/nrpe.pid
 # NOTE: This must be a non-priviledged port (i.e. > 1024).
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-server_port=5666
+server_port={{server_port}}
 
 # SERVER ADDRESS
 # Address that nrpe should bind to in case there are more than one interface

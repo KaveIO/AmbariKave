@@ -74,7 +74,7 @@ except ImportError:
         status = proc.returncode
         return status, stdout, stderr
 
-#taken from KTBox which works @ jenkins
+# taken from KTBox which works @ jenkins
     def detect_linux_version():
         try:
             status2, output2, err = mycmd("cat /etc/issue")

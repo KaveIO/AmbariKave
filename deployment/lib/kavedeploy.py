@@ -330,7 +330,7 @@ class remoteHost(object):
                 "Unable to contact machine " + self.user + "@" + self.host + "! or machine did not respond correctly")
         return True
 
-#taken from KTBox which works @ jenkins
+# taken from KTBox which works @ jenkins
     def detect_linux_version(self):
         try:
             status2, output2, err = self.run("cat /etc/issue")

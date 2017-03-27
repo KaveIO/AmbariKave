@@ -117,7 +117,6 @@ class Airflow(kc.ApacheScript):
         Execute('systemctl status airflow-webserver')
         Execute('systemctl status airflow-scheduler')
 
-#        super(Airflow, self).stop(env)
 
 
 if __name__ == "__main__":

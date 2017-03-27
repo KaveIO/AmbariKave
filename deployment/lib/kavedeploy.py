@@ -176,9 +176,9 @@ def parse_rhrelease(output):
     """
     Take a string and return a linux flavor
     """
-    if "centos" in output.lower() and "release 6" in output.lower():
+    if "CentOS" in output.lower() and "release 6" in output.lower():
         return "Centos6"
-    elif "centos" in output.lower() and "release 7" in output.lower():
+    elif "CentOS" in output.lower() and "release 7" in output.lower():
         return "Centos7"
     elif "red hat" in output.lower() and "release 7" in output.lower():
         return "Centos7"

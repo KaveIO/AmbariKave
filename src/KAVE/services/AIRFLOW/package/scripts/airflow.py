@@ -32,9 +32,9 @@ class Airflow(kc.ApacheScript):
     # This is a hack to overcome a certain restriction in airflow which requires
     # the argument to be quoted
     quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
-                    '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
-                    ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
-                )
+                 '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
+                 ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
+                 )
 
     def install(self, env):
         print "Installing Airflow"

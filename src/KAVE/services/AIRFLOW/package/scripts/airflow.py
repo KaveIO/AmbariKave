@@ -118,6 +118,5 @@ class Airflow(kc.ApacheScript):
         Execute('systemctl status airflow-scheduler')
 
 
-
 if __name__ == "__main__":
     Airflow().execute()

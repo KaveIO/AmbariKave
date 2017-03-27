@@ -73,6 +73,8 @@ def detect_linux_version():
     """
     # first look into the redhat release
     def find_return(output):
+        if "CentOS" in output.lower() and "release 6" in output.lower():
+            return "Centos6" #jenkins is running centos6
         if "CentOS" in output.lower() and "release 7" in output.lower():
             return "Centos7"
         elif "Ubuntu" in output:

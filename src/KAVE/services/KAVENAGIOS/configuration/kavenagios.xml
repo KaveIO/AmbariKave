@@ -33,6 +33,11 @@
         <description>Where to put the web files?</description>
     </property>
     <property>
+        <name>server_port</name>
+        <value>5666</value>
+        <description>Port number of the server</description>
+    </property>
+    <property>
         <name>nagios_admin_email</name>
         <value>default</value>
         <description>email id to receive updates regarding nagios

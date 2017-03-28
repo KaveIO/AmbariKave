@@ -17,6 +17,13 @@
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
+    { "Name" : "freeipa",
+    "Count" : -1,
+    "InstanceType" : "t2.medium",
+    "AccessType" : "freeipa",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+  },
   { "Name" : "ci",
     "Count" : -1,
     "InstanceType" : "m4.large",

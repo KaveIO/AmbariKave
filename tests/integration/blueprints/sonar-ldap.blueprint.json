@@ -59,6 +59,17 @@
       "cardinality" : "1+"
     },
     {
+      "name" : "freeipa",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      },
+        { "name" : "FREEIPA_SERVER"        },
+        { "name" : "FREEIPA_CLIENT"        }
+      ],
+      "cardinality" : "1+"
+    },
+    {
       "name" : "ci",
       "configurations" : [ ],
       "components" : [

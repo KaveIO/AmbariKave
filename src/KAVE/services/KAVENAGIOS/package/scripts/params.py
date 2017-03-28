@@ -34,7 +34,7 @@ if servername == "hostname":
     servername = hostname
 
 nagios_monitor_hosts = default('/clusterHostInfo/kavenagios_monitor_hosts', ['unknown'])
-
+server_port = default('configurations/kavenagios/server_port', '5666')
 template_000_default = default('configurations/kavenagios/template_000_default', """
 # Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart
@@ -243,7 +243,7 @@ pid_file=/var/run/nrpe/nrpe.pid
 # NOTE: This must be a non-priviledged port (i.e. > 1024).
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-server_port=5666
+server_port={{server_port}}
 
 # SERVER ADDRESS
 # Address that nrpe should bind to in case there are more than one interface

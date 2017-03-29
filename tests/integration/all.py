@@ -25,7 +25,7 @@ mods = [clusters]
 
 blueprints = glob.glob(os.path.dirname(__file__) + "/blueprints/*.blueprint.json")
 
-disabled = ["everything", "bbdemo"]
+disabled = ["everything", "bbdemo", "sonar-ldap"]
 
 blueprints = [b.split("/")[-1].split(".")[0] for b in blueprints]
 blueprints = [b for b in blueprints if b not in disabled]

@@ -15,11 +15,6 @@
 	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
 	},
 	{
-	    "name" : "freeipa",
-	    "configurations" : [   ],
-	    "hosts" : [ { "fqdn" : "freeipa.kave.io" } ]
-	},
-	{
 	    "name" : "ci",
 	    "configurations" : [   ],
 	    "hosts" : [ { "fqdn" : "ci.kave.io" } ]

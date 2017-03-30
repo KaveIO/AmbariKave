@@ -9,6 +9,13 @@
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 1,   "Attach" : "/dev/sdd" }]
   },
+  { "Name" : "freeipa",
+    "Count" : -1,
+    "InstanceType" : "t2.medium",
+    "AccessType" : "freeipa",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdc" } ]
+  },
   { "Name" : "gate",
     "Count" : 1,
     "InstanceType" : "t2.small",

@@ -27,12 +27,23 @@
         { "name" : "AMBARI_SERVER"      },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "ZOOKEEPER_SERVER"   },
-        { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "KAVEGANGLIA_SERVER"    },
-        { "name" : "KAVEGANGLIA_MONITOR"   }
+        { "name" : "KAVEGANGLIA_SERVER" },
+        { "name" : "KAVEGANGLIA_MONITOR"}
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "freeipa",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "FREEIPA_SERVER"     },
+        { "name" : "FREEIPA_CLIENT"     },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "KAVEGANGLIA_MONITOR"},
+        { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
     },

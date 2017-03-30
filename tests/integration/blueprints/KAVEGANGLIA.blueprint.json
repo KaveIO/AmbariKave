@@ -42,7 +42,7 @@
         { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR" },
+        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"

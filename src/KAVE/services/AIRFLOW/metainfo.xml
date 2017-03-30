@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>AIRFLOW</name>
+            <comment>Airflow is a platform to programmatically author, schedule and monitor workflows.</comment>
+            <displayName>Airflow</displayName>
+            <version>1.7</version>
+            <components>
+                    <component>
+                    <name>AIRFLOW_SERVER</name>
+                    <displayName>Airflow</displayName>
+                    <category>MASTER</category>
+                    <cardinality>1+</cardinality>
+                    <commandScript>
+                        <script>scripts/airflow.py</script>
+                        <scriptType>PYTHON</scriptType>
+                        <timeout>6000</timeout>
+                    </commandScript>
+                    </component>
+            </components>
+           <osSpecifics>
+                <osSpecific>
+                    <osFamily>any</osFamily>
+                    <packages>
+                        <package><name>wget</name></package>
+                        <package><name>httpd</name></package>
+                    </packages>
+                </osSpecific>
+            </osSpecifics>
+        </service>
+    </services>
+</metainfo>
+

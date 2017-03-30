@@ -35,7 +35,6 @@ if servername == "hostname":
 
 nagios_monitor_hosts = default('/clusterHostInfo/kavenagios_monitor_hosts', ['unknown'])
 server_port = default('configurations/kavenagios/server_port', '5666')
-
 template_000_default = default('configurations/kavenagios/template_000_default', """
 # Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart

@@ -1,4 +1,3 @@
-#!/bin/bash
 ##############################################################################
 #
 # Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
@@ -16,13 +15,11 @@
 #   limitations under the License.
 #
 ##############################################################################
-# init
-USERID="$1"
-
-/bin/egrep  -i "^${USERID}:" /etc/passwd
-#awk -F':' '/^{USERID}/{print $1}' /etc/passwd
-if [ $? -eq 0 ]; then
-   echo "-1"
-else
-   echo "0"
-fi
+# This file is the environment file for Airflow. Put this file in /etc/sysconfig/airflow per default
+# configuration of the systemd unit files.
+#
+AIRFLOW_CONFIG=/usr/opt/local/airflow/airflow.cfg
+AIRFLOW_HOME=/usr/opt/local/airflow
+#
+# required setting, 0 sets it to unlimited. Scheduler will get restart after every X runs
+SCHEDULER_RUNS=5

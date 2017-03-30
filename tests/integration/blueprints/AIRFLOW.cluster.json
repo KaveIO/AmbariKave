@@ -1,0 +1,18 @@
+{
+    "blueprint" : "airflow",
+    "default_password" : "admin",
+    "configurations" : [
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "airflow",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "airflow.kave.io" } ]
+	}
+    ]
+}

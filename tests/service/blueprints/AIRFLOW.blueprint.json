@@ -4,6 +4,11 @@
       "ams-site" : {
         "timeline.metrics.service.operation.mode" : "embedded"
       }
+    },
+    {
+      "airflow" : {
+        "AIRFLOW_ADMIN_PASSWORD" : "admin"
+      }
     }
   ],
   "host_groups" : [
@@ -16,8 +21,7 @@
         { "name" : "METRICS_COLLECTOR" },
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
-        { "name" : "KAVEGANGLIA_MONITOR"   },
-        { "name" : "KAVEGANGLIA_SERVER"    }
+        { "name" : "AIRFLOW_SERVER"    }
       ],
       "cardinality" : "1"
     }
@@ -25,6 +29,6 @@
   "Blueprints" : {
     "blueprint_name" : "default",
     "stack_name" : "HDP",
-    "stack_version" : "2.5.3.1.KAVE"
+    "stack_version" : "2.5.3.0.KAVE"
   }
 }

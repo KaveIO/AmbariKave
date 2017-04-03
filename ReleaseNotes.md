@@ -3,9 +3,38 @@
 Contains a list of the released versions with a summary of the main changes in each version.
 
 
-# Beta Releases
-# v3.1-Beta-Pre
+# v3.1-Beta
+MAJOR RELEASE
 
+MAJOR CHANGES:
+	The major changes were:
+
+		1.	Removal of Centos6 support.
+		2.	Addition of Dev Cot
+		3.	Gitlab tunneling from the gateway node
+		4.	PDSH issue resolution in integration test
+		5.	Addition of Fish shell
+		6.	MongoDB instance type resolution
+		7.	MongoDB db_path resolution
+		8.	HDFS-Log4j size modification
+		9.	Port configuration for MongoDB
+		10.	KaveLanding:
+				a. Drop down menu fix.
+				b. User-specific notebooks
+		11.	Port Configuration for Nagios
+		12. Lightning-Viz to KaveToolBox
+		13. KaveToolBox:
+		14. FreeIPA
+		15. Airflow; Addition of new service for visualization
+		16. Continuous Integration:
+				a. Jenkins is running now nightly builds for KaveToolBox
+				b. Jenkins to run for AmbariKave as well
+		18. KaveGanglia
+		19. AWS cleanup
+		20. Cloudbreak for Kave on Azure
+
+
+Important information:
 # v3.0-Beta
 
 **MAJOR RELEASE** not guaranteed backwards compatible

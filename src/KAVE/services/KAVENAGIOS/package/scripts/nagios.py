@@ -32,7 +32,7 @@ class Nagios(ApacheScript):
         super(Nagios, self).install(env)
         env.set_params(params)
         self.install_packages(env)
-        Package('httpd')
+        Execute('yum -y install httpd')
         kc.install_epel()
         Execute('yum -y install nagios')
         Execute('yum -y install nagios-plugins')

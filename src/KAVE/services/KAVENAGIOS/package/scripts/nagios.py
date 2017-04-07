@@ -29,10 +29,10 @@ class Nagios(ApacheScript):
 
     def install(self, env):
         import params
+        Package('httpd')
         super(Nagios, self).install(env)
         env.set_params(params)
         self.install_packages(env)
-        Package('httpd')
         kc.install_epel()
         Execute('yum -y install nagios')
         Execute('yum -y install nagios-plugins')

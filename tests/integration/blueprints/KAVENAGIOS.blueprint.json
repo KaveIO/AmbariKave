@@ -25,7 +25,6 @@
         { "name" : "AMBARI_SERVER"   },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
-        { "name" : "KAVENAGIOS_SERVER"  },
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
@@ -37,16 +36,7 @@
       "name" : "test",
       "configurations" : [ ],
       "components" : [
-        { "name" : "METRICS_MONITOR"   },
-        { "name" : "ZOOKEEPER_CLIENT"  },
-        { "name" : "KAVENAGIOS_MONITOR"}
-      ],
-      "cardinality" : "1+"
-    },
-    {
-      "name" : "ci",
-      "configurations" : [ ],
-      "components" : [
+        { "name" : "KAVENAGIOS_SERVER" },
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
         { "name" : "KAVENAGIOS_MONITOR"}

@@ -42,16 +42,6 @@
         { "name" : "KAVENAGIOS_MONITOR"}
       ],
       "cardinality" : "1+"
-    },
-    {
-      "name" : "ci",
-      "configurations" : [ ],
-      "components" : [
-        { "name" : "METRICS_MONITOR"   },
-        { "name" : "ZOOKEEPER_CLIENT"  },
-        { "name" : "KAVENAGIOS_MONITOR"}
-      ],
-      "cardinality" : "1+"
     }
   ],
   "Blueprints" : {

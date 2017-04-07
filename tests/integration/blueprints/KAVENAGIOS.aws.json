@@ -16,12 +16,6 @@
     "InstanceType" : "m4.large",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
-  },
-  { "Name" : "ci",
-    "Count" : 1,
-    "InstanceType" : "m4.large",
-    "AccessType" : "none",
-    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   }
   ]
 }

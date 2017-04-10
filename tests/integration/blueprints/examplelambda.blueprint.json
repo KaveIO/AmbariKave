@@ -60,6 +60,7 @@
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
+        { "name" : "ZOOKEEPER_SERVER"       },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "KAVEGANGLIA_SERVER" },
@@ -118,7 +119,6 @@
         { "name" : "RESOURCEMANAGER"        },
         { "name" : "APP_TIMELINE_SERVER"    },
         { "name" : "HISTORYSERVER"          },
-        { "name" : "ZOOKEEPER_SERVER"       },
         { "name" : "PIG"                    },
         { "name" : "HCAT"                   },
         { "name" : "HIVE_SERVER"            },

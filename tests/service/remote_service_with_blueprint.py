@@ -148,8 +148,10 @@ if __name__ == "__main__":
     test = TestServiceBlueprint()
     if service == "KAVELANDING":
         test = TestServiceKaveLanding()
-    if service == "FREEIPA":
-        test = TestServiceFreeIPA()
+#    For now just uncommenting FreeIPA check as it cannot be installed on the Ambari node anymore.
+#    Probbably the whole class TestServiceFreeIPA shall be removed.
+#    if service == "FREEIPA":
+#        test = TestServiceFreeIPA()
     test.service = service
     test.debug = verbose
     test.branch = branch

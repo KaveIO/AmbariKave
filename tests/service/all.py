@@ -32,17 +32,16 @@ ignore_services = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS", "ARCHIVA",
 
 services = [s for s, ds in base.find_services() if s not in ignore_services]
 
-checks = {"APACHE": ["http://localhost/"],
+checks = {"APACHE": ["http://ambari.kave.io/"],
           "KAVETOOLBOX": ["/opt/KaveToolbox", '/etc/profile.d/kave.sh'],
-          "KAVELANDING": ["http://localhost/"],
-          "JENKINS": ["http://localhost:8888/login"],
-          "JBOSS": ["http://localhost:8888/"],
-          "TWIKI": ["http://localhost/twiki/"],
-          "FREEIPA": ["https://ambari.kave.io/ipa/ui/"],
-          "STORM": ["http://localhost:8744/"],
+          "KAVELANDING": ["http://ambari.kave.io/"],
+          "JENKINS": ["http://ambari.kave.io:8888/login"],
+          "JBOSS": ["http://ambari.kave.io:8888/"],
+          "TWIKI": ["http://ambari.kave.io/twiki/"],
+          "STORM": ["http://ambari.kave.io:8744/"],
           "MONGODB": ["/var/lib/mongo"],
-          "SONARQUBE": ["http://localhost:5051/"],
-          "GITLAB": ["http://localhost:7777/"]
+          "SONARQUBE": ["http://ambari.kave.io:5051/"],
+          "GITLAB": ["http://ambari.kave.io:7777/"]
           }
 
 # service.sh will do all services apart from the ignored services

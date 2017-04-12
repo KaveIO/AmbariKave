@@ -41,9 +41,9 @@ class TestAService(base.LDTest):
         # restart ganglia and nagios
         if self.branch:
             abranch = self.service
-        for restart in ["METRICS_MONITOR", "AMBARI_METRICS", "ZOOKEEPER"]:
+        for restart in ["AMBARI_METRICS", "ZOOKEEPER"]:
             stdout = self.servicesh(ambari, "stop", restart)
-        for restart in ["ZOOKEEPER", "AMBARI_METRICS", "METRICS_MONITOR"]:
+            stdout = self.servicesh(ambari, "start", restart)
             self.wait_for_service(ambari, restart)
         import time
 
@@ -53,7 +53,7 @@ class TestAService(base.LDTest):
         self.assertTrue("IN_PROGRESS" in stdout or "InProgress" in stdout or "status\" : \"Accepted" in stdout,
                         "Was unable to install " + self.service + " through service.sh, (" + ' '.join(
                             ambari.sshcmd()) + ")")
-        self.wait_for_service(ambari)
+        self.wait_for_service(ambari, self.service)
         return self.check(ambari)
 
 

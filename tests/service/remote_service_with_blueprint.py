@@ -78,7 +78,6 @@ __kavelanding_html__ = """<h3><font size=5px>'default' cluster</font></h3>
   <li>Ambari <a href='http://ambari:8080'>admin</a></li>
   <li>Jenkins <a href='http://ambari:8888'>jenkins</a></li>
   <li>Metrics <a href='http://ambari:3000'>grafana</a></li>
-  <li>Metrics collector (['ambari.kave.io'])</li>
   <li>Zookeeper (['ambari.kave.io'])</li>
 </ul><p><b>Clients</b><p><ul>
   <li>ambari.kave.io ['kavelanding', 'metrics_monitor', 'zookeeper_client']</li>

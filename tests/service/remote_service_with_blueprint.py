@@ -64,7 +64,6 @@ __kavelanding_plain__ = """Welcome to your KAVE
 |  |--* Ambari <a href='http://ambari:8080'>admin</a>
 |  |--* Jenkins <a href='http://ambari:8888'>jenkins</a>
 |  |--* Metrics <a href='http://ambari:3000'>grafana</a>
-|  |--* Metrics collector (['ambari.kave.io'])
 |  |--* Zookeeper (['ambari.kave.io'])
 |
 |--* Clients

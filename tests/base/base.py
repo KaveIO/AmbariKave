@@ -900,8 +900,8 @@ class LDTest(unittest.TestCase):
             elif self.service.startswith("APACHE") and check.startswith("http://"):
                 stdout = ambari.run(" curl --retry 5  -i -X GET --keepalive-time 5 " + check, exit=False)
                 self.assertTrue(
-                    "If you can read this page it means that the Apache HTTP server installed at this site is working "
-                    "properly." in stdout,
+                    "If you can read this page it means that this site is working properly."
+                    in stdout,
                     "checking existence of " + check + " failed (" + ' '.join(ambari.sshcmd()) + ") \n" + stdout)
             elif self.service.startswith("JENKINS") and check.startswith("http://"):
                 flag = False

@@ -41,10 +41,10 @@ class TestAService(base.LDTest):
         # restart ganglia and nagios
         if self.branch:
             abranch = self.service
-        for restart in ["AMBARI_METRICS", "ZOOKEEPER"]:
-            stdout = self.servicesh(ambari, "stop", restart)
-            stdout = self.servicesh(ambari, "start", restart)
-            self.wait_for_service(ambari, restart)
+#        for restart in ["AMBARI_METRICS", "ZOOKEEPER"]:
+#            stdout = self.servicesh(ambari, "stop", restart)
+#            stdout = self.servicesh(ambari, "start", restart)
+#            self.wait_for_service(ambari, restart)
         import time
 
         time.sleep(15)

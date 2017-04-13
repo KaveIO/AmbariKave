@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "kavenagios" : {
+        "nagios_admin_password" : "averylongandannoyingpassword"
+      }
+    },
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [  ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"     },
+        { "name" : "ZOOKEEPER_SERVER"  },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  },
+        { "name" : "KAVENAGIOS_SERVER" },
+        { "name" : "KAVENAGIOS_MONITOR"}
+      ],
+      "cardinality" : "1"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "default",
+    "stack_name" : "HDP",
+    "stack_version" : "2.5.3.1.KAVE"
+  }
+}

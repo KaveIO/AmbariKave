@@ -26,7 +26,7 @@ import os
 mods = [test_kavetoolbox_head, remote_service_with_servicesh, remote_service_with_blueprint]
 
 # Ignore services which do not have a working default configuration, or have default ports which conflict with 8080
-ignore_services = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS", "ARCHIVA",
+ignore_services = ["GITLAB", "TWIKI", "KAVENAGIOS", "FREEIPA", "JENKINS", "ARCHIVA",
                    "JBOSS", "KAVELANDING", "STORMSD", "SONARQUBE", "MAIL"]
 # Gitlab cannot be installed on the ambari server because of the conflicting SQL databases
 
@@ -41,6 +41,7 @@ checks = {"APACHE": ["http://ambari.kave.io/"],
           "STORM": ["http://ambari.kave.io:8744/"],
           "MONGODB": ["/var/lib/mongo"],
           "SONARQUBE": ["http://ambari.kave.io:5051/"],
+          "AIRFLOW": ["http://ambari.kave.io:8082/admin/"],
           "GITLAB": ["http://ambari.kave.io:7777/"]
           }
 

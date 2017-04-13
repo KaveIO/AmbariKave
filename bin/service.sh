@@ -145,9 +145,7 @@ function runConfigureService {
     KAVENAGIOS)
 	buildConfiguration kavenagios nagios_admin_password
       ;;
-    AIRFLOW)
-	buildConfiguration airflow admin
-      ;;
+
   esac
 }
 

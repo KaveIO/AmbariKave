@@ -118,6 +118,12 @@ class TestKaveToolbox(base.LDTest):
 #            # add default 10GB in /opt
 #            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
 #            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
+
+        if self.ostype.startswith("Redhat7"):
+            # add default 10GB in /opt
+            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
+
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)

@@ -22,8 +22,8 @@ import os
 
 class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
-    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
-                 '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
+    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/anaconda/pro/bin/root',
+                 '/opt/eclipse', '/opt/anaconda']
     ostype = "Centos7"
     workstation = True
 

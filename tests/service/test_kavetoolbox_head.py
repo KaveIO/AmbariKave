@@ -109,15 +109,6 @@ class TestKaveToolbox(base.LDTest):
 
         lD = self.pre_check()
         ambari, iid = self.deploy_os(self.ostype)
-#    Commenting out the below section as Ubuntu is no longer supported and
-#    the new AMI alrady has a 10GB volume /dev/sdb mounted at /opt
-#
-#        if self.ostype.startswith("Ubuntu"):
-#            ambari.run('apt-get update')
-#        else:
-#            # add default 10GB in /opt
-#            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
-#            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
 
         if self.ostype.startswith("Redhat7"):
             # add default 10GB in /opt
@@ -127,7 +118,6 @@ class TestKaveToolbox(base.LDTest):
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)
-
 
 if __name__ == "__main__":
     import sys

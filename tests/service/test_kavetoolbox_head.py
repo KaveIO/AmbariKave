@@ -22,8 +22,8 @@ import os
 
 class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
-    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
-                 '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
+    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/anaconda/pro/bin/root',
+                 '/opt/eclipse', '/opt/anaconda']
     ostype = "Centos7"
     workstation = True
 
@@ -118,6 +118,12 @@ class TestKaveToolbox(base.LDTest):
 #            # add default 10GB in /opt
 #            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
 #            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
+
+        if self.ostype.startswith("Redhat7"):
+            # add default 10GB in /opt
+            deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
+            stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
+
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)

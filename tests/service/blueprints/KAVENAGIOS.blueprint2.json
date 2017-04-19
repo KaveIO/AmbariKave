@@ -1,13 +1,13 @@
 {
   "configurations" : [
     {
-      "ams-site" : {
-        "timeline.metrics.service.operation.mode" : "embedded"
+      "kavenagios" : {
+        "nagios_admin_password" : "averylongandannoyingpassword"
       }
     },
     {
-      "airflow" : {
-        "AIRFLOW_ADMIN_PASSWORD" : "admin"
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
       }
     }
   ],
@@ -21,7 +21,8 @@
         { "name" : "METRICS_COLLECTOR" },
         { "name" : "METRICS_MONITOR"   },
         { "name" : "ZOOKEEPER_CLIENT"  },
-        { "name" : "AIRFLOW_SERVER"    }
+        { "name" : "KAVENAGIOS_SERVER" },
+        { "name" : "KAVENAGIOS_MONITOR"}
       ],
       "cardinality" : "1"
     }

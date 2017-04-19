@@ -22,8 +22,8 @@ import os
 
 class TestKaveToolbox(base.LDTest):
     service = "KaveToolbox-HEAD"
-    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/root',
-                 '/opt/eclipse', '/opt/anaconda', '/opt/kettle']
+    checklist = ['/opt/KaveToolbox', '/etc/profile.d/kave.sh', '/opt/anaconda/pro/bin/root',
+                 '/opt/eclipse', '/opt/anaconda']
     ostype = "Centos7"
     workstation = True
 
@@ -69,7 +69,7 @@ class TestKaveToolbox(base.LDTest):
         import kavedeploy as lD
         # check the installed directories
         stdout = ambari.run("bash -c \"source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; which python; which root;\"")
-        self.assertTrue("/opt/root/pro" in stdout and "/opt/anaconda/pro/bin" in stdout,
+        self.assertTrue("/opt/anaconda/pro/bin/root" in stdout and "/opt/anaconda/pro/bin/python" in stdout,
                         "Environment sourcing fails to find installed packages")
         # check other features
         if self.workstation:
@@ -109,16 +109,15 @@ class TestKaveToolbox(base.LDTest):
 
         lD = self.pre_check()
         ambari, iid = self.deploy_os(self.ostype)
-        if self.ostype.startswith("Ubuntu"):
-            ambari.run('apt-get update')
-        else:
+
+        if self.ostype.startswith("Redhat7"):
             # add default 10GB in /opt
             deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
             stdout = lD.run_quiet(deploy_dir + "/aws/add_ebsvol_to_instance.py " + iid + " --not-strict ")
+
         self.deploy_ktb(ambari)
         self.wait_for_ktb(ambari)
         return self.check(ambari)
-
 
 if __name__ == "__main__":
     import sys

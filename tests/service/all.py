@@ -26,23 +26,23 @@ import os
 mods = [test_kavetoolbox_head, remote_service_with_servicesh, remote_service_with_blueprint]
 
 # Ignore services which do not have a working default configuration, or have default ports which conflict with 8080
-ignore_services = ["GITLAB", "TWIKI", "FREEIPA", "JENKINS", "ARCHIVA",
-                   "JBOSS", "KAVELANDING", "STORMSD", "SONARQUBE", "MAIL"]
+ignore_services = ["GITLAB", "TWIKI", "KAVENAGIOS", "KAVEGANGLIA", "FREEIPA", "JENKINS", "ARCHIVA",
+                   "JBOSS", "WILDFLY", "KAVELANDING", "STORMSD", "SONARQUBE", "MAIL", "MONGODB"]
 # Gitlab cannot be installed on the ambari server because of the conflicting SQL databases
 
 services = [s for s, ds in base.find_services() if s not in ignore_services]
 
-checks = {"APACHE": ["http://localhost/"],
+checks = {"APACHE": ["http://ambari.kave.io/"],
           "KAVETOOLBOX": ["/opt/KaveToolbox", '/etc/profile.d/kave.sh'],
-          "KAVELANDING": ["http://localhost/"],
-          "JENKINS": ["http://localhost:8888/login"],
-          "JBOSS": ["http://localhost:8888/"],
-          "TWIKI": ["http://localhost/twiki/"],
-          "FREEIPA": ["https://ambari.kave.io/ipa/ui/"],
-          "STORM": ["http://localhost:8744/"],
+          "KAVELANDING": ["http://ambari.kave.io/"],
+          "JENKINS": ["http://ambari.kave.io:8888/login"],
+          "JBOSS": ["http://ambari.kave.io:8888/"],
+          "TWIKI": ["http://ambari.kave.io/twiki/"],
+          "STORM": ["http://ambari.kave.io:8744/index.html"],
           "MONGODB": ["/var/lib/mongo"],
-          "SONARQUBE": ["http://localhost:5051/"],
-          "GITLAB": ["http://localhost:7777/"]
+          "SONARQUBE": ["http://ambari.kave.io:5051/"],
+          "AIRFLOW": ["http://ambari.kave.io:8082/admin/"],
+          "GITLAB": ["http://ambari.kave.io:7777/"]
           }
 
 # service.sh will do all services apart from the ignored services
@@ -80,7 +80,7 @@ for service in blueprint_not_services:
     else:
         blueprint_not_serviceargs.append(service)
 
-modargs = {test_kavetoolbox_head: ['Centos6', 'Centos7', 'Ubuntu14', 'Redhat7'],
+modargs = {test_kavetoolbox_head: ['Centos7', 'Redhat7'],
            remote_service_with_servicesh: serviceargs,
            remote_service_with_blueprint: blueprint_serviceargs,
            remote_blueprint: blueprint_not_serviceargs

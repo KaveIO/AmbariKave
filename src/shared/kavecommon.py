@@ -107,12 +107,12 @@ def detect_linux_version():
         pass
     status, output, err = mycmd("uname -r")
     if status:
-            raise RuntimeError("Problem detecting linux version: uname -r got:\n\t" + str(
-                status) + "\n from: \n" + output + " stderr: \n" + err)
+        raise RuntimeError("Problem detecting linux version: uname -r got:\n\t" + str(
+            status) + "\n from: \n" + output + " stderr: \n" + err)
     if "el6" in output:
-            return "Centos6"
+        return "Centos6"
     elif "el7" in output:
-            return "Centos7"
+        return "Centos7"
     return output
     #
 #

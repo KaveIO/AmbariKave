@@ -26,7 +26,7 @@ import random
 def node_tunneling(gateport, node, nodeport, pub_key_path, user):
 
     process = Popen(['ssh', '-i', pub_key_path, '-L', gateport, ':', node, ':',
-                    nodeport, user, '@', node], stdout=PIPE, stderr=PIPE)
+                     nodeport, user, '@', node], stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
 
     if stderr:

@@ -44,6 +44,7 @@ class TestAService(base.LDTest):
         for restart in ["METRICS_MONITOR", "AMBARI_METRICS", "ZOOKEEPER"]:
             stdout = self.servicesh(ambari, "stop", restart)
         for restart in ["ZOOKEEPER", "AMBARI_METRICS", "METRICS_MONITOR"]:
+            stdout = self.servicesh(ambari, "start", restart)
             self.wait_for_service(ambari, restart)
         import time
 

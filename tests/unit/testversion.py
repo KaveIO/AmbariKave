@@ -29,7 +29,7 @@ class TestVersions(unittest.TestCase):
     """
     regex = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     restack = re.compile("([0-9]\.[0-9]\.[0-9]\.[0-9]\.KAVE)")
-    ignore = ["ReleaseNotes.md"]
+    ignore = ["ReleaseNotes.md", "metainfo.xml", "kavetoolbox.xml", "params.py", "kavetoolbox.py", "new_dev_machine.py"]
     check_against = "3.1-Beta"
     check_against_stack = "2.5.3.1.KAVE"
 

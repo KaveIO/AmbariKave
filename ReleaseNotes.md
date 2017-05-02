@@ -1,7 +1,11 @@
 # The ReleaseNotes file
 
 Contains a list of the released versions with a summary of the main changes in each version.
+# v3.2-Beta
+MINOR RELEASE
+HDP 2.6
 
+ So the stack now looks like 2.6.3.2.KAVE (HDP-version.KAVE-version.KAVE)
 
 # v3.1-Beta
 MAJOR RELEASE
@@ -9,8 +13,8 @@ MAJOR RELEASE
 MAJOR CHANGES:
 	The major changes were:
 
-		1.	Removal of Centos6 support.
-		2.	Addition of Dev Cot
+		1.	Removal of CentOS6 and Ubuntu support. However we do support certain versions of Ubuntu for KaveToolBox.
+		2.	Addition of Dovecot
 		3.	Gitlab tunneling from the gateway node
 		4.	PDSH issue resolution in integration test
 		5.	Addition of Fish shell
@@ -20,18 +24,24 @@ MAJOR CHANGES:
 		9.	Port configuration for MongoDB
 		10.	KaveLanding:
 				a. Drop down menu fix.
-				b. User-specific notebooks
 		11.	Port Configuration for Nagios
-		12. Lightning-Viz to KaveToolBox
-		13. KaveToolBox:
-		14. FreeIPA
-		15. Airflow; Addition of new service for visualization
+		12. Lightning-Viz to KaveToolBox: Addition of new tool for visualization
+		    a framework for interactive data visualization, including a server, visualizations, and client libraries
+		13. KaveToolBox: small fixtures
+		        a. CairoSVG version
+		        b. Avoid loading default kaveenv for few users
+		        c. Improved linux version detection code
+		        d. Addition of remote desktop (via xrdp) support for the gateway node
+		14. FreeIPA: Custom port configuration no longer supported. FREEIPA needs to be installed on a separate node as per the official documentation.
+		15. Airflow: platform to programmatically author, schedule and monitor workflows
 		16. Continuous Integration:
 				a. Jenkins is running now nightly builds for KaveToolBox
-				b. Jenkins to run for AmbariKave as well
-		18. KaveGanglia
-		19. AWS cleanup
-		20. Cloudbreak for Kave on Azure
+				b. For Ambari Kave: The following tests are running with success
+				    i. Unit Tests
+				    ii. Service Tests
+				    iii. Integration Tests
+		This was a long overdue, that we have managed in this release.
+		18. KaveGanglia integration with kave: tasks finalized.
 
 
 Important information:

@@ -101,8 +101,8 @@ class FreeipaClient(Script):
     def install_jce(self):
         import params
         # cache this download so that this can be redistributed on restart of the service
-        kc.copy_cache_or_repo("jce_policy-7.zip", cache_dir='/etc/kave/cache', arch="noarch")
-        kc.copy_cache_or_repo("jce_policy-8.zip", cache_dir='/etc/kave/cache', arch="noarch")
+        kc.copy_cache_or_repo("jce_policy-7.zip", cache_dir='/etc/kave/cache', arch='noarch')
+        kc.copy_cache_or_repo("jce_policy-8.zip", cache_dir='/etc/kave/cache', arch='noarch')
         # need to think of some protection against recursive softlinks
         for javapath in params.searchpath.split(':'):
             # print "this is javaPath"+javapath

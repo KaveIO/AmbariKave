@@ -19,6 +19,7 @@ import base
 import checkpackage
 import ambarikave
 import kavetoolbox
+import Eskapade
 
 mods = [checkpackage, ambarikave, kavetoolbox]
 

@@ -33,7 +33,7 @@ class SonarQube(Script):
         self.install_packages(env)
         # protect against client downloading behind firewall
         if not os.path.exists(params.sonarqube_install_directory + '/current'):
-            kc.copy_cache_or_repo(self.package, arch="noarch")  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
+            kc.copy_cache_or_repo(self.package, arch='noarch')  # http://dist.sonar.codehaus.org/sonarqube-5.0.1.zip
             Execute('mkdir -p %s ' % params.sonarqube_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_install_directory))
             Execute('ln -sfn %s/sonarqube-5.4 %s/current' % (

@@ -30,6 +30,7 @@ class TestVersions(unittest.TestCase):
     regex = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     restack = re.compile("([0-9]\.[0-9]\.[0-9]\.[0-9]\.KAVE)")
     ignore = ["ReleaseNotes.md", "metainfo.xml", "kavetoolbox.xml", "params.py", "kavetoolbox.py", "new_dev_machine.py"]
+    ignoreplus = ["eskapade.xml"]
     check_against = "3.1-Beta"
     check_against_stack = "2.5.3.1.KAVE"
 
@@ -55,7 +56,7 @@ class TestVersions(unittest.TestCase):
                         f.endswith('.jpg') or f.endswith('.bmp') or
                         f.endswith('.pdf') or f.endswith('.pyc')):
                     continue
-                if f in self.ignore:
+                if f in (self.ignore or self.ignoreplus):
                     continue
                 found = found + self.findversion(os.path.join(root, f), regex)
         found = [i for i in found if i is not None and len(i)]

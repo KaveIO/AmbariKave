@@ -91,7 +91,7 @@ class TestRepoImports(unittest.TestCase):
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
                 if 'eskapade' in package:
-                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade', ver='0.4-Beta'))
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
             if not len(urls):
@@ -100,7 +100,7 @@ class TestRepoImports(unittest.TestCase):
                 else:
                     urls.append(kc.repo_url(package, arch=arch))
             if 'eskapade' in package:
-                urls.append(kc.repo_url(package, arch=arch, dir='Eskapade', ver='0.4-Beta'))
+                urls.append(kc.repo_url(package, arch=arch, dir='Eskapade'))
             else:
                 urls.append(kc.repo_url(package, arch=arch))
             try:

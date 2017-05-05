@@ -754,8 +754,6 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
         version = "master"
     if version == "latest":
         version = "3.1-Beta"
-    # if version == "latest" and pack.lower() == "eskapade":
-    #     version = "0.4-Beta"  # Didn work, results in one more error for mismatching versions
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:

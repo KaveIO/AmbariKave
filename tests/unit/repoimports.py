@@ -29,7 +29,7 @@ class TestRepoImports(unittest.TestCase):
     Checks for lines where we try and get a file from the repository,
     and checks that those files exist, then
     """
-    ignorefiles = ['repoimports.py']
+    ignorefiles = ['repoimports.py', 'eskapade.py']
     ignorepackages = []
     replaces = {"+params.releaseversion+": kc.__version__,
                 "%s": "el6"}
@@ -91,7 +91,7 @@ class TestRepoImports(unittest.TestCase):
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
                 if 'eskapade' in package:
-                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade'))
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade', ver='0.4-Beta'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
             if not len(urls):
@@ -100,7 +100,7 @@ class TestRepoImports(unittest.TestCase):
                 else:
                     urls.append(kc.repo_url(package, arch=arch))
             if 'eskapade' in package:
-                urls.append(kc.repo_url(package, arch=arch, dir='Eskapade'))
+                urls.append(kc.repo_url(package, arch=arch, dir='Eskapade', ver='0.4-Beta'))
             else:
                 urls.append(kc.repo_url(package, arch=arch))
             try:

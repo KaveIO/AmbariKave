@@ -32,14 +32,14 @@ class TestRepoImports(unittest.TestCase):
     ignorefiles = ['repoimports.py']
     ignorepackages = []
     replaces = {"+params.releaseversion+": kc.__version__,
-                "%s": "el6"}
+                "%s": "el7"}
 
     def find_repolocations(self, fullpath):
         found = []
         if os.path.isfile(fullpath):
             with open(fullpath) as fp:
                 package = ''
-                arch = 'centos6'
+                arch = 'centos7'
                 for i, line in enumerate(fp):
                     line = line.split("#")[0]
                     line = ''.join(line.split())
@@ -57,7 +57,7 @@ class TestRepoImports(unittest.TestCase):
                             package = package.replace(r, p)
                         found.append((fullpath, i + 1, arch, package))
                         package = ''
-                        arch = 'centos6'
+                        arch = 'centos7'
                         # break
 
         return found

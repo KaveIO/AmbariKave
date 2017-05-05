@@ -25,19 +25,19 @@
     then you can set this part to True. Otherwise, Eskapade installation will fail for sure.
     </description>
   </property>
-  <property>
-    <name>custom_install_template</name>
-    <value># -------------------------------
-import kavedefaults as cnf
+  <!--<property>-->
+    <!--<name>custom_install_template</name>-->
+    <!--<value># -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--import kavedefaults as cnf-->
 
-cnf.li.InstallTopDir="{{top_dir}}"
+<!--cnf.li.InstallTopDir="{{top_dir}}"-->
 
-# -------------------------------
-</value>
-    <description>Eskapade is very customizable. You can turn on and off features and minutely control the install with the CustomInstall.py file
-    Any strings surrounded by double-curled-braces will be replaced by the relevant parameter when written to disk
-    </description>
-  </property>
+<!--# -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <!--</value>-->
+    <!--<description>Eskapade is very customizable. You can turn on and off features and minutely control the install with the CustomInstall.py file-->
+    <!--Any strings surrounded by double-curled-braces will be replaced by the relevant parameter when written to disk-->
+    <!--</description>-->
+  <!--</property>-->
     <property>
     <name>command_line_args</name>
     <value>False</value>

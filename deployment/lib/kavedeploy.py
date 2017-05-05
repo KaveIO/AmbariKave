@@ -679,15 +679,15 @@ def _addeskapadetoremote(remote, github_key_location, git_origin, dest_type="wor
         raise ValueError("dest_type can only be one of: " + known_dest_types.__str__() + " you asked for " + dest_type)
     if eskapade_proj is None:
         if "eskapade" in git_origin.lower() and git_origin.startswith("git@"):
-            toolbox_proj = git_origin.split(':')[-1]
+            eskapade_proj = git_origin.split(':')[-1]
         elif "github" in git_origin:
-            toolbox_proj = "KaveIO/Eskapade.git"
+            eskapade_proj = "KaveIO/Eskapade.git"
         elif "gitlab-nl" in git_origin:
-            toolbox_proj = "decisionengine/eskapade.git"
+            eskapade_proj = "decisionengine/eskapade.git"
         elif "eskapade.git" in git_origin.lower():
-            toolbox_proj = git_origin.split(':')[-1].replace("AmbariKave.git",
-                                                             "eskapade.git"
-                                                             ).replace("ambarikave.git", "eskapade.git")
+            eskapade_proj = git_origin.split(':')[-1].replace("AmbariKave.git",
+                                                              "eskapade.git"
+                                                              ).replace("ambarikave.git", "eskapade.git")
         else:
             raise NameError("Cannot guess the eskapade project name from " + git_origin)
     remote.check()
@@ -743,7 +743,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     version=version to deploy, branch or 'HEAD' for git, 'local' to package locally and copy
     git=False, True imples perform checkout from git, which needs to know an ssh key and an origin
     gitenv: {"KeyFile":"/path/to/private/key","Origin":"git@github.com"}
-    pack: which package to deploy, ambarikave or kavetoolbox?
+    pack: which package to deploy, ambarikave or kavetoolbox or eskapade?
     repo: where to get the package from if downloading it?
     background=True: install in background process?
     options="": what options to pass to the installer?
@@ -754,12 +754,14 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
         version = "master"
     if version == "latest":
         version = "3.1-Beta"
+    if version == "latest" and pack.lower() == "eskapade":
+        version = "0.4-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
         raise ValueError("deploy from local does not make sense when you've specified to also use git!")
-    if pack.lower() not in ["ambarikave", "kavetoolbox"]:
-        raise ValueError("Unknown package " + pack + " I knew " + ["ambarikave", "kavetoolbox"].__str())
+    if pack.lower() not in ["ambarikave", "kavetoolbox", "eskapade"]:
+        raise ValueError("Unknown package " + pack + " I knew " + ["ambarikave", "kavetoolbox", "eskapade"].__str())
     pack = pack.lower()
     remote.check()
     # get directly from repo
@@ -771,6 +773,10 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
         arch = "noarch"
         archtag = ""
         dire = "AmbariKave"
+        if pack == "eskapade":
+            arch = "noarch"
+            dire = "Eskapade"
+            archtag = '-' + arch
         if pack == "kavetoolbox":
             arch = "noarch"
             dire = "KaveToolbox"

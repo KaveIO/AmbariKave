@@ -36,7 +36,7 @@ class Eskapade(Script):
         self.install_packages(env)
         env.set_params(params)
         # no need to install if already installed ... does not work behind firewall after restart
-        if self.kind == "node" and (os.path.exists('/etc/kave/toolbox_ok')
+        if self.kind == "node" and (os.path.exists('/etc/kave/eskapade_ok')
                                     and os.path.exists(params.top_dir + '/Eskapade')):
             return True
         # configure first before installing, create custom install file and mirror file if necessary
@@ -55,7 +55,7 @@ class Eskapade(Script):
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copy_cache_or_repo('eskapade-' + params.releaseversion + '.tar.gz', arch='noarch',
+            kc.copy_cache_or_repo('Eskapade-' + params.releaseversion + '.tar.gz', arch='noarch',
                                   ver=params.releaseversion,
                                   dir="Eskapade")
             Execute('tar -xzf eskapade-' + params.releaseversion + '.tar.gz')
@@ -75,7 +75,7 @@ class Eskapade(Script):
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/kave")
-        Execute('touch /etc/kave/toolbox_ok')
+        Execute('touch /etc/kave/eskapade_ok')
         Execute('chmod -R a+r /etc/kave')
         Execute('yum -y install python-pip')
         Execute('pip install --upgrade pip')

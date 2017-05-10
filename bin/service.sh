@@ -177,6 +177,7 @@ function runList {
   echo "	KAVENAGIOS"
   echo "	FREEIPA"
   echo "	KAVETOOLBOX"
+  echo "	ESKAPADE"
   echo "	KAVELANDING"
   echo "	JBOSS"
   echo "	WILDFLY"
@@ -319,6 +320,11 @@ elif [ $service = "METRICS_MONITOR" ]; then
   component="METRICS_MONITOR"
 elif [ $service = "AIRFLOW" ]; then
   component="AIRFLOW_SERVER"
+elif [ $service = "ESKAPADE" ]; then
+  component="ESKAPADENODE"
+elif [ $service = "ESKAPADEGATE" ]; then
+  service="ESKAPADE"
+  component="ESKAPADEGATE"
 else
   echo "ERROR: unknown service caught: $service"
   runHelp

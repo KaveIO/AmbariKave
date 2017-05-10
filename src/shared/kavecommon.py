@@ -99,8 +99,6 @@ def detect_linux_version():
     try:
         status3, output3, err = mycmd("cat /etc/redhat-release")
         if not status3 and "CentOS" in output3:
-            if "release 6" in output3.lower():
-                return "Centos6"
             if "release 7" in output3.lower():
                 return "Centos7"
     except:
@@ -109,9 +107,7 @@ def detect_linux_version():
     if status:
         raise RuntimeError("Problem detecting linux version: uname -r got:\n\t" + str(
             status) + "\n from: \n" + output + " stderr: \n" + err)
-    if "el6" in output:
-        return "Centos6"
-    elif "el7" in output:
+    if "el7" in output:
         return "Centos7"
     return output
     #

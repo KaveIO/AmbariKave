@@ -15,19 +15,26 @@
 #   limitations under the License.
 #
 ##############################################################################
-import base
-import checkpackage
-import ambarikave
-import kavetoolbox
-import Eskapade
+import sys
+import os
+import shutil
 
-mods = [checkpackage, ambarikave, kavetoolbox]
+from resource_management import *
+# from Eskapade import Eskapade
 
 
-modargs = {checkpackage: [],
-           kavetoolbox: ['Centos6', 'Centos7', 'Redhat7', 'Ubuntu14'],
-           ambarikave: ['Centos7', 'Redhat7']
-           }
+class EskapadeGate():
+    kind = "workstation"
+
+    def start(self, env):
+        return True
+
+    def stop(self, env):
+        return True
+
+    def status(self, env):
+        return True
+
 
 if __name__ == "__main__":
-    base.parallel(mods, modargs)
+    EskapadeGate().execute()

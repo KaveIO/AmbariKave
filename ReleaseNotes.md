@@ -5,7 +5,7 @@ Contains a list of the released versions with a summary of the main changes in e
 MINOR RELEASE
 HDP 2.6
 
- So the stack now looks like 2.6.3.2.KAVE (HDP-version.KAVE-version.KAVE)
+ So the stack now looks like 2.6.3.1.KAVE (HDP-version.KAVE-version.KAVE)
 
 # v3.1-Beta
 MAJOR RELEASE

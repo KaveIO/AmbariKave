@@ -25,11 +25,11 @@ If you are looking for the extensive documentation, including descriptions of di
 
 * Ambari is a cluster installation management system for hadoop-based clusters. It installs separate services on different machines across a cluster. AmbariKave is a small extention fo this. If what you're looking for is a common set of data science tools to install on one single machine (without a database or hdfs) consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
-* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.2-Beta, with username repos and password kaverepos, including downloading and installing ambari:
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.1-Beta, with username repos and password kaverepos, including downloading and installing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.2-Beta/ambarikave-installer-3.2-Beta.sh
-sudo bash ambarikave-installer-3.2-Beta.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.1-Beta/ambarikave-installer-3.1-Beta.sh
+sudo bash ambarikave-installer-3.1-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -59,11 +59,11 @@ Then to provision your cluster go to: http://YOUR_AMBARI_NODE:8080 or deploy usi
 Installation (patch) over existing Ambari
 =========================================
 
-* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.2-Beta, with username repos and password kaverepos, over existing ambari:
+* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.1-Beta, with username repos and password kaverepos, over existing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.2-Beta/ambarikave-package-3.2-Beta.tar.gz
-tar -xzf ambarikave-package-3.2-Beta.tar.gz -C /var/lib/
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.1-Beta/ambarikave-package-3.1-Beta.tar.gz
+tar -xzf ambarikave-package-3.1-Beta.tar.gz -C /var/lib/
 ```
 
 * OR to install the HEAD from git: example given with ssh copying from this github repo.
@@ -94,8 +94,8 @@ pull-update also respects git branches, as a command-line argument and is linked
 To update between released versions, simply install the new version over the old version after stopping the ambari server. Installing a new version of the stack, will not trigger an update of any running service. You would need to do this manually in the current state.
 ```
 sudo ambari-server stop
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.2-Beta/ambarikave-installer-3.2-Beta.sh
-sudo bash ambarikave-installer-3.2-Beta.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.1-Beta/ambarikave-installer-3.1-Beta.sh
+sudo bash ambarikave-installer-3.1-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -149,8 +149,8 @@ Downloading deployment tools
 
 ```
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.2-Beta/ambarikave-deployment-3.2-Beta.tar.gz
-tar -xzf ambarikave-deployment-3.2-Beta.tar.gz
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.1-Beta/ambarikave-deployment-3.1-Beta.tar.gz
+tar -xzf ambarikave-deployment-3.1-Beta.tar.gz
 ```
 
 Or download the head from github. See the github readme on the deployment tools, the help written for each tool, or better yet, contact us if you'd like some advice on how to use anything here. [Deployment readme](https://github.com/KaveIO/AmbariKave/tree/master/deployment)
@@ -198,7 +198,7 @@ The HDP stack number looks like X.Y, with a major and minor version. The KAVE al
 
 A KAVE official version tag appears like:
 
-* **Major.minor-qualifier** i.e. **3.2-Beta**
+* **Major.minor-qualifier** i.e. **3.1-Beta**
 
 The tag is split into four parts:
 
@@ -219,6 +219,6 @@ A new major version is started whenever changes of the following type are made:
 
 We currently name our stack within ambari to reflect both the version of the HDP stack we depend on, and the installed version of the KAVE.
 
-* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.2.KAVE is KAVE release 3.2 running on top of Ambari HDP stack 2.6
+* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.1.KAVE is KAVE release 3.1 running on top of Ambari HDP stack 2.6
 
 This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.

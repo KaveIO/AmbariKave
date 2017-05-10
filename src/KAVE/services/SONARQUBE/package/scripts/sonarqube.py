@@ -49,7 +49,7 @@ class SonarQube(Script):
             os.chdir(tdir)
             # http://downloads.sourceforge.net/project/jpam/jpam/jpam-1.1/JPam-Linux_amd64-1.1.tgz
             # -O JPam-Linux_amd64-1.1.tgz')
-            kc.copy_cache_or_repo("JPam-Linux_amd64-1.1.tgz", arch="noarch")
+            kc.copy_cache_or_repo("JPam-Linux_amd64-1.1.tgz", arch='noarch')
             Execute('tar -xvzf JPam-Linux_amd64-1.1.tgz')
             Execute('cp JPam-1.1/JPam-1.1.jar ' + params.sonarqube_install_directory + '/current/lib/common/')
             for javapath in params.jvmpath.split(':'):
@@ -67,7 +67,7 @@ class SonarQube(Script):
             Execute('cp JPam-1.1/net-sf-jpam /etc/pam.d/')
             # http://downloads.sonarsource.com/plugins/org/codehaus/sonar-plugins/sonar-pam-plugin
             # /0.2/sonar-pam-plugin-0.2.jar
-            kc.copy_cache_or_repo("sonar-pam-plugin-0.2.jar", arch="noarch")
+            kc.copy_cache_or_repo("sonar-pam-plugin-0.2.jar", arch='noarch')
             Execute('cp sonar-pam-plugin-0.2.jar ' + params.sonarqube_install_directory
                     + '/current/extensions/plugins/')
             os.chdir(topd)

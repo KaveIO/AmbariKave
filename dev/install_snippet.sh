@@ -41,8 +41,7 @@ else
 fi
 
 yum install -y wget curl
-wget -nv http://public-repo-1.hortonworks.com/HDP/${os}/2.x/updates/2.6.0.3/hdp.repo -O hdp.repo
-#wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.6.0.3/ambari.repo -O ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.5.0.3/ambari.repo -O ambari.repo
 cp ambari.repo /etc/yum.repos.d/
 # conflicts with HDP utils and pre-installed pdsh version on centos6, need HDP repo file
 
@@ -83,7 +82,7 @@ elif [[ "$version" == "1.7."* ]]; then
 	encrypt_number="4"
 elif [[ "$version" == "2.4."* ]]; then
 	encrypt_number="2"
-elif [[ "$version" == "2.6."* ]]; then
+elif [[ "$version" == "2.5."* ]]; then
 	encrypt_number="2"
 
 else

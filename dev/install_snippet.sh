@@ -41,7 +41,7 @@ else
 fi
 
 yum install -y wget curl
-wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.4.0.1/ambari.repo -O ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.6.0.3/ambari.repo -O ambari.repo
 cp ambari.repo /etc/yum.repos.d/
 # conflicts with HDP utils and pre-installed pdsh version on centos6, need HDP repo file
 

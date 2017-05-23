@@ -43,7 +43,12 @@ fi
 yum install -y wget curl
 wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.5.0.3/ambari.repo -O ambari.repo
 cp ambari.repo /etc/yum.repos.d/
-# conflicts with HDP utils and pre-installed pdsh version on centos6, need HDP repo file
+#wget -nv http://public-repo-1.hortonworks.com/HDP/${os}/2.x/updates/2.6.0.3/hdp.repo
+# conflicts with HDP utils and pre-installed pdsh version on ubuntu16, need HDP repo file
+if [ "$os" == "ubuntu16" ]; then
+    apt-get update
+    wget http://public-repo-1.hortonworks.com/HDP/${os}/2.x/updates/2.6.0.3/hdp.list -O /etc/apt/sources.list.d/hdp.list
+fi
 
 
 yum install ambari-server -y

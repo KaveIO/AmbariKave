@@ -25,7 +25,6 @@
                      {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
                      {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
-    				 {"Mount": "/usr",   "Size" : 10,   "Attach" : "/dev/sdf" },
     				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sdg" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdi" } ]
   },

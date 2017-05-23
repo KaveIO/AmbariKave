@@ -24,7 +24,8 @@
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" } ]
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr", "Size" : 10,   "Attach" : "/dev/sde" }]
   },
   { "Name" : "ci",
     "Count" : -1,

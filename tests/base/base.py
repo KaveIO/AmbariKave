@@ -513,8 +513,8 @@ class LDTest(unittest.TestCase):
                   + "/../remotescripts/default.netrc",
                   "~/.netrc")
         time.sleep(10)
-        if clustername in ('exampledev' , 'examplehadoop' , 'examplelambda' ):
-             max_rounds = 130
+        if clustername in ('exampledev', 'examplehadoop', 'examplelambda'):
+            max_rounds = 130
         while rounds <= max_rounds:
             # if curl --retry 5  fails, the ambari server may have dies for some reason
             # the standard restart_all_services script will then work to recover this failure

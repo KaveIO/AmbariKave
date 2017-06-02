@@ -118,8 +118,7 @@
         { "name" : "TEZ_CLIENT"             },
         { "name" : "YARN_CLIENT"            },
 	    { "name" : "MAPREDUCE2_CLIENT"      },
-        { "name" : "KAVETOOLBOXNODE"        },
-		{ "name" : "METRICS_MONITOR"        },
+ 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"         },
@@ -133,7 +132,6 @@
       "name":"namenode-2",
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
-        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },

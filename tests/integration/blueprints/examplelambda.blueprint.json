@@ -133,7 +133,6 @@
         { "name" : "YARN_CLIENT"            },
 	    { "name" : "MAPREDUCE2_CLIENT"      },
         { "name" : "OOZIE_CLIENT"           },
-        { "name" : "KAVETOOLBOXNODE"        },
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"    },
@@ -150,7 +149,6 @@
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "ZOOKEEPER_SERVER"     },
-        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },

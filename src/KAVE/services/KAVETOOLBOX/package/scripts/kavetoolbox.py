@@ -66,6 +66,12 @@ class KaveToolbox(Script):
                 if os.path.isdir(gits) and not gits.endswith("/.git"):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
             instscript = './KaveToolbox/scripts/KaveInstall'
+        Execute("mkdir -p /etc/kave")
+        Execute('chmod -R a+r /etc/kave')
+        File("/etc/kave/CustomInstall.py",
+             content=InlineTemplate(params.custom_install_template),
+             mode=0644
+             )    
 
         commandlineargs = ""
         if params.command_line_args:
@@ -74,9 +80,7 @@ class KaveToolbox(Script):
                 logoutput=True)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
-        Execute("mkdir -p /etc/kave")
         Execute('touch /etc/kave/toolbox_ok')
-        Execute('chmod -R a+r /etc/kave')
         Execute('yum -y install python-pip')
         Execute('pip install --upgrade pip')
         Execute('pip install lightning-python')

@@ -43,7 +43,9 @@ custom_install_template_default = """
 import kavedefaults as cnf
 
 cnf.li.InstallTopDir="{{top_dir}}"
-
+cnf.spark.doInstall=False
+cnf.spark.node=False
+cnf.spark.workstation=False
 # -------------------------------
 """
 custom_install_template = default('configurations/kavetoolbox/custom_install_template', custom_install_template_default)

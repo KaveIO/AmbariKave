@@ -25,7 +25,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 top_dir = kc.default("configurations/kavetoolbox/top_dir", "/opt/", kc.is_valid_directory)
-releaseversion = default('configurations/kavetoolbox/releaseversion', "3.2-Beta")
+releaseversion = default('configurations/kavetoolbox/releaseversion', "3.3-Beta")
 alternative_download = default('configurations/kavetoolbox/alternative_download', "none")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)

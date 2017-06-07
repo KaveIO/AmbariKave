@@ -154,9 +154,10 @@ def chooseinstancetype(instancetype):
         return instancetype
 
 
-def upamiid(amiid, type, security_group, keys, count=1, subnet=None):
+def upamiid(amiid, type, security_group, keys, count=1, subnet=None, rootSize=15):
     cmd = " ec2 run-instances --image-id " + amiid + " --count " + str(
-        count) + " --instance-type " + type + " --key-name " + keys
+        count) + " --instance-type " + type + " --block-device-mapping /dev/sda1=:" + str(
+        rootSize) + ":false" + " --key-name " + keys
     if subnet is not None:
         cmd = cmd + " --subnet " + subnet + " --security-group-ids " + security_group
     else:

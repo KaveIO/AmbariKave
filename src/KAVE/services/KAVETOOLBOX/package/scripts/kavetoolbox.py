@@ -71,7 +71,7 @@ class KaveToolbox(Script):
         File("/etc/kave/CustomInstall.py",
              content=InlineTemplate(params.custom_install_template),
              mode=0644
-             )    
+             )
 
         commandlineargs = ""
         if params.command_line_args:

@@ -31,14 +31,14 @@ class Airflow(kc.ApacheScript):
     systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
     # This is a hack to overcome a certain restriction in airflow which requires
     # the argument to be quoted
-    #quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
+    # quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
     #             '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
     #             ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
     #             )
     quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
                  '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
                  ' `find /usr/lib/python?.? -name requirements.py`'
-                 )             
+                 )
 
     def install(self, env):
         print "Installing Airflow"

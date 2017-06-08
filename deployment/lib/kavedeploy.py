@@ -151,14 +151,15 @@ def proxopts(portop='-p'):
         return []
     prnam = os.environ['http_proxy'].split('//')[-1].split(':')[0]
     prhs = os.environ['http_proxy'].split('//')[-1].split(':')[-1].split('/')[0]
-    return [portop, str(proxy_port), '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-o',
+    return [portop, str(proxy_port), '-o', 'UserKnownHostsFile=/dev/null',
+            '-o', 'ConnectTimeout=10', '-o', 'StrictHostKeyChecking=no', '-o',
             "ProxyCommand=corkscrew " + prnam + ' ' + prhs + ' %h %p']
 
 
 def strictopts():
     if strict_host_key_checking:
         return []
-    return ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no']
+    return ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-o', 'ConnectTimeout=10']
 
 
 def mysleep(x):
@@ -322,7 +323,7 @@ class remoteHost(object):
         extrasshopts = []
         if firsttime:
             extrasshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
-                            "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
+                            "PasswordAuthentication=no", "-o", "ConnectTimeout=10"]
         out = self.run("echo Hello World from $HOSTNAME", extrasshopts=extrasshopts)
         print out
         if "Hello World" not in out or "HOSTNAME" in out:
@@ -512,7 +513,7 @@ class multiremotes(object):
         extrasshopts = []
         if firsttime:
             extrasshopts = ["-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no", "-o",
-                            "PasswordAuthentication=no", "-o", "ConnectTimeout=1"]
+                            "PasswordAuthentication=no", "-o", "ConnectTimeout=10"]
         for host in self.host_names():
             out = self.jump.run(
                 "ssh " + ' '.join(extrasshopts) + " root@" + host + " echo Hello World from \\$HOSTNAME",

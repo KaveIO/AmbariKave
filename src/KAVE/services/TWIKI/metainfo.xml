@@ -18,6 +18,13 @@
                         <timeout>6000</timeout>
                     </commandScript>
                 </component>
+                <configFiles>
+                    <configFile>
+                        <type>env</type>
+                        <fileName>twiki_httpd.conf</fileName>
+                        <dictionaryName>twiki-httpd</dictionaryName>
+                    </configFile>
+                </configFiles>
             </components>
            <osSpecifics>
                	<osSpecific>
@@ -68,6 +75,10 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <configuration-dependencies>
+                <config-type>zookeeper-env</config-type>
+                <config-type>httpd-conf</config-type>
+            </configuration-dependencies>
             <restartRequiredAfterChange>true</restartRequiredAfterChange>
         </service>
     </services>

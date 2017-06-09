@@ -71,7 +71,6 @@
             <configuration-dependencies>
                 <config-type>twiki</config-type>
             </configuration-dependencies>
-            <restartRequiredAfterChange>true</restartRequiredAfterChange>
         </service>
     </services>
 </metainfo>

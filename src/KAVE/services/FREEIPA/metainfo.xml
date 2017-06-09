@@ -57,6 +57,9 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <configuration-dependencies>
+                <config-type>freeipa</config-type>
+            </configuration-dependencies>
         </service>
     </services>
 </metainfo>

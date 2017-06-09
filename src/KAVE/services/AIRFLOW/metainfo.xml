@@ -29,6 +29,9 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <configuration-dependencies>
+                <config-type>airflow</config-type>
+            </configuration-dependencies>
         </service>
     </services>
 </metainfo>

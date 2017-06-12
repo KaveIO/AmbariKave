@@ -40,7 +40,6 @@ class Airflow(kc.ApacheScript):
                  ' `find /usr/lib/python* -name requirements.py`'
                  )
 
-    def install(self, env):
         print "Installing Airflow"
         import params
         import os
@@ -92,7 +91,7 @@ class Airflow(kc.ApacheScript):
         super(Airflow, self).configure(env)
 
         Execute(self.quote_fix)
-        Execute('sudo -u airflow airflow initdb')
+        Execute('bash -c "sudo -u airflow airflow initdb"')
 
     def start(self, env):
         import params

@@ -91,7 +91,7 @@ class Airflow(kc.ApacheScript):
         super(Airflow, self).configure(env)
 
         Execute(self.quote_fix)
-        Execute('bash -c "sudo -u airflow airflow initdb"')
+        Execute("sed -i -e '/Defaults    requiretty/{ s/.*/# Defaults    requiretty/ }' /etc/sudoers sudo -u airflow airflow initdb")
 
     def start(self, env):
         import params

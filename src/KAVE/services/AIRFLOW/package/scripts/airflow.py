@@ -39,7 +39,7 @@ class Airflow(kc.ApacheScript):
                  '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
                  ' `find /usr/lib/python* -name requirements.py`'
                  )
-
+    def install(self, env):
         print "Installing Airflow"
         import params
         import os

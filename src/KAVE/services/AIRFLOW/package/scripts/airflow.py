@@ -49,9 +49,6 @@ class Airflow(kc.ApacheScript):
 
         Execute('curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
         Execute('python get-pip.py')
-        Execute('yum clean all')
-        Execute('sudo yum install -y postgresql-devel python-devel mysql-devel')
-        Execute('sudo yum -y install gcc gcc-c++ libffi-devel mariadb-devel cyrus-sasl-devel')
         Execute('pip install -U pip setuptools')
         # Create airflow config/home dir and set permissions
         Execute('id -u airflow &>/dev/null || useradd -r -s /sbin/nologin airflow')

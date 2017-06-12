@@ -30,6 +30,9 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <configuration-dependencies>
+                <config-type>kavelanding</config-type>
+            </configuration-dependencies>
         </service>
     </services>
 </metainfo>

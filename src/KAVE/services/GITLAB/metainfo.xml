@@ -27,6 +27,9 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <configuration-dependencies>
+                <config-type>gitlab</config-type>
+            </configuration-dependencies>
         </service>
     </services>
 </metainfo>

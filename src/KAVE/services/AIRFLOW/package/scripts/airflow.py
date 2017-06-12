@@ -35,7 +35,7 @@ class Airflow(kc.ApacheScript):
     #             '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
     #             ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
     #             )
-    quote_fix = ('sudo sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
+    quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
                  '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
                  ' `find /usr/lib/python* -name requirements.py`'
                  )

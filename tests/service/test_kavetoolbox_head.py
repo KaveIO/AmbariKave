@@ -69,7 +69,7 @@ class TestKaveToolbox(base.LDTest):
         import kavedeploy as lD
         # check the installed directories
         stdout = ambari.run("bash -c \"source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; which python; which root;\"")
-        self.assertTrue("/opt/anaconda/pro/bin/root" in stdout and "/opt/anaconda/pro/bin/python" in stdout,
+        self.assertTrue("/opt/root/pro/bin/root" in stdout and "/opt/anaconda/pro/bin/python" in stdout,
                         "Environment sourcing fails to find installed packages")
         # check other features
         if self.workstation:

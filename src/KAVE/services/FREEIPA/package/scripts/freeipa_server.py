@@ -18,6 +18,7 @@
 import freeipa
 import os
 import datetime
+import subprocess
 
 from resource_management import *
 
@@ -75,7 +76,6 @@ class FreeipaServer(Script):
         # Execute('/etc/init.d/ambari-server stop')
         # Execute('yum -y remove ambari-server')
 
-        import subprocess
         p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
         _hostname = p0.communicate()[0].strip()
         if p0.returncode:
@@ -118,12 +118,10 @@ class FreeipaServer(Script):
             else:
                 install_command += ' --no-forwarders'
 
-        # Crude check to avoid reinstalling during debugging
-        if not os.path.exists(self.admin_password_file):
-
-            # patch for long domain names!
-            if params.long_domain_patch:
-                freeipa.sed_ca_longdomain_patch()
+        p0 = subprocess.Popen(["ipactl", "status"], stdout=subprocess.PIPE)
+        p0.communicate()
+        ipacheck = p0.returncode
+        if ipacheck == 4 or ipacheck == 127:
 
             # This is a time-consuming command, better to log the output
             Execute(install_command, logoutput=True)
@@ -274,13 +272,14 @@ class FreeipaServer(Script):
             import params
             env.set_params(params)
             all_hosts = params.all_hosts
+            user = params.install_distribution_user
             print "using params for all_hosts"
         except (TypeError, ImportError, ValueError, KeyError):
             all_hosts = None
 
         rm = freeipa.RobotAdmin()
         print "distribution to all hosts with host being", all_hosts
-        rm.distribute_password(all_hosts=all_hosts)
+        rm.distribute_password(all_hosts=all_hosts, user=user)
 
 if __name__ == "__main__":
     FreeipaServer().execute()

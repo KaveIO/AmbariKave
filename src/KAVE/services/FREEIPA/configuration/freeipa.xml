@@ -4,9 +4,9 @@
 <configuration>
     <property>
         <name>ipa_domain</name>
-        <value>kavelocal.io</value>
+        <value>cloud.kave.io</value>
         <description>
-            Domain name to be used by FreeIPA. Kerberos realm and ldap realm are derived from this value.
+            Domain name to be used by FreeIPA. Kerberos realm and ldap realm are derived from this value. Please choose a domain wisely, see https://www.freeipa.org/page/DNS#Caveats.
         </description>
     </property>
     <property>
@@ -15,17 +15,6 @@
         <description>
             The time in seconds the client installation process will wait for a
             admin password file.
-        </description>
-    </property>
-    <property>
-        <name>long_domain_patch</name>
-        <value>False</value>
-        <description>
-            When the length of the Domain is longer than 42 characters, FreeIPA fails to handle this
-            correctly in current versions, due to additional " Certificate Authority" added to the domain.
-            Certification standards permit CA up to 64 characters, and so this additional naming increases
-            the length beyond the standard. We have a small patch which is activated by this flag.
-            With this patch we can handle domains up to 61 characters. This patch is experimental.
         </description>
     </property>
     <property>
@@ -160,6 +149,7 @@ admin@{{realm}} m *
         <name>resolvconf_template</name>
         <value>search {{domain}}
 nameserver {{ipa_server_ip_address}}
+nameserver 127.0.0.1
 </value>
         <description>
             Rasolve.conf is needed within the cluster to locate machines.
@@ -189,5 +179,12 @@ nameserver {{ipa_server_ip_address}}
 			users, and so we set their shells to /sbin/nologin by default. To restore old behaviour modify this, or
 			kinit as an admin user and call ipa user-mod --shell on the command line.
         </description>
+    </property>
+    <property>
+      <name>install_distribution_user</name>
+      <value>root</value>
+      <description>
+            User to distribute the robot-admin password file to the client; this is required to be 'cloudbreak' on Cloudbreak, otherwise it may be safely left to 'root'. In any case, an identity private key with the standard name 'id_rsa' and the right permission and ownership is expected in the .ssh directory of this user - on Cloudbreak you would accomplish this with a pre-recipe.
+      </description>
     </property>
 </configuration>

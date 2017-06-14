@@ -7,7 +7,7 @@ Upgraded HDP from 2.5 to 2.6 (So the stack now looks like 2.6.3.1.KAVE (HDP-vers
     Space added/ increased at various locations (/usr/hdp. /tmp, ...)
     repos (ambari, HDP) added in install_snippet
     common services removed form package builder
-    HDP and ambari version upgraded
+    HDP and ambari version upgraded (HDP: 2.6.0.3-8, Ambari: 2.5.0.3)
 
 FreeIPA : a number of fixes for the FreeIPA installation, result of the automation attempts in Cloudbreak. Not only bugs, sometimes just improvements or corrections.
 ROOT, SPARK build

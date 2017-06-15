@@ -29,17 +29,17 @@ class TestRepoImports(unittest.TestCase):
     Checks for lines where we try and get a file from the repository,
     and checks that those files exist, then
     """
-    ignorefiles = ['repoimports.py']
+    ignorefiles = ['repoimports.py', 'eskapade.py']
     ignorepackages = []
     replaces = {"+params.releaseversion+": kc.__version__,
-                "%s": "el6"}
+                "%s": "el7"}
 
     def find_repolocations(self, fullpath):
         found = []
         if os.path.isfile(fullpath):
             with open(fullpath) as fp:
                 package = ''
-                arch = 'centos6'
+                arch = 'centos7'
                 for i, line in enumerate(fp):
                     line = line.split("#")[0]
                     line = ''.join(line.split())
@@ -57,7 +57,7 @@ class TestRepoImports(unittest.TestCase):
                             package = package.replace(r, p)
                         found.append((fullpath, i + 1, arch, package))
                         package = ''
-                        arch = 'centos6'
+                        arch = 'centos7'
                         # break
 
         return found
@@ -90,14 +90,24 @@ class TestRepoImports(unittest.TestCase):
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
+                if 'eskapade' in package:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade'))
+                else:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror))
             if not len(urls):
                 if 'kavetoolbox' in package:
                     urls.append(kc.repo_url(package, arch=arch, dir='KaveToolbox'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch))
+            if 'eskapade' in package:
+                urls.append(kc.repo_url(package, arch=arch, dir='Eskapade'))
+            else:
+                urls.append(kc.repo_url(package, arch=arch))
             try:
                 sys.stdout.flush()
                 kc.failover_source(urls)
+            except IOError:
+                failed.append(details)
             except IOError:
                 failed.append(details)
         self.assertFalse(len(failed), "Some requested downloads do not exist!\n\t" +

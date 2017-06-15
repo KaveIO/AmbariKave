@@ -31,9 +31,10 @@ class Airflow(kc.ApacheScript):
     systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
     # This is a hack to overcome a certain restriction in airflow which requires
     # the argument to be quoted
+
     quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
                  '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
-                 ' /usr/lib/python2.7/site-packages/packaging/requirements.py'
+                 ' `find /usr/lib/python* -name requirements.py`'
                  )
 
     def install(self, env):
@@ -45,16 +46,13 @@ class Airflow(kc.ApacheScript):
 
         Execute('curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
         Execute('python get-pip.py')
-        Execute('yum -y update')
-        Execute('sudo yum install -y postgresql-devel python-devel mysql-devel')
-        Execute('sudo yum -y install gcc gcc-c++ libffi-devel mariadb-devel cyrus-sasl-devel')
         Execute('pip install -U pip setuptools')
         # Create airflow config/home dir and set permissions
         Execute('id -u airflow &>/dev/null || useradd -r -s /sbin/nologin airflow')
         Execute('mkdir -p /usr/opt/local/airflow')
         Execute('chown airflow:root /usr/opt/local/airflow')
         # Create directory to store the pid file and set permissions:
-        Execute('mkdir /run/airflow')
+        Execute('mkdir -p /run/airflow')
         Execute('chown airflow:root /run/airflow')
         # Set the AIRFLOW_HOME environment variable. Echoing it at the end of /etc/environment
         # is just one of the possible approaches.
@@ -89,9 +87,9 @@ class Airflow(kc.ApacheScript):
              )
 
         super(Airflow, self).configure(env)
-
+        Execute("sed -i -e '/Defaults    requiretty/{ s/.*/# Defaults    requiretty/ }' /etc/sudoers")
         Execute(self.quote_fix)
-        Execute('sudo -u airflow airflow initdb')
+        Execute("sudo -u airflow airflow initdb")
 
     def start(self, env):
         import params

@@ -22,10 +22,13 @@
     "Count" : 1,
     "InstanceType" : "m4.large",
     "AccessType" : "gateway",
-    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
+  "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
+                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp",   "Size" : 5,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sdg" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdi" } ]
   },
   { "Name" : "kafka",
     "Count" : 1,
@@ -34,7 +37,8 @@
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "edge",
     "Count" : -1,
@@ -52,7 +56,8 @@
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "mongo",
     "Count" : -1,
@@ -71,7 +76,8 @@
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sde" } ]
+    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "data",
     "Count" : 3,
@@ -81,7 +87,8 @@
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
-    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdf" }  ]
+    				 {"Mount": "/hadoop",   "Size" : 30, "Attach" : "/dev/sdf" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdg" }  ]
   },
   { "Name" : "nimbus",
     "Count" : -1,
@@ -99,7 +106,8 @@
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" } ]
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
   }
   ]
 }

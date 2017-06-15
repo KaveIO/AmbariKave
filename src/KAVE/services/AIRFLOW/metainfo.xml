@@ -26,6 +26,14 @@
                     <packages>
                         <package><name>wget</name></package>
                         <package><name>httpd</name></package>
+                        <package><name>postgresql-devel</name></package>
+                        <package><name>python-devel</name></package>
+                        <package><name>mysql-devel</name></package>
+                        <package><name>gcc</name></package>
+                        <package><name>gcc-c++</name></package>
+                        <package><name>libffi-devel</name></package>
+                        <package><name>mariadb-devel</name></package>
+                        <package><name>cyrus-sasl-devel</name></package>
                     </packages>
                 </osSpecific>
             </osSpecifics>

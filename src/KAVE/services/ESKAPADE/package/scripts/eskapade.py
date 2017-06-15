@@ -1,4 +1,4 @@
-##############################################################################
+#############################################################################
 #
 # Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
 #
@@ -14,7 +14,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-##############################################################################
+#############################################################################
 import sys
 import os
 import shutil
@@ -22,8 +22,8 @@ import shutil
 from resource_management import *
 
 
-class KaveToolbox(Script):
-    sttmpdir = "/tmp/kavetoolbox_install/dump"
+class Eskapade(Script):
+    sttmpdir = "/tmp/eskapade_install/dump"
     kind = "node"
 
     def status(self, env):
@@ -36,8 +36,8 @@ class KaveToolbox(Script):
         self.install_packages(env)
         env.set_params(params)
         # no need to install if already installed ... does not work behind firewall after restart
-        if self.kind == "node" and (os.path.exists('/etc/kave/toolbox_ok')
-                                    and os.path.exists(params.top_dir + '/KaveToolbox')):
+        if self.kind == "node" and (os.path.exists('/etc/kave/eskapade_ok')
+                                    and os.path.exists(params.top_dir + '/Eskapade')):
             return True
         # configure first before installing, create custom install file and mirror file if necessary
         self.configure(env)
@@ -50,28 +50,22 @@ class KaveToolbox(Script):
         extraopts = ""
         if params.ignore_missing_groups:
             extraopts = " --ignore-missing-groups"
-        kavetoolbox_path = '/KaveToolbox/' + params.releaseversion + 'scripts/KaveInstall'
-        instscript = params.top_dir + kavetoolbox_path
+        eskapade_path = '/Eskapade/' + params.releaseversion + 'scripts/KaveInstall'
+        instscript = params.top_dir + eskapade_path
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copy_cache_or_repo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch='noarch',
+            kc.copy_cache_or_repo('Eskapade-' + params.releaseversion + '.tar.gz', arch='noarch',
                                   ver=params.releaseversion,
-                                  dir="KaveToolbox")
-            Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
+                                  dir="Eskapade")
+            Execute('tar -xzf eskapade-' + params.releaseversion + '.tar.gz')
             # try to cope with the annoying way the tarball contains something with .git at the end!
             import glob
 
             for gits in glob.glob(self.sttmpdir + "/*.git"):
                 if os.path.isdir(gits) and not gits.endswith("/.git"):
                     Execute('mv ' + gits + ' ' + gits[:-len(".git")])
-            instscript = './KaveToolbox/scripts/KaveInstall'
-        Execute("mkdir -p /etc/kave")
-        Execute('chmod -R a+r /etc/kave')
-        File("/etc/kave/CustomInstall.py",
-             content=InlineTemplate(params.custom_install_template),
-             mode=0644
-             )
+            instscript = './Eskapade/scripts/KaveInstall'
 
         commandlineargs = ""
         if params.command_line_args:
@@ -80,7 +74,9 @@ class KaveToolbox(Script):
                 logoutput=True)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
-        Execute('touch /etc/kave/toolbox_ok')
+        Execute("mkdir -p /etc/kave")
+        Execute('touch /etc/kave/eskapade_ok')
+        Execute('chmod -R a+r /etc/kave')
         Execute('yum -y install python-pip')
         Execute('pip install --upgrade pip')
         Execute('pip install lightning-python')
@@ -114,4 +110,4 @@ class KaveToolbox(Script):
 
 
 if __name__ == "__main__":
-    KaveToolbox().execute()
+    Eskapade().execute()

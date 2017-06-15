@@ -35,7 +35,7 @@ class SonarQubeRunner(Script):
 
         # protect against client downloading behind firewall
         if not os.path.exists(params.sonarqube_runner_install_directory + '/current'):
-            kc.copy_cache_or_repo(self.package, arch="noarch")
+            kc.copy_cache_or_repo(self.package, arch='noarch')
             Execute('mkdir -p %s ' % params.sonarqube_runner_install_directory)
             Execute('unzip -o -q %s -d %s' % (self.package, params.sonarqube_runner_install_directory))
             Execute('ln -sfn %s/sonar-runner-2.4 %s/current' % (

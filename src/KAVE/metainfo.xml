@@ -3,6 +3,6 @@
     <versions>
           <active>true</active>
     </versions>
-    <extends>2.5</extends>
+    <extends>2.6</extends>
 </metainfo>
 

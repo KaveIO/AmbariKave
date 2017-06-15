@@ -34,7 +34,7 @@ class Archiva(Script):
         self.install_packages(env)
 
         Execute('mkdir -p %s ' % params.install_topdir)
-        kc.copy_cache_or_repo(self.package, arch="noarch")
+        kc.copy_cache_or_repo(self.package, arch='noarch')
         Execute('unzip -q %s' % (self.package))
         if os.path.exists(params.install_topdir + params.install_subdir):
             Execute('rm -rf %s' % (params.install_topdir + params.install_subdir))

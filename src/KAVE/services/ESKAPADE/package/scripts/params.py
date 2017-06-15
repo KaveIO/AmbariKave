@@ -24,12 +24,12 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
-top_dir = kc.default("configurations/kavetoolbox/top_dir", "/opt/", kc.is_valid_directory)
-releaseversion = default('configurations/kavetoolbox/releaseversion', "3.3-Beta")
-alternative_download = default('configurations/kavetoolbox/alternative_download', "none")
-ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
+top_dir = kc.default("configurations/eskapade/top_dir", "/opt/", kc.is_valid_directory)
+releaseversion = default('configurations/eskapade/releaseversion', "0.4-Beta")
+alternative_download = default('configurations/eskapade/alternative_download', "none")
+ignore_missing_groups = default('configurations/eskapade/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)
-command_line_args = default('configurations/kavetoolbox/command_line_args', "False")
+command_line_args = default('configurations/eskapade/command_line_args', "False")
 try:
     command_line_args = kc.trueorfalse(command_line_args)
 except TypeError, ValueError:
@@ -43,11 +43,9 @@ custom_install_template_default = """
 import kavedefaults as cnf
 
 cnf.li.InstallTopDir="{{top_dir}}"
-cnf.spark.doInstall=False
-cnf.spark.node=False
-cnf.spark.workstation=False
+
 # -------------------------------
 """
-custom_install_template = default('configurations/kavetoolbox/custom_install_template', custom_install_template_default)
+custom_install_template = default('configurations/eskapade/custom_install_template', custom_install_template_default)
 if alternative_download == "none":
     alternative_download = ""

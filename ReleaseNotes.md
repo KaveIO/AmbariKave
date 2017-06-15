@@ -1,6 +1,32 @@
 # The ReleaseNotes file
 
 Contains a list of the released versions with a summary of the main changes in each version.
+# v3.2-Beta
+MAJOR RELEASE
+The major changes were:
+    1. Upgraded HDP from 2.5 to 2.6 (So the stack now looks like 2.6.3.1.KAVE (HDP-version.KAVE-version.KAVE))
+        HDP and ambari version upgraded (HDP: 2.6.0.3-8, Ambari: 2.5.0.3)
+    2. Space added/ increased at various locations (/usr/hdp. /tmp, ...)
+    3. repos (ambari, HDP) added in install_snippet
+    4. FreeIPA : a number of fixes for the FreeIPA installation, result of the automation attempts in Cloudbreak. Not only bugs, sometimes just improvements or corrections.
+    5. ROOT, SPARK build (part of KaveToolBox release but mentioning them here since they are referred by AmbariKave ). A few releases of KaveToolBox were done meanwhile (3.2, 3.3 and a few hotfixes)
+    6. Eskapade added as a service (Not fully functional, that would be part of the next release)
+    7. Default aws ami size increased to 15 GB
+Minor changes: 
+The minor changes were
+    1. Some small fixes, enhancements in different services (Airflow, package dependencies, KTBox head test, Increased ssh client timeout to 60s in kavedeploy)
+        a. kaveToolBox node removed from nameNodes
+        b. Fixed CustomInstallscript.py to be created before install
+        c. Disabled KTB version of spark
+        d. common services removed form package builder
+        e. Add .gitlab-ci.yml for gitlab-ci, put on hold for now. Will be part of one of the upcoming releases. 
+        f. Fixed Issues: ABK-508,
+        g. Password protected notebooks
+        h. Show restart warnings for services
+        i. KTB on Python 3 breaks video /unity desktop
+        j. Path odities for system users
+        k. VNC
+        l. Working Kave, KaveToolbox
 
 
 # v3.1-Beta
@@ -9,8 +35,8 @@ MAJOR RELEASE
 MAJOR CHANGES:
 	The major changes were:
 
-		1.	Removal of Centos6 support.
-		2.	Addition of Dev Cot
+		1.	Removal of CentOS6 and Ubuntu support. However we do support certain versions of Ubuntu for KaveToolBox.
+		2.	Addition of Dovecot
 		3.	Gitlab tunneling from the gateway node
 		4.	PDSH issue resolution in integration test
 		5.	Addition of Fish shell
@@ -20,18 +46,24 @@ MAJOR CHANGES:
 		9.	Port configuration for MongoDB
 		10.	KaveLanding:
 				a. Drop down menu fix.
-				b. User-specific notebooks
 		11.	Port Configuration for Nagios
-		12. Lightning-Viz to KaveToolBox
-		13. KaveToolBox:
-		14. FreeIPA
-		15. Airflow; Addition of new service for visualization
+		12. Lightning-Viz to KaveToolBox: Addition of new tool for visualization
+		    a framework for interactive data visualization, including a server, visualizations, and client libraries
+		13. KaveToolBox: small fixtures
+		        a. CairoSVG version
+		        b. Avoid loading default kaveenv for few users
+		        c. Improved linux version detection code
+		        d. Addition of remote desktop (via xrdp) support for the gateway node
+		14. FreeIPA: Custom port configuration no longer supported. FREEIPA needs to be installed on a separate node as per the official documentation.
+		15. Airflow: platform to programmatically author, schedule and monitor workflows
 		16. Continuous Integration:
 				a. Jenkins is running now nightly builds for KaveToolBox
-				b. Jenkins to run for AmbariKave as well
-		18. KaveGanglia
-		19. AWS cleanup
-		20. Cloudbreak for Kave on Azure
+				b. For Ambari Kave: The following tests are running with success
+				    i. Unit Tests
+				    ii. Service Tests
+				    iii. Integration Tests
+		This was a long overdue, that we have managed in this release.
+		18. KaveGanglia integration with kave: tasks finalized.
 
 
 Important information:

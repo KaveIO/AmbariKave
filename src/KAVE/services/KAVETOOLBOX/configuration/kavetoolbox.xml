@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>releaseversion</name>
-    <value>3.2-Beta</value>
+    <value>3.3-Beta</value>
     <description>Which version to use.</description>
   </property>
   <property>
@@ -31,6 +31,9 @@
 import kavedefaults as cnf
 
 cnf.li.InstallTopDir="{{top_dir}}"
+cnf.spark.doInstall=False
+cnf.spark.node=False
+cnf.spark.workstation=False
 
 # -------------------------------
 </value>

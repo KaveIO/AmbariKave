@@ -3,17 +3,17 @@
     <schemaVersion>2.0</schemaVersion>
     <services>
         <service>
-            <name>KAVETOOLBOX</name>
-            <displayName>KaveToolbox</displayName>
+            <name>ESKAPADE</name>
+            <displayName>Eskapade</displayName>
             <comment>The KPMG standard analytics tools. Install as master on all gateway machines, install client on all worker nodes.
             A suite of analysis tools, and user experience features, including python R and ROOT.
             Needs at least 4GB of free space in /opt, with an additional 3GB in /tmp for unpacking during the install</comment>
-            <version>3.3-Beta</version>
+            <version>0.4</version>
             <components>
                 <component>
-                    <name>KAVETOOLBOXGATE</name>
-                    <displayName>KaveToolbox (Gate)</displayName>
-                    <comment>X and IDEs on top of KaveToolbox, to be installed on your gateway machines</comment>
+                    <name>ESKAPADEGATE</name>
+                    <displayName>ESKAPADE (Gate)</displayName>
+                    <comment>X and IDEs on top of ESKAPADE, to be installed on your gateway machines</comment>
                     <category>MASTER</category>
                     <cardinality>0+</cardinality>
                     <commandScript>
@@ -23,12 +23,12 @@
                     </commandScript>
                 </component>
                 <component>
-                    <name>KAVETOOLBOXNODE</name>
-                    <displayName>KaveToolbox (Node)</displayName>
+                    <name>ESKAPADENODE</name>
+                    <displayName>ESKAPADE (Node)</displayName>
                     <comment>Install this on all your worker nodes, storm/namenode/nimbus etc.</comment>
                     <category>CLIENT</category>
                     <commandScript>
-                        <script>scripts/kavetoolbox.py</script>
+                        <script>scripts/eskapade.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>
@@ -47,10 +47,6 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
-            <configuration-dependencies>
-                <config-type>kavetoolbox</config-type>
-            </configuration-dependencies>
         </service>
     </services>
 </metainfo>
-

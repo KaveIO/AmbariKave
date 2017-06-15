@@ -28,6 +28,9 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <configuration-dependencies>
+                <config-type>jboss</config-type>
+            </configuration-dependencies>
         </service>
     </services>
 </metainfo>

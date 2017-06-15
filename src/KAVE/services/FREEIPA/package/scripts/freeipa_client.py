@@ -78,12 +78,8 @@ class FreeipaClient(Script):
 
             Execute('chkconfig ntpd on')
 
-            # patch for long domain names!
-            if params.long_domain_patch:
-                freeipa.sed_ca_longdomain_patch()
-
             # installs ipa-client software
-            rm.client_install(params.ipa_server, params.domain, params.client_init_wait, params.install_with_dns)
+            rm.client_install(params.ipa_server, params.domain, params.realm, params.client_init_wait, params.install_with_dns, params.install_distribution_user)
 
         # here we remove the robot-admin-password in case we are not running on the server
         # Note the strange construction due to the enter/exit clauses of the get_freeipa method

@@ -19,6 +19,7 @@ import re
 import socket
 import json
 import kavecommon as kc
+import subprocess
 
 from resource_management import *
 
@@ -34,9 +35,9 @@ if not ipa_server:
     raise KeyError('ipa_server could not be found in this cluster, this is strange and indicates much worse problems'
                    ' FreeIPA Client is the client partner of the server, so cannot install without its mommy')
 
-ipa_domain = default('configurations/freeipa/ipa_domain', 'kavelocal.io')
+ipa_domain = default('configurations/freeipa/ipa_domain', 'cloud.kave.io')
 if not ipa_domain:
-    raise Exception('ipa_domain couldn\'t be determined')
+    raise Exception('ipa_domain appears to be empty')
 
 ipa_server_ip_address = socket.gethostbyname(ipa_server)
 if not ipa_server_ip_address:
@@ -113,17 +114,6 @@ searchpath = default('configurations/freeipa/searchpath',
 # folderpath="/jre/lib/security:/lib/security"
 folderpath = default('configurations/freeipa/folderpath', '/jre/lib/security:/lib/security')
 
-long_domain_patch = default("configurations/freeipa/long_domain_patch", False)
-long_domain_patch = kc.trueorfalse(long_domain_patch)
-
-if len(domain) > 61:
-    raise SystemError("Apologies, but FreeIPA cannot support domain names longer than 61 characters")
-elif len(domain) >= 42 and not long_domain_patch:
-    raise SystemError("Apologies, but FreeIPA cannot support domain of 42+ characters out-of-the-box "
-                      + "if you want to try our experimental patch,"
-                      + " please set the long_domain_patch parameter to true")
-elif len(domain) < 20 and long_domain_patch:
-    raise ValueError("This domain is less than 20 characters, and so the long_domain_patch "
-                     + "is unecessary and potentially harmful.")
-
 admin_user_shell = kc.default('configurations/freeipa/admin_user_shell', '/sbin/nologin', kc.is_valid_directory)
+
+install_distribution_user = kc.default('configurations/freeipa/install_distribution_user', 'root')

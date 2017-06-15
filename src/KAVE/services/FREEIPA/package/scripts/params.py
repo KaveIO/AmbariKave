@@ -100,6 +100,7 @@ admin@{{realm}} m *
 
 resolvconf_template = default('configurations/freeipa/resolvconf_template', """search {{domain}}
 nameserver {{ipa_server_ip_address}}
+nameserver 127.0.0.1
 """)
 
 for user, passwd in initial_user_passwords.iteritems():

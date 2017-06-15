@@ -79,7 +79,8 @@ class FreeipaClient(Script):
             Execute('chkconfig ntpd on')
 
             # installs ipa-client software
-            rm.client_install(params.ipa_server, params.domain, params.realm, params.client_init_wait, params.install_with_dns, params.install_distribution_user)
+            rm.client_install(params.ipa_server, params.domain, params.realm, params.client_init_wait,
+                              params.install_with_dns, params.install_distribution_user)
 
         # here we remove the robot-admin-password in case we are not running on the server
         # Note the strange construction due to the enter/exit clauses of the get_freeipa method

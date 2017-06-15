@@ -25,15 +25,6 @@ import string
 import pwd
 import grp
 
-
-def sed_ca_longdomain_patch():
-    from resource_management import Execute
-    Execute("grep -IlR 'Certificate Authority' /usr/lib/python*/site-packages/ipa* "
-
-            # "| xargs sed -i 's/Certificate Authority/CA/g'")
-            "| xargs -r sed -i 's/Certificate Authority/CA/g'")
-
-
 def protect(apass):
     try:
         from resource_management import Logger
@@ -72,7 +63,8 @@ class RobotAdmin():
     """
 
     login = 'robot-admin'
-    password_file = '/root/%s-password' % login
+    password_file_simple = '%s-password' % login
+    password_file = '/root/%s' % password_file_simple
     previously_distributed_file = '/root/%s-previously-distributed' % login
     ambari_db_password_file = '/etc/ambari-server/conf/password.dat'
     psql_query = ['psql', 'ambari', 'ambari', '-q', '-A', '-t', '-c',
@@ -89,7 +81,7 @@ class RobotAdmin():
     def get_freeipa(self, destroy_password_file=True):
         return FreeIPA(self.login, self.password_file, destroy_password_file)
 
-    def distribute_password(self, all_hosts=None):
+    def distribute_password(self, all_hosts=None, user="root"):
         previously_distributed_hosts = self._previously_distributed_hosts()
         if all_hosts is None:
             p0 = subprocess.Popen(["hostname", "-f"], stdout=subprocess.PIPE)
@@ -111,17 +103,25 @@ class RobotAdmin():
 
         new_hosts = [host for host in all_hosts if host not in previously_distributed_hosts]
 
+        home = '~'
+        if user != "root":
+            home = "/home/%s" % user
+        dest = home
+
         for new_host in new_hosts:
-            subprocess.call(['scp', '-o', 'StrictHostKeyChecking=no',
-                             self.password_file, '%s:%s' % (new_host, self.password_file)])
+            subprocess.call(['scp',
+                             '-o', 'StrictHostKeyChecking=no',
+                             '-i', '%s/.ssh/id_rsa' % home,
+                             self.password_file, '%s@%s:%s' % (user, new_host, dest)])
 
         self._update_distributed_hosts(new_hosts)
 
-    def client_install(self, server, domain, wait_limit=600, install_with_dns=True):
+    def client_install(self, server, domain, realm, wait_limit=600, install_with_dns=True, install_user="root"):
         start_time = datetime.datetime.now()
 
         while not os.path.exists(self.password_file) \
                 and (datetime.datetime.now() - start_time).seconds < wait_limit:
+            subprocess.Popen(["cp", "/home/%s/%s" % (install_user, self.password_file_simple), self.password_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             time.sleep(1)
 
         if os.path.isfile(self.password_file):
@@ -130,8 +130,7 @@ class RobotAdmin():
             _hostname = p0.communicate()[0].strip()
             if p0.returncode:
                 raise OSError("Failed to determine hostname!")
-            options = ['--enable-dns-updates', '--force-join', '--ssh-trust-dns', '--domain', domain,
-                       '--hostname', _hostname] if install_with_dns else ['--force-join', '--hostname', _hostname]
+            options = ['--enable-dns-updates', '--force-join', '--ssh-trust-dns', '--domain', domain, '--hostname', _hostname, '--realm', realm] if install_with_dns else ['--force-join', '--hostname', _hostname]
 
             # Install the ipa-client software, This requires the robot-admin password.
             p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)

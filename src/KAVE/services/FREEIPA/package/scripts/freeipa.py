@@ -25,6 +25,7 @@ import string
 import pwd
 import grp
 
+
 def protect(apass):
     try:
         from resource_management import Logger
@@ -121,7 +122,8 @@ class RobotAdmin():
 
         while not os.path.exists(self.password_file) \
                 and (datetime.datetime.now() - start_time).seconds < wait_limit:
-            subprocess.Popen(["cp", "/home/%s/%s" % (install_user, self.password_file_simple), self.password_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.Popen(["cp", "/home/%s/%s" % (install_user, self.password_file_simple),
+                              self.password_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             time.sleep(1)
 
         if os.path.isfile(self.password_file):
@@ -130,7 +132,9 @@ class RobotAdmin():
             _hostname = p0.communicate()[0].strip()
             if p0.returncode:
                 raise OSError("Failed to determine hostname!")
-            options = ['--enable-dns-updates', '--force-join', '--ssh-trust-dns', '--domain', domain, '--hostname', _hostname, '--realm', realm] if install_with_dns else ['--force-join', '--hostname', _hostname]
+            options = ['--enable-dns-updates', '--force-join', '--ssh-trust-dns', '--domain', domain,
+                       '--hostname', _hostname, '--realm', realm] if install_with_dns else ['--force-join',
+                                                                                            '--hostname', _hostname]
 
             # Install the ipa-client software, This requires the robot-admin password.
             p1 = subprocess.Popen(['cat', self.password_file], stdout=subprocess.PIPE)

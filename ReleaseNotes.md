@@ -6,6 +6,8 @@ MAJOR RELEASE
 The major changes were:
     1. Upgraded HDP from 2.5 to 2.6 (So the stack now looks like 2.6.3.1.KAVE (HDP-version.KAVE-version.KAVE))
         HDP and ambari version upgraded (HDP: 2.6.0.3-8, Ambari: 2.5.0.3)
+        For details please see HDP Release Notes at: https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.0/bk_release-notes/content/comp_versions.html
+        and Ambari: https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.0.3/bk_ambari-release-notes/content/ch_relnotes-ambari-2.5.0.3.html
     2. Space added/ increased at various locations (/usr/hdp. /tmp, ...)
     3. repos (ambari, HDP) added in install_snippet
     4. FreeIPA : a number of fixes for the FreeIPA installation, result of the automation attempts in Cloudbreak. Not only bugs, sometimes just improvements or corrections.

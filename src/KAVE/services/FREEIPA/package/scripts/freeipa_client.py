@@ -53,6 +53,15 @@ class FreeipaClient(Script):
                  mode=0644
                  )
 
+    def edit_dhconfig(self, env):
+        import params
+        env.set_params(params)
+        if params.install_with_dns:
+            f = open("/etc/dhcp/dhcpclient.conf", "a")
+            f.write('supersede domain-search "{}";'.format(params.ipa_domain))
+            f.write('prepend domain-name-servers {}, {};'.format(params.ipa_serever_ip_address, '127.0.0.1'))
+            f.close()
+
     def install(self, env):
         import params
         env.set_params(params)
@@ -90,6 +99,8 @@ class FreeipaClient(Script):
 
         # Only write the resolv.conf if the client installation was successful, otherwise I can get into biiig trouble!
         self.write_resolvconf(env)
+
+        self.edit_dhconfig(env)
 
         if not os.path.exists(self.ipa_client_install_lock_file):
             with open(self.ipa_client_install_lock_file, 'w') as f:

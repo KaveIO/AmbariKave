@@ -57,8 +57,8 @@ class FreeipaClient(Script):
         import params
         env.set_params(params)
         if params.install_with_dns:
-            f = open("/etc/dhcp/dhcpclient.conf", "a")
-            f.write('supersede domain-search "{}";'.format(params.ipa_domain))
+            f = open("/etc/dhcp/dhclient.conf", "a")
+            f.write('\nsupersede domain-search "{}";\n'.format(params.ipa_domain))
             f.write('prepend domain-name-servers {}, {};'.format(params.ipa_server_ip_address, '127.0.0.1'))
             f.close()
 

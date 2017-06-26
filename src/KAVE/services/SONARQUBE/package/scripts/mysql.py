@@ -50,6 +50,12 @@ class Mysql(Script):
 
         Execute('service %s start' % params.daemon_name)
 
+    def restart(self, env):
+        import params
+        self.configure(env)
+
+        Execute('service %s restart' % params.daemon_name)
+
     def stop(self, env):
         import params
 

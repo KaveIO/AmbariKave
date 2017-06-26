@@ -51,6 +51,9 @@ class NagiosClient(Script):
     def stop(self, env):
         Execute("service nrpe stop")
 
+    def restart(self, env):
+        Execute("service nrpe restart")
+
     def status(self, env):
         Execute("service nrpe status")
 

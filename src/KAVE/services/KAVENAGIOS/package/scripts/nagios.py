@@ -85,6 +85,10 @@ class Nagios(ApacheScript):
         Execute("service nagios stop")
         super(Nagios, self).stop(env)
 
+    def restart(self, env):
+        Execute("service nagios restart")
+        super(Nagios, self).restart(env)
+
     def status(self, env):
         Execute("service nagios status")
         super(Nagios, self).status(env)

@@ -26,8 +26,5 @@ class apachehttpd(kc.ApacheScript):
         super(apachehttpd, self).install(env)
         self.configure(env)
 
-    def restart(self, env):
-        Execute('service apachehttpd restart')
-
 if __name__ == "__main__":
     apachehttpd().execute()

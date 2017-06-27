@@ -567,3 +567,7 @@ class ApacheScript(res.Script):
     def status(self, env):
         print "checking status..."
         res.Execute('service httpd status')
+
+    def restart(self, env):
+        print "restart apache..."
+        res.Execute('service httpd restart')

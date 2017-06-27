@@ -35,6 +35,8 @@ class KaveToolboxGate(KaveToolbox):
     def status(self, env):
         return True
 
+    def restart(self, env):
+        return True
 
 if __name__ == "__main__":
     KaveToolboxGate().execute()

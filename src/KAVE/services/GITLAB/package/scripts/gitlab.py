@@ -85,6 +85,7 @@ class Gitlab(Script):
         Execute('gitlab-ctl status')
 
     def restart(self, env):
+        self.configure(env)
         Execute('gitlab-ctl restart')
 
 if __name__ == "__main__":

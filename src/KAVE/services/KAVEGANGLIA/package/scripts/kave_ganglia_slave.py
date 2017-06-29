@@ -79,6 +79,9 @@ class KaveGangliaSlave(Script):
     def stop(self, env):
         Execute("service gmond stop")
 
+    def restart(self, env):
+        Execute("service gmond restart")
+
     def status(self, env):
         print Execute("service gmond status")
 

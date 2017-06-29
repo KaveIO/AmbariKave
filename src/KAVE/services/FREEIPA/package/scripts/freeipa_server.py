@@ -194,6 +194,9 @@ class FreeipaServer(Script):
     def stop(self, env):
         Execute('service ipa stop')
 
+    def restart(self, env):
+        Execute('service ipa restart')
+
     def status(self, env):
         # Pretty weird call here. We need to enforce that the keys are
         # distributed to all agents when they are first installed. This proved

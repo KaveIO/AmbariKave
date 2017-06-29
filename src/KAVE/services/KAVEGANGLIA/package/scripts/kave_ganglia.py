@@ -94,6 +94,9 @@ class KaveGanglia(kc.ApacheScript):
         super(KaveGanglia, self).status(env)
         Execute("service gmetad status")
 
+    def restart(self, env):
+        super(KaveGanglia, self).restart(env)
+        Execute("service gmetad restart")
 
 if __name__ == "__main__":
     KaveGanglia().execute()

@@ -109,8 +109,6 @@ class Airflow(kc.ApacheScript):
         super(Airflow, self).stop(env)
 
     def restart(self, env):
-        import params
-        import os
 
         self.configure(env)
         Execute('systemctl restart airflow-webserver')

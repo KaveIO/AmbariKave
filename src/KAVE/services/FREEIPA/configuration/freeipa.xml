@@ -149,6 +149,7 @@ admin@{{realm}} m *
         <name>resolvconf_template</name>
         <value>search {{domain}}
 nameserver {{ipa_server_ip_address}}
+{{other_nameservers}}
 nameserver 127.0.0.1
 </value>
         <description>

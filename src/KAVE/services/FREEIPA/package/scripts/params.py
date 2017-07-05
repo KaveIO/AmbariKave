@@ -72,6 +72,8 @@ forwarders = default('configurations/freeipa/forwarders', '10.0.0.10').split(','
 forwarders = [forwarder.strip() for forwarder in forwarders]
 forwarders = [forwarder for forwarder in forwarders if re.match('\\d+\\.\\d+\\.\\d+\\.\\d+', forwarder)]
 
+forwarders_to_add ='\n'.join(['nameserver ' + f for f in forwarders])
+
 client_init_wait = default('configurations/freeipa/client_init_wait', 600)
 
 all_hosts = default("/clusterHostInfo/all_hosts", None)

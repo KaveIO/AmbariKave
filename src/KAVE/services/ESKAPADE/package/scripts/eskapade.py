@@ -57,7 +57,7 @@ class Eskapade(Script):
         Execute('mkdir -p ' + install_dir)
         Execute('cp -R Eskapade-' + params.releaseversion + ' ' + install_dir)
         os.chdir(install_dir)
-        Execute("bash -c 'source /opt/KaveToolbox/3.4-Beta/scripts/KaveEnv.sh &>/dev/null; pip install -r requirements.txt'")
+        Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -r requirements.txt'")
 
         File("/etc/profile.d/eskapade.sh",
                  content=Template("eskapade.sh.j2", setup_script=install_dir + '/setup.sh'),

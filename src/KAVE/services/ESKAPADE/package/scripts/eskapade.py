@@ -55,13 +55,13 @@ class Eskapade(Script):
                               dir="Eskapade")
         Execute('tar -xzf Eskapade-' + params.releaseversion + '.tar.gz')
         Execute('mkdir -p ' + install_dir)
-        Execute('cp -R Eskapade-' + params.releaseversion + ' ' + install_dir)
+        Execute('cp -R Eskapade-' + params.releaseversion + '/* ' + install_dir)
         os.chdir(install_dir)
         Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -r requirements.txt'")
 
         File("/etc/profile.d/eskapade.sh",
                  content=Template("eskapade.sh.j2", setup_script=install_dir + '/setup.sh'),
-                 mode=0600
+                 mode=0644
                  )
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")

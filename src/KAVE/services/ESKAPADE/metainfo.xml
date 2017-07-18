@@ -8,20 +8,8 @@
             <comment>The KPMG standard analytics tools. Install as master on all gateway machines, install client on all worker nodes.
             A suite of analysis tools, and user experience features, including python R and ROOT.
             Needs at least 4GB of free space in /opt, with an additional 3GB in /tmp for unpacking during the install</comment>
-            <version>0.5/version>
+            <version>0.5</version>
             <components>
-                <component>
-                    <name>ESKAPADEGATE</name>
-                    <displayName>ESKAPADE (Gate)</displayName>
-                    <comment>X and IDEs on top of ESKAPADE, to be installed on your gateway machines</comment>
-                    <category>MASTER</category>
-                    <cardinality>0+</cardinality>
-                    <commandScript>
-                        <script>scripts/eskapadegate.py</script>
-                        <scriptType>PYTHON</scriptType>
-                        <timeout>6000</timeout>
-                    </commandScript>
-                </component>
                 <component>
                     <name>ESKAPADENODE</name>
                     <displayName>ESKAPADE (Node)</displayName>

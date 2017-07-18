@@ -17,7 +17,7 @@
                     <category>MASTER</category>
                     <cardinality>0+</cardinality>
                     <commandScript>
-                        <script>scripts/kavetoolboxgate.py</script>
+                        <script>scripts/eskapadegate.py</script>
                         <scriptType>PYTHON</scriptType>
                         <timeout>6000</timeout>
                     </commandScript>
@@ -47,6 +47,10 @@
                     </packages>
                 </osSpecific>
             </osSpecifics>
+            <requiredServices>
+                <service>KAVETOOLBOX</service>
+                <!-- <service>SPARK2</service> -->
+            </requiredServices>
         </service>
     </services>
 </metainfo>

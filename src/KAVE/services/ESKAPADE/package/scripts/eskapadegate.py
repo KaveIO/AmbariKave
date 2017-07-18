@@ -23,7 +23,7 @@ from resource_management import *
 # from Eskapade import Eskapade
 
 
-class EskapadeGate():
+class EskapadeGate(Script):
     kind = "workstation"
 
     def start(self, env):

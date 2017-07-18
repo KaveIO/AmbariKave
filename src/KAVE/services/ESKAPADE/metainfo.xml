@@ -14,7 +14,8 @@
                     <name>ESKAPADENODE</name>
                     <displayName>ESKAPADE (Node)</displayName>
                     <comment>Install this on all your worker nodes, storm/namenode/nimbus etc.</comment>
-                    <category>CLIENT</category>
+                    <category>MASTER</category>
+                    <cardinality>1+</cardinality>
                     <commandScript>
                         <script>scripts/eskapade.py</script>
                         <scriptType>PYTHON</scriptType>
@@ -37,7 +38,7 @@
             </osSpecifics>
             <requiredServices>
                 <service>KAVETOOLBOX</service>
-                <!-- <service>SPARK2</service> -->
+                <service>SPARK2</service>
             </requiredServices>
         </service>
     </services>

@@ -27,7 +27,7 @@ class Eskapade(Script):
     kind = "node"
 
     def status(self, env):
-        raise ClientComponentHasNoStatus()
+        return True
 
     def install(self, env):
         import params

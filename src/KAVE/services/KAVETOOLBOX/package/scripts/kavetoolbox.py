@@ -23,6 +23,7 @@ from resource_management import *
 
 
 class KaveToolbox(Script):
+    package = 'kavetoolbox-3.4-Beta.tar.gz'
     sttmpdir = "/tmp/kavetoolbox_install/dump"
     kind = "node"
 
@@ -55,10 +56,10 @@ class KaveToolbox(Script):
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copy_cache_or_repo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch='noarch',
+            kc.copy_cache_or_repo(self.package, arch='noarch',
                                   ver=params.releaseversion,
                                   dir="KaveToolbox")
-            Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
+            Execute('tar -xzf ' + self.package)
             # try to cope with the annoying way the tarball contains something with .git at the end!
             import glob
 

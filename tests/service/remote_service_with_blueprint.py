@@ -126,6 +126,26 @@ class TestServiceFreeIPA(TestServiceBlueprint):
         ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ambari.run("./createkeytabs.py ./kerberostest.csv")
 
+
+class TestServiceEskapade(TestServiceBlueprint):
+    def check(self, ambari):
+        super(TestServiceEskapade, self).check(ambari)
+
+        import subprocess as sub
+        test_type = "unit"
+        proc = sub.Popen(ambari.sshcmd() + ["run_tests.py", test_type],
+                         shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
+        try:
+            output, err = proc.communicate(timeout=600)
+        except sub.TimeoutExpired as exc:
+            self.assertTrue(False,
+                            "Eskapade {} tests failed with timeout exception. Msg: {}.".format(test_type, exc.args))
+            return
+        self.assertTrue("FAILED" not in err, "Eskapade {} tests failed.".format(test_type))
+        self.assertEqual(nowhite(err)[-2:], "OK",
+                         "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+
+
 if __name__ == "__main__":
     import sys
 
@@ -146,6 +166,8 @@ if __name__ == "__main__":
     test = TestServiceBlueprint()
     if service == "KAVELANDING":
         test = TestServiceKaveLanding()
+    if service == "ESKAPADE":
+        test = TestServiceEskapade()
     test.service = service
     test.debug = verbose
     test.branch = branch

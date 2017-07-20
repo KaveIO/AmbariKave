@@ -1,0 +1,83 @@
+{
+  "configurations": [
+    {
+      "ams-site": {
+        "timeline.metrics.service.operation.mode": "embedded"
+      }
+    },
+    {
+      "kavelanding": {
+        "AMBARI_ADMIN": "admin",
+        "AMBARI_ADMIN_PASS": "admin"
+      }
+    },
+    {
+      "ams-grafana-env": {
+        "metrics_grafana_password": "SnowCapMountainChap"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"     },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_GRAFANA"   },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "node_group",
+      "configurations": [],
+      "components" : [
+        { "name" : "NAMENODE"                },
+        { "name" : "DATANODE"                },
+        { "name" : "RESOURCEMANAGER"         },
+        { "name" : "NODEMANAGER"             },
+        { "name" : "HISTORYSERVER"           },
+        { "name" : "APP_TIMELINE_SERVER"     },
+        { "name" : "HIVE_SERVER"             },
+        { "name" : "HIVE_METASTORE"          },
+        { "name" : "SPARK2_JOBHISTORYSERVER" },
+        { "name" : "ZOOKEEPER_SERVER"        },
+        { "name" : "HIVE_CLIENT"             },
+        { "name" : "METRICS_MONITOR"         },
+        { "name" : "ZOOKEEPER_CLIENT"        }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "mongo",
+      "components" : [
+        { "name" : "MONGODB_MASTER"  },
+        { "name" : "METRICS_MONITOR"}
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "eskapade",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "KAVETOOLBOXNODE"   },
+        { "name" : "ESKAPADENODE"      },
+        { "name" : "SPARK2_CLIENT"     },
+        { "name" : "YARN_CLIENT"       },
+        { "name" : "MAPREDUCE2_CLIENT" },
+        { "name" : "HIVE_CLIENT"       },
+        { "name" : "MONGODB_CLIENT"    },
+        { "name" : "METRICS_MONITOR"   },
+        { "name" : "ZOOKEEPER_CLIENT"  }
+      ],
+      "cardinality" : "1"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "eskapade",
+    "stack_name" : "HDP",
+    "stack_version" : "2.6.3.2.KAVE"
+  }
+}

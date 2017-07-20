@@ -17,22 +17,10 @@
 ##############################################################################
 import base
 import unittest
-import kavedeploy as kD
 from sys import stdout
 
 
 class TestCluster(base.LDTest):
-    mach_list = ["ambari", "freeipa"]
-
-    def resolve_machine_host(self, hname, out='none'):
-        self.mdict = {}
-        for hname in self.mach_list:
-            try:
-                remote, _ = self.remote_from_cluster_stdout(stdout=out, mname=hname)
-                self.mdict[hname] = remote
-            except KeyError:
-                continue
-        return self.mdict
 
     def runTest(self):
         """
@@ -57,8 +45,7 @@ class TestCluster(base.LDTest):
         if self.clustername == 'prod':
             self.clustername = self.service
         self.stdout = self.deploycluster(pref + ".aws.json", cname=self.clustername)
-        hostname = self.resolve_machine_host(hname='ambari', out=self.stdout)
-        ambari = hostname['ambari']
+        ambari, _ = self.remote_from_cluster_stdout(self.stdout, 'ambari')
         ambari.register()
         self.wait_for_ambari(ambari, check_inst=["inst.stdout", "inst.stderr"])
         self.pull(ambari)
@@ -93,8 +80,35 @@ class TestFreeIPACluster(TestCluster):
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)
-        hostname = self.resolve_machine_host(hname='freeipa', out=self.stdout)
-        self.checkipaserver(hostname['freeipa'])
+        ipaserver, _ = self.remote_from_cluster_stdout(self.stdout, 'freeipa')
+        self.checkipaserver(ipaserver)
+
+
+class TestEskapadeCluster(TestCluster):
+    def check_eskapade(self, host):
+        """
+        Run Eskapade integration tests.
+        :param host: Eskapade host
+        """
+        import subprocess as sub
+        test_type = "integration"
+        proc = sub.Popen(host.sshcmd() + ["run_tests.py", test_type],
+                         shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
+        try:
+            output, err = proc.communicate(timeout=600)
+        except sub.TimeoutExpired as exc:
+            self.assertTrue(False,
+                            "Eskapade {} tests failed with timeout exception. Msg: {}.".format(test_type, exc.args))
+            return
+        self.assertTrue("FAILED" not in err, "Eskapade {} tests failed.".format(test_type))
+        self.assertEqual(''.join(err.split())[-2:], "OK",
+                         "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+
+    def check(self, ambari):
+        super(TestCluster, self).check(ambari)
+        eskapade, _ = self.remote_from_cluster_stdout(self.stdout, 'eskapade')
+        self.check_eskapade(eskapade)
+
 
 if __name__ == "__main__":
     import sys
@@ -120,6 +134,8 @@ if __name__ == "__main__":
     test = TestCluster()
     if service.startswith("FREEIPA"):
         test = TestFreeIPACluster()
+    if service.startswith("ESKAPADE"):
+        test = TestEskapadeCluster()
     test.service = service
     test.debug = verbose
     test.clustername = clustername

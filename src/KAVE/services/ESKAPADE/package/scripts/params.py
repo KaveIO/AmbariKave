@@ -25,7 +25,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 top_dir = kc.default("configurations/eskapade/top_dir", "/opt/", kc.is_valid_directory)
-releaseversion = default('configurations/eskapade/releaseversion', "0.5-Beta")
+releaseversion = default('configurations/eskapade/releaseversion', "0.5")
 alternative_download = default('configurations/eskapade/alternative_download', "none")
 ignore_missing_groups = default('configurations/eskapade/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)

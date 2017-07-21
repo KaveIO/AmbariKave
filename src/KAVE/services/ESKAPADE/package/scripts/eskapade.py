@@ -18,11 +18,13 @@
 import sys
 import os
 import shutil
+import params
 
 from resource_management import *
 
 
 class Eskapade(Script):
+    package = "Eskapade-0.5.tar.gz"
     sttmpdir = "/tmp/eskapade_install/dump"
     kind = "node"
 
@@ -30,7 +32,6 @@ class Eskapade(Script):
         return True
 
     def install(self, env):
-        import params
         import kavecommon as kc
         Execute('yum clean all')
         self.install_packages(env)
@@ -50,10 +51,8 @@ class Eskapade(Script):
         eskapade_path = 'Eskapade/' + params.releaseversion + ''
         install_dir = params.top_dir + eskapade_path
         os.chdir(self.sttmpdir)
-        kc.copy_cache_or_repo('Eskapade-' + params.releaseversion + '.tar.gz', arch='noarch',
-                              ver=params.releaseversion,
-                              dir="Eskapade")
-        Execute('tar -xzf Eskapade-' + params.releaseversion + '.tar.gz')
+        kc.copy_cache_or_repo(self.package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
+        Execute('tar -xzf ' + self.package)
         Execute('mkdir -p ' + install_dir)
         Execute('cp -R Eskapade-' + params.releaseversion + '/* ' + install_dir)
         os.chdir(install_dir)
@@ -70,8 +69,6 @@ class Eskapade(Script):
         Execute('chmod -R a+r /etc/eskapade')
 
     def configure(self, env):
-        import params
-
         env.set_params(params)
         Execute("mkdir -p /etc/eskapade")
         Execute("chmod -R a+r /etc/eskapade")

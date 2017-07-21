@@ -18,7 +18,6 @@
 import sys
 import os
 import shutil
-import params
 
 from resource_management import *
 
@@ -32,6 +31,7 @@ class Eskapade(Script):
         return True
 
     def install(self, env):
+        import params
         import kavecommon as kc
         Execute('yum clean all')
         self.install_packages(env)
@@ -69,6 +69,7 @@ class Eskapade(Script):
         Execute('chmod -R a+r /etc/eskapade')
 
     def configure(self, env):
+        import params
         env.set_params(params)
         Execute("mkdir -p /etc/eskapade")
         Execute("chmod -R a+r /etc/eskapade")

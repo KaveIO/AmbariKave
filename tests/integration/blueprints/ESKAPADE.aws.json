@@ -45,8 +45,9 @@
       "InstanceType": "m4.large",
       "AccessType": "none",
       "ExtraDisks": [
-        { "Mount": "/var/log", "Size": 2, "Attach": "/dev/sdb" },
-        { "Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sdc" }
+        { "Mount": "/opt", "Size": 4, "Attach": "/dev/sdb" },
+        { "Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc" },
+        { "Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sdd" }
       ]
     }
   ]

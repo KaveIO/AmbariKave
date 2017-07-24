@@ -4,6 +4,12 @@
       "ams-site": {
         "timeline.metrics.service.operation.mode": "embedded"
       }
+    },
+    {
+      "eskapade": {
+        "releaseversion": "0.5",
+        "top_dir": "/opt"
+      }
     }
   ],
   "host_groups": [

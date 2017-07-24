@@ -1,0 +1,35 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "m4.large",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/var/lib/ambari-metrics-collector", "Size" : 10,   "Attach" : "/dev/sdf" } ]
+  },
+  { "Name" : "gate",
+    "Count" : 1,
+    "InstanceType" : "c4.large",
+    "AccessType" : "gateway",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/home",   "Size" : 10, "Attach" : "/dev/sdc" },	
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/usr/hdp",   "Size" : 5, "Attach" : "/dev/sdg" }]
+  },
+  { "Name" : "HDP",
+    "Count" : -1,
+    "InstanceType" : "m4.xlarge",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sde" } ]
+  }
+  ]
+}

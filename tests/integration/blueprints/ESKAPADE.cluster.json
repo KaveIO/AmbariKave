@@ -1,0 +1,23 @@
+{
+    "blueprint" : "ESKAPADE",
+    "default_password" : "admin",
+    "configurations" : [
+    ],
+    "host_groups" : [
+    {
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } } ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "HDP",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "hdp.kave.io" } ]
+	}
+    ]
+}

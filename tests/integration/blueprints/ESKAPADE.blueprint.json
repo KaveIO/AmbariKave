@@ -11,16 +11,17 @@
     	}
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
+    { "hdfs-log4j" : { "log4j.appender.RFA.MaxFileSize" : "128MB", "log4j.appender.RFA.MaxBackupIndex" : "5" } },
+    { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
+        "initial_users_and_groups" : "{\"Users\" : [\"someadmin\", \"someuser\"], \"Groups\" : {\"admins\" : [\"someadmin\"], \"hadoop\" : [\"someadmin\", \"someuser\"]}}",
+        "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\", \"someuser\": \"MarketLeafFromNails\"}",
         "initial_sudoers" : "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}"
         }
     },
     { "sonarqube" : {
-    	"sonar_database_url":"ci.kave.io",
     	"sonar_database_user_passwd" : "admin"
     	}
     },
@@ -39,32 +40,83 @@
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
+        { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
-        { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "ZOOKEEPER_CLIENT"   }
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "YARN_CLIENT"        },
+	    { "name" : "MAPREDUCE2_CLIENT"  },
+        { "name" : "SLIDER" 		    },
+	    { "name" : "INFRA_SOLR"         },
+        { "name" : "INFRA_SOLR_CLIENT"  }
       ],
       "cardinality" : "1"
     },
     {
       "name" : "gateway",
-      "configurations" : [      ],
+      "configurations" : [   ],
       "components" : [
         { "name" : "KAVETOOLBOXGATE"      },
+	    { "name" : "ZEPPELIN_MASTER"      },
+		{ "name" : "SQOOP"                },
+	    { "name" : "HDFS_CLIENT"          },
+	    { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "METRICS_MONITOR"      },
-        { "name" : "ZOOKEEPER_CLIENT"     }
-              ],
-      "cardinality" : "1+"
+		{ "name" : "HIVE_CLIENT"          },
+		{ "name" : "TEZ_CLIENT"           },
+		{ "name" : "SPARK_CLIENT"         },
+        { "name" : "OOZIE_CLIENT"         },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "SLIDER" 		      },
+        { "name" : "INFRA_SOLR_CLIENT"    }
+
+      ],
+      "cardinality" : "1"
     },
     {
-      "name" : "HDP",
-      "configurations" : [ ],
+      "name":"namenode-1",
       "components" : [
-        { "name" : "KAVETOOLBOXNODE"       },
-        { "name" : "METRICS_MONITOR"       },
-        { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR"   }
+        { "name" : "NAMENODE"               },
+        { "name" : "RESOURCEMANAGER"        },
+        { "name" : "APP_TIMELINE_SERVER"    },
+        { "name" : "HISTORYSERVER"          },
+        { "name" : "PIG"                    },
+        { "name" : "HCAT"                   },
+        { "name" : "HIVE_SERVER"            },
+        { "name" : "HIVE_METASTORE"         },
+        { "name" : "SPARK2_THRIFTSERVER"     },
+        { "name" : "SPARK2_JOBHISTORYSERVER" },
+        { "name" : "OOZIE_SERVER"           },
+        { "name" : "WEBHCAT_SERVER"         },
+        { "name" : "MYSQL_SERVER"           },
+        { "name" : "HIVE_CLIENT"            },
+        { "name" : "TEZ_CLIENT"             },
+        { "name" : "YARN_CLIENT"            },
+	    { "name" : "MAPREDUCE2_CLIENT"      },
+ 		{ "name" : "METRICS_MONITOR"        },
+		{ "name" : "ZOOKEEPER_CLIENT"       },
+        { "name" : "SLIDER" 		        },
+        { "name" : "INFRA_SOLR_CLIENT"      }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "data",
+      "components" : [
+        { "name" : "DATANODE"             },
+        { "name" : "NODEMANAGER"          },
+        { "name" : "KAVETOOLBOXNODE"      },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "KAVEGANGLIA_MONITOR"  },
+        { "name" : "FREEIPA_CLIENT"       },
+        { "name" : "YARN_CLIENT"          },
+	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "SLIDER" 		      },
+        { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1+"
     }

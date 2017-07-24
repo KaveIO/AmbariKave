@@ -4,7 +4,7 @@
     "configurations" : [
     ],
     "host_groups" : [
-    {
+	{
 	    "name" : "admin",
 	    "configurations" : [  ],
 	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
@@ -15,9 +15,14 @@
 	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
 	},
 	{
-	    "name" : "HDP",
+	    "name" : "namenode-1",
 	    "configurations" : [   ],
-	    "hosts" : [ { "fqdn" : "hdp.kave.io" } ]
+	    "hosts" : [ { "fqdn" : "nno-001.kave.io" } ]
+	},
+	{
+	    "name" : "data",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "data-001.kave.io" } ]
 	}
     ]
 }

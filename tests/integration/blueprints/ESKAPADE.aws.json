@@ -8,28 +8,40 @@
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
-    				 {"Mount": "/var/lib/ambari-metrics-collector", "Size" : 10,   "Attach" : "/dev/sdf" } ]
+    				 {"Mount": "/var/lib/ambari-metrics-collector", "Size" : 10,   "Attach" : "/dev/sde" } ]
   },
   { "Name" : "gate",
     "Count" : 1,
-    "InstanceType" : "c4.large",
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "gateway",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
-    				 {"Mount": "/home",   "Size" : 10, "Attach" : "/dev/sdc" },	
-    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" },
-    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" },
-    				 {"Mount": "/usr/hdp",   "Size" : 5, "Attach" : "/dev/sdg" }]
+                     {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
+                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdg" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdi" } ]
   },
-  { "Name" : "HDP",
-    "Count" : -1,
-    "InstanceType" : "m4.xlarge",
+  { "Name" : "nno",
+    "Count" : 1,
+    "InstanceType" : "c4.xlarge",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
     				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
-    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sde" } ]
+    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
+  },
+  { "Name" : "data",
+    "Count" : 1,
+    "InstanceType" : "m4.large",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/hadoop",   "Size" : 100, "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdg" }  ]
   }
   ]
 }

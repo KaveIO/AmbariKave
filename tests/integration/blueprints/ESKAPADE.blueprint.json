@@ -71,7 +71,6 @@
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "SLIDER" 		      },
         { "name" : "INFRA_SOLR_CLIENT"    }
-
       ],
       "cardinality" : "1"
     },
@@ -108,6 +107,9 @@
         { "name" : "DATANODE"             },
         { "name" : "NODEMANAGER"          },
         { "name" : "KAVETOOLBOXNODE"      },
+        { "name" : "ESKAPADENODE"         },
+        { "name" : "SPARK2_CLIENT"        },
+        { "name" : "HIVE_CLIENT"          },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },

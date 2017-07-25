@@ -7,13 +7,11 @@
     },
     {
       "eskapade": {
-        "releaseversion": "0.5",
         "top_dir": "/opt/"
       }
     },
     {
       "kavetoolbox" : {
-        "releaseversion" : "3.4-Beta",
         "custom_install_template" :
             "import kavedefaults as cnf\ncnf.li.InstallTopDir=\"{{top_dir}}\""
       }

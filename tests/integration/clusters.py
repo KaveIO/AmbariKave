@@ -106,7 +106,7 @@ class TestEskapadeCluster(TestCluster):
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)
-        eskapade, _ = self.remote_from_cluster_stdout(self.stdout, 'data')
+        eskapade, _ = self.remote_from_cluster_stdout(self.stdout, 'data-001')
         self.check_eskapade(eskapade)
 
 

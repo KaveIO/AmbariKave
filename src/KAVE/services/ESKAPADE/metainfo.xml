@@ -5,15 +5,14 @@
         <service>
             <name>ESKAPADE</name>
             <displayName>Eskapade</displayName>
-            <comment>The KPMG standard analytics tools. Install as master on all gateway machines, install client on all worker nodes.
-            A suite of analysis tools, and user experience features, including python R and ROOT.
-            Needs at least 4GB of free space in /opt, with an additional 3GB in /tmp for unpacking during the install</comment>
+            <comment>A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/).
+            </comment>
             <version>0.5</version>
             <components>
                 <component>
                     <name>ESKAPADENODE</name>
-                    <displayName>ESKAPADE (Node)</displayName>
-                    <comment>Install this on all your worker nodes, storm/namenode/nimbus etc.</comment>
+                    <displayName>ESKAPADE</displayName>
+                    <comment>KaveToolbox (Node or Gate) and Spark2 client need to be present on the node where the Eskapade is installed.</comment>
                     <category>MASTER</category>
                     <cardinality>1+</cardinality>
                     <commandScript>

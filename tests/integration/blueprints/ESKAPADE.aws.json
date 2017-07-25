@@ -1,54 +1,47 @@
 {
-  "CloudFormation": {
-    "Script": "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt"
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "m4.large",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-metrics-collector", "Size" : 10,   "Attach" : "/dev/sde" } ]
   },
-  "InstanceGroups": [
-    {
-      "Name": "ambari",
-      "Count": -1,
-      "InstanceType": "m4.large",
-      "AccessType": "admin",
-      "ExtraDisks": [
-        { "Mount": "/var/log", "Size": 2, "Attach": "/dev/sdb" },
-        { "Mount": "/var/lib/ambari-server", "Size": 2, "Attach": "/dev/sdc" },
-        { "Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sdd" }
-      ]
-    },
-    {
-      "Name": "mongo",
-      "Count": -1,
-      "InstanceType": "m4.large",
-      "AccessType": "none",
-      "ExtraDisks": [
-        { "Mount": "/opt", "Size": 4, "Attach": "/dev/sdb" },
-        { "Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc" },
-        { "Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sdd" },
-        { "Mount": "/var/lib/mongo", "Size": 4, "Attach": "/dev/sde" }
-      ]
-    },
-    {
-      "Name": "nno",
-      "Count": -1,
-      "InstanceType": "m4.large",
-      "AccessType": "none",
-      "ExtraDisks": [
-        { "Mount": "/opt", "Size": 10, "Attach": "/dev/sdb" },
-        { "Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc" },
-        { "Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sdd" },
-        { "Mount": "/usr/hdp", "Size": 6, "Attach": "/dev/sde" },
-        { "Mount": "/tmp", "Size": 5, "Attach": "/dev/sdf" }
-      ]
-    },
-    {
-      "Name": "eskapade",
-      "Count": -1,
-      "InstanceType": "m4.large",
-      "AccessType": "none",
-      "ExtraDisks": [
-        { "Mount": "/opt", "Size": 4, "Attach": "/dev/sdb" },
-        { "Mount": "/var/log", "Size": 2, "Attach": "/dev/sdc" },
-        { "Mount": "/var/lib/ambari-agent", "Size": 2, "Attach": "/dev/sdd" }
-      ]
-    }
+  { "Name" : "gate",
+    "Count" : 1,
+    "InstanceType" : "c4.xlarge",
+    "AccessType" : "gateway",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+                     {"Mount": "/home",   "Size" : 100, "Attach" : "/dev/sdc" },
+                     {"Mount": "/data",   "Size" : 10, "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdg" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdi" } ]
+  },
+  { "Name" : "nno",
+    "Count" : 1,
+    "InstanceType" : "c4.xlarge",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/usr/hdp", "Size" : 6,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
+  },
+  { "Name" : "data",
+    "Count" : 1,
+    "InstanceType" : "m4.large",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 10, "Attach" : "/dev/sdb" },
+    				 {"Mount": "/hadoop",   "Size" : 100, "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdd" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sde" },
+    				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sdf" },
+    				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdg" }  ]
+  }
   ]
 }

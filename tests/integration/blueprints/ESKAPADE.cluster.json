@@ -1,27 +1,28 @@
 {
-  "blueprint": "eskapade",
-  "default_password": "admin",
-  "configurations": [ ],
-  "host_groups": [
-    {
-      "name": "admin",
-      "configurations": [],
-      "hosts": [ { "fqdn" : "ambari.kave.io" } ]
-    },
-    {
-      "name": "node_group",
-      "configurations": [],
-      "hosts": [ { "fqdn" : "nno.kave.io" } ]
-    },
-    {
-      "name": "mongo",
-      "configurations": [],
-      "hosts": [ { "fqdn" : "mongo.kave.io" } ]
-    },
-    {
-      "name": "eskapade",
-      "configurations": [],
-      "hosts": [ { "fqdn" : "eskapade.kave.io" } ]
-    }
-  ]
+    "blueprint" : "ESKAPADE",
+    "default_password" : "admin",
+    "configurations" : [
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	},
+	{
+	    "name" : "gateway",
+	    "configurations" : [  { "kavelanding" : { "AMBARI_ADMIN" : "admin", "AMBARI_ADMIN_PASS" : "admin" } } ],
+	    "hosts" : [ { "fqdn" : "gate-001.kave.io" } ]
+	},
+	{
+	    "name" : "namenode-1",
+	    "configurations" : [   ],
+	    "hosts" : [ { "fqdn" : "nno-001.kave.io" } ]
+	},
+	{
+	    "name" : "data",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "data-001.kave.io" } ]
+	}
+    ]
 }

@@ -133,6 +133,8 @@ class TestServiceEskapade(TestServiceBlueprint):
 
         import subprocess as sub
         test_type = "unit"
+        # "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh"
+        # "source /opt/Eskapade/0.5/setup.sh"
         proc = sub.Popen(ambari.sshcmd() + ["run_tests.py", test_type],
                          shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
         try:

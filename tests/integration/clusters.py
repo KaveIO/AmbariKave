@@ -104,7 +104,7 @@ class TestEskapadeCluster(TestCluster):
         output, err = proc.communicate()
 
         self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
-        self.assertEqual(''.join(err.split())[-2:, "OK",
+        self.assertEqual(''.join(err.split())[-2:], "OK",
                          "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
         """
         TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.

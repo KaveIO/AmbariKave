@@ -132,20 +132,23 @@ class TestServiceEskapade(TestServiceBlueprint):
         super(TestServiceEskapade, self).check(ambari)
 
         import subprocess as sub
+
         test_type = "unit"
-        # "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh"
-        # "source /opt/Eskapade/0.5/setup.sh"
-        proc = sub.Popen(ambari.sshcmd() + ["run_tests.py", test_type],
+        proc = sub.Popen(ambari.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                                            " source /opt/Eskapade/*/setup.sh;",
+                                            " run_tests.py {}".format(test_type)],
                          shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
-        try:
-            output, err = proc.communicate(timeout=600)
-        except sub.TimeoutExpired as exc:
-            self.assertTrue(False,
-                            "Eskapade {} tests failed with timeout exception. Msg: {}.".format(test_type, exc.args))
-            return
-        self.assertTrue("FAILED" not in err, "Eskapade {} tests failed.".format(test_type))
+        output, err = proc.communicate()
+
+        self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
         self.assertEqual(nowhite(err)[-2:], "OK",
                          "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+        """
+        TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
+        ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   " source /opt/Eskapade/*/setup.sh;"
+                   " run_tests.py {}".foramt(test_type))
+        """
 
 
 if __name__ == "__main__":

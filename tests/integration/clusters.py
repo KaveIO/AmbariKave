@@ -91,18 +91,27 @@ class TestEskapadeCluster(TestCluster):
         :param host: Eskapade host
         """
         import subprocess as sub
+
+        # Hack for Centos7
+        # Since all tests in the suite are run for Centos7, no need to check for OS
+        host.run("sed -i s/std=c++14/std=c++11/ /opt/Eskapade/*/Makefile", exit=False)
+
         test_type = "integration"
-        proc = sub.Popen(host.sshcmd() + ["run_tests.py", test_type],
+        proc = sub.Popen(host.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                                          " source /opt/Eskapade/*/setup.sh;",
+                                          " run_tests.py {}".format(test_type)],
                          shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
-        try:
-            output, err = proc.communicate(timeout=600)
-        except sub.TimeoutExpired as exc:
-            self.assertTrue(False,
-                            "Eskapade {} tests failed with timeout exception. Msg: {}.".format(test_type, exc.args))
-            return
-        self.assertTrue("FAILED" not in err, "Eskapade {} tests failed.".format(test_type))
-        self.assertEqual(''.join(err.split())[-2:], "OK",
+        output, err = proc.communicate()
+
+        self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
+        self.assertEqual(''.join(err.split())[-2:, "OK",
                          "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+        """
+        TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
+        ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   " source /opt/Eskapade/*/setup.sh;"
+                   " run_tests.py {}".foramt(test_type))
+        """
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)

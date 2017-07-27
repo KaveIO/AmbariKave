@@ -85,7 +85,7 @@ class TestFreeIPACluster(TestCluster):
 
 
 class TestEskapadeCluster(TestCluster):
-    def check_eskapade(self, host):
+    def check_eskapade(self, host, version="*"):
         """
         Run Eskapade integration tests.
         :param host: Eskapade host
@@ -94,12 +94,12 @@ class TestEskapadeCluster(TestCluster):
 
         # Hack for Centos7
         # Since all tests in the suite are run for Centos7, no need to check for OS
-        host.run("sed -i s/std=c++14/std=c++11/ /opt/Eskapade/*/Makefile", exit=False)
+        host.run("sed -i s/std=c++14/std=c++11/ /opt/Eskapade/{version}/Makefile".format(version=version), exit=False)
 
         test_type = "integration"
         proc = sub.Popen(host.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                                          " source /opt/Eskapade/*/setup.sh;",
-                                          " run_tests.py {}".format(test_type)],
+                                          " source /opt/Eskapade/{version}/setup.sh;".format(version=version),
+                                          " run_tests.py {test_type}".format(test_type=test_type)],
                          shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
         output, err = proc.communicate()
 

@@ -27,8 +27,10 @@
         { "name" : "YARN_CLIENT"        },
 	    { "name" : "MAPREDUCE2_CLIENT"  },
         { "name" : "SLIDER" 		    },
+	    { "name" : "LOGSEARCH_SERVER"   },
 	    { "name" : "INFRA_SOLR"         },
-        { "name" : "INFRA_SOLR_CLIENT"  }
+        { "name" : "INFRA_SOLR_CLIENT"  },
+        { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
       "cardinality" : "1"
     },
@@ -37,8 +39,9 @@
       "configurations" : [   ],
       "components" : [
         { "name" : "KAVETOOLBOXGATE"      },
-	    { "name" : "ZEPPELIN_MASTER"      },
+ 	    { "name" : "ZEPPELIN_MASTER"      },
 		{ "name" : "SQOOP"                },
+		{ "name" : "ESKAPADENODE"                },
 	    { "name" : "HDFS_CLIENT"          },
 	    { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
@@ -49,15 +52,16 @@
         { "name" : "OOZIE_CLIENT"         },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "SLIDER" 		      },
+        { "name" : "LOGSEARCH_LOGFEEDER"  },
         { "name" : "INFRA_SOLR_CLIENT"    }
-
       ],
-      "cardinality" : "1"
+      "cardinality" : "0-10"
     },
     {
       "name":"namenode-1",
       "components" : [
         { "name" : "NAMENODE"               },
+        { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "RESOURCEMANAGER"        },
         { "name" : "APP_TIMELINE_SERVER"    },
         { "name" : "HISTORYSERVER"          },
@@ -77,7 +81,8 @@
  		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "SLIDER" 		        },
-        { "name" : "INFRA_SOLR_CLIENT"      }
+        { "name" : "INFRA_SOLR_CLIENT"      },
+        { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
       "cardinality" : "1"
     },
@@ -95,11 +100,11 @@
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
-      "cardinality" : "1+"
+      "cardinality" : "1"
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "ESKAPADE",
+    "blueprint_name" : "eskapade",
     "stack_name" : "HDP",
     "stack_version" : "2.6.3.2.KAVE"
   }

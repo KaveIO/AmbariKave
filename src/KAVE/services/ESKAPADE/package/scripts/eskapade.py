@@ -25,8 +25,13 @@ from resource_management import *
 class Eskapade(Script):
     sttmpdir = "/tmp/eskapade_install/dump"
     kind = "node"
+    status_file = "/etc/eskapade/status"
 
     def status(self, env):
+        with open(self.status_file, 'r') as content_file:
+            content = content_file.read()
+        if int(content) != 0:
+            raise ComponentIsNotRunning()
         return True
 
     def install(self, env):
@@ -92,13 +97,13 @@ class Eskapade(Script):
         Execute("chmod -R a+r /etc/eskapade")
 
     def start(self, env):
-        return True
+        Execute("echo 0 > " + self.status_file)
 
     def stop(self, env):
-        return True
+        Execute("echo 1 > " + self.status_file)
 
     def restart(self, env):
-        return True
+        Execute("echo 0 > " + self.status_file)
 
 if __name__ == "__main__":
     Eskapade().execute()

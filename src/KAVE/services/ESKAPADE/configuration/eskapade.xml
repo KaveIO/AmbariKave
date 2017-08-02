@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>releaseversion</name>
-    <value>0.4-Beta</value>
+    <value>0.5</value>
     <description>Which version to use.</description>
   </property>
   <property>
@@ -16,34 +16,5 @@
     <name>alternative_download</name>
     <value>none</value>
     <description>List of alternative websites or local cache locations to download the Eskapade distribution</description>
-  </property>
-  <property>
-    <name>ignore_missing_groups</name>
-    <value>False</value>
-    <description>Eskapade installation fails if yum groups are not available.
-    If you have installed the contents of the groups Development Tools, Additional Development and X Window System manually where needed
-    then you can set this part to True. Otherwise, Eskapade installation will fail for sure.
-    </description>
-  </property>
-  <!--<property>-->
-    <!--<name>custom_install_template</name>-->
-    <!--<value># -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--import kavedefaults as cnf-->
-
-<!--cnf.li.InstallTopDir="{{top_dir}}"-->
-
-<!--# -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-    <!--</value>-->
-    <!--<description>Eskapade is very customizable. You can turn on and off features and minutely control the install with the CustomInstall.py file-->
-    <!--Any strings surrounded by double-curled-braces will be replaced by the relevant parameter when written to disk-->
-    <!--</description>-->
-  <!--</property>-->
-    <property>
-    <name>command_line_args</name>
-    <value>False</value>
-    <description>
-    Extra options to pass to the command line installation,
-    for more details on the options read the Eskapade readme on github.
-    </description>
   </property>
 </configuration>

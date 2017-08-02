@@ -96,6 +96,42 @@ class TestFreeIPACluster(TestCluster):
         hostname = self.resolve_machine_host(hname='freeipa', out=self.stdout)
         self.checkipaserver(hostname['freeipa'])
 
+
+class TestEskapadeCluster(TestCluster):
+    def check_eskapade(self, host, version="*"):
+        """
+        Run Eskapade integration tests.
+        :param host: Eskapade host
+        """
+        import subprocess as sub
+
+        # Hack for Centos7
+        # Since all tests in the suite are run for Centos7, no need to check for OS
+        host.run("sed -i s/std=c++14/std=c++11/ /opt/Eskapade/{version}/Makefile".format(version=version), exit=False)
+
+        test_type = "integration"
+        proc = sub.Popen(host.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                                          " source /opt/Eskapade/{version}/setup.sh;".format(version=version),
+                                          " run_tests.py {test_type}".format(test_type=test_type)],
+                         shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
+        output, err = proc.communicate()
+
+        self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
+        self.assertEqual(''.join(err.split())[-2:], "OK",
+                         "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+        """
+        TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
+        ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   " source /opt/Eskapade/*/setup.sh;"
+                   " run_tests.py {}".foramt(test_type))
+        """
+
+    def check(self, ambari):
+        super(TestCluster, self).check(ambari)
+        eskapade, _ = self.remote_from_cluster_stdout(self.stdout, 'gate-001')
+        self.check_eskapade(eskapade)
+
+
 if __name__ == "__main__":
     import sys
 
@@ -120,6 +156,8 @@ if __name__ == "__main__":
     test = TestCluster()
     if service.startswith("FREEIPA"):
         test = TestFreeIPACluster()
+    if service.startswith("ESKAPADE"):
+        test = TestEskapadeCluster()
     test.service = service
     test.debug = verbose
     test.clustername = clustername

@@ -32,6 +32,8 @@ class KaveToolbox(Script):
     def install(self, env):
         import params
         import kavecommon as kc
+
+        package = 'kavetoolbox-' + params.releaseversion + '.tar.gz'
         Execute('yum clean all')
         self.install_packages(env)
         env.set_params(params)
@@ -55,10 +57,10 @@ class KaveToolbox(Script):
         # no need to download if install script already exists
         if not os.path.exists(instscript):
             os.chdir(self.sttmpdir)
-            kc.copy_cache_or_repo('kavetoolbox-' + params.releaseversion + '.tar.gz', arch='noarch',
+            kc.copy_cache_or_repo(package, arch='noarch',
                                   ver=params.releaseversion,
                                   dir="KaveToolbox")
-            Execute('tar -xzf kavetoolbox-' + params.releaseversion + '.tar.gz')
+            Execute('tar -xzf ' + package)
             # try to cope with the annoying way the tarball contains something with .git at the end!
             import glob
 

@@ -29,7 +29,7 @@ class TestRepoImports(unittest.TestCase):
     Checks for lines where we try and get a file from the repository,
     and checks that those files exist, then
     """
-    ignorefiles = ['repoimports.py', 'eskapade.py']
+    ignorefiles = ['repoimports.py']
     ignorepackages = []
     replaces = {"+params.releaseversion+": kc.__version__,
                 "%s": "el7"}
@@ -59,7 +59,6 @@ class TestRepoImports(unittest.TestCase):
                         package = ''
                         arch = 'centos7'
                         # break
-
         return found
 
     def runTest(self):
@@ -87,22 +86,20 @@ class TestRepoImports(unittest.TestCase):
             urls = []
             for mirror in kc.mirrors():
                 if 'kavetoolbox' in package:
-                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox'))
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox', ver='3.4-Beta'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
-                if 'eskapade' in package:
-                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade'))
+                if 'Eskapade' in package:
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade', ver='0.5'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
             if not len(urls):
                 if 'kavetoolbox' in package:
-                    urls.append(kc.repo_url(package, arch=arch, dir='KaveToolbox'))
+                    urls.append(kc.repo_url(package, arch=arch, dir='KaveToolbox', ver='3.4-Beta'))
+                if 'Eskapade' in package:
+                    urls.append(kc.repo_url(package, arch=arch, dir='Eskapade', ver='0.5'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch))
-            if 'eskapade' in package:
-                urls.append(kc.repo_url(package, arch=arch, dir='Eskapade'))
-            else:
-                urls.append(kc.repo_url(package, arch=arch))
             try:
                 sys.stdout.flush()
                 kc.failover_source(urls)

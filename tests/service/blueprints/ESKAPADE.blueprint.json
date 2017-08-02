@@ -1,0 +1,41 @@
+{
+  "configurations": [
+    {
+      "ams-site": {
+        "timeline.metrics.service.operation.mode": "embedded"
+      }
+    },
+    {
+      "eskapade": {
+        "top_dir": "/opt/"
+      }
+    },
+    {
+      "kavetoolbox" : {
+        "custom_install_template" :
+            "import kavedefaults as cnf\ncnf.li.InstallTopDir=\"{{top_dir}}\""
+      }
+    }
+  ],
+  "host_groups": [
+    {
+      "name": "admin",
+      "configurations": [],
+      "components": [
+        { "name": "AMBARI_SERVER" },
+        { "name": "ZOOKEEPER_SERVER" },
+        { "name": "METRICS_COLLECTOR" },
+        { "name": "METRICS_MONITOR" },
+        { "name": "ZOOKEEPER_CLIENT" },
+        { "name": "KAVETOOLBOXNODE" },
+        { "name": "ESKAPADENODE" }
+      ],
+      "cardinality": "1"
+    }
+  ],
+  "Blueprints": {
+    "blueprint_name": "default",
+    "stack_name": "HDP",
+    "stack_version": "2.6.3.2.KAVE"
+  }
+}

@@ -25,18 +25,25 @@ from resource_management import *
 class Eskapade(Script):
     sttmpdir = "/tmp/eskapade_install/dump"
     kind = "node"
+    status_file = "/etc/eskapade/status"
 
     def status(self, env):
-        raise ClientComponentHasNoStatus()
+        with open(self.status_file, 'r') as content_file:
+            content = content_file.read()
+        if int(content) != 0:
+            raise ComponentIsNotRunning()
+        return True
 
     def install(self, env):
         import params
         import kavecommon as kc
+
+        package = 'Eskapade-' + params.releaseversion + '.tar.gz'
         Execute('yum clean all')
         self.install_packages(env)
         env.set_params(params)
         # no need to install if already installed ... does not work behind firewall after restart
-        if self.kind == "node" and (os.path.exists('/etc/kave/eskapade_ok')
+        if self.kind == "node" and (os.path.exists('/etc/eskapade/eskapade_ok')
                                     and os.path.exists(params.top_dir + '/Eskapade')):
             return True
         # configure first before installing, create custom install file and mirror file if necessary
@@ -47,47 +54,32 @@ class Eskapade(Script):
         Execute("mkdir -p " + self.sttmpdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         topdir = os.path.realpath(os.path.curdir)
-        extraopts = ""
-        if params.ignore_missing_groups:
-            extraopts = " --ignore-missing-groups"
-        eskapade_path = '/Eskapade/' + params.releaseversion + 'scripts/KaveInstall'
-        instscript = params.top_dir + eskapade_path
-        # no need to download if install script already exists
-        if not os.path.exists(instscript):
-            os.chdir(self.sttmpdir)
-            kc.copy_cache_or_repo('Eskapade-' + params.releaseversion + '.tar.gz', arch='noarch',
-                                  ver=params.releaseversion,
-                                  dir="Eskapade")
-            Execute('tar -xzf eskapade-' + params.releaseversion + '.tar.gz')
-            # try to cope with the annoying way the tarball contains something with .git at the end!
-            import glob
+        eskapade_path = 'Eskapade/' + params.releaseversion + ''
+        install_dir = params.top_dir + eskapade_path
+        os.chdir(self.sttmpdir)
+        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
+        Execute('tar -xzf ' + package)
+        Execute('mkdir -p ' + install_dir)
+        Execute('cp -R Eskapade-' + params.releaseversion + '/* ' + install_dir)
+        os.chdir(install_dir)
+        Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -r requirements.txt'")
 
-            for gits in glob.glob(self.sttmpdir + "/*.git"):
-                if os.path.isdir(gits) and not gits.endswith("/.git"):
-                    Execute('mv ' + gits + ' ' + gits[:-len(".git")])
-            instscript = './Eskapade/scripts/KaveInstall'
-
-        commandlineargs = ""
-        if params.command_line_args:
-            commandlineargs = " " + params.command_line_args
-        Execute(instscript + ' --' + self.kind + extraopts + commandlineargs,
-                logoutput=True)
+        File("/etc/profile.d/eskapade.sh",
+             content=Template("eskapade.sh.j2", setup_script=install_dir + '/setup.sh'),
+             mode=0644
+             )
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
-        Execute("mkdir -p /etc/kave")
-        Execute('touch /etc/kave/eskapade_ok')
-        Execute('chmod -R a+r /etc/kave')
-        Execute('yum -y install python-pip')
-        Execute('pip install --upgrade pip')
-        Execute('pip install lightning-python')
+        Execute("mkdir -p /etc/eskapade")
+        Execute('touch /etc/eskapade/eskapade_ok')
+        Execute('chmod -R a+r /etc/eskapade')
 
     def configure(self, env):
         import params
-
         env.set_params(params)
-        Execute("mkdir -p /etc/kave")
-        Execute("chmod -R a+r /etc/kave")
-        Execute("chmod a+x /etc/kave")
+        Execute("mkdir -p /etc/eskapade")
+        Execute("chmod -R a+r /etc/eskapade")
+        Execute("chmod a+x /etc/eskapade")
         alternatives = []
         if ',' in params.alternative_download:
             alternatives = [a.strip() for a in params.alternative_download.strip().split(',')]
@@ -102,12 +94,16 @@ class Eskapade(Script):
             f.write('\n'.join(alternatives))
             f.write('\n')
             f.close()
-        File("/etc/kave/CustomInstall.py",
-             content=InlineTemplate(params.custom_install_template),
-             mode=0644
-             )
-        Execute("chmod -R a+r /etc/kave")
+        Execute("chmod -R a+r /etc/eskapade")
 
+    def start(self, env):
+        Execute("echo 0 > " + self.status_file)
+
+    def stop(self, env):
+        Execute("echo 1 > " + self.status_file)
+
+    def restart(self, env):
+        Execute("echo 0 > " + self.status_file)
 
 if __name__ == "__main__":
     Eskapade().execute()

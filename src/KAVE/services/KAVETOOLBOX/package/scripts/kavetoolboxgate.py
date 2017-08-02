@@ -25,18 +25,23 @@ from kavetoolbox import KaveToolbox
 
 class KaveToolboxGate(KaveToolbox):
     kind = "workstation"
-
-    def start(self, env):
-        return True
-
-    def stop(self, env):
-        return True
+    status_file = "/etc/kave/status"
 
     def status(self, env):
+        with open(self.status_file, 'r') as content_file:
+            content = content_file.read()
+        if int(content) != 0:
+            raise ComponentIsNotRunning()
         return True
 
+    def start(self, env):
+        Execute("echo 0 > " + self.status_file)
+
+    def stop(self, env):
+        Execute("echo 1 > " + self.status_file)
+
     def restart(self, env):
-        return True
+        Execute("echo 0 > " + self.status_file)
 
 if __name__ == "__main__":
     KaveToolboxGate().execute()

@@ -23,7 +23,6 @@ from resource_management import *
 
 
 class Eskapade(Script):
-    package = "Eskapade-0.5.tar.gz"
     sttmpdir = "/tmp/eskapade_install/dump"
     kind = "node"
     status_file = "/etc/eskapade/status"
@@ -38,6 +37,8 @@ class Eskapade(Script):
     def install(self, env):
         import params
         import kavecommon as kc
+
+        package = 'Eskapade-' + params.releaseversion + '.tar.gz'
         Execute('yum clean all')
         self.install_packages(env)
         env.set_params(params)
@@ -56,8 +57,8 @@ class Eskapade(Script):
         eskapade_path = 'Eskapade/' + params.releaseversion + ''
         install_dir = params.top_dir + eskapade_path
         os.chdir(self.sttmpdir)
-        kc.copy_cache_or_repo(self.package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
-        Execute('tar -xzf ' + self.package)
+        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
+        Execute('tar -xzf ' + package)
         Execute('mkdir -p ' + install_dir)
         Execute('cp -R Eskapade-' + params.releaseversion + '/* ' + install_dir)
         os.chdir(install_dir)

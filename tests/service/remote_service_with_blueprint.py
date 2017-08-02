@@ -126,6 +126,31 @@ class TestServiceFreeIPA(TestServiceBlueprint):
         ambari.cp(os.path.dirname(__file__) + '/kerberostest.csv', 'kerberostest.csv')
         ambari.run("./createkeytabs.py ./kerberostest.csv")
 
+
+class TestServiceEskapade(TestServiceBlueprint):
+    def check(self, ambari):
+        super(TestServiceEskapade, self).check(ambari)
+
+        import subprocess as sub
+
+        test_type = "unit"
+        proc = sub.Popen(ambari.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                                            " source /opt/Eskapade/*/setup.sh;",
+                                            " run_tests.py {}".format(test_type)],
+                         shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
+        output, err = proc.communicate()
+
+        self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
+        self.assertEqual(nowhite(err)[-2:], "OK",
+                         "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+        """
+        TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
+        ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   " source /opt/Eskapade/*/setup.sh;"
+                   " run_tests.py {}".foramt(test_type))
+        """
+
+
 if __name__ == "__main__":
     import sys
 
@@ -146,6 +171,8 @@ if __name__ == "__main__":
     test = TestServiceBlueprint()
     if service == "KAVELANDING":
         test = TestServiceKaveLanding()
+    if service == "ESKAPADE":
+        test = TestServiceEskapade()
     test.service = service
     test.debug = verbose
     test.branch = branch

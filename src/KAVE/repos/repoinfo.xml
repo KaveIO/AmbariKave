@@ -20,14 +20,14 @@
   <os family="redhat6">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
   </os>
   <os family="redhat7">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -39,7 +39,7 @@
   <os family="suse11">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/suse11sp3/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -51,7 +51,7 @@
   <os family="suse12">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/sles12/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -63,7 +63,7 @@
   <os family="ubuntu12">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/ubuntu12/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -75,7 +75,7 @@
   <os family="debian7">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/debian7/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>
@@ -87,7 +87,7 @@
   <os family="ubuntu14">
     <repo>
       <baseurl>http://public-repo-1.hortonworks.com/HDP/ubuntu14/2.x/updates/2.6.1.0</baseurl>
-      <repoid>HDP-2.6.3.2.KAVE</repoid>
+      <repoid>HDP-2.6.3.3.KAVE</repoid>
       <reponame>HDP</reponame>
     </repo>
     <repo>

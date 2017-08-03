@@ -1,6 +1,64 @@
 # The ReleaseNotes file
 
 Contains a list of the released versions with a summary of the main changes in each version.
+
+# v3.3-Beta
+- August 2017
+
+**MAJOR RELEASE**  
+
+* The major changes were:  
+    1. New Service added - ESKAPADE 0.5 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/)
+    2. HDP stack version switched from 2.6.0.3 to 2.6.1.0
+    3. Moving to KaveToolbox-3.4.-Beta which sets up the kaveEvn for all non-system users.
+
+* The minor changes were:  
+    1. Some small fixes, enhancements in different services  
+        a. Airflow starts/stops unexpectedly (Removed airflow-scheduler status check from status function) 
+        b. ssh client time-out increased to 600s in clusters.py  
+
+
+
+**KAVE stack versioning change**
+- Users were confused by the version numbering of KAVE
+- So the stack now looks like 2.6.3.3.KAVE (HDP-version.KAVE-version.KAVE)
+- KAVE is a as usual a small extension of HDP and this should improve the clarity
+- Read more here about KAVE versioning: https://github.com/KaveIO/AmbariKave/wiki/kave-versioning
+
+New Services:
+
+* ESKAPADE:  A light-weight, python-based data analysis framework, meant for all sorts of data analysis problems.
+
+Minor improvements in existing services:
+
+* A PEN Test was conducted
+  
+
+Other topics:
+* Eskapade service and integration tests
+* Modified role_command_order and created eskapade blueprints
+* Switched to Spark2 in ESKAPADE blueprint
+* Fixed continuing loop on ESKAPADE service stop
+* Changed Spark to Spark2 in examplehadoop blueprint
+* As a cluster administrator I want my installation to be reboot-proof: Tested
+* Incorrect restart hook in GitLab
+* As a cluster admin I want to be sure that Spark on YARN and Kafka are fully functional: Tested
+
+
+Bugfixes in installer:
+* Added known forwarders to /etc/resolv.conf 
+* Changed placeholder name and edit all places where /etc/resolv.conf templete is defined 
+* Changed ktb env. path 
+* Removed "Beta" from eskapade version
+* Changed KTB version to 3.4-Beta in order to have Python 3 installed
+* Eskapade install prodecure fixes
+* Remove Gate component from Eskapade service
+* Configure metainfo.xml for Eskapade service
+* Do not raise exception for Eskapade service status
+* Move Eskapade and KTB package name into separate variable
+* Package name depends on release version
+
+
 # v3.2-Beta
 **MAJOR RELEASE**  
 

@@ -2,33 +2,36 @@
 
 Contains a list of the released versions with a summary of the main changes in each version.
 # v3.2-Beta
-MAJOR RELEASE
-The major changes were:
-    1. Upgraded HDP from 2.5 to 2.6 (So the stack now looks like 2.6.3.1.KAVE (HDP-version.KAVE-version.KAVE))
-        HDP and ambari version upgraded (HDP: 2.6.0.3-8, Ambari: 2.5.0.3)
-        For details please see HDP Release Notes at: https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.0/bk_release-notes/content/comp_versions.html
-        and Ambari: https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.0.3/bk_ambari-release-notes/content/ch_relnotes-ambari-2.5.0.3.html
-    2. Space added/ increased at various locations (/usr/hdp. /tmp, ...)
-    3. repos (ambari, HDP) added in install_snippet
-    4. FreeIPA : a number of fixes for the FreeIPA installation, result of the automation attempts in Cloudbreak. Not only bugs, sometimes just improvements or corrections.
-    5. ROOT, SPARK build (part of KaveToolBox release but mentioning them here since they are referred by AmbariKave ). A few releases of KaveToolBox were done meanwhile (3.2, 3.3 and a few hotfixes)
-    6. Eskapade added as a service (Not fully functional, that would be part of the next release)
-    7. Default aws ami size increased to 15 GB
-Minor changes: 
-The minor changes were
-    1. Some small fixes, enhancements in different services (Airflow, package dependencies, KTBox head test, Increased ssh client timeout to 60s in kavedeploy)
-        a. kaveToolBox node removed from nameNodes
-        b. Fixed CustomInstallscript.py to be created before install
-        c. Disabled KTB version of spark
-        d. common services removed form package builder
-        e. Add .gitlab-ci.yml for gitlab-ci, put on hold for now. Will be part of one of the upcoming releases. 
-        f. Fixed Issues: ABK-508,
-        g. Password protected notebooks
-        h. Show restart warnings for services
-        i. KTB on Python 3 breaks video /unity desktop
-        j. Path odities for system users
-        k. VNC
-        l. Working Kave, KaveToolbox
+**MAJOR RELEASE**  
+
+* The major changes were:  
+    1. Upgraded HDP from 2.5 to 2.6 (So the stack now looks like 2.6.3.1.KAVE (HDP-version.KAVE-version.KAVE))  
+        HDP and ambari version upgraded (HDP: 2.6.0.3-8, Ambari: 2.5.0.3)  
+        For details please see HDP Release Notes at: https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.0/bk_release-notes/content/comp_versions.html  
+        and Ambari: https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.0.3/bk_ambari-release-notes/content/ch_relnotes-ambari-2.5.0.3.html  
+    2. Space added/ increased at various locations (/usr/hdp. /tmp, ...)  
+    3. repos (ambari, HDP) added in install_snippet  
+    4. FreeIPA : a number of fixes for the FreeIPA installation, result of the automation attempts in Cloudbreak. Not only bugs, sometimes just improvements or corrections.  
+    5. ROOT, SPARK build (part of KaveToolBox release but mentioning them here since they are referred by AmbariKave ). A few releases of KaveToolBox were done meanwhile (3.2, 3.3 and a few hotfixes)  
+    6. Eskapade added as a service (Not fully functional, that would be part of the next release)  
+    7. Default aws ami size increased to 15 GB  
+
+**Minor changes:**  
+
+   * The minor changes were  
+       1. Some small fixes, enhancements in different services (Airflow, package dependencies, KTBox head test, Increased ssh client timeout to 60s in kavedeploy)  
+        a. kaveToolBox node removed from nameNodes  
+        b. Fixed CustomInstallscript.py to be created before install  
+        c. Disabled KTB version of spark  
+        d. common services removed form package builder  
+        e. Add .gitlab-ci.yml for gitlab-ci, put on hold for now. Will be part of one of the upcoming releases.   
+        f. Fixed Issues: ABK-508,  
+        g. Password protected notebooks  
+        h. Show restart warnings for services  
+        i. KTB on Python 3 breaks video /unity desktop  
+        j. Path odities for system users  
+        k. VNC  
+        l. Working Kave, KaveToolbox  
 
 
 # v3.1-Beta

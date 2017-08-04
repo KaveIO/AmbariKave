@@ -106,8 +106,6 @@ class Airflow(kc.ApacheScript):
         Execute('systemctl stop airflow-webserver')
         Execute('systemctl stop airflow-scheduler')
 
-        super(Airflow, self).stop(env)
-
     def restart(self, env):
 
         self.configure(env)

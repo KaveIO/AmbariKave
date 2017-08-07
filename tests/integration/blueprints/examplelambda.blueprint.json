@@ -295,6 +295,6 @@
   "Blueprints" : {
     "blueprint_name" : "examplelambda",
     "stack_name" : "HDP",
-    "stack_version" : "2.6.3.2.KAVE"
+    "stack_version" : "2.6.3.3.KAVE"
   }
 }

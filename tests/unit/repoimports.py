@@ -29,7 +29,7 @@ class TestRepoImports(unittest.TestCase):
     Checks for lines where we try and get a file from the repository,
     and checks that those files exist, then
     """
-    ignorefiles = ['repoimports.py', 'eskapade.py']
+    ignorefiles = ['repoimports.py', 'eskapade.py', 'kavetoolbox.py']
     ignorepackages = []
     replaces = {"+params.releaseversion+": kc.__version__,
                 "%s": "el7"}

@@ -27,7 +27,7 @@
         { "name": "METRICS_COLLECTOR" },
         { "name": "METRICS_MONITOR" },
         { "name": "ZOOKEEPER_CLIENT" },
-        { "name": "KAVETOOLBOXNODE" },
+        { "name": "KAVETOOLBOXGATE" },
         { "name": "ESKAPADENODE" }
       ],
       "cardinality": "1"

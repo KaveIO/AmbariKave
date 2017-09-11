@@ -72,6 +72,8 @@ template_000_default = default('configurations/kaveganglia/template_000_default'
 # Edit the template through the Ambari interface instead
 TraceEnable Off
 RequestHeader unset Proxy early
+ServerSignature Off
+ServerTokens Prod
 Listen {{PORT}}
 ServerName "{{servername}}"
 DocumentRoot "{{www_folder}}"

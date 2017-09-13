@@ -171,6 +171,10 @@ class FreeipaServer(Script):
             fi.create_sudorule('allsudo', **(params.initial_sudoers))
         # create robot admin
         self.reset_robot_admin_expire_date(env)
+        # Enable security options for Apache
+        with open("/etc/httpd/conf/httpd.conf", "a") as httpd_conf:
+            httpd_conf.write("TraceEnable Off\nServerSignature Off\nServerTokens Prod")
+        Execute('systemctl restart httpd')
         # if FreeIPA server is not started properly, then the clients will not install
         self.start(env)
 

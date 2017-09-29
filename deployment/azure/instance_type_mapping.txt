@@ -5,7 +5,7 @@ The table below shows the mapping between currently used AWS instance types in K
 +--------------------------------------------------------+--------------------------------------------------------+
 | Instance Type | vCPU | Memory(GiB) | Type              | Instance Type | vCPU | Memory(GiB) | Type              |
 +---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
-| m4.large      | 2    | 8           | General Purpose   | D2 v3         | 2    | 8           | General Purpose   |
+| m4.large      | 2    | 8           | General Purpose   | D2 v2         | 2    | 8           | General Purpose   |
 +---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
 | t2.medium     | 2    | 4           | General Purpose   | A2 v2         | 2    | 4           | General Purpose   |
 +---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+

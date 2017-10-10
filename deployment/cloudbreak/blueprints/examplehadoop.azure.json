@@ -1,0 +1,28 @@
+{
+  "host_groups" : [
+    {
+      "Name" : "admin",
+      "machine-type": "D2v2"
+    },
+    { 
+      "Name" : "gateway",
+      "machine-type": "D2v2"
+  },
+  {   
+      "Name" : "ci",
+      "machine-type": "F4"
+  },
+  {
+      "name":"namenode-1",
+      "machine-type": "F4"
+  },
+  {
+      "name":"namenode-2",
+      "machine-type": "F4"
+  },
+  { 
+      "Name" : "data",
+      "machine-type": "D2v2"
+  }
+  ]
+}

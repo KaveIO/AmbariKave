@@ -1,0 +1,8 @@
+{
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "machine-type": "D2v2"
+    }
+  ]
+}

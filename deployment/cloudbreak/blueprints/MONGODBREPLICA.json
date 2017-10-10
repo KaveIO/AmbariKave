@@ -1,0 +1,70 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "METRICS_GRAFANA"     },
+        { "name" : "ZOOKEEPER_SERVER"    },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "components" : [
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "KAVELANDING"         },
+        { "name" : "MONGODB_CLIENT"      }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "replica",
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0","db_path" : "/var/lib/mongo/data" } } ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_MASTER"     },
+        { "name" : "MONGODB_CLIENT"     }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "arbiter",
+      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0" } } ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_ARBITER"    },
+        { "name" : "MONGODB_CLIENT"     }
+      ],
+      "cardinality" : "0+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "mongodbreplica",
+    "stack_name" : "HDP",
+    "stack_version" : "2.6"
+  }
+}

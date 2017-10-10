@@ -164,8 +164,9 @@
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
-        { "name" : "KAVENAGIOS_MONITOR"   }
-      ],
+        { "name" : "KAVENAGIOS_MONITOR"   },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
+        		     ],
       "cardinality" : "1+"
     },
     {
@@ -178,7 +179,8 @@
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR"   },
-        { "name" : "KAVENAGIOS_MONITOR"    }
+        { "name" : "KAVENAGIOS_MONITOR"    },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1+"
     },
@@ -228,7 +230,8 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "KAVEGANGLIA_MONITOR"},
-        { "name" : "KAVENAGIOS_MONITOR" }
+        { "name" : "KAVENAGIOS_MONITOR" },
+        { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"
     },
@@ -239,10 +242,10 @@
         { "name" : "METRICS_MONITOR"     },
         { "name" : "KAVETOOLBOXNODE"     },
         { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVEGANGLIA_MONITOR" },
-        { "name" : "KAVENAGIOS_MONITOR"  }
+        { "name" : "KAVENAGIOS_MONITOR"  },
+        { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
     },
@@ -255,7 +258,8 @@
         { "name" : "KAFKA_BROKER"     },
         { "name" : "ZOOKEEPER_CLIENT" },
         { "name" : "KAVEGANGLIA_MONITOR" },
-        { "name" : "KAVENAGIOS_MONITOR"  }
+        { "name" : "KAVENAGIOS_MONITOR"  },
+        { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
     }

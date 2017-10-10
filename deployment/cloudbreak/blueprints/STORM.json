@@ -1,0 +1,78 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    }
+   ],
+  "host_groups" : [
+        {
+      "name" : "admin",
+      "components" : [
+        { "name" : "AMBARI_SERVER"       },
+        { "name" : "METRICS_COLLECTOR"   },
+        { "name" : "METRICS_GRAFANA"     },
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "KAVEGANGLIA_SERVER"  },
+        { "name" : "KAVELANDING"         },
+        { "name" : "STORMSD_UI_SERVER"   },
+        { "name" : "STORMSD_LOG_VIEWER"  },
+        { "name" : "STORMSD_CLIENT"      },
+        { "name" : "STORMSD_DRPC_SERVER" }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "gateway",
+      "components" : [
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "KAVELANDING"         },
+        { "name" : "STORMSD_LOG_VIEWER"  },
+        { "name" : "STORMSD_CLIENT"      },
+        { "name" : "KAVEGANGLIA_MONITOR" }
+      ],
+      "cardinality" : "1+"
+    },
+    {
+      "name" : "nimbus",
+      "components" : [
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "STORMSD_LOG_VIEWER" },
+        { "name" : "NIMBUS_SD_MASTER"   },
+        { "name" : "KAVEGANGLIA_MONITOR" }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "supervisor",
+      "components" : [
+        { "name" : "METRICS_MONITOR"     },
+        { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "STORMSD_LOG_VIEWER"  },
+        { "name" : "SUPERVISOR_SD_SLAVE" },
+        { "name" : "KAVEGANGLIA_MONITOR" }
+      ],
+      "cardinality" : "1+"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "storm",
+    "stack_name" : "HDP",
+    "stack_version" : "2.6"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "configurations" : [
+    {
+      "ams-site" : {
+        "timeline.metrics.service.operation.mode" : "embedded"
+      }
+    },
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
+    },
+    {
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    }
+  ],
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_GRAFANA"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "airflow",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      },
+        { "name" : "AIRFLOW_SERVER"        }
+      ],
+      "cardinality" : "1"
+    }
+  ],
+  "Blueprints" : {
+    "blueprint_name" : "airflow",
+    "stack_name" : "HDP",
+    "stack_version" : "2.6"
+  }
+}

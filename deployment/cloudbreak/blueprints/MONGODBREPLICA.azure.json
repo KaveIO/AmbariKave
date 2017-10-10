@@ -1,0 +1,20 @@
+{
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "machine-type": "D2v2"
+    },
+    {
+      "name" : "gateway",
+      "machine-type": "D2v2"
+    },
+    {
+      "name" : "replica",
+      "machine-type": "D2v2"
+    },
+    {
+      "name" : "arbiter",
+      "machine-type": "D2v2"
+    }
+  ]
+}

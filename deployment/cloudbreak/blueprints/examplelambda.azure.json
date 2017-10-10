@@ -1,0 +1,48 @@
+{
+  "host_groups" : [
+    {
+      "name" : "admin",
+      "machine-type": "D2v2"
+    },
+    {
+      "name" : "gateway",
+      "machine-type": "D2v2"
+    },
+    {
+      "name":"namenode-1",
+      "machine-type": "F4"
+    },
+    {
+      "name":"namenode-2",
+      "machine-type": "F4"
+    },
+    {
+      "name" : "data",
+      "machine-type": "D2v2"
+    },
+    {
+      "name" : "mongo",
+      "machine-type": "D1v2"
+    },
+    {
+      "name" : "as",
+      "machine-type": "F2"
+    },
+    {
+      "name" : "ci",
+      "machine-type": "F4"
+    },
+    {
+      "name" : "nimbus",
+      "machine-type": "F2"
+    },
+    {
+      "name" : "supervisor",
+      "machine-type": "D1v2"
+    },
+    {
+      "name" : "kafka",
+      "machine-type": "D1v2"
+    }
+  ]
+}

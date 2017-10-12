@@ -2,11 +2,13 @@
   "host_groups" : [
     {
       "Name" : "ambari",
-      "machine-type": "D2v2"
+      "machine-type": "D2v2",
+      "volume-size": 30
     },
     {
       "Name" : "airflow",
-      "machine-type": "A2v2"
+      "machine-type": "A2v2",
+      "volume-size": 20
     }
   ]
 }

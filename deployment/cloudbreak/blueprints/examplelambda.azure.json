@@ -1,59 +1,48 @@
 {
-  "host_groups" : [
-    {
-      "name" : "admin",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 30
-    },
-    {
-      "name" : "gateway",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 150
-    },
-    {
-      "name":"namenode-1",
-      "machine-type": "Standard_F4",
-      "volume-size": 50
-    },
-    {
-      "name":"namenode-2",
-      "machine-type": "Standard_F4",
-      "volume-size": 50
-    },
-    {
-      "name" : "data",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 50
-    },
-    {
-      "name" : "mongo",
-      "machine-type": "Standard_D1_v2",
-      "volume-size": 50
-    },
-    {
-      "name" : "as",
-      "machine-type": "Standard_F2",
-      "volume-size": 50
-    },
-    {
-      "name" : "ci",
-      "machine-type": "Standard_F4",
-      "volume-size": 50
-    },
-    {
-      "name" : "nimbus",
-      "machine-type": "Standard_F2",
-      "volume-size": 30
-    },
-    {
-      "name" : "supervisor",
-      "machine-type": "Standard_D1_v2",
-      "volume-size": 40
-    },
-    {
-      "name" : "kafka",
-      "machine-type": "Standard_D1_v2",
-      "volume-size": 40
+    "host_groups": {
+        "admin": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 30
+        },
+        "gateway": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 150
+        },
+        "namenode-1": {
+            "machine-type": "Standard_F4",
+            "volume-size": 50
+        },
+        "namenode-2": {
+            "machine-type": "Standard_F4",
+            "volume-size": 50
+        },
+        "data": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 50
+        },
+        "mongo": {
+            "machine-type": "Standard_D1_v2",
+            "volume-size": 50
+        },
+        "as": {
+            "machine-type": "Standard_F2",
+            "volume-size": 50
+        },
+        "ci": {
+            "machine-type": "Standard_F4",
+            "volume-size": 50
+        },
+        "nimbus": {
+            "machine-type": "Standard_F2",
+            "volume-size": 30
+        },
+        "supervisor": {
+            "machine-type": "Standard_D1_v2",
+            "volume-size": 40
+        },
+        "kafka": {
+            "machine-type": "Standard_D1_v2",
+            "volume-size": 40
+        }
     }
-  ]
 }

@@ -1,9 +1,8 @@
 {
-  "host_groups" : [
-    {
-      "name" : "admin",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 30
+    "host_groups": {
+        "admin": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 30
+        }
     }
-  ]
 }

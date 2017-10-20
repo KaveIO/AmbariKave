@@ -1,19 +1,16 @@
 {
-  "host_groups" : [
-    {
-      "name" : "admin",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 30
-    },
-    {
-      "name" : "gateway",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 150
-    },
-    {
-      "name" : "ci",
-      "machine-type": "Standard_F4",
-      "volume-size": 50
+    "host_groups": {
+        "admin": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 30
+        },
+        "gateway": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 150
+        },
+        "ci": {
+            "machine-type": "Standard_F4",
+            "volume-size": 50
+        }
     }
-  ]
 }

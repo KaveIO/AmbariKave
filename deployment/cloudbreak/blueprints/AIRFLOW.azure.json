@@ -1,14 +1,12 @@
 {
-  "host_groups" : [
-    {
-      "Name" : "ambari",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 30
-    },
-    {
-      "Name" : "airflow",
-      "machine-type": "Standard_A2_v2",
-      "volume-size": 20
+    "host_groups": {
+        "ambari": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 30
+        },
+        "airflow": {
+            "machine-type": "Standard_A2_v2",
+            "volume-size": 20
+        }
     }
-  ]
 }

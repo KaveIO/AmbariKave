@@ -1,24 +1,20 @@
 {
-  "host_groups" : [
-    {
-      "name" : "admin",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 30
-    },
-    {
-      "name" : "gateway",
-      "machine-type": "Standard_D2_v2",
-      "volume-size": 150
-    },
-    {
-      "name" : "nimbus",
-      "machine-type": "Standard_F2",
-      "volume-size": 30
-    },
-    {
-      "name" : "supervisor",
-      "machine-type": "Standard_D1_v2",
-      "volume-size": 40
+    "host_groups": {
+        "admin": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 30
+        },
+        "gateway": {
+            "machine-type": "Standard_D2_v2",
+            "volume-size": 150
+        },
+        "nimbus": {
+            "machine-type": "Standard_F2",
+            "volume-size": 30
+        },
+        "supervisor": {
+            "machine-type": "Standard_D1_v2",
+            "volume-size": 40
+        }
     }
-  ]
 }

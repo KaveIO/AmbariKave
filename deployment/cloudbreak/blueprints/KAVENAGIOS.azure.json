@@ -2,12 +2,12 @@
   "host_groups" : [
     {
       "name" : "admin",
-      "machine-type": "D2v2",
+      "machine-type": "Standard_D2_v2",
       "volume-size": 30
     },
     {
       "name" : "test",
-      "machine-type": "D1v2",
+      "machine-type": "Standard_D1_v2",
       "volume-size": 20
     }
   ]

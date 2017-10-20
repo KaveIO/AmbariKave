@@ -28,3 +28,67 @@ def get_access_token():
         return token
     except Exception as e:
         print "Error getting Cloudbreak access token: ", e
+
+
+def check_for_template(hostgroup):
+    """
+    Checks if Cloudbreak template with given name exists
+    """
+
+    name = hostgroup + '-' + params.kave_version
+    path = '/cb/api/v1/templates/account/' + name
+    url = params.cb_https_url + path
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+
+    response = requests.get(url, headers=headers, verify=False)
+    if response.status_code == 200:
+        return True
+    else:
+        print "Template with name " + name + " does not exist.\nTemplate " + name + " will be created."
+        if create_template(hostgroup) == True:
+            return True
+        else:
+            return False
+
+
+def create_template(hostgroup):
+    """
+    Creates Cloudbreak template with given name exists
+    """
+
+    path = '/cb/api/v1/templates/user/'
+    url = params.cb_https_url + path
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+
+    with open('blueprints/hostgroups.azure.json') as hg_file:
+        hgjson = json.load(hg_file)
+    if not (hgjson and hgjson.get(hostgroup)):
+        print "Description for hostgroup " + hostgroup + " is missing in blueprints/hostgroups.azure.json."
+        return False
+
+    name = hostgroup + '-' + params.kave_version
+    hostgroup_info = hgjson[hostgroup]
+    data = {}
+    data['name'] = name
+    data['cloudPlatform'] = 'AZURE'
+    data['parameters'] = {}
+    data['parameters']['managedDisk'] = True
+    data['instanceType'] = hostgroup_info['machine-type']
+    data['volumeCount'] = 1
+    data['volumeSize'] = hostgroup_info['volume-size']
+    data['volumeType'] = 'Standard_LRS'
+
+    response = requests.post(url, data=json.dumps(
+        data), headers=headers, verify=False)
+    if response.status_code == 200:
+        print "Created new Cloudbreak template with name " + hostgroup
+        print response.text
+        return True
+    else:
+        print "Error creating Cloudbreak template with name " + hostgroup
+        print response.text
+        return False

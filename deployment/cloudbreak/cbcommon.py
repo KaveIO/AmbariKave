@@ -55,7 +55,7 @@ def check_for_template(hostgroup):
 
 def create_template(hostgroup):
     """
-    Creates Cloudbreak template with given name exists
+    Creates Cloudbreak template with given name
     """
 
     path = '/cb/api/v1/templates/user/'
@@ -85,10 +85,67 @@ def create_template(hostgroup):
     response = requests.post(url, data=json.dumps(
         data), headers=headers, verify=False)
     if response.status_code == 200:
-        print "Created new Cloudbreak template with name " + hostgroup
+        print "Created new Cloudbreak template with name " + name
         print response.text
         return True
     else:
-        print "Error creating Cloudbreak template with name " + hostgroup
+        print "Error creating Cloudbreak template with name " + name
+        print response.text
+        return False
+
+
+def check_for_blueprint(name):
+    """
+    Checks if Cloudbreak blueprint with given name exists
+    """
+
+    bp_name = name + '-' + params.kave_version
+    path = '/cb/api/v1/blueprints/user/' + bp_name
+    url = params.cb_https_url + path
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+
+    response = requests.get(url, headers=headers, verify=False)
+    if response.status_code == 200:
+        return True
+    else:
+        print "Blueprint with name " + bp_name + " does not exist.\nBlueprint " + bp_name + " will be created."
+        if create_blueprint(name) == True:
+            return True
+        else:
+            return False
+
+
+def create_blueprint(name):
+    """
+    Creates Cloudbreak blueprint with given name
+    """
+
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+    path = '/cb/api/v1/blueprints/user'
+    url = params.cb_https_url + path
+
+    try:
+        with open('blueprints/' + name + '.json') as bp_file:
+            bp = json.load(bp_file)
+    except (IOError, ValueError):
+        print "No correct blueprint .json file found for " + name
+        return False
+
+    data = {}
+    bp_name = name + '-' + params.kave_version
+    data['name'] = bp_name
+    data['ambariBlueprint'] = bp
+
+    response = requests.post(url, data=json.dumps(
+        data), headers=headers, verify=False)
+    if response.status_code == 200:
+        print "Created new Cloudbreak blueprint with name " + bp_name
+        return True
+    else:
+        print "Error creating Cloudbreak blueprint with name " + bp_name
         print response.text
         return False

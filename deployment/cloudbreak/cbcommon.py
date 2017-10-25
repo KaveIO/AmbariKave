@@ -46,13 +46,10 @@ def check_for_template(hostgroup):
 
     response = requests.get(url, headers=headers, verify=False)
     if response.status_code == 200:
-        return True
+        return response.json()["id"]
     else:
         print "Template with name " + name + " does not exist.\nTemplate " + name + " will be created."
-        if create_template(hostgroup) == True:
-            return True
-        else:
-            return False
+        return create_template(hostgroup)
 
 
 def create_template(hostgroup):
@@ -89,7 +86,7 @@ def create_template(hostgroup):
     if response.status_code == 200:
         print "Created new Cloudbreak template with name " + name
         print response.text
-        return True
+        return response.json()["id"]
     else:
         print "Error creating Cloudbreak template with name " + name
         print response.text
@@ -110,13 +107,10 @@ def check_for_blueprint(name):
 
     response = requests.get(url, headers=headers, verify=False)
     if response.status_code == 200:
-        return True
+        return response.json()["id"]
     else:
         print "Blueprint with name " + bp_name + " does not exist.\nBlueprint " + bp_name + " will be created."
-        if create_blueprint(name) == True:
-            return True
-        else:
-            return False
+        return create_blueprint(name)
 
 
 def create_blueprint(name):
@@ -146,7 +140,7 @@ def create_blueprint(name):
         data), headers=headers, verify=False)
     if response.status_code == 200:
         print "Created new Cloudbreak blueprint with name " + bp_name
-        return True
+        return response.json()["id"]
     else:
         print "Error creating Cloudbreak blueprint with name " + bp_name
         print response.text
@@ -167,13 +161,10 @@ def check_for_recipe(name):
 
     response = requests.get(url, headers=headers, verify=False)
     if response.status_code == 200:
-        return True
+        return response.json()["id"]
     else:
         print "Recipe with name " + recipe_name + " does not exist.\nRecipe " + recipe_name + " will be created."
-        if create_recipe(name) == True:
-            return True
-        else:
-            return False
+        return create_recipe(name)
 
 
 def create_recipe(name):
@@ -202,7 +193,7 @@ def create_recipe(name):
         data), headers=headers, verify=False)
     if response.status_code == 200:
         print "Created new Cloudbreak recipe with name " + name + '-' + params.kave_version
-        return True
+        return response.json()["id"]
     else:
         print "Error creating Cloudbreak recipe with name " + name + '-' + params.kave_version
         print response.text

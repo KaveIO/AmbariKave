@@ -2,6 +2,8 @@ import requests
 import json
 import params
 import urlparse
+import base64
+from string import Template
 
 
 def get_access_token():
@@ -100,7 +102,7 @@ def check_for_blueprint(name):
     """
 
     bp_name = name + '-' + params.kave_version
-    path = '/cb/api/v1/blueprints/user/' + bp_name
+    path = '/cb/api/v1/blueprints/account/' + bp_name
     url = params.cb_https_url + path
     token = get_access_token()
     headers = {"Authorization": "Bearer " +
@@ -147,5 +149,61 @@ def create_blueprint(name):
         return True
     else:
         print "Error creating Cloudbreak blueprint with name " + bp_name
+        print response.text
+        return False
+
+
+def check_for_recipe(name):
+    """
+    Checks if Cloudbreak recipe with given name exists
+    """
+
+    recipe_name = name + '-' + params.kave_version
+    path = '/cb/api/v1/recipes/account/' + recipe_name
+    url = params.cb_https_url + path
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+
+    response = requests.get(url, headers=headers, verify=False)
+    if response.status_code == 200:
+        return True
+    else:
+        print "Recipe with name " + recipe_name + " does not exist.\nRecipe " + recipe_name + " will be created."
+        if create_recipe(name) == True:
+            return True
+        else:
+            return False
+
+
+def create_recipe(name):
+    """
+    Creates Cloudbreak recipe with given name
+    """
+
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+    path = '/cb/api/v1/recipes/user'
+    url = params.cb_https_url + path
+
+    details = params.recipes[name]
+    data = {}
+    data['name'] = name + '-' + params.kave_version
+    data['recipeType'] = details['recipeType']
+    data['description'] = details['description']
+    with open(details["templatePath"]) as rec_file:
+        rec = rec_file.read()
+    str = Template(rec)
+    content = str.substitute(details["params"])
+    data['content'] = base64.b64encode(content)
+
+    response = requests.post(url, data=json.dumps(
+        data), headers=headers, verify=False)
+    if response.status_code == 200:
+        print "Created new Cloudbreak recipe with name " + name + '-' + params.kave_version
+        return True
+    else:
+        print "Error creating Cloudbreak recipe with name " + name + '-' + params.kave_version
         print response.text
         return False

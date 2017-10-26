@@ -44,7 +44,7 @@ def check_for_template(hostgroup):
     headers = {"Authorization": "Bearer " +
                token, "Content-type": "application/json"}
 
-    response = requests.get(url, headers=headers, verify=False)
+    response = requests.get(url, headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         return response.json()["id"]
     else:
@@ -82,7 +82,7 @@ def create_template(hostgroup):
     data['volumeType'] = 'Standard_LRS'
 
     response = requests.post(url, data=json.dumps(
-        data), headers=headers, verify=False)
+        data), headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         print "Created new Cloudbreak template with name " + name
         print response.text
@@ -105,7 +105,7 @@ def check_for_blueprint(name):
     headers = {"Authorization": "Bearer " +
                token, "Content-type": "application/json"}
 
-    response = requests.get(url, headers=headers, verify=False)
+    response = requests.get(url, headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         return response.json()["id"]
     else:
@@ -137,7 +137,7 @@ def create_blueprint(name):
     data['ambariBlueprint'] = bp
 
     response = requests.post(url, data=json.dumps(
-        data), headers=headers, verify=False)
+        data), headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         print "Created new Cloudbreak blueprint with name " + bp_name
         return response.json()["id"]
@@ -159,7 +159,7 @@ def check_for_recipe(name):
     headers = {"Authorization": "Bearer " +
                token, "Content-type": "application/json"}
 
-    response = requests.get(url, headers=headers, verify=False)
+    response = requests.get(url, headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         return response.json()["id"]
     else:
@@ -190,7 +190,7 @@ def create_recipe(name):
     data['content'] = base64.b64encode(content)
 
     response = requests.post(url, data=json.dumps(
-        data), headers=headers, verify=False)
+        data), headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         print "Created new Cloudbreak recipe with name " + name + '-' + params.kave_version
         return response.json()["id"]

@@ -5,8 +5,28 @@ uaa_port=8089
 cb_username="admin@example.com"
 cb_password="KavePassword01"
 ssl_verify=False
-recipes = {"testrecipe": {"recipeType": "PRE",
-                          "description": "test recipe from code",
-                          "templatePath" : "recipes/testrecipe.sh",
-                          "params" : {"text" : 'echo "hello world" > /dev/null'}},
-           "testrec2": {"key1": "value1"}}
+recipes = {
+  "patchambari":
+    {
+      "recipeType": "PRE",
+      "description": "Add the KAVE Stack to ambari",
+      "templatePath" : "recipes/setup_cloudbreak_kavepatch_ambari.sh"
+    },
+  "fix-hosts-file": 
+    {
+      "recipeType": "PRE",
+      "description": "Fix hosts file on all nodes",
+      "templatePath" : "recipes/setup_cloudbreak_fixhostsfile_all.sh"
+    },
+  "distibute-private-key":
+    {
+      "recipeType": "PRE",
+      "description": "Distribute private key on all nodes",
+      "templatePath" : "recipes/setup_cloudbreak_keydistrib_all.sh"
+    },
+  "limit-ssh-attempts":
+    {
+      "recipeType": "PRE",
+      "description": "Limit unsuccessful ssh attempts rate",
+      "templatePath" : "recipes/limit-ssh-attempts.sh"
+    }}

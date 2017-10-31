@@ -1,0 +1,27 @@
+{
+  "name": "",
+  "credentialId": 6,
+  "region": "North Europe",
+  "failurePolicy": {
+    "adjustmentType": "BEST_EFFORT",
+    "threshold": null
+  },
+  "onFailureAction": "DO_NOTHING",
+  "instanceGroups": [],
+  "parameters": {
+    "persistentStorage": "cbstore",
+    "attachedStorageOption": "SINGLE"
+  },
+  "networkId": 4,
+  "relocateDocker": true,
+  "availabilityZone": null,
+  "orchestrator": {
+    "type": "SALT"
+  },
+  "tags": {
+    "userDefined": {}
+  },
+  "platformVariant": "AZURE",
+  "customImage": null,
+  "flexId": null
+}

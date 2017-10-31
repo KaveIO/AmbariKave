@@ -4,6 +4,7 @@ import params
 import urlparse
 import base64
 from string import Template
+import time
 
 
 def get_access_token():
@@ -107,7 +108,7 @@ def check_for_blueprint(name):
 
     response = requests.get(url, headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
-        return response.json()["id"]
+        return response.json()
     else:
         print "Blueprint with name " + bp_name + " does not exist.\nBlueprint " + bp_name + " will be created."
         return create_blueprint(name)
@@ -140,7 +141,7 @@ def create_blueprint(name):
         data), headers=headers, verify=params.ssl_verify)
     if response.status_code == 200:
         print "Created new Cloudbreak blueprint with name " + bp_name
-        return response.json()["id"]
+        return response.json()
     else:
         print "Error creating Cloudbreak blueprint with name " + bp_name
         print response.text
@@ -198,3 +199,107 @@ def create_recipe(name):
         print "Error creating Cloudbreak recipe with name " + name + '-' + params.kave_version
         print response.text
         return False
+
+
+def create_stack(blueprint_name):
+    """
+    Creates Cloudbreak stack with given blueprint name
+    """
+
+    with open("stack_template.json") as stack_file:
+        stack = json.load(stack_file)
+    with open("blueprints/hostgroups.azure.json") as hgs_file:
+        hg_info = json.load(hgs_file)
+    stack["name"] = blueprint_name.lower() + str(int(time.time()))
+    blueprint = check_for_blueprint(blueprint_name)
+    if blueprint:
+        hgs = [item["name"]
+               for item in blueprint["ambariBlueprint"]["host_groups"]]
+    for hg in hgs:
+        instance = {}
+        instance["templateId"] = check_for_template(hg)
+        instance["group"] = hg
+        instance["nodeCount"] = 1
+        instance["type"] = hg_info[hg]["instance-type"]
+        instance["securityGroupId"] = hg_info[hg]["securityGroup"]
+        stack["instanceGroups"].append(instance)
+
+    print stack
+
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+    path = '/cb/api/v1/stacks/user'
+    url = params.cb_https_url + path
+    response = requests.post(url, data=json.dumps(
+        stack), headers=headers, verify=params.ssl_verify)
+    print response.text
+    return (blueprint, response.json()["id"])
+
+
+def create_cluster(blueprint, stack_id):
+    """
+    Creates Cloudbreak cluster with given blueprint name and stack id
+    """
+
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+    path = '/cb/api/v1/stacks/' + str(stack_id)
+    url = params.cb_https_url + path
+    stack = requests.get(url, headers=headers, verify=params.ssl_verify).json()
+
+    with open("cluster_template.json") as cl_file:
+        cluster = json.load(cl_file)
+    with open("blueprints/hostgroups.azure.json") as hgs_file:
+        hg_info = json.load(hgs_file)
+    cluster["name"] = stack["name"]
+    cluster["blueprintId"] = blueprint["id"]
+
+    hgs = [item["name"]
+         for item in blueprint["ambariBlueprint"]["host_groups"]]
+    for hg in hgs:
+        hostgroup = {}
+        hostgroup["name"] = hg
+        hostgroup["constraint"] = {}
+        hostgroup["constraint"]["instanceGroupName"] = hg
+        hostgroup["constraint"]["hostCount"] = 1
+        hostgroup["recipeIds"] = hg_info[hg]["recipeIds"]
+        cluster["hostGroups"].append(hostgroup)
+
+    url = url + '/cluster'
+    response = requests.post(url, data=json.dumps(
+        cluster), headers=headers, verify=params.ssl_verify)
+
+    return response.json()
+
+
+def wait_for_cluster(name):
+    """
+    Creates Cloudbreak cluster with given blueprint name and waits for it to be up
+    """
+
+    blueprint, stack_id = create_stack(name)
+    cluster = create_cluster(blueprint, stack_id)
+
+    token = get_access_token()
+    headers = {"Authorization": "Bearer " +
+               token, "Content-type": "application/json"}
+    path = '/cb/api/v1/stacks/' + str(stack_id) + '/cluster'
+    url = params.cb_https_url + path
+
+    timeout = int(time.time()) + 3600
+    timer = int(time.time())
+    interval = 30
+
+    while timer < timeout:
+        response = requests.get(url, headers=headers, verify=params.ssl_verify)
+        if response.json() and response.json().get("status") and response.json()["status"] == "AVAILABLE":
+            print "Cluster " + response.json()["name"] + " deployed successfully."
+            return True
+        else:
+            time.sleep(interval)
+            timer = int(time.time())
+
+    print "Error creating cluster " + cluster["name"]
+    return False

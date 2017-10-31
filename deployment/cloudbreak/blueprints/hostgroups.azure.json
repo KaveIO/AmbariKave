@@ -1,7 +1,10 @@
  {
     "admin": {
         "machine-type": "Standard_D2_v2",
-        "volume-size": 30
+        "volume-size": 30,
+        "instance-type" : "GATEWAY",
+        "securityGroup" : 5,
+        "recipeIds": [45,37,47,35]
     },
     "gateway": {
         "machine-type": "Standard_D2_v2",
@@ -49,7 +52,10 @@
     },
     "airflow": {
         "machine-type": "Standard_A2_v2",
-        "volume-size": 20
+        "volume-size": 20,
+        "instance-type": "CORE",
+        "securityGroup": 5,
+        "recipeIds": [37,47,35]
     },
     "test": {
         "machine-type": "Standard_D1_v2",

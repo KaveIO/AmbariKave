@@ -125,7 +125,7 @@ class CBDeploy():
         url = params.cb_https_url + path
 
         try:
-            with open('blueprints/' + name + '.json') as bp_file:
+            with open('blueprints/' + name + '.blueprint.json') as bp_file:
                 bp = json.load(bp_file)
         except (IOError, ValueError):
             print "No correct blueprint .json file found for " + name
@@ -181,9 +181,12 @@ class CBDeploy():
         data['description'] = details['description']
         with open(details["templatePath"]) as rec_file:
             rec = rec_file.read()
-        str = Template(rec)
-        content = str.substitute(details["params"])
-        data['content'] = base64.b64encode(content)
+        if details.get("params") :
+            temp = Template(rec)
+            content = content.substitute(details["params"])
+            data['content'] = base64.b64encode(content)
+        else:
+            data['content'] = base64.b64encode(rec)
 
         response = requests.post(url, data=json.dumps(
             data), headers=headers, verify=params.ssl_verify)
@@ -254,7 +257,7 @@ class CBDeploy():
             hostgroup["constraint"] = {}
             hostgroup["constraint"]["instanceGroupName"] = hg
             hostgroup["constraint"]["hostCount"] = 1
-            hostgroup["recipeIds"] = hg_info[hg]["recipeIds"]
+            hostgroup["recipeIds"] = self.get_recipe_ids(hg_info[hg]["recipes"])
             cluster["hostGroups"].append(hostgroup)
 
         url = url + '/cluster'
@@ -262,6 +265,13 @@ class CBDeploy():
             cluster), headers=headers, verify=params.ssl_verify)
 
         return response.json()
+
+    def get_recipe_ids(self, recipe_names):
+        recipe_ids = []
+        for recipe in recipe_names:
+            rid = self.check_for_recipe(recipe)
+            recipe_ids.append(rid)
+        return recipe_ids
 
     def wait_for_cluster(self, name):
         """
@@ -283,9 +293,13 @@ class CBDeploy():
         while timer < timeout:
             response = requests.get(
                 url, headers=headers, verify=params.ssl_verify)
-            if response.json() and response.json().get("status") and response.json()["status"] == "AVAILABLE":
-                print "Cluster " + response.json()["name"] + " deployed successfully."
-                return True
+            if response.json() and response.json().get("status"):
+                if response.json()["status"] == "AVAILABLE":
+                    print "Cluster " + response.json()["name"] + " deployed successfully."
+                    return True
+                if response.json()["status"].endswith("FAILED"):
+                    print "Deployment of cluster " + response.json()["name"] + " failed. Status: " + response.json()["status"]
+                    return False
             else:
                 time.sleep(interval)
                 timer = int(time.time())

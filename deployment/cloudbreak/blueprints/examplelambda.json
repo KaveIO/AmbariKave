@@ -97,6 +97,7 @@
         { "name" : "RESOURCEMANAGER"        },
         { "name" : "APP_TIMELINE_SERVER"    },
         { "name" : "HISTORYSERVER"          },
+        { "name" : "KAVETOOLBOXNODE"        },
         { "name" : "PIG"                    },
         { "name" : "HCAT"                   },
         { "name" : "HIVE_SERVER"            },
@@ -134,6 +135,7 @@
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"

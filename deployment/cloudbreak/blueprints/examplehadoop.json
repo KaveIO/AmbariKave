@@ -92,6 +92,7 @@
         { "name" : "SPARK2_JOBHISTORYSERVER" },
         { "name" : "OOZIE_SERVER"           },
         { "name" : "WEBHCAT_SERVER"         },
+        { "name" : "KAVETOOLBOXNODE"        },
         { "name" : "MYSQL_SERVER"           },
         { "name" : "HIVE_CLIENT"            },
         { "name" : "TEZ_CLIENT"             },
@@ -117,6 +118,7 @@
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"

@@ -7,6 +7,9 @@ from string import Template
 import time
 
 
+requests.packages.urllib3.disable_warnings()
+
+
 class CBDeploy():
 
     access_token = ""

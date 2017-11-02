@@ -184,7 +184,7 @@ class CBDeploy():
         data['description'] = details['description']
         with open(details["templatePath"]) as rec_file:
             rec = rec_file.read()
-        if details.get("params") :
+        if details.get("params"):
             temp = Template(rec)
             content = content.substitute(details["params"])
             data['content'] = base64.b64encode(content)
@@ -230,7 +230,7 @@ class CBDeploy():
         url = params.cb_https_url + path
         response = requests.post(url, data=json.dumps(
             stack), headers=headers, verify=params.ssl_verify)
-        print response.text
+        print "Created stack " + response.json()["name"]
         return (blueprint, response.json()["id"])
 
     def create_cluster(self, blueprint, stack_id):
@@ -284,28 +284,43 @@ class CBDeploy():
         blueprint, stack_id = self.create_stack(name)
         cluster = self.create_cluster(blueprint, stack_id)
 
+        print "Created cluster " + cluster["name"] + ". Waiting for Ambari..."
+
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(stack_id) + '/cluster'
         url = params.cb_https_url + path
 
         timeout = int(time.time()) + 3600
-        timer = int(time.time())
+        start = timer = int(time.time())
         interval = 30
+        max_retries = 5
+        last_request_status = True
 
         while timer < timeout:
             response = requests.get(
                 url, headers=headers, verify=params.ssl_verify)
-            if response.json() and response.json().get("status"):
-                if response.json()["status"] == "AVAILABLE":
-                    print "Cluster " + response.json()["name"] + " deployed successfully."
-                    return True
-                if response.json()["status"].endswith("FAILED"):
-                    print "Deployment of cluster " + response.json()["name"] + " failed. Status: " + response.json()["status"]
+            if response.status_code != 200:
+                # ignore cluster not found response for the first 10 minutes - give the cluster time to allocate resources
+                if response.status_code == 404 and (timer - start < 600):
+                    time.sleep(interval)
+                    timer = int(time.time())
+                    continue
+                if max_retries > 0:
+                    max_retries -= 1
+                    time.sleep(interval)
+                    timer = int(time.time())
+                else:
+                    print "Unable to obtain status for cluster " + cluster["name"] + ". Connection to Cloudbreak might be lost."
                     return False
             else:
-                time.sleep(interval)
-                timer = int(time.time())
+                if response.json() and response.json().get("status"):
+                    if response.json()["status"] == "AVAILABLE":
+                        print "Cluster " + response.json()["name"] + " deployed successfully in " + str(timer - start) + " seconds ."
+                        return True
+                    if response.json()["status"].endswith("FAILED"):
+                        print "Deployment of cluster " + response.json()["name"] + " failed. Status: " + response.json()["status"]
+                        return False
 
         print "Error creating cluster " + cluster["name"]
         return False

@@ -340,6 +340,11 @@ class CBDeploy():
                         print str.format("FAILURE: Cluster deployment {} failed with status: {}",
                                          response.json()["name"], response.json()["status"])
                         return False
+                # reset max_retries count after success
+                if max_retries != 5:
+                    max_retries = 5
+                time.sleep(interval)
+                timer = int(time.time())
 
         print str.format("FAILURE: Cluster {} failed to complete in {} seconds.",
                          cluster["name"], (max_execution_time))

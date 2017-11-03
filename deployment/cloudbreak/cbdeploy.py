@@ -34,8 +34,7 @@ if __name__ == "__main__":
         blueprints = sys.argv[1:]
 
     for i in range(0, len(blueprints)):
-        print "Start integration test for blueprint " + blueprints[i]
+        print "Start cluster deployment for blueprint " + blueprints[i]
         t = Thread(target=cb.wait_for_cluster, args=(blueprints[i],))
         t.start()
-        t.join()
         time.sleep(20)

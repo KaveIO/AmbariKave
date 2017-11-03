@@ -23,8 +23,8 @@ class CBDeploy():
         """
 
         token = None
-        url = params.cb_http_url + ':' + \
-            str(params.uaa_port) + '/oauth/authorize?response_type=token&client_id=cloudbreak_shell&ope.0=openid&source=login&redirect_uri=http://cloudbreak.shell'
+        url = (params.cb_http_url + ':' + str(params.uaa_port) + '/oauth/authorize?response_type=token'
+               + '&client_id=cloudbreak_shell&ope.0=openid&source=login&redirect_uri=http://cloudbreak.shell')
         headers = {'Accept': 'application/x-www-form-urlencoded',
                    'Content-type': 'application/x-www-form-urlencoded'}
         data = {'credentials': '{"username": "' + params.cb_username +
@@ -57,7 +57,7 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()["id"]
         else:
-            print "Template with name " + name + " does not exist.\nTemplate " + name + " will be created."
+            print str.format("Template with name {} does not exist.\nTemplate {} will be created.", name, name)
             return self.create_template(hostgroup)
 
     def create_template(self, hostgroup):
@@ -91,11 +91,10 @@ class CBDeploy():
         response = requests.post(url, data=json.dumps(
             data), headers=headers, verify=params.ssl_verify)
         if response.status_code == 200:
-            print "Created new Cloudbreak template with name " + name
-            print response.text
+            print str.format("Created new Cloudbreak template with name {}", name)
             return response.json()["id"]
         else:
-            print "Error creating Cloudbreak template with name " + name
+            print str.format("Error creating Cloudbreak template with name {}", name)
             print response.text
             return False
 
@@ -114,7 +113,7 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()
         else:
-            print "Blueprint with name " + bp_name + " does not exist.\nBlueprint " + bp_name + " will be created."
+            print str.format("Blueprint with name {} does not exist.\nBlueprint {} will be created.", bp_name, bp_name)
             return self.create_blueprint(name)
 
     def create_blueprint(self, name):
@@ -131,7 +130,7 @@ class CBDeploy():
             with open('blueprints/' + name + '.blueprint.json') as bp_file:
                 bp = json.load(bp_file)
         except (IOError, ValueError):
-            print "No correct blueprint .json file found for " + name
+            print str.format("No correct blueprint .json file found for {}", name)
             return False
 
         data = {}
@@ -142,10 +141,10 @@ class CBDeploy():
         response = requests.post(url, data=json.dumps(
             data), headers=headers, verify=params.ssl_verify)
         if response.status_code == 200:
-            print "Created new Cloudbreak blueprint with name " + bp_name
+            print str.format("Created new Cloudbreak blueprint with name {}", bp_name)
             return response.json()
         else:
-            print "Error creating Cloudbreak blueprint with name " + bp_name
+            print str.format("Error creating Cloudbreak blueprint with name {}", bp_name)
             print response.text
             return False
 
@@ -164,7 +163,7 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()["id"]
         else:
-            print "Recipe with name " + recipe_name + " does not exist.\nRecipe " + recipe_name + " will be created."
+            print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.", recipe_name)
             return self.create_recipe(name)
 
     def create_recipe(self, name):
@@ -194,11 +193,10 @@ class CBDeploy():
         response = requests.post(url, data=json.dumps(
             data), headers=headers, verify=params.ssl_verify)
         if response.status_code == 200:
-            print "Created new Cloudbreak recipe with name " + name + '-' + params.kave_version
+            print str.format("Created new Cloudbreak recipe with name {}-{}", name, params.kave_version)
             return response.json()["id"]
         else:
-            print "Error creating Cloudbreak recipe with name " + name + '-' + params.kave_version
-            print response.text
+            print str.format("Error creating Cloudbreak recipe with name {}-{}", name, params.kave_version)
             return False
 
     def create_stack(self, blueprint_name):
@@ -230,7 +228,7 @@ class CBDeploy():
         url = params.cb_https_url + path
         response = requests.post(url, data=json.dumps(
             stack), headers=headers, verify=params.ssl_verify)
-        print "Created stack " + response.json()["name"]
+        print str.format("Stack {} requested", response.json()["name"])
         return (blueprint, response.json()["id"])
 
     def create_cluster(self, blueprint, stack_id):
@@ -284,24 +282,25 @@ class CBDeploy():
         blueprint, stack_id = self.create_stack(name)
         cluster = self.create_cluster(blueprint, stack_id)
 
-        print "Created cluster " + cluster["name"] + ". Waiting for Ambari..."
+        print str.format("Cluster {} requested. Waiting for Ambari...", cluster["name"])
 
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(stack_id) + '/cluster'
         url = params.cb_https_url + path
 
-        timeout = int(time.time()) + 3600
+        max_execution_time = 3600
         start = timer = int(time.time())
+        timeout = start + max_execution_time
         interval = 30
         max_retries = 5
-        last_request_status = True
 
         while timer < timeout:
             response = requests.get(
                 url, headers=headers, verify=params.ssl_verify)
             if response.status_code != 200:
-                # ignore cluster not found response for the first 10 minutes - give the cluster time to allocate resources
+                # ignore cluster not found response for the first 10 minutes -
+                # give the cluster time to allocate resources
                 if response.status_code == 404 and (timer - start < 600):
                     time.sleep(interval)
                     timer = int(time.time())
@@ -311,16 +310,21 @@ class CBDeploy():
                     time.sleep(interval)
                     timer = int(time.time())
                 else:
-                    print "Unable to obtain status for cluster " + cluster["name"] + ". Connection to Cloudbreak might be lost."
+                    print str.format("Integration test failed. Unable to obtain status for cluster {}. Connection to "
+                                     + "Cloudbreak might be lost or infrastructure creation might have failed.",
+                                     cluster["name"])
                     return False
             else:
                 if response.json() and response.json().get("status"):
                     if response.json()["status"] == "AVAILABLE":
-                        print "Cluster " + response.json()["name"] + " deployed successfully in " + str(timer - start) + " seconds ."
+                        print str.format("Integration test passed successfully. Cluster {} was deployed in {} seconds.",
+                                         response.json()["name"], (timer - start))
                         return True
                     if response.json()["status"].endswith("FAILED"):
-                        print "Deployment of cluster " + response.json()["name"] + " failed. Status: " + response.json()["status"]
+                        print str.format("Integration test failed. Deployment of cluster {} failed with status: {}",
+                                         response.json()["name"], response.json()["status"])
                         return False
 
-        print "Error creating cluster " + cluster["name"]
+        print str.format("Integration test for cluster {} failed to complete in {} seconds.",
+                         cluster["name"], (max_execution_time))
         return False

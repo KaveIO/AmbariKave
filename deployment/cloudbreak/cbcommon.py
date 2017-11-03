@@ -337,8 +337,8 @@ class CBDeploy():
                                          response.json()["name"], (timer - start))
                         return True
                     if response.json()["status"].endswith("FAILED"):
-                        print str.format("FAILURE: Cluster deployment {} failed with status: {}",
-                                         response.json()["name"], response.json()["status"])
+                        print str.format("FAILURE: Cluster deployment {} failed: {}: {}", response.json()["name"],
+                                         response.json()["status"], response.json()["statusReason"])
                         return False
                 # reset max_retries count after success
                 if max_retries != 5:

@@ -245,7 +245,6 @@ class CBDeploy():
         url = params.cb_https_url + path
         response = requests.post(url, data=json.dumps(
             stack), headers=headers, verify=params.ssl_verify)
-        print str.format("Stack {} requested", response.json()["name"])
         return (blueprint, response.json()["id"])
 
     def create_cluster(self, blueprint, stack_id):
@@ -327,21 +326,21 @@ class CBDeploy():
                     time.sleep(interval)
                     timer = int(time.time())
                 else:
-                    print str.format("Integration test failed. Unable to obtain status for cluster {}. Connection to "
+                    print str.format("FAILURE: Unable to obtain status for cluster {}. Connection to "
                                      + "Cloudbreak might be lost or infrastructure creation might have failed.",
                                      cluster["name"])
                     return False
             else:
                 if response.json() and response.json().get("status"):
                     if response.json()["status"] == "AVAILABLE":
-                        print str.format("Integration test passed successfully. Cluster {} was deployed in {} seconds.",
+                        print str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
                                          response.json()["name"], (timer - start))
                         return True
                     if response.json()["status"].endswith("FAILED"):
-                        print str.format("Integration test failed. Deployment of cluster {} failed with status: {}",
+                        print str.format("FAILURE: Cluster deployment {} failed with status: {}",
                                          response.json()["name"], response.json()["status"])
                         return False
 
-        print str.format("Integration test for cluster {} failed to complete in {} seconds.",
+        print str.format("FAILURE: Cluster {} failed to complete in {} seconds.",
                          cluster["name"], (max_execution_time))
         return False

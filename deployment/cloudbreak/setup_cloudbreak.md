@@ -1,50 +1,65 @@
-Azure account support: Bart van der Kolk
-Azure test user: kave-test@kpmgnl.onmicrosoft.com/Ka..01
-Azure Resource Group: KoA_Cloudbreak - DO NOT DELETE!
+# Deploying Cloudbreak instance on Azure
+The below information should be considered as a quick-start and a reference guide only.
+Full, detailed instructions on deploying Cloudbreak on Azure can be found on the [Hortonworks github docs](https://hortonworks.github.io/cloudbreak-azure-docs/azure-launch/index.html) The [Azure prerequisites](https://hortonworks.github.io/cloudbreak-azure-docs/azure-prerequisites/index.html) are also listed there.
 
-Deploy Cloudbreak on Azure, https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsequenceiq%2Fazure-cbd-quickstart%2F1.6.3%2Fazuredeploy.json
+## 1. Azure portal
+ * Login to the portal and [click this link](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsequenceiq%2Fazure-cbd-quickstart%2F1.6.3%2Fazuredeploy.json) to start deploying a machine from the Cloudbrake template. 
+    * Create a new resource group or use an existing one. Exanple: __KoA_Cloudbreak__
+    * Select appropriate location
+    * Select VM size - for running all integration tests in parralel D2 is reccomended. For single cluster deployments D1 should be sufficient
+    * Type in desired username and password for accessing the cloudbreak instance
+    * Accept license and click the Purchase button. After a while the machine should be visible in the portal.
+ 
+## 2. Cloudbreak machine
 
-Install the Azure CLI:
--yum check-update ; yum install -y gcc libffi-devel python-devel openssl-devel
--curl -L https://aka.ms/InstallAzureCli | bash
-
-Check that the deployment is ok:
--ssh cloudbreak@40.83.253.211 (pass Ka...01)
--sudo su
--cd /var/lib/cloudbreak-deployment; ANY cbd COMMAND MUST BE RUN FROM HERE !
--grep "export PUBLIC_IP=" Profile ---> export PUBLIC_IP=40.83.253.211
--cbd doctor
--cbd logs cloudbreak | grep "Started CloudbreakApplication in" ---> Application - [owner:spring] [type:springLog] [id:] [name:] Started CloudbreakApplic...
+  * Check that the deployment is ok:
+```bash
+ssh cloudbreak@<cloudbreak machine public IP> #(password from previous step)
+sudo su
+cd /var/lib/cloudbreak-deployment; ANY cbd COMMAND MUST BE RUN FROM HERE !
+grep "export PUBLIC_IP=" Profile ---> export PUBLIC_IP=40.83.253.211
+cbd doctor
+cbd logs cloudbreak | grep "Started CloudbreakApplication in" ---> Application - [owner:spring] [type:springLog] [id:] [name:] Started CloudbreakApplic...
+```
+  * Install the Azure CLI:
+ ```bash
+yum check-update ; yum install -y gcc libffi-devel python-devel openssl-devel
+curl -L https://aka.ms/InstallAzureCli | bash
+```
 
 new command:
+ ```bash
 az login
 az account set -s "b2c7cebc-..." #choose the right subscription!
-az ad sp create-for-rbac --name cloudbreak-app-an --password Kav..01 --role Owner
-
+az ad sp create-for-rbac --name cloudbreak-app-an --password _<accout password>_ --role Owner
+```
 old command:
-cbd azure configure-arm --app_name koacbd --app_password Ka...01 --subscription_id a31a9a22-ae1c-4dea-8086-... --username kave-test@kpmgnl.onmicrosoft.com --password Ka...01
+cbd azure configure-arm --app_name koacbd --app_password _<accout password>_ --subscription_id a31a9a22-ae1c-4dea-8086-... --username kave-test@kpmgnl.onmicrosoft.com --password Ka...01
 
-new output:
+New output ( __This is what you fill in to create a CBD credential.__ ):
+```
 {
   "appId": "23d8acb2-29b6-44fe-bf46-38f774248063",
   "displayName": "cloudbreak-app-an",
   "name": "http://cloudbreak-app-an",
-  "password": "KavePassword01",
+  "password": "_<stripped>_",
   "tenant": "d8e9043f-c360-49f3-bfcf-0d12d1ba54a9"
 }
-
+```
 old output:
 Subscription ID: a31a9a22-ae1c-4dea-8086-...
 App ID: d26ad9c1-255c-42d7-9fe2-51ab5efdd40d
-Password: Ka...01
+Password: _<stripped>_
 App Owner Tenant ID: d8e9043f-c360-49f3-bfcf-0d12d1ba54a9
-This is what you fill in to create a CBD credential.
+
 
 generate a new ssh key: ssh-keygen -t rsa -b 4096 -C "kave@kpmg.com"
 
-login into https://40.83.253.211/sl/
+login into ```https://__<cloudbreak public ip>__/sl/```
 
-To get a shell on one of the microservice dockers, $docker exec -i -t cbreak_sultans_1 /bin/bash
+To get a shell on one of the microservice dockers:
+
+```bash docker exec -i -t cbreak_sultans_1 /bin/bash```
 
 Because of https://github.com/sequenceiq/cloudbreak/issues/1492 you will not be able to register. Just use the credentials shown in the Profile file.
 

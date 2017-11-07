@@ -21,6 +21,7 @@
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
+        "forwarders": "10.0.0.10",
         "directory_password": "testtestdirpass1234",
         "initial_users_and_groups" : "{\"Users\" : [\"someadmin\", \"someuser\"], \"Groups\" : {\"admins\" : [\"someadmin\"], \"hadoop\" : [\"someadmin\", \"someuser\"]}}",
         "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\", \"someuser\": \"MarketLeafFromNails\"}",

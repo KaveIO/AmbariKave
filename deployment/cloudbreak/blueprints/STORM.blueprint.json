@@ -40,7 +40,6 @@
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
-        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "STORMSD_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR" }
       ],
@@ -52,7 +51,6 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "STORMSD_LOG_VIEWER" },
         { "name" : "NIMBUS_SD_MASTER"   },
         { "name" : "KAVEGANGLIA_MONITOR" }
       ],
@@ -63,7 +61,6 @@
       "components" : [
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "SUPERVISOR_SD_SLAVE" },
         { "name" : "KAVEGANGLIA_MONITOR" }
       ],

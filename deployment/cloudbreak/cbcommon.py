@@ -309,20 +309,21 @@ class CBDeploy():
         start = timer = int(time.time())
         timeout = start + max_execution_time
         interval = 30
-        max_retries = 5
+        retries_count = 0
+        max_retries = 10
 
         while timer < timeout:
             response = requests.get(
                 url, headers=headers, verify=params.ssl_verify)
             if response.status_code != 200:
-                # ignore cluster not found response for the first 10 minutes -
+                # ignore cluster not found response for the first 20 minutes -
                 # give the cluster time to allocate resources
-                if response.status_code == 404 and (timer - start < 600):
+                if response.status_code == 404 and (timer - start < 1200):
                     time.sleep(interval)
                     timer = int(time.time())
                     continue
-                if max_retries > 0:
-                    max_retries -= 1
+                if retries_count < max_retries :
+                    retries_count += 1
                     time.sleep(interval)
                     timer = int(time.time())
                 else:
@@ -340,9 +341,9 @@ class CBDeploy():
                         print str.format("FAILURE: Cluster deployment {} failed: {}: {}", response.json()["name"],
                                          response.json()["status"], response.json()["statusReason"])
                         return False
-                # reset max_retries count after success
-                if max_retries != 5:
-                    max_retries = 5
+                # reset retries_count after success
+                if retries_count != 0:
+                    retries_count = 0
                 time.sleep(interval)
                 timer = int(time.time())
 

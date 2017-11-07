@@ -180,7 +180,7 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()["id"]
         else:
-            print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.", recipe_name)
+            print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.", recipe_name, recipe_name)
             return self.create_recipe(name)
 
     def create_recipe(self, name):

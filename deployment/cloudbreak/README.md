@@ -141,7 +141,7 @@ It takes a blueprint/cluster name as argument. For example running:
 ```
 will look for the ```AIRFLOW.blueprint.json``` file inside the deployment/cloudbreak/blueprints folder. Then it would read out the host_groups defined and check their description in the ```hostgroups.azure.json``` Based on that it would create the necessary machine templates (only if they are not already present) Then create the recipes (again only if not already present) and then will create a stack and a cluster on that stack. Process can be monitored in the console or in CloudbreakUI (UI requires a refresh sometimes to acknowledge the changes).
 
-The script can also take a list of blueprint/cluster names as parameter to deploy clusters simultaneously, or an ```"--all"``` parameter, which would deploy everything present in the blueprints folder at once.
+The script can also take a list of blueprint/cluster names as parameter to deploy clusters simultaneously, or an ```"--all"``` parameter, which would deploy all clusters described in the blueprints folder at once.
 
 
 

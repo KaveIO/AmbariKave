@@ -16,11 +16,11 @@
 #
 ##############################################################################
 kave_version = "33-beta"
-cb_http_url = "http://13.64.195.21"
-cb_https_url = "https://13.64.195.21"
+cb_http_url = "http://<cloudbreak pub. IP>"
+cb_https_url = "https:///<cloudbreak pub. IP>"
 uaa_port = 8089
 cb_username = "admin@example.com"
-cb_password = "KavePassword01"
+cb_password = "<cloudbreak accounbt password>"
 ssl_verify = False
 recipes = {
     "patchambari":

@@ -86,7 +86,7 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 Looking at the last json object:
 * _namenode-1_ is the template name
 *  _machine-type_ is the Azure machine template to be used
-*  _volume-size_ - The volume size in GB, provisioned to the node
+*  _volume-size_ - The amount of storage (in GB), provisioned to the node
 *  _instance-type_ - "GATEWAY" for the Ambari node, "CORE" for all the rest.
 *  _securityGroup_ - The ID of the security group in which nodes from the hostgroup will be created. 
    *  NOTE: To get a list of all current scurity groups, while logged in Cloudbreak UI, navigate to: ```https://<CloudbreakIP>/securitygroups/account``` Specifying security groups by name is in the roadmap.

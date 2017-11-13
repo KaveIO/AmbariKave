@@ -180,7 +180,8 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()["id"]
         else:
-            print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.", recipe_name, recipe_name)
+            print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.",
+                             recipe_name, recipe_name)
             return self.create_recipe(name)
 
     def create_recipe(self, name):
@@ -322,7 +323,7 @@ class CBDeploy():
                     time.sleep(interval)
                     timer = int(time.time())
                     continue
-                if retries_count < max_retries :
+                if retries_count < max_retries:
                     retries_count += 1
                     time.sleep(interval)
                     timer = int(time.time())

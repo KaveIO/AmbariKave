@@ -19,7 +19,7 @@
     </property>
     <property require-input = "false">
         <name>forwarders</name>
-        <value>10.0.0.10</value>
+        <value>168.63.129.16</value>
         <description>
             The IP address of the DNS server to whom FreeIPA should first forward requests.
             Usually this is specific to your datacenter. This can be a comma-separated list.

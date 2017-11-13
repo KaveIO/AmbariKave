@@ -219,6 +219,6 @@ A new major version is started whenever changes of the following type are made:
 
 We currently name our stack within ambari to reflect both the version of the HDP stack we depend on, and the installed version of the KAVE.
 
-* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.3.KAVE is KAVE release 3.3 running on top of Ambari HDP stack 2.6
+* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.4.KAVE is KAVE release 3.4 running on top of Ambari HDP stack 2.6
 
 This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.

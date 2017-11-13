@@ -43,7 +43,7 @@ Contains a list of the released versions with a summary of the main changes in e
 
 **KAVE stack versioning change**
 - Users were confused by the version numbering of KAVE
-- So the stack now looks like 2.6.3.3.KAVE (HDP-version.KAVE-version.KAVE)
+- So the stack now looks like 2.6.3.4.KAVE (HDP-version.KAVE-version.KAVE)
 - KAVE is a as usual a small extension of HDP and this should improve the clarity
 - Read more here about KAVE versioning: https://github.com/KaveIO/AmbariKave/wiki/kave-versioning
 

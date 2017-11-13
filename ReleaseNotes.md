@@ -1,6 +1,28 @@
 # The ReleaseNotes file
 
 Contains a list of the released versions with a summary of the main changes in each version.
+# v3.4-Beta
+- November 2017
+
+**MAJOR RELEASE**
+
+* The major changes were:
+    1. Cloudbreak based automated deployement of Kave on Azure: 3.4-Beta
+    2. New version of ESKAPADE 0.6 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see releases  at https://github.com/KaveIO/Eskapade/releases, or http://eskapade.kave.io/)
+    3. New version of KaveToolbox 3.6-Beta, see details here https://github.com/KaveIO/KaveToolbox/releases
+
+
+* Minor changes were:
+    * Kave on Azure migration leveraging Cloudbreak
+    * For cloudbreak freeipa was removed,
+    * Do not stop httpd service when stopping Airflow service
+    * Added guide how to enable SSL on Oozie
+    * Use recommended ciphers and MACs for SSH
+    * Do not expose Jetty version in HTTP requests
+    * Disable version disclosure for Apache
+    * Add security configurations for Apache, installed by FreeIPA
+
+
 
 # v3.3-Beta
 - August 2017

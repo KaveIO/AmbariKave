@@ -31,8 +31,8 @@ class TestVersions(unittest.TestCase):
     restack = re.compile("([0-9]\.[0-9]\.[0-9]\.[0-9]\.KAVE)")
     ignore = ["ReleaseNotes.md", "metainfo.xml", "kavetoolbox.xml", "params.py", "kavetoolbox.py",
               "new_dev_machine.py", "repoimports.py", "eskapade.xml", "eskapade.py"]
-    check_against = "3.3-Beta"
-    check_against_stack = "2.6.3.3.KAVE"
+    check_against = "3.4-Beta"
+    check_against_stack = "2.6.3.4.KAVE"
 
     def findversion(self, fullpath, regex):
         found = []

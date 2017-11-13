@@ -30,7 +30,7 @@ Contains a list of the released versions with a summary of the main changes in e
 **MAJOR RELEASE**  
 
 * The major changes were:  
-    1. New Service added - ESKAPADE 0.5 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/)
+    1. New Service added - ESKAPADE 0.6 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/)
     2. HDP stack version switched from 2.6.0.3 to 2.6.1.0
     3. Moving to KaveToolbox-3.4.-Beta which sets up the kaveEvn for all non-system users.
 

@@ -17,7 +17,7 @@
             admin password file.
         </description>
     </property>
-    <property require-input = "true">
+    <property require-input = "false">
         <name>forwarders</name>
         <value></value>
         <description>

@@ -17,7 +17,7 @@
 ##############################################################################
 import requests
 import json
-import params
+import cbparams
 import urlparse
 import base64
 from string import Template

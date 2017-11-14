@@ -14,6 +14,7 @@
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
         "forwarders": "10.0.0.10",
+        "install_with_dns": "True",
         "initial_users_and_groups" : "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
         "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
         "initial_sudoers" : "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}"

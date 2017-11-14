@@ -64,6 +64,7 @@ class TestXMLContent(unittest.TestCase):
                                              "maximum": [], "increment-step": [],
                                              "unit": [], 'empty-value-valid': [],
                                              'entries': {"entry": ["value", "description"]},
+                                             "empty_value_valid": []
                                              },
                         "description": [], "comment": [],
                         "property-type": [], "deleted": [],
@@ -136,7 +137,7 @@ class TestXMLContent(unittest.TestCase):
 
 
 class TestMatchRequiredOrDefault(unittest.TestCase):
-    skip = ['hive-site.xml', 'hdfs-site.xml', 'oozie-site.xml', 'yarn-site.xml']
+    skip = ['hive-site.xml', 'hdfs-site.xml', 'oozie-site.xml', 'yarn-site.xml', 'cloudbreak/params.py']
     skip_prop = ['kavetoolbox/custom_install_template', 'twiki/ldap_bind_password',
                  'mail/hostname', 'mail/domain']
 

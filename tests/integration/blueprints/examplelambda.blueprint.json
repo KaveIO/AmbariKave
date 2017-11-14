@@ -22,6 +22,7 @@
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "forwarders": "10.0.0.10",
+        "install_with_dns": "True",
         "directory_password": "testtestdirpass1234",
         "initial_users_and_groups" : "{\"Users\" : [\"someadmin\", \"someuser\"], \"Groups\" : {\"admins\" : [\"someadmin\"], \"hadoop\" : [\"someadmin\", \"someuser\"]}}",
         "initial_user_passwords" : "{\"someadmin\": \"ProbablySwimmingNearestDriver\", \"someuser\": \"MarketLeafFromNails\"}",

@@ -40,12 +40,12 @@ class CBDeploy():
         """
 
         token = None
-        url = (params.cb_http_url + ':' + str(params.uaa_port) + '/oauth/authorize?response_type=token'
+        url = (cbparams.cb_http_url + ':' + str(cbparams.uaa_port) + '/oauth/authorize?response_type=token'
                + '&client_id=cloudbreak_shell&ope.0=openid&source=login&redirect_uri=http://cloudbreak.shell')
         headers = {'Accept': 'application/x-www-form-urlencoded',
                    'Content-type': 'application/x-www-form-urlencoded'}
-        data = {'credentials': '{"username": "' + params.cb_username +
-                '", "password": "' + params.cb_password + '"}'}
+        data = {'credentials': '{"username": "' + cbparams.cb_username +
+                '", "password": "' + cbparams.cb_password + '"}'}
 
         try:
             auth = requests.post(
@@ -64,13 +64,13 @@ class CBDeploy():
         Checks if Cloudbreak template with given name exists
         """
 
-        name = hostgroup + '-' + params.kave_version
+        name = hostgroup + '-' + cbparams.kave_version
         path = '/cb/api/v1/templates/account/' + name
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        response = requests.get(url, headers=headers, verify=params.ssl_verify)
+        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
         if response.status_code == 200:
             return response.json()["id"]
         else:
@@ -83,7 +83,7 @@ class CBDeploy():
         """
 
         path = '/cb/api/v1/templates/user/'
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
@@ -93,7 +93,7 @@ class CBDeploy():
             print "Description for hostgroup " + hostgroup + " is missing in blueprints/hostgroups.azure.json."
             return False
 
-        name = hostgroup + '-' + params.kave_version
+        name = hostgroup + '-' + cbparams.kave_version
         hostgroup_info = hgjson[hostgroup]
         data = {}
         data['name'] = name
@@ -106,7 +106,7 @@ class CBDeploy():
         data['volumeType'] = 'Standard_LRS'
 
         response = requests.post(url, data=json.dumps(
-            data), headers=headers, verify=params.ssl_verify)
+            data), headers=headers, verify=cbparams.ssl_verify)
         if response.status_code == 200:
             print str.format("Created new Cloudbreak template with name {}", name)
             return response.json()["id"]
@@ -120,13 +120,13 @@ class CBDeploy():
         Checks if Cloudbreak blueprint with given name exists
         """
 
-        bp_name = name + '-' + params.kave_version
+        bp_name = name + '-' + cbparams.kave_version
         path = '/cb/api/v1/blueprints/account/' + bp_name
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        response = requests.get(url, headers=headers, verify=params.ssl_verify)
+        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
         if response.status_code == 200:
             return response.json()
         else:
@@ -141,7 +141,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/blueprints/user'
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
 
         try:
             with open('blueprints/' + name + '.blueprint.json') as bp_file:
@@ -151,12 +151,12 @@ class CBDeploy():
             return False
 
         data = {}
-        bp_name = name + '-' + params.kave_version
+        bp_name = name + '-' + cbparams.kave_version
         data['name'] = bp_name
         data['ambariBlueprint'] = bp
 
         response = requests.post(url, data=json.dumps(
-            data), headers=headers, verify=params.ssl_verify)
+            data), headers=headers, verify=cbparams.ssl_verify)
         if response.status_code == 200:
             print str.format("Created new Cloudbreak blueprint with name {}", bp_name)
             return response.json()
@@ -170,13 +170,13 @@ class CBDeploy():
         Checks if Cloudbreak recipe with given name exists
         """
 
-        recipe_name = name + '-' + params.kave_version
+        recipe_name = name + '-' + cbparams.kave_version
         path = '/cb/api/v1/recipes/account/' + recipe_name
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        response = requests.get(url, headers=headers, verify=params.ssl_verify)
+        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
         if response.status_code == 200:
             return response.json()["id"]
         else:
@@ -192,11 +192,11 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/recipes/user'
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
 
-        details = params.recipes[name]
+        details = cbparams.recipes[name]
         data = {}
-        data['name'] = name + '-' + params.kave_version
+        data['name'] = name + '-' + cbparams.kave_version
         data['recipeType'] = details['recipeType']
         data['description'] = details['description']
         with open(details["templatePath"]) as rec_file:
@@ -209,12 +209,12 @@ class CBDeploy():
             data['content'] = base64.b64encode(rec)
 
         response = requests.post(url, data=json.dumps(
-            data), headers=headers, verify=params.ssl_verify)
+            data), headers=headers, verify=cbparams.ssl_verify)
         if response.status_code == 200:
-            print str.format("Created new Cloudbreak recipe with name {}-{}", name, params.kave_version)
+            print str.format("Created new Cloudbreak recipe with name {}-{}", name, cbparams.kave_version)
             return response.json()["id"]
         else:
-            print str.format("Error creating Cloudbreak recipe with name {}-{}", name, params.kave_version)
+            print str.format("Error creating Cloudbreak recipe with name {}-{}", name, cbparams.kave_version)
             return False
 
     def create_stack(self, blueprint_name):
@@ -243,9 +243,9 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/user'
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
         response = requests.post(url, data=json.dumps(
-            stack), headers=headers, verify=params.ssl_verify)
+            stack), headers=headers, verify=cbparams.ssl_verify)
         return (blueprint, response.json()["id"])
 
     def create_cluster(self, blueprint, stack_id):
@@ -256,9 +256,9 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(stack_id)
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
         stack = requests.get(url, headers=headers,
-                             verify=params.ssl_verify).json()
+                             verify=cbparams.ssl_verify).json()
 
         with open("cluster_template.json") as cl_file:
             cluster = json.load(cl_file)
@@ -280,7 +280,7 @@ class CBDeploy():
 
         url = url + '/cluster'
         response = requests.post(url, data=json.dumps(
-            cluster), headers=headers, verify=params.ssl_verify)
+            cluster), headers=headers, verify=cbparams.ssl_verify)
 
         return response.json()
 
@@ -304,7 +304,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(stack_id) + '/cluster'
-        url = params.cb_https_url + path
+        url = cbparams.cb_https_url + path
 
         max_execution_time = 3600
         start = timer = int(time.time())
@@ -315,7 +315,7 @@ class CBDeploy():
 
         while timer < timeout:
             response = requests.get(
-                url, headers=headers, verify=params.ssl_verify)
+                url, headers=headers, verify=cbparams.ssl_verify)
             if response.status_code != 200:
                 # ignore cluster not found response for the first 20 minutes -
                 # give the cluster time to allocate resources

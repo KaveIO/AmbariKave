@@ -101,7 +101,7 @@ class CBDeploy():
         data['parameters'] = {}
         data['parameters']['managedDisk'] = True
         data['instanceType'] = hostgroup_info['machine-type']
-        data['volumeCount'] = 1
+        data['volumeCount'] = hostgroup_info['volume-count']
         data['volumeSize'] = hostgroup_info['volume-size']
         data['volumeType'] = 'Standard_LRS'
 

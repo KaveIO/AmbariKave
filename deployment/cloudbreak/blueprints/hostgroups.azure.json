@@ -2,6 +2,7 @@
     "admin": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 30,
+        "volume-count": 1,
         "instance-type" : "GATEWAY",
         "securityGroup" : 5,
         "recipes": [
@@ -14,6 +15,7 @@
     "gateway": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 150,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -25,6 +27,7 @@
     "namenode-1": {
         "machine-type": "Standard_F4",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -36,6 +39,7 @@
     "namenode-2": {
         "machine-type": "Standard_F4",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -47,6 +51,7 @@
     "data": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -58,6 +63,7 @@
     "mongo": {
         "machine-type": "Standard_D1_v2",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -69,6 +75,7 @@
     "as": {
         "machine-type": "Standard_F2",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -80,6 +87,7 @@
     "ci": {
         "machine-type": "Standard_F4",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -91,6 +99,7 @@
     "nimbus": {
         "machine-type": "Standard_F2",
         "volume-size": 30,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -102,6 +111,7 @@
     "supervisor": {
         "machine-type": "Standard_D1_v2",
         "volume-size": 40,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -113,6 +123,7 @@
     "kafka": {
         "machine-type": "Standard_D1_v2",
         "volume-size": 40,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -124,6 +135,7 @@
     "ambari": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 30,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -136,6 +148,7 @@
     "airflow": {
         "machine-type": "Standard_A2_v2",
         "volume-size": 20,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -147,6 +160,7 @@
     "test": {
         "machine-type": "Standard_D1_v2",
         "volume-size": 20,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -158,6 +172,7 @@
     "replica": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 50,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [
@@ -169,6 +184,7 @@
     "arbiter": {
         "machine-type": "Standard_D1_v2",
         "volume-size": 20,
+        "volume-count": 1,
         "instance-type" : "CORE",
         "securityGroup" : 5,
         "recipes": [

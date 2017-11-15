@@ -63,7 +63,7 @@ domain = ipa_domain.lower()
 realm = ipa_domain.upper()
 realm_ldap = 'dc=' + ',dc='.join(domain_components)
 
-install_with_dns = default('configurations/freeipa/install_with_dns', True)
+install_with_dns = default('configurations/freeipa/install_with_dns', False)
 install_with_dns = kc.trueorfalse(install_with_dns)
 default_shell = default('configurations/freeipa/default_shell', '/bin/bash')
 

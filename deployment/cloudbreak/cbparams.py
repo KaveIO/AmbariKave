@@ -27,23 +27,23 @@ recipes = {
     {
         "recipeType": "PRE",
         "description": "Add the KAVE Stack to ambari",
-        "templatePath": "recipes/setup_cloudbreak_kavepatch_ambari.sh"
+        "templatePath": "recipes/mandatory/setup_cloudbreak_kavepatch_ambari.sh"
     },
     "fix-hosts-file":
     {
         "recipeType": "PRE",
         "description": "Fix hosts file on all nodes",
-        "templatePath": "recipes/setup_cloudbreak_fixhostsfile_all.sh"
+        "templatePath": "recipes/mandatory/setup_cloudbreak_fixhostsfile_all.sh"
     },
     "distibute-private-key":
     {
         "recipeType": "PRE",
         "description": "Distribute private key on all nodes",
-        "templatePath": "recipes/setup_cloudbreak_keydistrib_all.sh"
+        "templatePath": "recipes/mandatory/setup_cloudbreak_keydistrib_all.sh"
     },
     "limit-ssh-attempts":
     {
         "recipeType": "PRE",
         "description": "Limit unsuccessful ssh attempts rate",
-        "templatePath": "recipes/limit-ssh-attempts.sh"
+        "templatePath": "recipes/mandatory/limit-ssh-attempts.sh"
     }}

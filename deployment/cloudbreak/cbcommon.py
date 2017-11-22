@@ -249,7 +249,7 @@ class CBDeploy():
             stack), headers=headers, verify=cbparams.ssl_verify)
         return (blueprint, response.json()["id"])
 
-    def create_cluster(self, blueprint, stack_id):
+    def create_cluster(self, blueprint, stack_id, credential):
         """
         Creates Cloudbreak cluster with given blueprint name and stack id
         """
@@ -279,11 +279,27 @@ class CBDeploy():
             hostgroup["recipeIds"] = self.get_recipe_ids(hg_info[hg]["recipes"])
             cluster["hostGroups"].append(hostgroup)
 
+        if cbparams.adls_enabled == True and cbparams.adls_name:
+            fileSystem = {}
+            fileSystem["type"] = "ADLS"
+            fileSystem["defaultFs"] = False
+            fileSystem["name"] = stack["name"]
+            fileSystem["properties"] = {}
+            fileSystem["properties"]["tenantId"] = credential["parameters"]["tenantId"]
+            fileSystem["properties"]["clientId"] = credential["parameters"]["accessKey"]
+            fileSystem["properties"]["accountName"] = cbparams.adls_name
+            fileSystem["properties"]["secure"] = False
+            cluster["fileSystem"] = fileSystem
+
         url = url + '/cluster'
         response = requests.post(url, data=json.dumps(
             cluster), headers=headers, verify=cbparams.ssl_verify)
 
-        return response.json()
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print str.format("FAILURE: Cluster {} could not be created: {}", stack["name"], response.text)
+            return False
 
     def get_recipe_ids(self, recipe_names):
         recipe_ids = []
@@ -304,14 +320,17 @@ class CBDeploy():
             print "Missing credential name. Please provide correct value for credential_name in cbparams.py"
             return False
 
-    def wait_for_cluster(self, name):
+    def wait_for_cluster(self, name, adls_enabled=False):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
 
         credential = self.get_credential()
         blueprint, stack_id = self.create_stack(name, credential)
-        cluster = self.create_cluster(blueprint, stack_id)
+        cluster = self.create_cluster(blueprint, stack_id, credential)
+
+        if not cluster:
+            return False
 
         print str.format("Cluster {} requested. Waiting for Ambari...", cluster["name"])
 

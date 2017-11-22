@@ -328,7 +328,7 @@ class CBDeploy():
         response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
         return response.json()["id"]
 
-    def wait_for_cluster(self, name, adls_enabled=False):
+    def wait_for_cluster(self, name):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """

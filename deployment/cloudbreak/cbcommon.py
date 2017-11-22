@@ -217,7 +217,7 @@ class CBDeploy():
             print str.format("Error creating Cloudbreak recipe with name {}-{}", name, cbparams.kave_version)
             return False
 
-    def create_stack(self, blueprint_name):
+    def create_stack(self, blueprint_name, credential):
         """
         Creates Cloudbreak stack with given blueprint name
         """
@@ -240,6 +240,7 @@ class CBDeploy():
             instance["securityGroupId"] = hg_info[hg]["securityGroup"]
             stack["instanceGroups"].append(instance)
 
+        stack["credentialId"] = credential["id"]
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/user'
@@ -291,12 +292,25 @@ class CBDeploy():
             recipe_ids.append(rid)
         return recipe_ids
 
+    def get_credential(self):
+        if cbparams.credential_name:
+            headers = {"Authorization": "Bearer " +
+                       self.access_token, "Content-type": "application/json"}
+            path = '/cb/api/v1/credentials/account/' + cbparams.credential_name
+            url = cbparams.cb_https_url + path
+            response = requests.get(url, headers=headers, verify = cbparams.ssl_verify)
+            return response.json()
+        else:
+            print "Missing credential name. Please provide correct value for credential_name in cbparams.py"
+            return False
+
     def wait_for_cluster(self, name):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
 
-        blueprint, stack_id = self.create_stack(name)
+        credential = self.get_credential()
+        blueprint, stack_id = self.create_stack(name, credential)
         cluster = self.create_cluster(blueprint, stack_id)
 
         print str.format("Cluster {} requested. Waiting for Ambari...", cluster["name"])

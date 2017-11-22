@@ -20,7 +20,8 @@ cb_http_url = "http://<cloudbreak pub. IP>"
 cb_https_url = "https:///<cloudbreak pub. IP>"
 uaa_port = 8089
 cb_username = "admin@example.com"
-cb_password = "<cloudbreak accounbt password>"
+cb_password = "<cloudbreak account password>"
+credential_name = "<cloudbreak credential name>"
 ssl_verify = False
 recipes = {
     "patchambari":

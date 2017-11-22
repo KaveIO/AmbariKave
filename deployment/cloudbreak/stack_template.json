@@ -1,6 +1,6 @@
 {
   "name": "",
-  "credentialId": 6,
+  "credentialId": null,
   "region": "North Europe",
   "failurePolicy": {
     "adjustmentType": "BEST_EFFORT",

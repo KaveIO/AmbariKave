@@ -931,11 +931,11 @@ def confallssh(remote, restart=True):
     Common sshd_config for all machines upped with these scripts
     Forbid weak ssh encryption
     """
-    remote.run("echo >> /etc/ssh/sshd_config")
-    remote.run("echo 'Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'"
-               + " >> /etc/ssh/sshd_config")
-    remote.run("echo 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,"
-               + "hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' >> /etc/ssh/sshd_config")
+    remote.run("bash -c 'echo >> /etc/ssh/sshd_config'")
+    remote.run("bash -c 'echo \"Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\""
+               + " >> /etc/ssh/sshd_config'")
+    remote.run("bash -c 'echo \"MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,"
+               + "hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com\" >> /etc/ssh/sshd_config'")
     if restart:
         try:
             remote.run("service sshd restart")

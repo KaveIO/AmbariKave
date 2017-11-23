@@ -4,7 +4,7 @@
         "volume-size": 30,
         "volume-count": 1,
         "instance-type" : "GATEWAY",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -17,7 +17,7 @@
         "volume-size": 150,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -29,7 +29,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -41,7 +41,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -53,7 +53,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -65,7 +65,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -77,7 +77,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -89,7 +89,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -101,7 +101,7 @@
         "volume-size": 30,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -113,7 +113,7 @@
         "volume-size": 40,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -125,7 +125,7 @@
         "volume-size": 40,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -137,7 +137,7 @@
         "volume-size": 30,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -150,7 +150,7 @@
         "volume-size": 20,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -162,7 +162,7 @@
         "volume-size": 20,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -174,7 +174,7 @@
         "volume-size": 50,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -186,7 +186,7 @@
         "volume-size": 20,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "securityGroup" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-azure-only-ssh-and-ssl",
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",

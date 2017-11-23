@@ -237,7 +237,7 @@ class CBDeploy():
             instance["group"] = hg
             instance["nodeCount"] = 1
             instance["type"] = hg_info[hg]["instance-type"]
-            instance["securityGroupId"] = self.get_security_group_id(hg_info[hg]["securityGroup"])
+            instance["securityGroupId"] = self.get_security_group_id(hg_info[hg]["security-group"])
             stack["instanceGroups"].append(instance)
 
         stack["credentialId"] = credential["id"]

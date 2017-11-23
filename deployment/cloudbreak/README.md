@@ -2,7 +2,7 @@
 
 ### Some notes:
 
-Currently FreeIPA has issues installing on Cloudbreak. It has been removed from the cloudbreak blueprints until all issues are resolved.
+Currently FreeIPA has issues installing on Cloudbreak. It has been removed from the Cloudbreak blueprints until all issues are resolved.
 Cloudbreak requires different blueprints, as some of the KAVE services require different settings.
 
 ### Accessing cloudbreak UI
@@ -15,14 +15,17 @@ sudo cbd restart
 ```
 ### Configuring target cloudbreak instance details
 
-The file __```/deployment/cloudbreak/params.py```__ holds the necessary configuration, related to the cloud break deployment:
+The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary configuration, related to the Cloudbreak deployment:
 
 * kave_version = "33-beta" - This string is appended on recipe and template names so they can be differentiated. Will be generated automatically in the future.
 * cb_http_url = "http://<cloudbreak public IP>"	- Cloudbreak Url for http requests
 * cb_https_url = "https://<cloudbreak public IP>" - Cloudbreak Url for http**s** requests
-* uaa_port = 8089  - Port on which tha UAA server is listening to on the cloudbreak instance. Default is 8089									
-* cb_username = "admin@example.com"  - Username defined when cloudbreak instance was created				
-* cb_password = "<password>"	- Cloudbreak user password
+* uaa_port = 8089  - Port on which tha UAA server is listening to on the cloudbreak instance. Default is 8089
+* cb_username = "admin@example.com"  - Username defined when cloudbreak instance was created
+* cb_password = "<password>" - Cloudbreak user password
+* credential_name = "<cloudbreak credential name>" - Name of Cloudbreak credential which will be used for cluster deployment
+* adls_enabled = False - Parameter which indicates whether Azure Data Lake Store should be used for file system. Default is False. If set to True, a valid value for adls_name should be set as well
+* adls_name = "<Azure Data Lake Store name>" - Azure Data Lake Store name
 * ssl_verify = False - Parameter which control SSL certificate verification behavior. Possible values are:
   * False (Default) - no certificate verification performed. We will just trust whatever is presented by cloudbreak. This was made the default option as by default cloudbreak uses very primitive ssl self signed cert.
   * True - should be set when real certificate is used, or one which trust is established by other means (OS level, corp CA etc.)
@@ -34,7 +37,7 @@ The file __```/deployment/cloudbreak/params.py```__ holds the necessary configur
     {
         "recipeType": "PRE", 
         "description": "This description with show up in CLoudbreak UI",
-        "templatePath": "recipes/script-to-be-executed-by-recipe.sh"
+        "templatePath": "recipes/custom/script-to-be-executed-by-recipe.sh"
     }}
 ```
 
@@ -50,8 +53,9 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 	"admin": {
 		"machine-type": "Standard_D2_v2",
 		"volume-size": 30,
+		"volume-count": 1,
 		"instance-type": "GATEWAY",
-		"securityGroup": 5,
+		"security-group": "default-azure-only-ssh-and-ssl",
 		"recipes": [
 			"patchambari",
 			"fix-hosts-file",
@@ -62,8 +66,9 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 	"gateway": {
 		"machine-type": "Standard_D2_v2",
 		"volume-size": 150,
+		"volume-count": 1,
 		"instance-type": "CORE",
-		"securityGroup": 5,
+		"security-group": "default-azure-only-ssh-and-ssl",
 		"recipes": [
 			"fix-hosts-file",
 			"distibute-private-key",
@@ -73,8 +78,9 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 	"namenode-1": {
 		"machine-type": "Standard_F4",
 		"volume-size": 50,
+		"volume-count": 1,
 		"instance-type": "CORE",
-		"securityGroup": 5,
+		"security-group": "default-azure-only-ssh-and-ssl",
 		"recipes": [
 			"fix-hosts-file",
 			"distibute-private-key",
@@ -84,13 +90,13 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 }
 ```
 Looking at the last json object:
-* _namenode-1_ is the template name
+*  _namenode-1_ is the template name
 *  _machine-type_ is the Azure machine template to be used
 *  _volume-size_ - The amount of storage (in GB), provisioned to the node
-*  _instance-type_ - "GATEWAY" for the Ambari node, "CORE" for all the rest.
-*  _securityGroup_ - The ID of the security group in which nodes from the hostgroup will be created. 
-   *  NOTE: To get a list of all current scurity groups, while logged in Cloudbreak UI, navigate to: ```https://<CloudbreakIP>/securitygroups/account``` Specifying security groups by name is in the roadmap.
-*  _recipes_ - list of recipe names (as desctribed in params.py) to be applied to this hostgoup
+*  _volume-count_ - Attached volumes per instance. Number between 1 and 24
+*  _instance-type_ - "GATEWAY" for the Ambari node, "CORE" for all the rest
+*  _security-group_ - Name of the security group in which nodes from the hostgroup will be created
+*  _recipes_ - list of recipe names (as desctribed in cbparams.py) to be applied to this hostgoup
 
 ### Stack
 Prior to insatlling the actual HDP components and cluster a stack needs to be created. "Stack" means the **running cloud infrastructure** that is created based on the hostgroups groups and cluster details (machine templates, credential, instance-types, network, securitygroup etc.). The new cluster will use your templates and by using Azure ARM will launch the cloud stack. To configure the stack details edit the following file:
@@ -98,7 +104,7 @@ Prior to insatlling the actual HDP components and cluster a stack needs to be cr
 ```json
 {
   "name": "",
-  "credentialId": 6,
+  "credentialId": null,
   "region": "North Europe",
   "failurePolicy": {
     "adjustmentType": "BEST_EFFORT",
@@ -125,12 +131,9 @@ Prior to insatlling the actual HDP components and cluster a stack needs to be cr
 }
 ```
 The relevant fields are:
-* **credentialId** - ID of the cloudbreak credential to be used when deploying the infrastructure.
-  * NOTE: To get a list of all credentials configured in Cloudbreak, log into the UI and navigate to: ```https://<CloudbreakIP>/credentials/account``` This will return a json list of all credentials configured. A more sphisticated method on setting the credentials is planned for future releases
-
-* **region** Name of the cloudprovider region in which the infrastructure will be created.
-* **networkId** ID of the network in which the cluster will be created. 
-  * NOTE: To get a list of all the networks configured in Cloudbreak, log into the UI and navigate to: ```https://<CloudbreakIP>/networks/account``` This will return a json list of all networks. A more sphisticated method on selecting the network is planned for future releases
+* **region** Name of the cloud provider region in which the infrastructure will be created.
+* **networkId** ID of the network in which the cluster will be created.
+  * NOTE: To get a list of all the networks configured in Cloudbreak, log into the UI and navigate to: ```https://<CloudbreakIP>/networks/account``` This will return a json list of all networks. A more sophisticated method on selecting the network is planned for future releases
 
 ## Running the deployment script
 

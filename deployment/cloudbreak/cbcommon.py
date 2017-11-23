@@ -237,7 +237,7 @@ class CBDeploy():
             instance["group"] = hg
             instance["nodeCount"] = 1
             instance["type"] = hg_info[hg]["instance-type"]
-            instance["securityGroupId"] = hg_info[hg]["securityGroup"]
+            instance["securityGroupId"] = self.get_security_group_id(hg_info[hg]["securityGroup"])
             stack["instanceGroups"].append(instance)
 
         stack["credentialId"] = credential["id"]
@@ -319,6 +319,14 @@ class CBDeploy():
         else:
             print "Missing credential name. Please provide correct value for credential_name in cbparams.py"
             return False
+
+    def get_security_group_id(self, name):
+        headers = {"Authorization": "Bearer " +
+                   self.access_token, "Content-type": "application/json"}
+        path = '/cb/api/v1/securitygroups/account/' + name
+        url = cbparams.cb_https_url + path
+        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        return response.json()["id"]
 
     def wait_for_cluster(self, name, adls_enabled=False):
         """

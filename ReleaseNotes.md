@@ -1,6 +1,28 @@
 # The ReleaseNotes file
 
 Contains a list of the released versions with a summary of the main changes in each version.
+# v3.4-Beta
+- November 2017
+
+**MAJOR RELEASE**
+
+* The major changes were:
+    1. Cloudbreak based automated deployement of Kave on Azure: 3.4-Beta
+    2. New version of ESKAPADE 0.6 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see releases  at https://github.com/KaveIO/Eskapade/releases, or http://eskapade.kave.io/)
+    3. New version of KaveToolbox 3.6-Beta, see details here https://github.com/KaveIO/KaveToolbox/releases
+
+
+* Minor changes were:
+    * Kave on Azure migration leveraging Cloudbreak
+    * For cloudbreak freeipa was removed,
+    * Do not stop httpd service when stopping Airflow service
+    * Added guide how to enable SSL on Oozie
+    * Use recommended ciphers and MACs for SSH
+    * Do not expose Jetty version in HTTP requests
+    * Disable version disclosure for Apache
+    * Add security configurations for Apache, installed by FreeIPA
+
+
 
 # v3.3-Beta
 - August 2017
@@ -8,7 +30,7 @@ Contains a list of the released versions with a summary of the main changes in e
 **MAJOR RELEASE**  
 
 * The major changes were:  
-    1. New Service added - ESKAPADE 0.5 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/)
+    1. New Service added - ESKAPADE 0.6 - A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/)
     2. HDP stack version switched from 2.6.0.3 to 2.6.1.0
     3. Moving to KaveToolbox-3.4.-Beta which sets up the kaveEvn for all non-system users.
 
@@ -21,7 +43,7 @@ Contains a list of the released versions with a summary of the main changes in e
 
 **KAVE stack versioning change**
 - Users were confused by the version numbering of KAVE
-- So the stack now looks like 2.6.3.3.KAVE (HDP-version.KAVE-version.KAVE)
+- So the stack now looks like 2.6.3.4.KAVE (HDP-version.KAVE-version.KAVE)
 - KAVE is a as usual a small extension of HDP and this should improve the clarity
 - Read more here about KAVE versioning: https://github.com/KaveIO/AmbariKave/wiki/kave-versioning
 

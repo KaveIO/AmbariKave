@@ -44,7 +44,7 @@ class Airflow(kc.ApacheScript):
         super(Airflow, self).install(env)
         kc.install_epel()
 
-        Execute('curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
+        Execute('curl --tlsv1.2 "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
         Execute('python get-pip.py')
         Execute('pip install -U pip setuptools')
         # Create airflow config/home dir and set permissions

@@ -1,0 +1,180 @@
+ {
+    "admin": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 30,
+        "instance-type" : "GATEWAY",
+        "securityGroup" : 5,
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "gateway": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 150,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "namenode-1": {
+        "machine-type": "Standard_F4",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "namenode-2": {
+        "machine-type": "Standard_F4",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "data": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "mongo": {
+        "machine-type": "Standard_D1_v2",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "as": {
+        "machine-type": "Standard_F2",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "ci": {
+        "machine-type": "Standard_F4",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "nimbus": {
+        "machine-type": "Standard_F2",
+        "volume-size": 30,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "supervisor": {
+        "machine-type": "Standard_D1_v2",
+        "volume-size": 40,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "kafka": {
+        "machine-type": "Standard_D1_v2",
+        "volume-size": 40,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "ambari": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 30,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "airflow": {
+        "machine-type": "Standard_A2_v2",
+        "volume-size": 20,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "test": {
+        "machine-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "replica": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 50,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "arbiter": {
+        "machine-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "instance-type" : "CORE",
+        "securityGroup" : 5,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
+    }
+}

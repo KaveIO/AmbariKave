@@ -86,18 +86,18 @@ class TestRepoImports(unittest.TestCase):
             urls = []
             for mirror in kc.mirrors():
                 if 'kavetoolbox' in package:
-                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox', ver='3.4-Beta'))
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='KaveToolbox', ver='3.6-Beta'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
                 if 'Eskapade' in package:
-                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade', ver='0.5'))
+                    urls.append(kc.repo_url(package, arch=arch, repo=mirror, dir='Eskapade', ver='0.6'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch, repo=mirror))
             if not len(urls):
                 if 'kavetoolbox' in package:
-                    urls.append(kc.repo_url(package, arch=arch, dir='KaveToolbox', ver='3.4-Beta'))
+                    urls.append(kc.repo_url(package, arch=arch, dir='KaveToolbox', ver='3.6-Beta'))
                 if 'Eskapade' in package:
-                    urls.append(kc.repo_url(package, arch=arch, dir='Eskapade', ver='0.5'))
+                    urls.append(kc.repo_url(package, arch=arch, dir='Eskapade', ver='0.6'))
                 else:
                     urls.append(kc.repo_url(package, arch=arch))
             try:

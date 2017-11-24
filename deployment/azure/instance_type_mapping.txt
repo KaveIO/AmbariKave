@@ -1,0 +1,30 @@
+The table below shows the mapping between currently used AWS instance types in KAVE integration tests and their equivalents on Azure:
+
++--------------------------------------------------------+--------------------------------------------------------+
+|                           AWS                          |                          Azure                         |
++--------------------------------------------------------+--------------------------------------------------------+
+| Instance Type | vCPU | Memory(GiB) | Type              | Instance Type | vCPU | Memory(GiB) | Type              |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+| m4.large      | 2    | 8           | General Purpose   | D2 v2         | 2    | 8           | General Purpose   |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+| t2.medium     | 2    | 4           | General Purpose   | A2 v2         | 2    | 4           | General Purpose   |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+| m1.medium     | 1    | 3.75        | General Purpose   | D1 v2         | 1    | 3.5         | General Purpose   |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+| t2.small      | 1    | 2           | General Purpose   | D1 v2         | 1    | 3.5         | General Purpose   |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+| c4.xlarge     | 4    | 7.5         | Compute Optimized | F4            | 4    | 8           | Compute Optimized |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+| c4.large      | 2    | 3.75        | Compute Optimized | F2            | 2    | 4           | Compute Optimized |
++---------------+------+-------------+-------------------+---------------+------+-------------+-------------------+
+
+More generally, Azure provides different types of VMs:
+- General Purpose - Balanced CPU-to-memory ratio. Ideal for testing and development, small to medium databases, and low to medium traffic web servers.
+- Compute Optimized - High CPU-to-memory ratio. Good for medium traffic web servers, network appliances, bath processes, and application servers.
+- Memory Optimized - High memory-to-CPU ratio. Great for relational database servers, medium to large caches, and in-memory analytics.
+- Storage Optimized - High disk throughput and IO. Ideal for Big Data, SQL, and NoSQL databases.
+- GPU - Specialized virtual machines targeted for heavy graphic rendering and video editing. Available with single or multiple GPUs.
+- High performance compute - The fastest and most powerful CPU virtual machines with optional high-throughput network interfaces (RDMA).
+
+More information on Azure Linux VMs is available here: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes 
+Information about pricing: https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/

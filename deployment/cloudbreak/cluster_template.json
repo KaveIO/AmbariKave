@@ -1,0 +1,36 @@
+{
+  "name": "",
+  "enableShipyard": false,
+  "hostGroups": [],
+  "password": "admin",
+  "userName": "admin",
+  "enableSecurity": false,
+  "gateway": {
+    "enableGateway": false,
+    "exposedServices": [
+      "ALL"
+    ]
+  },
+  "kerberos": {},
+  "ldapRequired": false,
+  "sssdConfigId": null,
+  "validateBlueprint": true,
+  "fileSystem": null,
+  "customContainer": null,
+  "customQueue": "default",
+  "ambariRepoDetailsJson": {
+    "version": "2.5.1.0",
+    "gpgKeyUrl": "http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.1.0/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins",
+    "baseUrl": "http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.1.0"
+  },
+  "ambariStackDetails": {
+    "stack": "HDP",
+    "version": "2.6.1",
+    "stackRepoId": "HDP-2.6",
+    "stackBaseURL": "http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.1.0",
+    "utilsRepoId": "HDP-UTILS-1.1.0.21",
+    "utilsBaseURL": "http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.21/repos/centos7",
+    "verify": true
+  },
+  "configStrategy": "ALWAYS_APPLY_DONT_OVERRIDE_CUSTOM_VALUES"
+}

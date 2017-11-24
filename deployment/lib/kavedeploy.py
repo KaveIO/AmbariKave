@@ -754,7 +754,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "3.3-Beta"
+        version = "3.4-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -842,7 +842,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     cat = cat.replace("No errors were found.".lower(), '')
                     cat = cat.replace("no errors and warnings were found.".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
-                        raise SystemError("Failure in ambari server start server detected!")
+                        raise SystemError("Failure in ambari server start detected!")
         except ShellExecuteError:
             pass
 
@@ -931,11 +931,13 @@ def confallssh(remote, restart=True):
     Common sshd_config for all machines upped with these scripts
     Forbid weak ssh encryption
     """
-    remote.run("\"echo >> /etc/ssh/sshd_config \" ")
-    remote.run("\"echo 'Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr' "
-               + " >> /etc/ssh/sshd_config\" ")
-    remote.run("\"echo 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,"
-               + "hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' >> /etc/ssh/sshd_config\" ")
+    remote.run("bash -c 'echo >> /etc/ssh/sshd_config'")
+    remote.run("bash -c "
+               + "'echo \"Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\""
+               + " >> /etc/ssh/sshd_config'")
+    remote.run("bash -c "
+               + "'echo \"MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,"
+               + "hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com\" >> /etc/ssh/sshd_config'")
     if restart:
         try:
             remote.run("service sshd restart")

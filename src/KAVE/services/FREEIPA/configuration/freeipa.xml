@@ -17,9 +17,12 @@
             admin password file.
         </description>
     </property>
-    <property>
+    <property require-input = "true">
         <name>forwarders</name>
-        <value>10.0.0.10</value>
+        <value></value>
+        <value-attributes>
+          <empty_value_valid>True</empty_value_valid>
+        </value-attributes>
         <description>
             The IP address of the DNS server to whom FreeIPA should first forward requests.
             Usually this is specific to your datacenter. This can be a comma-separated list.
@@ -101,7 +104,7 @@
     </property>
     <property>
         <name>install_with_dns</name>
-        <value>True</value>
+        <value>False</value>
         <description>
             This will install the FreeIPA server with a DNS. This will also
             overwrite some dns related network settings.

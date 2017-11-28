@@ -328,7 +328,35 @@ class CBDeploy():
         response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
         return response.json()["id"]
 
-    def wait_for_cluster(self, name):
+    def delete_stack_by_id(self, id):
+        headers = {"Authorization": "Bearer " +
+                   self.access_token, "Content-type": "application/json"}
+        path = '/cb/api/v1/stacks/' + str(id)
+        url = cbparams.cb_https_url + path
+        params = {"forced": True}
+        response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
+        if response.status_code != 204:
+            print str.format("Cluster {} and its infrastructure could not be deleted. {}", name, response.text)
+            return False
+        else:
+            print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
+            return True
+
+    def delete_stack_by_name(self, name):
+        headers = {"Authorization": "Bearer " +
+                   self.access_token, "Content-type": "application/json"}
+        path = '/cb/api/v1/stacks/user/' + name
+        url = cbparams.cb_https_url + path
+        params = {"forced": True}
+        response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
+        if response.status_code != 204:
+            print str.format("Cluster {} and its infrastructure could not be deleted. {}", name, response.text)
+            return False
+        else:
+            print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
+            return True
+
+    def wait_for_cluster(self, name, kill_passed=False, kill_failed=False, kill_all=False):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
@@ -347,7 +375,7 @@ class CBDeploy():
         path = '/cb/api/v1/stacks/' + str(stack_id) + '/cluster'
         url = cbparams.cb_https_url + path
 
-        max_execution_time = 3600
+        max_execution_time = 5400
         start = timer = int(time.time())
         timeout = start + max_execution_time
         interval = 30
@@ -372,16 +400,24 @@ class CBDeploy():
                     print str.format("FAILURE: Unable to obtain status for cluster {}. Connection to "
                                      + "Cloudbreak might be lost or infrastructure creation might have failed.",
                                      cluster["name"])
+                    if kill_failed or kill_all:
+                        self.delete_stack_by_name(cluster["name"])
                     return False
             else:
                 if response.json() and response.json().get("status"):
                     if response.json()["status"] == "AVAILABLE":
                         print str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
                                          response.json()["name"], (timer - start))
+                        if kill_passed or kill_all:
+                            print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
+                            self.delete_stack_by_name(cluster["name"])
                         return True
                     if response.json()["status"].endswith("FAILED"):
-                        print str.format("FAILURE: Cluster deployment {} failed: {}: {}", response.json()["name"],
+                        print str.format("FAILURE: Cluster deployment {} failed: {}: {}", cluster["name"],
                                          response.json()["status"], response.json()["statusReason"])
+                        if kill_failed or kill_all:
+                            print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
+                            self.delete_stack_by_name(cluster["name"])
                         return False
                 # reset retries_count after success
                 if retries_count != 0:
@@ -391,4 +427,7 @@ class CBDeploy():
 
         print str.format("FAILURE: Cluster {} failed to complete in {} seconds.",
                          cluster["name"], (max_execution_time))
+        if kill_failed or kill_all:
+            print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
+            self.delete_stack_by_name(cluster["name"])
         return False

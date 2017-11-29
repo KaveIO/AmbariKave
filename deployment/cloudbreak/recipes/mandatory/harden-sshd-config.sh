@@ -17,7 +17,7 @@
 #
 ##############################################################################
 
-TARGETFILE="sshhardened.conf"
+TARGETFILE="/etc/ssh/sshd_config"
 INFOLINE="#KAVE ssh config hardening:"
 SSHCONFIGOPTIONS="$INFOLINE
 HostKey /etc/ssh/ssh_host_ed25519_key

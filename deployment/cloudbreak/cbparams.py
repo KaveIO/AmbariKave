@@ -49,4 +49,11 @@ recipes = {
         "recipeType": "PRE",
         "description": "Limit unsuccessful ssh attempts rate",
         "templatePath": "recipes/mandatory/limit-ssh-attempts.sh"
+    },
+    "harden-sshd-config":
+    {
+        "recipeType": "PRE",
+        "description": "Harden the configuration of the SSH daemon",
+        "templatePath": "recipes/mandatory/harden-sshd-config.sh"
     }}
+

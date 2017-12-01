@@ -22,6 +22,7 @@ import urlparse
 import base64
 from string import Template
 import time
+import os
 
 
 requests.packages.urllib3.disable_warnings()
@@ -138,6 +139,9 @@ class CBDeploy():
         Creates Cloudbreak blueprint with given name
         """
 
+        if not self.verify_blueprint(name):
+            return False
+
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/blueprints/user'
@@ -164,6 +168,57 @@ class CBDeploy():
             print str.format("Error creating Cloudbreak blueprint with name {}", bp_name)
             print response.text
             return False
+
+    def verify_blueprint(self, bp_name):
+
+        b = os.path.exists('blueprints/' + bp_name + '.blueprint.json')
+        if not b:
+            print str.format("No correct blueprint .json file found for {}", bp_name)
+            return False
+
+        bp={}
+        try:
+            with open('blueprints/' + bp_name + '.blueprint.json') as bp_file:
+                bp = json.load(bp_file)
+        except (IOError, ValueError):
+            print str.format("Json file {}.blueprint.json is not complete or not readable", bp_name)
+            return False
+        if "host_groups" not in bp:
+            print str.format("Missing 'host_groups' definition in {}.blueprint.json", bp_name)
+            return False
+        if "Blueprints" not in bp:
+            print str.format("Missing 'Blueprints' definition in {}.blueprint.json", bp_name)
+            return False
+        return True
+
+    def verify_hostgroups(self, hg_names):
+        """
+        Check if list of hostgroups, have the corresponding definitions in hostgroups.azure.json
+        """
+
+        h = os.path.exists('blueprints/hostgroups.azure.json')
+        if not h:
+            print str.format("File hostgroups.azure.json not found")
+            return False
+        hg_defs={}
+        try:
+            with open('blueprints/hostgroups.azure.json') as hgs_file:
+                hg_defs = json.load(hgs_file)
+        except (IOError, ValueError):
+            print "Json file hostgroups.azure.json is not complete or is not readable."
+            return False
+        for hg in hg_names:
+            if hg not in hg_defs:
+                print str.format("Missing details for hostgroup '{}' in hostgroups.azure.json file.", hg)
+                return False
+            for prop in ["machine-type", "volume-size", "volume-count", "instance-type", "security-group", "recipes"]:
+                if prop not in hg_defs[hg]:
+                    print str.format("'{}' for '{}' hostgroup is not definined in hostgroups.azure.json", prop, hg)
+                    return False
+                if not hg_defs[hg][prop]:
+                    print str.format("Invalid or missing value for '{}' property in '{}' hostgroup definition", prop, hg)
+                    return False
+        return True
 
     def check_for_recipe(self, name):
         """
@@ -224,13 +279,17 @@ class CBDeploy():
 
         with open("stack_template.json") as stack_file:
             stack = json.load(stack_file)
-        with open("blueprints/hostgroups.azure.json") as hgs_file:
-            hg_info = json.load(hgs_file)
         stack["name"] = blueprint_name.lower() + str(int(time.time()))
         blueprint = self.check_for_blueprint(blueprint_name)
         if blueprint:
             hgs = [item["name"]
                    for item in blueprint["ambariBlueprint"]["host_groups"]]
+        else:
+            raise Exception("Terminating stack creation for blueprint " + blueprint_name)
+        if not self.verify_hostgroups(hgs):
+            raise Exception("Terminating stack creation for blueprint " + blueprint_name)
+        with open("blueprints/hostgroups.azure.json") as hgs_file:
+            hg_info = json.load(hgs_file)
         for hg in hgs:
             instance = {}
             instance["templateId"] = self.check_for_template(hg)
@@ -247,7 +306,10 @@ class CBDeploy():
         url = cbparams.cb_https_url + path
         response = requests.post(url, data=json.dumps(
             stack), headers=headers, verify=cbparams.ssl_verify)
-        return (blueprint, response.json()["id"])
+        if response.status_code==200:
+            return (blueprint, response.json()["id"])
+        else:
+            raise Exception(str.format("FAILURE: Stack {} could not be created: {}", stack["name"], response.text))
 
     def create_cluster(self, blueprint, stack_id, credential):
         """
@@ -270,6 +332,8 @@ class CBDeploy():
 
         hgs = [item["name"]
                for item in blueprint["ambariBlueprint"]["host_groups"]]
+        if not self.verify_hostgroups(hgs):
+            raise Exception("Terminating stack creation for blueprint " + blueprint_name)
         for hg in hgs:
             hostgroup = {}
             hostgroup["name"] = hg
@@ -298,8 +362,7 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()
         else:
-            print str.format("FAILURE: Cluster {} could not be created: {}", stack["name"], response.text)
-            return False
+            raise Exception(str.format("FAILURE: Cluster {} could not be created: {}", stack["name"], response.text))
 
     def get_recipe_ids(self, recipe_names):
         recipe_ids = []
@@ -361,12 +424,13 @@ class CBDeploy():
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
 
-        credential = self.get_credential()
-        blueprint, stack_id = self.create_stack(name, credential)
-        cluster = self.create_cluster(blueprint, stack_id, credential)
-
-        if not cluster:
-            return False
+        try:
+            credential = self.get_credential()
+            blueprint, stack_id = self.create_stack(name, credential)
+            cluster = self.create_cluster(blueprint, stack_id, credential)
+        except Exception as e:
+            print e
+            return
 
         print str.format("Cluster {} requested. Waiting for Ambari...", cluster["name"])
 

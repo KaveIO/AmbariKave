@@ -146,5 +146,17 @@ will look for the ```AIRFLOW.blueprint.json``` file inside the deployment/cloudb
 
 The script can also take a list of blueprint/cluster names as parameter to deploy clusters simultaneously, or an ```"--all"``` parameter, which would deploy all clusters described in the blueprints folder at once.
 
+Additionally, the script accepts parameters ```"--kill-passed"``` , ```"--kill-failed"``` ,and  ```"--kill-all"``` which indicate if and which clusters should be automatically terminated after the deployment is ready:
+* --kill-passed - if present, all successfully deployed clusters will be deleted
+* --kill-failed - if present, all clusters which reported failure will be deleted
+* --kill-all - if present, all clusters will be deleted after deployment is complete
+
+## Deleting clusters
+
+Cloudbreak clusters can be deleted using the ```deployment/cloudbreak/kill_clusters.py```
+Running the script with given cluster name, the cluster and its infrastructure get deleted. For example:
+```bash
+./kill_clusters.py --name examplelambda1512132645
+```
 
 

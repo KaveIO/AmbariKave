@@ -55,5 +55,12 @@ recipes = {
         "recipeType": "PRE",
         "description": "Harden the configuration of the SSH daemon",
         "templatePath": "recipes/mandatory/harden-sshd-config.sh"
-    }}
+    },
+    "add-missing-jars":
+    {
+        "recipeType": "POST",
+        "description": "Add missing jars, needed for ADLS integration",
+        "templatePath": "recipes/mandatory/add_missing_jars.sh"
+    }
+}
 

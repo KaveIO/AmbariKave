@@ -21,7 +21,7 @@
 #Log at /var/log/recipes/pre-kaveprepatch.log
 
 #At every release, please update these variables.
-KAVE_VERSION=3.3
+KAVE_VERSION=3.4
 HDP_STACK=2.6
 KAVE_STACK=$HDP_STACK.$KAVE_VERSION.KAVE
 

@@ -19,13 +19,14 @@
         "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
         "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
         "forwarders": "168.63.129.16",
-        "install_distribution_user": "cloudbreak"
+        "install_distribution_user": "cloudbreak",
+        "install_with_dns": "True"
       }
     }
   ],
   "host_groups": [
     {
-      "name": "admin",
+      "name": "admin-freeipa",
       "configurations": [],
       "components": [
         {
@@ -36,9 +37,6 @@
         },
         {
           "name": "ZOOKEEPER_SERVER"
-        },
-        {
-          "name": "FREEIPA_CLIENT"
         },
         {
           "name": "METRICS_MONITOR"
@@ -61,15 +59,12 @@
         },
         {
           "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "FREEIPA_CLIENT"
         }
       ],
       "cardinality": "1+"
     },
     {
-      "name": "test",
+      "name": "freeipa",
       "configurations": [],
       "components": [
         {

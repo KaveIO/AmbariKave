@@ -9,7 +9,23 @@
                     "patchambari",
                     "fix-hosts-file",
                     "distibute-private-key",
-                    "limit-ssh-attempts"
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable"
+                    ]
+    },
+    "admin-freeipa": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 30,
+        "volume-count": 1,
+        "instance-type" : "GATEWAY",
+        "security-group" : "default-azure-only-ssh-and-ssl",
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable",
+                    "install_ipa_clients"
                     ]
     },
     "gateway": {
@@ -142,7 +158,8 @@
                     "patchambari",
                     "fix-hosts-file",
                     "distibute-private-key",
-                    "limit-ssh-attempts"
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable"
                     ]
     },
     "airflow": {
@@ -157,7 +174,7 @@
                     "limit-ssh-attempts"
                     ]
     },
-    "test": {
+    "freeipa": {
         "machine-type": "Standard_D1_v2",
         "volume-size": 20,
         "volume-count": 1,
@@ -166,7 +183,8 @@
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
-                    "limit-ssh-attempts"
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable"
                     ]
     },
     "replica": {

@@ -15,13 +15,13 @@
 #   limitations under the License.
 #
 ##############################################################################
-kave_version = "33-beta"
-cb_http_url = "http://<cloudbreak pub. IP>"
-cb_https_url = "https:///<cloudbreak pub. IP>"
+kave_version = "34-beta"
+cb_http_url = "http://13.64.195.21"
+cb_https_url = "https://13.64.195.21"
 uaa_port = 8089
 cb_username = "admin@example.com"
-cb_password = "<cloudbreak account password>"
-credential_name = "<cloudbreak credential name>"
+cb_password = "KavePassword01"
+credential_name = "rallycred"
 adls_enabled = False
 adls_name = "<Azure Data Lake Store name>"
 ssl_verify = False
@@ -61,6 +61,18 @@ recipes = {
         "recipeType": "POST",
         "description": "Add missing jars, needed for ADLS integration",
         "templatePath": "recipes/mandatory/add_missing_jars.sh"
-    }
+    },
+    "ipv6-lo-enable":
+    {
+        "recipeType": "PRE",
+        "description": "Enable IPv6 on the loop-back interface",
+        "templatePath": "recipes/mandatory/enable_ipv6.sh"
+    },
+    "install_ipa_clients":
+    {
+        "recipeType": "POST",
+        "description": "Install FreeIPA Client on all hosts",
+        "templatePath": "recipes/mandatory/distribute-secrets-and-install-ipa-client.sh"
+    }       
 }
 

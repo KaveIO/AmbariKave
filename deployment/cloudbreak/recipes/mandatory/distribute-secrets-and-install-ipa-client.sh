@@ -37,7 +37,7 @@ do
         if [ "$current_host" != "$freeipa_host" ]
         then
         curl -i -H "X-Requested-By: ambari" -u ${ambari_user}:${ambari_password} -X POST "http://$ambari_host:$ambari_port/api/v1/clusters/$cluster_name/hosts/$current_host/host_components/FREEIPA_CLIENT"
-        sleep 2
+        sleep 10
         curl -i -H "X-Requested-By: ambari" -u ${ambari_user}:${ambari_password} -X PUT -d '{"HostRoles": {"state": "INSTALLED"}}' "http://$ambari_host:$ambari_port/api/v1/clusters/$cluster_name/hosts/$current_host/host_components/FREEIPA_CLIENT"
         fi
 done

@@ -68,7 +68,7 @@ recipes = {
         "description": "Enable IPv6 on the loop-back interface",
         "templatePath": "recipes/mandatory/enable_ipv6.sh"
     },
-    "install_ipa_clients":
+    "install-ipa-clients":
     {
         "recipeType": "POST",
         "description": "Install FreeIPA Client on all hosts",

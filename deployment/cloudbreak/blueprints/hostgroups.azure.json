@@ -25,7 +25,7 @@
                     "distibute-private-key",
                     "limit-ssh-attempts",
                     "ipv6-lo-enable",
-                    "install_ipa_clients"
+                    "install-ipa-clients"
                     ]
     },
     "gateway": {

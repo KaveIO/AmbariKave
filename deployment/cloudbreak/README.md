@@ -30,7 +30,12 @@ The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary config
   * False (Default) - no certificate verification performed. We will just trust whatever is presented by cloudbreak. This was made the default option as by default cloudbreak uses very primitive ssl self signed cert.
   * True - should be set when real certificate is used, or one which trust is established by other means (OS level, corp CA etc.)
   * /<path>/<to>/<trusted public key> - A path containing trusted certs or CA bundles can be set. In this case only the certs in this path will be trusted and no others - even if they are real ones.
-* recipes - A json description of all the recipes which need to be available. Example value:
+
+### Manage recipes
+
+Cloudbreak recipe is a script extension to a cluster that runs on all nodes before or after the Ambari cluster installation.
+Recipes related information is kept in __```/deployment/cloudbreak/recipes/```__ folder. The subfolders __```mandatory```__  and __```custom```__ contain the recipes definitions. __```mandatory```__  folder contains KAVE related recipes, which should not be changed or deleted and all custom recipes should be placed in __```custom```__ folder.
+Each recipe should be described in  __```recipe_details.json```__ file in the following format:
 
 ```json
 { "recipe-name-to-be-used":   
@@ -100,7 +105,7 @@ Looking at the last json object:
 *  _instance-type_ - "GATEWAY" for the Ambari node, "CORE" for all the rest
 *  _security-group_ - Name of the security group in which nodes from the hostgroup will be created
 *  _node-count_ - Number of nodes to be deployed
-*  _recipes_ - List of recipe names (as desctribed in cbparams.py) to be applied to this hostgoup
+*  _recipes_ - List of recipe names (as described in recipe_details.py) to be applied to this hostgoup
 
 ### Stack
 Prior to insatlling the actual HDP components and cluster a stack needs to be created. "Stack" means the **running cloud infrastructure** that is created based on the hostgroups groups and cluster details (machine templates, credential, instance-types, network, securitygroup etc.). The new cluster will use your templates and by using Azure ARM will launch the cloud stack. To configure the stack details edit the following file:

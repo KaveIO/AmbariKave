@@ -1,0 +1,50 @@
+{
+    "patchambari":
+    {
+        "recipeType": "PRE",
+        "description": "Add the KAVE Stack to ambari",
+        "templatePath": "recipes/mandatory/setup_cloudbreak_kavepatch_ambari.sh"
+    },
+    "fix-hosts-file":
+    {
+        "recipeType": "PRE",
+        "description": "Fix hosts file on all nodes",
+        "templatePath": "recipes/mandatory/setup_cloudbreak_fixhostsfile_all.sh"
+    },
+    "distibute-private-key":
+    {
+        "recipeType": "PRE",
+        "description": "Distribute private key on all nodes",
+        "templatePath": "recipes/mandatory/setup_cloudbreak_keydistrib_all.sh"
+    },
+    "limit-ssh-attempts":
+    {
+        "recipeType": "PRE",
+        "description": "Limit unsuccessful ssh attempts rate",
+        "templatePath": "recipes/mandatory/limit-ssh-attempts.sh"
+    },
+    "harden-sshd-config":
+    {
+        "recipeType": "PRE",
+        "description": "Harden the configuration of the SSH daemon",
+        "templatePath": "recipes/mandatory/harden-sshd-config.sh"
+    },
+    "add-missing-jars":
+    {
+        "recipeType": "POST",
+        "description": "Add missing jars, needed for ADLS integration",
+        "templatePath": "recipes/mandatory/add_missing_jars.sh"
+    },
+    "ipv6-lo-enable":
+    {
+        "recipeType": "PRE",
+        "description": "Enable IPv6 on the loop-back interface",
+        "templatePath": "recipes/mandatory/enable_ipv6.sh"
+    },
+    "install-ipa-clients":
+    {
+        "recipeType": "POST",
+        "description": "Install FreeIPA Client on all hosts",
+        "templatePath": "recipes/mandatory/distribute-secrets-and-install-ipa-client.sh"
+    }
+}

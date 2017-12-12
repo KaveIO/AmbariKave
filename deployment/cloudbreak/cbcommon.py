@@ -249,7 +249,19 @@ class CBDeploy():
         path = '/cb/api/v1/recipes/user'
         url = cbparams.cb_https_url + path
 
-        details = cbparams.recipes[name]
+        try:
+            with open('recipes/recipe_details.json') as rd_file:
+                rd = json.load(rd_file)
+        except (IOError, ValueError):
+            print "Json file recipe_details.json is not complete or is not readable."
+            return False
+
+        if (rd.get(name)):
+            details = rd[name]
+        else:
+            print str.format("Missing details for recipe {} in recipe_details.json", name)
+            return False
+
         data = {}
         data['name'] = name + '-' + cbparams.kave_version
         data['recipeType'] = details['recipeType']

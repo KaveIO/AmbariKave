@@ -56,6 +56,7 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 		"volume-count": 1,
 		"instance-type": "GATEWAY",
 		"security-group": "default-azure-only-ssh-and-ssl",
+		"node-count" : 1,
 		"recipes": [
 			"patchambari",
 			"fix-hosts-file",
@@ -69,6 +70,7 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 		"volume-count": 1,
 		"instance-type": "CORE",
 		"security-group": "default-azure-only-ssh-and-ssl",
+		"node-count" : 1,
 		"recipes": [
 			"fix-hosts-file",
 			"distibute-private-key",
@@ -81,6 +83,7 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 		"volume-count": 1,
 		"instance-type": "CORE",
 		"security-group": "default-azure-only-ssh-and-ssl",
+		"node-count" : 1,
 		"recipes": [
 			"fix-hosts-file",
 			"distibute-private-key",
@@ -96,7 +99,8 @@ Looking at the last json object:
 *  _volume-count_ - Attached volumes per instance. Number between 1 and 24
 *  _instance-type_ - "GATEWAY" for the Ambari node, "CORE" for all the rest
 *  _security-group_ - Name of the security group in which nodes from the hostgroup will be created
-*  _recipes_ - list of recipe names (as desctribed in cbparams.py) to be applied to this hostgoup
+*  _node-count_ - Number of nodes to be deployed
+*  _recipes_ - List of recipe names (as desctribed in cbparams.py) to be applied to this hostgoup
 
 ### Stack
 Prior to insatlling the actual HDP components and cluster a stack needs to be created. "Stack" means the **running cloud infrastructure** that is created based on the hostgroups groups and cluster details (machine templates, credential, instance-types, network, securitygroup etc.). The new cluster will use your templates and by using Azure ARM will launch the cloud stack. To configure the stack details edit the following file:

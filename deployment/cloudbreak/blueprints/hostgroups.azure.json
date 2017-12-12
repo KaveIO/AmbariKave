@@ -5,6 +5,7 @@
         "volume-count": 1,
         "instance-type" : "GATEWAY",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -34,6 +35,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -46,6 +48,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -58,6 +61,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -70,6 +74,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -82,6 +87,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -94,6 +100,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -106,6 +113,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -118,6 +126,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -130,6 +139,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -142,6 +152,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -154,6 +165,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -168,6 +180,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -180,6 +193,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -193,6 +207,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",
@@ -205,6 +220,7 @@
         "volume-count": 1,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
                     "distibute-private-key",

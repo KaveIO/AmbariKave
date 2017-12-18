@@ -431,7 +431,7 @@ class CBDeploy():
             print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
             return True
 
-    def wait_for_cluster(self, name, kill_passed=False, kill_failed=False, kill_all=False):
+    def wait_for_cluster(self, name, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
@@ -448,47 +448,52 @@ class CBDeploy():
 
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
-        path = '/cb/api/v1/stacks/' + str(stack_id) + '/cluster'
+        path = '/cb/api/v1/stacks/' + str(stack_id)
         url = cbparams.cb_https_url + path
 
         max_execution_time = 5400
         start = timer = int(time.time())
         timeout = start + max_execution_time
-        interval = 30
+        interval = 10
         retries_count = 0
-        max_retries = 10
+        max_retries = 5
+        latest_status = ""
+        latest_status_reason = ""
 
         while timer < timeout:
             response = requests.get(
                 url, headers=headers, verify=cbparams.ssl_verify)
             if response.status_code != 200:
-                # ignore cluster not found response for the first 20 minutes -
-                # give the cluster time to allocate resources
-                if response.status_code == 404 and (timer - start < 1200):
-                    time.sleep(interval)
-                    timer = int(time.time())
-                    continue
                 if retries_count < max_retries:
                     retries_count += 1
                     time.sleep(interval)
                     timer = int(time.time())
                 else:
-                    print str.format("FAILURE: Unable to obtain status for cluster {}. Connection to "
-                                     + "Cloudbreak might be lost or infrastructure creation might have failed.",
+                    print str.format("FAILURE: Unable to obtain status for cluster {}. Connection to Cloudbreak might be lost.",
                                      cluster["name"])
                     if kill_failed or kill_all:
                         self.delete_stack_by_name(cluster["name"])
                     return False
             else:
-                if response.json() and response.json().get("status"):
-                    if response.json()["status"] == "AVAILABLE":
+                if response.json() and response.json().get("status") and response.json().get("cluster"):
+                    # if change in latest stack status is observed, log message
+                    if verbose and (response.json()["status"] != latest_status or response.json()["statusReason"] != latest_status_reason):
+                        latest_status = response.json()["status"]
+                        latest_status_reason = response.json()["statusReason"]
+                        print str.format("{} -- stack status: {} - {}; cluster status: {}",
+                                         cluster["name"], response.json()["status"], response.json()["statusReason"],
+                                         response.json()["cluster"]["status"])
+                    if response.json()["status"].startswith("DELETE"):
+                        print str.format("FAILURE: Requested deletion for cluster {}. Terminating current process.", cluster["name"])
+                        return False
+                    if response.json()["status"] == "AVAILABLE" and response.json()["cluster"]["status"] == "AVAILABLE":
                         print str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
                                          response.json()["name"], (timer - start))
                         if kill_passed or kill_all:
                             print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
                             self.delete_stack_by_name(cluster["name"])
                         return True
-                    if response.json()["status"].endswith("FAILED"):
+                    if response.json()["status"].endswith("FAILED") or response.json()["cluster"]["status"].endswith("FAILED"):
                         print str.format("FAILURE: Cluster deployment {} failed: {}: {}", cluster["name"],
                                          response.json()["status"], response.json()["statusReason"])
                         if kill_failed or kill_all:

@@ -160,6 +160,8 @@ Additionally, the script accepts parameters ```"--kill-passed"``` , ```"--kill-f
 * --kill-failed - if present, all clusters which reported failure will be deleted
 * --kill-all - if present, all clusters will be deleted after deployment is complete
 
+Use ```"--verbose"``` parameter, if you want to see more information about stack and cluster status druging deployment.
+
 ## Deleting clusters
 
 Cloudbreak clusters can be deleted using the ```deployment/cloudbreak/kill_clusters.py```

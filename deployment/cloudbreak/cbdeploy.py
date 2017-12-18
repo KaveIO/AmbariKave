@@ -28,6 +28,7 @@ if __name__ == "__main__":
     kill_passed_clusters = False
     kill_failed_clusters = False
     kill_all_clusters = False
+    verbose_enabled = False
 
     cb = cbcommon.CBDeploy()
     if "--all" in sys.argv:
@@ -35,17 +36,20 @@ if __name__ == "__main__":
         blueprints = [b.split("/")[-1].split(".")[0] for b in blueprints]
         blueprints = [b for b in blueprints if b not in disabled]
     else:
-        blueprints = [bp for bp in sys.argv[1:] if not bp.startswith("--kill-")]
+        blueprints = [bp for bp in sys.argv[1:] if not (bp.startswith("--kill-") or bp.startswith("--verbose"))]
     if "--kill-passed" in sys.argv:
         kill_passed_clusters = True
     if "--kill-failed" in sys.argv:
         kill_failed_clusters = True
     if "--kill-all" in sys.argv:
         kill_all_clusters = True
+    if "--verbose" in sys.argv:
+        verbose_enabled = True
 
     for i in range(0, len(blueprints)):
         print "Start cluster deployment for blueprint " + blueprints[i]
         t = Thread(target=cb.wait_for_cluster, args=(blueprints[i],), kwargs={
-                   "kill_passed": kill_passed_clusters, "kill_failed": kill_failed_clusters, "kill_all": kill_all_clusters})
+                   "kill_passed": kill_passed_clusters, "kill_failed": kill_failed_clusters, "kill_all": kill_all_clusters,
+                   "verbose": verbose_enabled})
         t.start()
         time.sleep(20)

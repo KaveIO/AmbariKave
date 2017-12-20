@@ -1,1 +1,0 @@
-sysctl -w net.ipv6.conf.lo.disable_ipv6=0

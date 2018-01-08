@@ -25,4 +25,7 @@ if __name__ == "__main__":
     if "--name" in sys.argv:
         clusters = sys.argv[2:]
         for cl in clusters:
-            cb.delete_stack_by_name(cl)
+            try:
+                cb.delete_stack_by_name(cl)
+            except Exception as e:
+                print "ERROR: ", e

@@ -25,4 +25,3 @@ credential_name = "rallycred"
 adls_enabled = False
 adls_name = "<Azure Data Lake Store name>"
 ssl_verify = False
-

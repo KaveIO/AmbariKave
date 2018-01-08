@@ -31,6 +31,9 @@ if __name__ == "__main__":
     verbose_enabled = False
 
     cb = cbcommon.CBDeploy()
+    if not cb.access_token:
+        sys.exit("FAILURE: Missing Cloudbreak access token.")
+
     if "--all" in sys.argv:
         blueprints = glob.glob("blueprints/*.blueprint.json")
         blueprints = [b.split("/")[-1].split(".")[0] for b in blueprints]
@@ -49,7 +52,9 @@ if __name__ == "__main__":
     for i in range(0, len(blueprints)):
         print "Start cluster deployment for blueprint " + blueprints[i]
         t = Thread(target=cb.wait_for_cluster, args=(blueprints[i],), kwargs={
-                   "kill_passed": kill_passed_clusters, "kill_failed": kill_failed_clusters, "kill_all": kill_all_clusters,
+                   "kill_passed": kill_passed_clusters,
+                   "kill_failed": kill_failed_clusters,
+                   "kill_all": kill_all_clusters,
                    "verbose": verbose_enabled})
         t.start()
         time.sleep(20)

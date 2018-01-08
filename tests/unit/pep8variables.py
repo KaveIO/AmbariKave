@@ -31,7 +31,7 @@ class TestVariables(unittest.TestCase):
     Except for those inherited form the underlying library, of course!
     """
     ignorefiles = ['pep8functions.py', 'params.py', 'stack_advisor.py', 'exceptions.py']
-    ignorevars = ["lD", "lA", "Logger"]
+    ignorevars = ["lD", "lA", "Logger", "fileSystem"]
 
     def find_definitions(self, fullpath):
         found = []

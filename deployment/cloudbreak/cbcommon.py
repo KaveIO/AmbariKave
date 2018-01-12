@@ -23,6 +23,7 @@ import base64
 from string import Template
 import time
 import os
+from requests.exceptions import RequestException
 
 
 requests.packages.urllib3.disable_warnings()
@@ -71,7 +72,11 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        except RequestException as e:
+            print "Unable to get Cloudbreak template"
+            raise
         if response.status_code == 200:
             return response.json()["id"]
         else:
@@ -88,11 +93,15 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        with open('blueprints/hostgroups.azure.json') as hg_file:
-            hgjson = json.load(hg_file)
+        try:
+            with open('blueprints/hostgroups.azure.json') as hg_file:
+                hgjson = json.load(hg_file)
+        except (IOError, ValueError):
+            raise StandardError("Error reading blueprints/hostgrups.azure.json file")
         if not (hgjson and hgjson.get(hostgroup)):
-            print "Description for hostgroup " + hostgroup + " is missing in blueprints/hostgroups.azure.json."
-            return False
+            raise ValueError(
+                str.format("Description for hostgroup {} is missing in blueprints/hostgroups.azure.json file.",
+                           hostgroup))
 
         name = hostgroup + '-' + cbparams.kave_version
         hostgroup_info = hgjson[hostgroup]
@@ -106,15 +115,17 @@ class CBDeploy():
         data['volumeSize'] = hostgroup_info['volume-size']
         data['volumeType'] = 'Standard_LRS'
 
-        response = requests.post(url, data=json.dumps(
-            data), headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.post(url, data=json.dumps(
+                data), headers=headers, verify=cbparams.ssl_verify)
+        except RequestException as e:
+            print str.format("Error creating Cloudbreak template with name {}: {}", name, response.text)
+            raise
         if response.status_code == 200:
             print str.format("Created new Cloudbreak template with name {}", name)
             return response.json()["id"]
         else:
-            print str.format("Error creating Cloudbreak template with name {}", name)
-            print response.text
-            return False
+            raise ValueError(str.format("Error creating Cloudbreak template with name {}: {}", name, response.text))
 
     def check_for_blueprint(self, name):
         """
@@ -127,7 +138,11 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to get Cloudbreak blueprint with name {}: {}", name, response.text)
+            raise
         if response.status_code == 200:
             return response.json()
         else:
@@ -150,24 +165,25 @@ class CBDeploy():
         try:
             with open('blueprints/' + name + '.blueprint.json') as bp_file:
                 bp = json.load(bp_file)
-        except (IOError, ValueError):
-            print str.format("No correct blueprint .json file found for {}", name)
-            return False
+        except (IOError, ValueError) as e:
+            raise StandardError(str.format("No correct blueprint .json file found for {}: {}", name, e))
 
         data = {}
         bp_name = name + '-' + cbparams.kave_version
         data['name'] = bp_name
         data['ambariBlueprint'] = bp
 
-        response = requests.post(url, data=json.dumps(
-            data), headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.post(url, data=json.dumps(
+                data), headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to create Cloudbreak blueprint with name {}: {}", name, response.text)
+            raise
         if response.status_code == 200:
             print str.format("Created new Cloudbreak blueprint with name {}", bp_name)
             return response.json()
         else:
-            print str.format("Error creating Cloudbreak blueprint with name {}", bp_name)
-            print response.text
-            return False
+            raise StandardError("Error creating Cloudbreak blueprint with name {}: {}", bp_name, response.text)
 
     def verify_blueprint(self, bp_name):
 
@@ -176,7 +192,7 @@ class CBDeploy():
             print str.format("No correct blueprint .json file found for {}", bp_name)
             return False
 
-        bp={}
+        bp = {}
         try:
             with open('blueprints/' + bp_name + '.blueprint.json') as bp_file:
                 bp = json.load(bp_file)
@@ -200,7 +216,7 @@ class CBDeploy():
         if not h:
             print str.format("File hostgroups.azure.json not found")
             return False
-        hg_defs={}
+        hg_defs = {}
         try:
             with open('blueprints/hostgroups.azure.json') as hgs_file:
                 hg_defs = json.load(hgs_file)
@@ -211,12 +227,14 @@ class CBDeploy():
             if hg not in hg_defs:
                 print str.format("Missing details for hostgroup '{}' in hostgroups.azure.json file.", hg)
                 return False
-            for prop in ["machine-type", "volume-size", "volume-count", "instance-type", "security-group", "node-count", "recipes"]:
+            for prop in ["machine-type", "volume-size", "volume-count", "instance-type",
+                         "security-group", "node-count", "recipes"]:
                 if prop not in hg_defs[hg]:
                     print str.format("'{}' for '{}' hostgroup is not definined in hostgroups.azure.json", prop, hg)
                     return False
                 if not hg_defs[hg][prop]:
-                    print str.format("Invalid or missing value for '{}' property in '{}' hostgroup definition", prop, hg)
+                    print str.format("Invalid or missing value for '{}' property in '{}' hostgroup definition",
+                                     prop, hg)
                     return False
         return True
 
@@ -231,7 +249,11 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
-        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to get details for recipe {} from Cloudbreak: {}", recipe_name, response.text)
+            raise
         if response.status_code == 200:
             return response.json()["id"]
         else:
@@ -252,22 +274,23 @@ class CBDeploy():
         try:
             with open('recipes/recipe_details.json') as rd_file:
                 rd = json.load(rd_file)
-        except (IOError, ValueError):
-            print "Json file recipe_details.json is not complete or is not readable."
-            return False
+        except (IOError, ValueError) as e:
+            raise StandardError("Json file recipe_details.json is not complete or is not readable. ")
 
         if (rd.get(name)):
             details = rd[name]
         else:
-            print str.format("Missing details for recipe {} in recipe_details.json", name)
-            return False
+            raise ValueError("Missing details for recipe {} in recipe_details.json", name)
 
         data = {}
         data['name'] = name + '-' + cbparams.kave_version
         data['recipeType'] = details['recipeType']
         data['description'] = details['description']
-        with open(details["templatePath"]) as rec_file:
-            rec = rec_file.read()
+        try:
+            with open(details["templatePath"]) as rec_file:
+                rec = rec_file.read()
+        except (IOError, ValueError):
+            raise StandardError(str.format("File {} is missing or is not readable. ", details["templatePath"]))
         if details.get("params"):
             temp = Template(rec)
             content = content.substitute(details["params"])
@@ -275,22 +298,29 @@ class CBDeploy():
         else:
             data['content'] = base64.b64encode(rec)
 
-        response = requests.post(url, data=json.dumps(
-            data), headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.post(url, data=json.dumps(
+                data), headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to create Cloudbreak recipe {}-{}", name, cbparams.kave_version)
+            raise
         if response.status_code == 200:
-            print str.format("Created new Cloudbreak recipe with name {}-{}", name, cbparams.kave_version)
+            print str.format("Created new Cloudbreak recipe {}-{}", name, cbparams.kave_version)
             return response.json()["id"]
         else:
-            print str.format("Error creating Cloudbreak recipe with name {}-{}", name, cbparams.kave_version)
-            return False
+            raise StandardError("Error creating Cloudbreak recipe {}-{}: {}",
+                                name, cbparams.kave_version, response.text)
 
     def create_stack(self, blueprint_name, credential):
         """
         Creates Cloudbreak stack with given blueprint name
         """
 
-        with open("stack_template.json") as stack_file:
-            stack = json.load(stack_file)
+        try:
+            with open("stack_template.json") as stack_file:
+                stack = json.load(stack_file)
+        except (IOError, ValueError) as e:
+            raise StandardError("Json file stack_template.json is not complete or is not readable.")
         stack["name"] = blueprint_name.lower() + str(int(time.time()))
         blueprint = self.check_for_blueprint(blueprint_name)
         if blueprint:
@@ -300,8 +330,11 @@ class CBDeploy():
             raise Exception("Terminating stack creation for blueprint " + blueprint_name)
         if not self.verify_hostgroups(hgs):
             raise Exception("Terminating stack creation for blueprint " + blueprint_name)
-        with open("blueprints/hostgroups.azure.json") as hgs_file:
-            hg_info = json.load(hgs_file)
+        try:
+            with open("blueprints/hostgroups.azure.json") as hgs_file:
+                hg_info = json.load(hgs_file)
+        except (IOError, ValueError) as e:
+            raise StandardError("Json file blueprints/hostgroups.azure.json is not complete or is not readable.")
         for hg in hgs:
             instance = {}
             instance["templateId"] = self.check_for_template(hg)
@@ -316,12 +349,16 @@ class CBDeploy():
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/user'
         url = cbparams.cb_https_url + path
-        response = requests.post(url, data=json.dumps(
-            stack), headers=headers, verify=cbparams.ssl_verify)
-        if response.status_code==200:
+        try:
+            response = requests.post(url, data=json.dumps(
+                stack), headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to create stack for blueprint {}", blueprint_name)
+            raise
+        if response.status_code == 200:
             return (blueprint, response.json()["id"])
         else:
-            raise Exception(str.format("FAILURE: Stack {} could not be created: {}", stack["name"], response.text))
+            raise Exception(str.format("Stack {} could not be created: {}", stack["name"], response.text))
 
     def create_cluster(self, blueprint, stack_id, credential):
         """
@@ -332,13 +369,23 @@ class CBDeploy():
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(stack_id)
         url = cbparams.cb_https_url + path
-        stack = requests.get(url, headers=headers,
-                             verify=cbparams.ssl_verify).json()
+        try:
+            stack = requests.get(url, headers=headers,
+                                 verify=cbparams.ssl_verify).json()
+        except RequestException:
+            print str.format("Unable to get stack with id {} from Cloudbreak.", stack_id)
+            raise
 
-        with open("cluster_template.json") as cl_file:
-            cluster = json.load(cl_file)
-        with open("blueprints/hostgroups.azure.json") as hgs_file:
-            hg_info = json.load(hgs_file)
+        try:
+            with open("cluster_template.json") as cl_file:
+                cluster = json.load(cl_file)
+        except (IOError, ValueError):
+            raise StandardError("File cluster_template.json is not complete or is not readable.")
+        try:
+            with open("blueprints/hostgroups.azure.json") as hgs_file:
+                hg_info = json.load(hgs_file)
+        except (IOError, ValueError):
+            raise StandardError("File blueprints/hostgroups.azure.json is not complete or is not readable.")
         cluster["name"] = stack["name"]
         cluster["blueprintId"] = blueprint["id"]
 
@@ -355,7 +402,7 @@ class CBDeploy():
             hostgroup["recipeIds"] = self.get_recipe_ids(hg_info[hg]["recipes"])
             cluster["hostGroups"].append(hostgroup)
 
-        if cbparams.adls_enabled == True and cbparams.adls_name:
+        if cbparams.adls_enabled and cbparams.adls_name:
             fileSystem = {}
             fileSystem["type"] = "ADLS"
             fileSystem["defaultFs"] = False
@@ -368,13 +415,17 @@ class CBDeploy():
             cluster["fileSystem"] = fileSystem
 
         url = url + '/cluster'
-        response = requests.post(url, data=json.dumps(
-            cluster), headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.post(url, data=json.dumps(
+                cluster), headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Error creating cluster {}", stack["name"])
+            raise
 
         if response.status_code == 200:
             return response.json()
         else:
-            raise Exception(str.format("FAILURE: Cluster {} could not be created: {}", stack["name"], response.text))
+            raise Exception(str.format("Cluster {} could not be created: {}", stack["name"], response.text))
 
     def get_recipe_ids(self, recipe_names):
         recipe_ids = []
@@ -389,18 +440,29 @@ class CBDeploy():
                        self.access_token, "Content-type": "application/json"}
             path = '/cb/api/v1/credentials/account/' + cbparams.credential_name
             url = cbparams.cb_https_url + path
-            response = requests.get(url, headers=headers, verify = cbparams.ssl_verify)
-            return response.json()
+            try:
+                response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+            except RequestException as e:
+                print "Unable to obtain Cloudbreak credential."
+                raise
+            else:
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    raise ValueError("Unable to obtain Cloudbreak credential.")
         else:
-            print "Missing credential name. Please provide correct value for credential_name in cbparams.py"
-            return False
+            raise ValueError("Missing credential name. Please provide correct value for credential_name in cbparams.py")
 
     def get_security_group_id(self, name):
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/securitygroups/account/' + name
         url = cbparams.cb_https_url + path
-        response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        try:
+            response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print "Unable to get Cloudbreak security group"
+            raise
         return response.json()["id"]
 
     def delete_stack_by_id(self, id):
@@ -409,13 +471,16 @@ class CBDeploy():
         path = '/cb/api/v1/stacks/' + str(id)
         url = cbparams.cb_https_url + path
         params = {"forced": True}
-        response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
+        try:
+            response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Cluster with id {} and its infrastructure could not be deleted.", id)
+            raise
         if response.status_code != 204:
-            print str.format("Cluster {} and its infrastructure could not be deleted. {}", name, response.text)
-            return False
+            raise StandardError(str.format(
+                "Cluster with id {} and its infrastructure could not be deleted: {}", id, response.text))
         else:
-            print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
-            return True
+            print str.format("Cluster with id {} and its infrastructure were successfully deleted.", id)
 
     def delete_stack_by_name(self, name):
         headers = {"Authorization": "Bearer " +
@@ -423,10 +488,14 @@ class CBDeploy():
         path = '/cb/api/v1/stacks/user/' + name
         url = cbparams.cb_https_url + path
         params = {"forced": True}
-        response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
+        try:
+            response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Cluster {} and its infrastructure could not be deleted.", name)
+            raise
         if response.status_code != 204:
-            print str.format("Cluster {} and its infrastructure could not be deleted. {}", name, response.text)
-            return False
+            raise StandardError(str.format(
+                "Cluster {} and its infrastructure could not be deleted: {}", name, response.text))
         else:
             print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
             return True
@@ -441,7 +510,7 @@ class CBDeploy():
             blueprint, stack_id = self.create_stack(name, credential)
             cluster = self.create_cluster(blueprint, stack_id, credential)
         except Exception as e:
-            print e
+            print "FAILURE: ", e
             return
 
         print str.format("Cluster {} requested. Waiting for Ambari...", cluster["name"])
@@ -469,22 +538,25 @@ class CBDeploy():
                     time.sleep(interval)
                     timer = int(time.time())
                 else:
-                    print str.format("FAILURE: Unable to obtain status for cluster {}. Connection to Cloudbreak might be lost.",
-                                     cluster["name"])
+                    print str.format(
+                        "FAILURE: Unable to obtain status for cluster {}. Connection to Cloudbreak might be lost.",
+                        cluster["name"])
                     if kill_failed or kill_all:
                         self.delete_stack_by_name(cluster["name"])
                     return False
             else:
                 if response.json() and response.json().get("status") and response.json().get("cluster"):
                     # if change in latest stack status is observed, log message
-                    if verbose and (response.json()["status"] != latest_status or response.json()["statusReason"] != latest_status_reason):
+                    if verbose and (response.json()["status"] != latest_status
+                                    or response.json()["statusReason"] != latest_status_reason):
                         latest_status = response.json()["status"]
                         latest_status_reason = response.json()["statusReason"]
                         print str.format("{} -- stack status: {} - {}; cluster status: {}",
                                          cluster["name"], response.json()["status"], response.json()["statusReason"],
                                          response.json()["cluster"]["status"])
                     if response.json()["status"].startswith("DELETE"):
-                        print str.format("FAILURE: Requested deletion for cluster {}. Terminating current process.", cluster["name"])
+                        print str.format("FAILURE: Requested deletion for cluster {}. Terminating current process.",
+                                         cluster["name"])
                         return False
                     if response.json()["status"] == "AVAILABLE" and response.json()["cluster"]["status"] == "AVAILABLE":
                         print str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
@@ -493,7 +565,8 @@ class CBDeploy():
                             print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
                             self.delete_stack_by_name(cluster["name"])
                         return True
-                    if response.json()["status"].endswith("FAILED") or response.json()["cluster"]["status"].endswith("FAILED"):
+                    if response.json()["status"].endswith("FAILED") \
+                            or response.json()["cluster"]["status"].endswith("FAILED"):
                         print str.format("FAILURE: Cluster deployment {} failed: {}: {}", cluster["name"],
                                          response.json()["status"], response.json()["statusReason"])
                         if kill_failed or kill_all:

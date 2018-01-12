@@ -29,21 +29,11 @@
       "name": "admin-freeipa",
       "configurations": [],
       "components": [
-        {
-          "name": "AMBARI_SERVER"
-        },
-        {
-          "name": "METRICS_COLLECTOR"
-        },
-        {
-          "name": "ZOOKEEPER_SERVER"
-        },
-        {
-          "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "ZOOKEEPER_CLIENT"
-        }
+        { "name": "AMBARI_SERVER"       },
+        { "name": "METRICS_COLLECTOR"   },
+        { "name": "ZOOKEEPER_SERVER"    },
+        { "name": "METRICS_MONITOR"     },
+        { "name": "ZOOKEEPER_CLIENT"    }
       ],
       "cardinality": "1"
     },
@@ -51,15 +41,9 @@
       "name": "gateway",
       "configurations": [],
       "components": [
-        {
-          "name": "KAVELANDING"
-        },
-        {
-          "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "ZOOKEEPER_CLIENT"
-        }
+        { "name": "KAVELANDING"        },
+        { "name": "METRICS_MONITOR"    },
+        { "name": "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality": "1+"
     },
@@ -67,20 +51,12 @@
       "name": "freeipa",
       "configurations": [],
       "components": [
-        {
-          "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "FREEIPA_SERVER"
-        },
-        {
-          "name": "FREEIPA_CLIENT"
-        }
+        { "name": "METRICS_MONITOR"      },
+        { "name": "ZOOKEEPER_CLIENT"     },
+        { "name": "FREEIPA_SERVER"       },
+        { "name": "FREEIPA_CLIENT"       }
       ],
-      "cardinality": "1+"
+      "cardinality": "1"
     }
   ],
   "Blueprints": {

@@ -46,5 +46,12 @@
         "recipeType": "POST",
         "description": "Install FreeIPA Client on all hosts",
         "templatePath": "recipes/mandatory/distribute-secrets-and-install-ipa-client.sh"
+    },
+    "ipa-security-settings":
+    {
+        "recipeType": "POST",
+        "description": "Modify default security settings",
+        "templatePath": "recipes/mandatory/ipa_security_settings.sh"
     }
+    
 }

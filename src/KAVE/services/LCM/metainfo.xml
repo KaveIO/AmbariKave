@@ -45,6 +45,9 @@
             <configuration-dependencies>
                 <config-type>lcm</config-type>
             </configuration-dependencies>
+            <requiredServices>
+                <service>MONGODB</service>
+            </requiredServices>
         </service>
     </services>
 </metainfo>

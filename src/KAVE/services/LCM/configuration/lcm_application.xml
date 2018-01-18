@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+      <name>LcmServerURL</name>
+      <value>localhost</value>
+      <description>Server name</description>
+  </property>
+    <property>
+        <name>LcmPORT</name>
+        <value>8081</value>
+        <description>lcm.server.port</description>
+    </property>
+    <property>
+        <name>LcmSecurePort</name>
+        <value>4444</value>
+        <description>LCM Server HTTPS Port</description>
+    </property>
+    <property>
+        <name>application.properties</name>
+        <value>
+# LCM configuration file
+#
+# The LCM is splitted up in two separate executables. The server and the UI.
+# These both configured with this properties file. the distinction can be easily
+# made by looking at the property names.
+
+############################# Server settings #############################
+
+#The maximum length of the application name property is 12.
+#If the application name property is longer than that only the first 12 symbols are taken.
+#The LCM id consists three components:
+# - application name which is defined by the user bellow;
+# - unix timestamp;
+# - random alphanum.
+#The length of the whole LCM id must be 32.
+# LCM Id is used in the communication between LCMs it is public.
+lcm.server.application.name=
+
+lcm.server.name={{LcmServerURL}}
+lcm.server.port={{LcmPORT}}
+lcm.server.securePort={{LcmSecurePORT}}
+
+# Example mongo configuration
+lcm.server.storage=mongo
+lcm.server.storage.mongo.host=localhost
+lcm.server.storage.mongo.port=27017
+lcm.server.storage.mongo.database=lcm
+#use syntax like bellow to authenticate
+#username:password@databaseName
+#or leave this field blank for unauthenticated access
+lcm.server.storage.mongo.credentials=
+
+lcm.server.basic.authentication.enabled=true
+lcm.server.session.authentication.enabled=true
+############################# UI settings #############################
+
+# LCM User Interface configuration properties
+lcm.ui.server.name=localhost
+lcm.ui.server.port=8080
+lcm.ui.server.securePort=4443
+
+# In case swagger is enabled REST API documentation  will be available.
+# Go to http://<lcm.server.name>:<lcm.server.swagger.port>/docs for example http://localhost:8082/docs
+# and place in the swagger source box: http://<lcm.server.name>:<lcm.server.swagger.port>/swagger.json
+lcm.server.swagger.enable=true
+lcm.server.swagger.port=8082
+		</value>
+<description>
+    LCM application configuration details.
+</description>
+</property>
+</configuration>

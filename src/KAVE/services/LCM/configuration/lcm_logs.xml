@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+      <name>Sever log file path</name>
+      <value>logs/lcm-server.log</value>
+      <description>Path for LCM server logs</description>
+  </property>
+  <property>
+      <name>Maximum size for Server log file </name>
+      <value>20MB</value>
+      <description>Max size for log files</description>
+  </property>
+  <property>
+        <name>log4j-server.properties</name>
+        <value>
+          # Root logger option -  default one
+    log4j.rootLogger=INFO, serverLog
+
+    # All autorization messages are logged with this logger
+    log4j.category.authorizationLogger=DEBUG, authorizationLog
+
+    # All authentication messages are logged with this logger
+    log4j.category.authenticationLogger=DEBUG, authenticationLog
+
+    # lcm-ui module logger
+    log4j.category.sout=DEBUG, stdout
+
+    log4j.appender.serverLog=org.apache.log4j.RollingFileAppender
+    log4j.appender.serverLog.File=logs/lcm-server.log
+    log4j.appender.serverLog.MaxFileSize=20MB
+    log4j.appender.serverLog.MaxBackupIndex=10
+    log4j.appender.serverLog.layout=org.apache.log4j.PatternLayout
+    log4j.appender.serverLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+    log4j.appender.authorizationLog=org.apache.log4j.RollingFileAppender
+    log4j.appender.authorizationLog.File=logs/authorization.log
+    log4j.appender.authorizationLog.MaxFileSize=20MB
+    log4j.appender.authorizationLog.MaxBackupIndex=10
+    log4j.appender.authorizationLog.layout=org.apache.log4j.PatternLayout
+    log4j.appender.authorizationLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n
+
+    log4j.appender.authenticationLog=org.apache.log4j.RollingFileAppender
+    log4j.appender.authenticationLog.File=logs/authentication.log
+    log4j.appender.authenticationLog.MaxFileSize=20MB
+    log4j.appender.authenticationLog.MaxBackupIndex=10
+    log4j.appender.authenticationLog.layout=org.apache.log4j.PatternLayout
+    log4j.appender.authenticationLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n
+
+    # Direct log messages to stdout
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.Target=System.out
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %C{1}:%L - %m%n
+
+    log4j.logger.org.mongodb.driver=ERROR
+</value>
+<description>
+    LCM log server configuration details.
+</description>
+</property>
+<property>
+    <name>UI log file path</name>
+    <value>logs/lcm-ui.log</value>
+    <description>Path for LCM UI logs</description>
+</property>
+<property>
+    <name>Maximum size for UI log file </name>
+    <value>20MB</value>
+    <description>Max size for log files</description>
+</property>
+<property>
+      <name>log4j-ui.properties</name>
+      <value>
+        # Root logger option - defailt one
+log4j.rootLogger=INFO, uiLog
+
+# lcm-ui module logger
+log4j.category.sout=DEBUG, stdout
+
+log4j.appender.uiLog=org.apache.log4j.RollingFileAppender
+log4j.appender.uiLog.File=logs/lcm-ui.log
+log4j.appender.uiLog.MaxFileSize=20MB
+log4j.appender.uiLog.MaxBackupIndex=10
+log4j.appender.uiLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.uiLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+# Direct log messages to stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+</value>
+<description>
+  LCM log UI configuration details.
+</description>
+</property>
+</configuration>

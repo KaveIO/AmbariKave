@@ -2,11 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <property>
+	<property>
       <name>LcmServerURL</name>
       <value>localhost</value>
       <description>Server name</description>
-  </property>
+	</property>
     <property>
         <name>LcmPORT</name>
         <value>8081</value>
@@ -62,13 +62,11 @@ lcm.ui.server.port=8080
 lcm.ui.server.securePort=4443
 
 # In case swagger is enabled REST API documentation  will be available.
-# Go to http://<lcm.server.name>:<lcm.server.swagger.port>/docs for example http://localhost:8082/docs
-# and place in the swagger source box: http://<lcm.server.name>:<lcm.server.swagger.port>/swagger.json
+# Go to http://{lcm.server.name}:{lcm.server.swagger.port}/docs for example http://localhost:8082/docs
+# and place in the swagger source box: http://{lcm.server.name}:{lcm.server.swagger.port}/swagger.json
 lcm.server.swagger.enable=true
 lcm.server.swagger.port=8082
 		</value>
-<description>
-    LCM application configuration details.
-</description>
-</property>
+		<description>LCM application configuration details.</description>
+	</property>
 </configuration>

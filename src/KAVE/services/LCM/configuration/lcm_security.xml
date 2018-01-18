@@ -2,18 +2,19 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <property>
-      <name>Security.truststoreType</name>
-      <value>JKS</value>
-      <description>LCM client security truststoreType</description>
-      <property>
-        <name>lcm.server.security.encryption.key</name>
-        <value>123456789qwertyu</value>
-        <description>LCM server security encryption key - This property must be exactly 16 symbols long </description>
-    </property>
-    <property>
-        <name>security.properties</name>
-        <value>
+	<property>
+		<name>Security.truststoreType</name>
+		<value>JKS</value>
+		<description>LCM client security truststoreType</description>
+	</property>
+	<property>
+		<name>lcm.server.security.encryption.key</name>
+		<value>123456789qwertyu</value>
+		<description>LCM server security encryption key - This property must be exactly 16 symbols long </description>
+	</property>
+	<property>
+		<name>security.properties</name>
+		<value>
           # LCM security configuration file.
           # DO NOT SHARE THIS FILE AND MAKE SURE THAT ONLY AUTHRIZED USERS CAN ACCESS IT!
           #
@@ -91,9 +92,7 @@
 
           #Link to the server certificate - in the UI there is download link
           lcm.ui.client.security.server.certificate=${PWD}/src/main/resources/certificates/lcm-certificate.cer
-</value>
-<description>
-    LCM security configuration details.
-</description>
-</property>
+		</value>
+		<description>LCM security configuration details.</description>
+	</property>
 </configuration>

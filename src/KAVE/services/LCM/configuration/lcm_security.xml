@@ -47,7 +47,7 @@
           # SSL settings for requests made in the lcm-server module to another LCM
           lcm.client.security.truststore=certificates/lcm.keystore
           lcm.client.security.truststorePassword=
-          lcm.client.security.truststoreType=JKS
+          lcm.client.security.truststoreType={{Security.truststoreType}}
 
 
           # Set this to true if you want to run on HTTP in case of HTTPS misconfiguration; when 'false' and on HTTPS a redirect HTTP -> HTTPS is setup.

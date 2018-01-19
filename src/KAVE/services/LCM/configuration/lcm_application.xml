@@ -3,20 +3,10 @@
 
 <configuration>
 	<property>
-      <name>LcmServerURL</name>
-      <value>localhost</value>
+      <name>lcm.server.application.name</name>
+      <value>Application_name</value>
       <description>Server name</description>
 	</property>
-    <property>
-        <name>LcmPORT</name>
-        <value>8081</value>
-        <description>lcm.server.port</description>
-    </property>
-    <property>
-        <name>LcmSecurePort</name>
-        <value>4444</value>
-        <description>LCM Server HTTPS Port</description>
-    </property>
     <property>
         <name>application.properties</name>
         <value>
@@ -36,11 +26,11 @@
 # - random alphanum.
 #The length of the whole LCM id must be 32.
 # LCM Id is used in the communication between LCMs it is public.
-lcm.server.application.name=
+lcm.server.application.name={{lcm.server.application.name}}
 
-lcm.server.name={{LcmServerURL}}
-lcm.server.port={{LcmPORT}}
-lcm.server.securePort={{LcmSecurePORT}}
+lcm.server.name=localhost
+lcm.server.port=8081
+lcm.server.securePort=4444
 
 # Example mongo configuration
 lcm.server.storage=mongo

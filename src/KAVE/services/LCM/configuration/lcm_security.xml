@@ -2,14 +2,9 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-    <property>
-        <name>Security.truststoreType</name>
-        <value>JKS</value>
-        <description>LCM client security truststoreType</description>
-    </property>
 
     <property require-input = "true">
-        <name>administrator.password</name>
+        <name>admin.password</name>
         <property-type>PASSWORD</property-type>
         <value></value>
         <value-attributes>
@@ -42,7 +37,7 @@
           # Username and password for the default admin user. Once a actual admin user is
           # created these become unused.
           lcm.server.adminUser=admin
-          lcm.server.adminPassword={{administrator.password}}
+          lcm.server.adminPassword={{admin.password}}
 
           # Default ssl configuration location based on installation with the setup_ssl.sh script.
           # 'certificates' directory must be in the base application directory i.e. on the same level as
@@ -58,7 +53,7 @@
           # SSL settings for requests made in the lcm-server module to another LCM
           lcm.client.security.truststore=certificates/lcm.keystore
           lcm.client.security.truststorePassword=
-          lcm.client.security.truststoreType={{Security.truststoreType}}
+          lcm.client.security.truststoreType=JKS
 
 
           # Set this to true if you want to run on HTTP in case of HTTPS misconfiguration; when 'false' and on HTTPS a redirect HTTP -> HTTPS is setup.

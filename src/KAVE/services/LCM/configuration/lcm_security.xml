@@ -7,9 +7,13 @@
 		<value>JKS</value>
 		<description>LCM client security truststoreType</description>
 	</property>
-	<property>
+	<property require-input = "true">
 		<name>lcm.server.security.encryption.key</name>
-		<value>123456789qwertyu</value>
+        <property-type>PASSWORD</property-type>
+        <value></value>
+        <value-attributes>
+          <type>password</type>
+        </value-attributes>
 		<description>LCM server security encryption key - This property must be exactly 16 symbols long </description>
 	</property>
 	<property>

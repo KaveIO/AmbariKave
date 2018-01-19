@@ -8,14 +8,8 @@
         <description>LCM client security truststoreType</description>
     </property>
 
-    <property>
-        <name>lcm.administrator.user</name>
-        <value>admin</value>
-        <description>LCM administrator user</description>
-    </property>
-
     <property require-input = "true">
-        <name>lcm.administrator.password</name>
+        <name>administrator.password</name>
         <property-type>PASSWORD</property-type>
         <value></value>
         <value-attributes>
@@ -47,8 +41,8 @@
 
           # Username and password for the default admin user. Once a actual admin user is
           # created these become unused.
-          lcm.server.adminUser={{lcm.administrator.user}}
-          lcm.server.adminPassword={{lcm.administrator.password}}
+          lcm.server.adminUser=admin
+          lcm.server.adminPassword={{administrator.password}}
 
           # Default ssl configuration location based on installation with the setup_ssl.sh script.
           # 'certificates' directory must be in the base application directory i.e. on the same level as

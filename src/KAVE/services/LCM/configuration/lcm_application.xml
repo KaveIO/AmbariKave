@@ -7,6 +7,21 @@
       <value>Application_name</value>
       <description>Server name</description>
 	</property>
+	<property>
+      <name>LcmPORT</name>
+      <value>8081</value>
+      <description>Port number</description>
+    </property>
+    <property>
+      <name>LcmSecurePort</name>
+      <value>4444</value>
+      <description>Secure Port number</description>
+    </property>
+        <property>
+      <name>LcmServerURL</name>
+      <value>localhost</value>
+      <description>LCM Server Name</description>
+    </property>
     <property>
         <name>application.properties</name>
         <value>
@@ -28,9 +43,9 @@
 # LCM Id is used in the communication between LCMs it is public.
 lcm.server.application.name={{lcm.server.application.name}}
 
-lcm.server.name=localhost
-lcm.server.port=8081
-lcm.server.securePort=4444
+lcm.server.name={{LcmServerURL}}
+lcm.server.port={{LcmPORT }}
+lcm.server.securePort={{LcmSecurePort}}
 
 # Example mongo configuration
 lcm.server.storage=mongo

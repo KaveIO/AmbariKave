@@ -228,5 +228,18 @@
                     "distibute-private-key",
                     "limit-ssh-attempts"
                     ]
+    },
+    "test": {
+        "machine-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "instance-type" : "CORE",
+        "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "distibute-private-key",
+                    "limit-ssh-attempts"
+                    ]
     }
 }

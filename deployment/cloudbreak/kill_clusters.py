@@ -16,12 +16,32 @@
 #   limitations under the License.
 #
 ##############################################################################
+"""
+Deletes clusters and their infrastructure from Cloudbreak
+
+usage: ./kill_clusters.py --name cluster_name/list_of_cluster_names
+ex: ./kill_clusters.py --name examplelambda1512132645
+
+params:
+    --help/-h - shows this helper message and exits
+
+    --name cluster_name/list_of_cluster_names - Cloudbreak cluster name or list of cluster names, separated by spaces, to be deleted.
+        Both the cluster(s) and infrastructure will be deleted.
+
+"""
+
 import cbcommon
+
+def help():
+    print __doc__
 
 if __name__ == "__main__":
     import sys
 
     cb = cbcommon.CBDeploy()
+    if "--help" in sys.argv or "-h" in sys.argv:
+        help()
+        sys.exit(0)
     if "--name" in sys.argv:
         clusters = sys.argv[2:]
         for cl in clusters:

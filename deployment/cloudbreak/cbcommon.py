@@ -15,6 +15,10 @@
 #   limitations under the License.
 #
 ##############################################################################
+"""
+A Python module, containing functions for interaction with Cloudbreak.
+"""
+
 import requests
 import json
 import cbparams

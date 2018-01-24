@@ -34,6 +34,12 @@
                     </commandScript>
                     </component>
             </components>
+            <quickLinksConfigurations>
+       <quickLinksConfiguration>
+         <fileName>quicklinks.json</fileName>
+         <default>true</default>
+       </quickLinksConfiguration>
+     </quickLinksConfigurations>
            <osSpecifics>
                 <osSpecific>
                     <osFamily>any</osFamily>

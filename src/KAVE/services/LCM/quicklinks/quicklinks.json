@@ -1,0 +1,30 @@
+{
+  "name": "default",
+  "description": "default quick links configuration",
+  "configuration": {
+    "protocol":
+    {
+      "type":"https"
+
+    },
+
+    "links": [
+      {
+        "name": "lcm_dashboard",
+        "label": "LCM Dashboard",
+        "requires_user_name": "true",
+        "component_name": "LCM_SERVER",
+        "url": "http://ambari.kave.io:8080",
+        "attributes": ["authenticated", "sso"],
+        "port":{
+          "http_property": "lcm.server.http.port",
+          "http_default_port": "8080",
+          "https_property": "lcm.server.https.port",
+          "https_default_port": "4443",
+          "regex": "^(\\d+)$",
+          "site": "application-properties"
+        }
+      }
+    ]
+  }
+}

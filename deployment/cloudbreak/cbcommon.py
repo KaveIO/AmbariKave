@@ -32,6 +32,7 @@ from requests.exceptions import RequestException
 
 requests.packages.urllib3.disable_warnings()
 
+KAVE_VERSION = "34-beta"
 
 class CBDeploy():
 
@@ -70,7 +71,7 @@ class CBDeploy():
         Checks if Cloudbreak template with given name exists
         """
 
-        name = hostgroup + '-' + cbparams.kave_version
+        name = hostgroup + '-' + KAVE_VERSION
         path = '/cb/api/v1/templates/account/' + name
         url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
@@ -107,11 +108,11 @@ class CBDeploy():
                 str.format("Description for hostgroup {} is missing in blueprints/hostgroups.azure.json file.",
                            hostgroup))
 
-        name = hostgroup + '-' + cbparams.kave_version
+        name = hostgroup + '-' + KAVE_VERSION
         hostgroup_info = hgjson[hostgroup]
         data = {}
         data['name'] = name
-        data['cloudPlatform'] = 'AZURE'
+        data['cloudPlatform'] = cbparams.cloud_platform
         data['parameters'] = {}
         data['parameters']['managedDisk'] = True
         data['instanceType'] = hostgroup_info['machine-type']
@@ -136,7 +137,7 @@ class CBDeploy():
         Checks if Cloudbreak blueprint with given name exists
         """
 
-        bp_name = name + '-' + cbparams.kave_version
+        bp_name = name + '-' + KAVE_VERSION
         path = '/cb/api/v1/blueprints/account/' + bp_name
         url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
@@ -173,7 +174,7 @@ class CBDeploy():
             raise StandardError(str.format("No correct blueprint .json file found for {}: {}", name, e))
 
         data = {}
-        bp_name = name + '-' + cbparams.kave_version
+        bp_name = name + '-' + KAVE_VERSION
         data['name'] = bp_name
         data['ambariBlueprint'] = bp
 
@@ -247,7 +248,7 @@ class CBDeploy():
         Checks if Cloudbreak recipe with given name exists
         """
 
-        recipe_name = name + '-' + cbparams.kave_version
+        recipe_name = name + '-' + KAVE_VERSION
         path = '/cb/api/v1/recipes/account/' + recipe_name
         url = cbparams.cb_https_url + path
         headers = {"Authorization": "Bearer " +
@@ -287,7 +288,7 @@ class CBDeploy():
             raise ValueError("Missing details for recipe {} in recipe_details.json", name)
 
         data = {}
-        data['name'] = name + '-' + cbparams.kave_version
+        data['name'] = name + '-' + KAVE_VERSION
         data['recipeType'] = details['recipeType']
         data['description'] = details['description']
         try:
@@ -306,14 +307,14 @@ class CBDeploy():
             response = requests.post(url, data=json.dumps(
                 data), headers=headers, verify=cbparams.ssl_verify)
         except RequestException:
-            print str.format("Unable to create Cloudbreak recipe {}-{}", name, cbparams.kave_version)
+            print str.format("Unable to create Cloudbreak recipe {}-{}", name, KAVE_VERSION)
             raise
         if response.status_code == 200:
-            print str.format("Created new Cloudbreak recipe {}-{}", name, cbparams.kave_version)
+            print str.format("Created new Cloudbreak recipe {}-{}", name, KAVE_VERSION)
             return response.json()["id"]
         else:
             raise StandardError("Error creating Cloudbreak recipe {}-{}: {}",
-                                name, cbparams.kave_version, response.text)
+                                name, KAVE_VERSION, response.text)
 
     def create_stack(self, blueprint_name, credential):
         """
@@ -349,6 +350,11 @@ class CBDeploy():
             stack["instanceGroups"].append(instance)
 
         stack["credentialId"] = credential["id"]
+        if cbparams.region:
+            stack["region"] = cbparams.region
+        else:
+            raise ValueError("Missing region information. Please provide correct value for region in cbparams.pys")
+        stack["networkId"] = self.get_network_id()
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/user'
@@ -437,6 +443,26 @@ class CBDeploy():
             rid = self.check_for_recipe(recipe)
             recipe_ids.append(rid)
         return recipe_ids
+
+    def get_network_id(self):
+        if cbparams.network_name:
+            headers = {"Authorization": "Bearer " +
+                       self.access_token, "Content-type": "application/json"}
+            path = '/cb/api/v1/networks/account/' + cbparams.network_name
+            url = cbparams.cb_https_url + path
+            try:
+                response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+            except RequestException:
+                print str.format("Unable to get information about Cloudbreak network {}", cbparams.network_name)
+                raise
+            else:
+                if response.status_code == 200:
+                    return response.json()["id"]
+                else:
+                    raise ValueError(str.format("Unable to obtain Cloudbreak network {}: {} - {}", cbparams.network_name,
+                                                response.status_code, response.text))
+        else:
+            raise ValueError("Missing network name. Please provide correct value for network_name in cbparams.py")
 
     def get_credential(self):
         if cbparams.credential_name:
@@ -571,7 +597,7 @@ class CBDeploy():
                         return True
                     if response.json()["status"].endswith("FAILED") \
                             or response.json()["cluster"]["status"].endswith("FAILED"):
-                        print str.format("FAILURE: Cluster deployment {} failed: {}: {}", cluster["name"],
+                        print str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}. Cluster status- {} : {}", cluster["name"],
                                          response.json()["status"], response.json()["statusReason"])
                         if kill_failed or kill_all:
                             print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])

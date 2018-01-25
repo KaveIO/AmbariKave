@@ -15,13 +15,34 @@
 #   limitations under the License.
 #
 ##############################################################################
-kave_version = "34-beta"
+
+# ===============================================
+# Cloudbreak details
+# ===============================================
+
 cb_http_url = "http://13.64.195.21"
 cb_https_url = "https://13.64.195.21"
 uaa_port = 8089
 cb_username = "admin@example.com"
 cb_password = "KavePassword01"
+
+# ===============================================
+# Deployment specific configurations
+# ===============================================
+
 credential_name = "rallycred"
+network_name = "default-azure-network"
+ssl_verify = False
+
+# ===============================================
+# Cloud provider specific configurations
+# ===============================================
+
+cloud_platform = "AZURE"
+
+# -----------------------------------------------
+# Azure
+# -----------------------------------------------
+region = "North Europe"
 adls_enabled = False
 adls_name = "<Azure Data Lake Store name>"
-ssl_verify = False

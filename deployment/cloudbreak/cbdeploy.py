@@ -84,7 +84,7 @@ if __name__ == "__main__":
         verbose_enabled = True
 
     for i in range(0, len(blueprints)):
-        print "Start cluster deployment for blueprint " + blueprints[i]
+        print "Starting cluster deployment for blueprint " + blueprints[i]
         t = Thread(target=cb.wait_for_cluster, args=(blueprints[i],), kwargs={
                    "kill_passed": kill_passed_clusters,
                    "kill_failed": kill_failed_clusters,

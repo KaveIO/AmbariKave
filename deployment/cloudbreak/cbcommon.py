@@ -46,13 +46,29 @@ class CBDeploy():
         Retrieves OAuth access token for Cloudbreak REST API.
         """
 
+        import getpass
+
         token = None
+        stored_credentials = os.path.isfile(os.path.expanduser('~/.cbcredstore'))
+
+        if stored_credentials:
+            try:
+                with open(os.path.expanduser('~/.cbcredstore')) as cred_file:
+                    user=cred_file.readline().strip()
+                    passwd=base64.b64decode(cred_file.readline().strip())
+            except (IOError, ValueError):
+                print "Error reading Cloudbreak login credentials."
+                raise
+        else:
+            user = raw_input("Please enter Cloudbreak username: ")
+            passwd = getpass.getpass()
+
         url = (cbparams.cb_http_url + ':' + str(cbparams.uaa_port) + '/oauth/authorize?response_type=token'
                + '&client_id=cloudbreak_shell&ope.0=openid&source=login&redirect_uri=http://cloudbreak.shell')
         headers = {'Accept': 'application/x-www-form-urlencoded',
                    'Content-type': 'application/x-www-form-urlencoded'}
-        data = {'credentials': '{"username": "' + cbparams.cb_username +
-                '", "password": "' + cbparams.cb_password + '"}'}
+        data = {'credentials': '{"username": "' + user +
+                '", "password": "' + passwd + '"}'}
 
         try:
             auth = requests.post(
@@ -65,6 +81,20 @@ class CBDeploy():
             self.access_token = token
         except Exception as e:
             print "Error getting Cloudbreak access token: ", e
+        if (not stored_credentials) and self.access_token:
+            # if getting token passed successfully, store the login credentials
+            self.store_cloudbreak_user_credentials(user, base64.b64encode(passwd))
+
+    def store_cloudbreak_user_credentials(self, username, password):
+
+        try:
+            file = open(os.path.expanduser('~/.cbcredstore'), "w")
+            content = [username+'\n', password+'\n']
+            file.writelines(content)
+            file.close()
+            os.chmod(os.path.expanduser('~/.cbcredstore'), 0600)
+        except:
+            print "Cloudbreak credentials were not successfully stored."
 
     def check_for_template(self, hostgroup):
         """

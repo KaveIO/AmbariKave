@@ -2,25 +2,46 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-	<property>
-      <name>lcm.server.application.name</name>
-      <value>Application_name</value>
-      <description>Server name</description>
-	</property>
-	<property>
-      <name>LcmPORT</name>
-      <value>8081</value>
-      <description>Port number</description>
+    <property>
+      <name>lcm_application_name</name>
+      <value>lcmapp</value>
+      <description>If the application name property is longer than that only the first 12 symbols are taken.
+The LCM id consists three components:
+ - application name which is defined by the user bellow;
+ - unix timestamp;
+ - random alphanum.
+The length of the whole LCM id must be 32.
+LCM Id is used in the communication between LCMs when it is public.</description>
     </property>
     <property>
-      <name>LcmSecurePort</name>
-      <value>4444</value>
-      <description>Secure Port number</description>
-    </property>
-        <property>
-      <name>LcmServerURL</name>
+      <name>LCM_UI_URL</name>
       <value>localhost</value>
-      <description>LCM Server Name</description>
+      <description>LCM Web UI binding FQDN</description>
+    </property>
+	<property>
+      <name>Lcm_UI_PORT</name>
+      <value>8081</value>
+      <description>LCM UI http binding port</description>
+    </property>
+    <property>
+      <name>Lcm_SecureUI_Port</name>
+      <value>4444</value>
+      <description>LCM UI Secure http binding port</description>
+    </property>
+    <property>
+      <name>LCM_Server_URL</name>
+      <value>localhost</value>
+      <description>LCM Server binding FQDN</description>
+    </property>
+    	<property>
+      <name>Lcm_Server_PORT</name>
+      <value>8085</value>
+      <description>LCM Server binding port</description>
+    </property>
+    <property>
+      <name>Lcm_SecureServer_Port</name>
+      <value>4445</value>
+      <description>LCM Server SSL binding port</description>
     </property>
     <property>
         <name>application.properties</name>
@@ -40,18 +61,19 @@
 # - unix timestamp;
 # - random alphanum.
 #The length of the whole LCM id must be 32.
-# LCM Id is used in the communication between LCMs it is public.
-lcm.server.application.name={{lcm.server.application.name}}
+# LCM Id is used in the communication between LCMs when it is public.
 
-lcm.server.name={{LcmServerURL}}
-lcm.server.port={{LcmPORT }}
-lcm.server.securePort={{LcmSecurePort}}
+lcm.server.application.name={{lcm_application_name}}
+
+lcm.server.name={{LCM_Server_URL}}
+lcm.server.port={{Lcm_Server_PORT}}
+lcm.server.securePort={{Lcm_SecureServer_Port}}
 
 # Example mongo configuration
 lcm.server.storage=mongo
-lcm.server.storage.mongo.host=localhost
-lcm.server.storage.mongo.port=27017
-lcm.server.storage.mongo.database=lcm
+lcm.server.storage.mongo.host={{mongodb_host}}
+lcm.server.storage.mongo.port={{mongodb_port}}
+lcm.server.storage.mongo.database={{mongo_database_name}}
 #use syntax like bellow to authenticate
 #username:password@databaseName
 #or leave this field blank for unauthenticated access
@@ -62,9 +84,9 @@ lcm.server.session.authentication.enabled=true
 ############################# UI settings #############################
 
 # LCM User Interface configuration properties
-lcm.ui.server.name=localhost
-lcm.ui.server.port=8080
-lcm.ui.server.securePort=4443
+lcm.ui.server.name={{LCM_UI_URL}}
+lcm.ui.server.port={{Lcm_UI_PORT}}
+lcm.ui.server.securePort={Lcm_SecureUI_Port}}
 
 # In case swagger is enabled REST API documentation  will be available.
 # Go to http://{lcm.server.name}:{lcm.server.swagger.port}/docs for example http://localhost:8082/docs

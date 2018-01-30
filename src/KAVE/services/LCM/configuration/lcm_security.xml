@@ -2,98 +2,131 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <property>
-      <name>Security.truststoreType</name>
-      <value>JKS</value>
-      <description>LCM client security truststoreType</description>
-      <property>
-        <name>lcm.server.security.encryption.key</name>
-        <value>123456789qwertyu</value>
-        <description>LCM server security encryption key - This property must be exactly 16 symbols long </description>
-    </property>
-    <property>
-        <name>security.properties</name>
-        <value>
-          # LCM security configuration file.
-          # DO NOT SHARE THIS FILE AND MAKE SURE THAT ONLY AUTHRIZED USERS CAN ACCESS IT!
-          #
-          # The LCM is splitted up in two separate executables. The server and the UI.
-          # These both configured with this properties file. the distinction can be easily
-          # made by looking at the property names.
+	<property>
+		<name>Security_truststoreType</name>
+		<value>JKS</value>
+		<description>LCM client security truststoreType</description>
+	</property>
+	<property require-input="true">
+		<name>admin_password</name>
+		<property-type>PASSWORD</property-type>
+		<value></value>
+		<value-attributes>
+			<type>password</type>
+		</value-attributes>
+		<description>LCM server administration password </description>
+	</property>
+	<property>
+		<name>lcm.server.security.encryption.key</name>
+		<description>LCM server security encryption key - This property must
+			be exactly 16 symbols long </description>
+		<property-type>PASSWORD</property-type>
+		<value></value>
+		<value-attributes>
+			<type>password</type>
+		</value-attributes>
+	</property>
+	<property>
+		<name>security.properties</name>
+		<value>
+		    ###########################################################################
+			# LCM security configuration file.
+			# DO NOT SHARE THIS FILE AND MAKE SURE THAT ONLY AUTHRIZED USERS CAN ACCESS IT!
+			#
+			# The LCM is splitted up in two separate executables. The server and the UI.
+			# These both configured with this properties file. the distinction can be easily
+			# made by looking at the property names.
+			############################# Server settings #############################
 
-          ############################# Server settings #############################
+			# Username and password for the default admin user. Once a actual admin user is
+			# created these become unused.
+			lcm.server.adminUser="admin"
+			lcm.server.adminPassword={{admin_password}}
+			# Default ssl configuration location based on installation with the	setup_ssl.sh script.
+			# 'certificates' directory must be in the base application directory i.e. on the same 
+			# level as bin, logs etc...
+			# SSL settings for the Grizzly server in the lcm-server module
+			lcm.server.security.keystore=certificates/server.p12
+			lcm.server.security.keystoreType={{Security_truststoreType}}
+			lcm.server.security.keystorePassword=
+			lcm.server.security.keystoreAlias=cert-lcm
+			lcm.server.security.keystoreKeypass=
+			lcm.server.security.debug=ssl
 
-          # Username and password for the default admin user. Once a actual admin user is
-          # created these become unused.
-          lcm.server.adminUser=
-          lcm.server.adminPassword=
-
-          # Default ssl configuration location based on installation with the setup_ssl.sh script.
-          # 'certificates' directory must be in the base application directory i.e. on the same level as
-          # bin, logs etc...
-          # SSL settings for the Grizzly server in the lcm-server module
-          lcm.server.security.keystore=certificates/server.p12
-          lcm.server.security.keystoreType=pkcs12
-          lcm.server.security.keystorePassword=
-          lcm.server.security.keystoreAlias=cert-lcm
-          lcm.server.security.keystoreKeypass=
-          lcm.server.security.debug=ssl
-
-          # SSL settings for requests made in the lcm-server module to another LCM
-          lcm.client.security.truststore=certificates/lcm.keystore
-          lcm.client.security.truststorePassword=
-          lcm.client.security.truststoreType=JKS
+			# SSL settings for requests made in the lcm-server module to another
+			LCM
+			lcm.client.security.truststore=certificates/lcm.keystore
+			lcm.client.security.truststorePassword=
+			lcm.client.security.truststoreType=JKS
 
 
-          # Set this to true if you want to run on HTTP in case of HTTPS misconfiguration; when 'false' and on HTTPS a redirect HTTP -> HTTPS is setup.
-          # Please be aware that, as the name suggests, this introduces a safety concern. Be aware that if "unsafe" mode is on then, in case of SSL setup
-          # failures, HTTP is tried automatically.
-          # For the server, this means that if we cannot start on SSL then we just try to start on HTTP; and intercom will be HTTP only too.
-          # For the client/ui, same as the server for the webapp listener and backend connection too. Please also be aware that on pure HTTP no data is ever
-          # encrypted!
-          # Unsafe mode is meant for debug as well as a way to fallback on faulty HTTPS.
+			# Set this to true if you want to run on HTTP in case of HTTPS
+			misconfiguration; when 'false' and on HTTPS a redirect HTTP -> HTTPS
+			is setup.
+			# Please be aware that, as the name suggests, this introduces a safety
+			concern. Be aware that if "unsafe" mode is on then, in case of SSL
+			setup
+			# failures, HTTP is tried automatically.
+			# For the server, this means that if we cannot start on SSL then we
+			just try to start on HTTP; and intercom will be HTTP only too.
+			# For the client/ui, same as the server for the webapp listener and
+			backend connection too. Please also be aware that on pure HTTP no
+			data is ever
+			# encrypted!
+			# Unsafe mode is meant for debug as well as a way to fallback on
+			faulty HTTPS.
 
-          # Disable server module SSL
-          lcm.server.unsafe=false
+			# Disable server module SSL
+			lcm.server.unsafe=false
 
 
-          #This property must be exactly 16 symbols long!
-          #Make sure that it is unique and do not share it with anyone!
-          lcm.server.security.encryption.key=
+			#This property must be exactly 16 symbols long!
+			#Make sure that it is unique and do not share it with anyone!
+			lcm.server.security.encryption.key=
 
-          ############################# UI settings #############################
+			############################# UI settings #############################
 
-          # Default ssl configuration location based on installation with the setup_ssl.sh script.
-          # 'certificates' directory must be in the base application directory i.e. on the same level as
-          # bin, logs etc...
+			# Default ssl configuration location based on installation with the
+			setup_ssl.sh script.
+			# 'certificates' directory must be in the base application directory
+			i.e. on the same level as
+			# bin, logs etc...
 
-          #Setting for Grizzly server in lcm-ui module.
-          lcm.ui.server.security.keystore=certificates/client.p12
-          lcm.ui.server.security.keystoreType=pkcs12
-          lcm.ui.server.security.keystorePassword=storepass
-          lcm.ui.server.security.keystoreAlias=cert-ui
-          lcm.ui.server.security.keystoreKeypass=storepass
-          #Requests to the lcm-server module will use bellow settings
-          lcm.ui.client.security.truststore=certificates/ui.keystore
-          lcm.ui.client.security.truststorePassword=storepass
-          lcm.ui.client.security.truststoreType=JKS
+			#Setting for Grizzly server in lcm-ui module.
+			lcm.ui.server.security.keystore=certificates/client.p12
+			lcm.ui.server.security.keystoreType=pkcs12
+			lcm.ui.server.security.keystorePassword=storepass
+			lcm.ui.server.security.keystoreAlias=cert-ui
+			lcm.ui.server.security.keystoreKeypass=storepass
+			#Requests to the lcm-server module will use bellow settings
+			lcm.ui.client.security.truststore=certificates/ui.keystore
+			lcm.ui.client.security.truststorePassword=storepass
+			lcm.ui.client.security.truststoreType=JKS
 
-          # Set this to true if you want to run on HTTP in case of HTTPS misconfiguration; when 'false' and on HTTPS a redirect HTTP -> HTTPS is setup.
-          # Please be aware that, as the name suggests, this introduces a safety concern. Be aware that if "unsafe" mode is on then, in case of SSL setup
-          # failures, HTTP is tried automatically.
-          # For the server, this means that if we cannot start on SSL then we just try to start on HTTP; and intercom will be HTTP only too.
-          # For the client/ui, same as the server for the webapp listener and backend connection too. Please also be aware that on pure HTTP no data is ever
-          # encrypted!
-          # Unsafe mode is meant for debug as well as a way to fallback on faulty HTTPS.
+			# Set this to true if you want to run on HTTP in case of HTTPS
+			misconfiguration; when 'false' and on HTTPS a redirect HTTP -> HTTPS
+			is setup.
+			# Please be aware that, as the name suggests, this introduces a safety
+			concern. Be aware that if "unsafe" mode is on then, in case of SSL
+			setup
+			# failures, HTTP is tried automatically.
+			# For the server, this means that if we cannot start on SSL then we
+			just try to start on HTTP; and intercom will be HTTP only too.
+			# For the client/ui, same as the server for the webapp listener and
+			backend connection too. Please also be aware that on pure HTTP no
+			data is ever
+			# encrypted!
+			# Unsafe mode is meant for debug as well as a way to fallback on
+			faulty HTTPS.
 
-          # Disable ui module SSL
-          lcm.ui.server.unsafe=false
+			# Disable ui module SSL
+			lcm.ui.server.unsafe=false
 
-          #Link to the server certificate - in the UI there is download link
-          lcm.ui.client.security.server.certificate=${PWD}/src/main/resources/certificates/lcm-certificate.cer
-</value>
-<description>
-    LCM security configuration details.
-</description>
-</property>
+			#Link to the server certificate - in the UI there is download link
+			lcm.ui.client.security.server.certificate=${PWD}/src/main/resources/certificates/lcm-certificate.cer
+		</value>
+		<description>
+			LCM security configuration details.
+		</description>
+	</property>
 </configuration>

@@ -2,24 +2,13 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-
-    <property require-input = "true">
-        <name>admin.password</name>
-        <property-type>PASSWORD</property-type>
-        <value></value>
-        <value-attributes>
-          <type>password</type>
-        </value-attributes>
-        <description>LCM server administration password </description>
-    </property>
-
-    <property require-input = "true">
+  <property>
+      <name>Security.truststoreType</name>
+      <value>JKS</value>
+      <description>LCM client security truststoreType</description>
+      <property>
         <name>lcm.server.security.encryption.key</name>
-        <property-type>PASSWORD</property-type>
-        <value></value>
-        <value-attributes>
-          <type>password</type>
-        </value-attributes>
+        <value>123456789qwertyu</value>
         <description>LCM server security encryption key - This property must be exactly 16 symbols long </description>
     </property>
     <property>
@@ -36,8 +25,8 @@
 
           # Username and password for the default admin user. Once a actual admin user is
           # created these become unused.
-          lcm.server.adminUser=admin
-          lcm.server.adminPassword={{admin.password}}
+          lcm.server.adminUser=
+          lcm.server.adminPassword=
 
           # Default ssl configuration location based on installation with the setup_ssl.sh script.
           # 'certificates' directory must be in the base application directory i.e. on the same level as
@@ -102,7 +91,9 @@
 
           #Link to the server certificate - in the UI there is download link
           lcm.ui.client.security.server.certificate=${PWD}/src/main/resources/certificates/lcm-certificate.cer
-        </value>
-        <description>LCM security configuration details.</description>
-    </property>
+</value>
+<description>
+    LCM security configuration details.
+</description>
+</property>
 </configuration>

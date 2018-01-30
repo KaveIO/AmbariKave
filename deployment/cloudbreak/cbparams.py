@@ -23,8 +23,6 @@
 cb_http_url = "http://13.64.195.21"
 cb_https_url = "https://13.64.195.21"
 uaa_port = 8089
-cb_username = "admin@example.com"
-cb_password = "KavePassword01"
 
 # ===============================================
 # Deployment specific configurations

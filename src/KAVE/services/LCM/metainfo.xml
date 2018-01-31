@@ -45,6 +45,7 @@
                     <osFamily>any</osFamily>
                     <packages>
                         <package><name>wget</name></package>
+                        <package><name>java-1.8.0-openjdk</name></package>
                      </packages>
                 </osSpecific>
             </osSpecifics>

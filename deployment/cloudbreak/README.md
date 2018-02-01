@@ -1,11 +1,6 @@
 # How to deploy KAVE automatically on Azure via Cloudbreak.
 
-### Some notes:
-
-Currently FreeIPA has issues installing on Cloudbreak. It has been removed from the Cloudbreak blueprints until all issues are resolved.
-Cloudbreak requires different blueprints, as some of the KAVE services require different settings.
-
-### Accessing cloudbreak UI
+## Accessing cloudbreak UI
 Cloudbreak portal can be opened at ```http://<cloudbreak machine public IP>``` and use the credentials specified when deploying the machine.
 If it is down or non-responsive restart it:
 ```bash
@@ -13,25 +8,37 @@ ssh cloudbreak@<cloudbreak machine public IP>
 cd /var/lib/cloudbreak-deployment/  # All cbd commands must be issued from this location!
 sudo cbd restart
 ```
-### Configuring target cloudbreak instance details
+## Authentication
+The first time you try to deploy a cluster, using the script, you will be prompted to enter your Cloudbreak login credentials (Cloudbreak username and password).
+After successfully obtaining Cloudbreak access token, login credentials will be stored in the hidden file .cbcredstore, located in the user's home directory.
+Note: In case of storing incorrect credentails, delete ~/.cbcredstore file.
+
+## Configuring target cloudbreak instance details
 
 The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary configuration, related to the Cloudbreak deployment:
 
-* kave_version = "33-beta" - This string is appended on recipe and template names so they can be differentiated. Will be generated automatically in the future.
+#### Cloudbreak details
 * cb_http_url = "http://<cloudbreak public IP>"	- Cloudbreak Url for http requests
 * cb_https_url = "https://<cloudbreak public IP>" - Cloudbreak Url for http**s** requests
-* uaa_port = 8089  - Port on which tha UAA server is listening to on the cloudbreak instance. Default is 8089
-* cb_username = "admin@example.com"  - Username defined when cloudbreak instance was created
-* cb_password = "<password>" - Cloudbreak user password
+* uaa_port = 8089  - Port on which tha UAA server is listening to on the Cloudbreak instance. Default is 8089
+
+#### Deployment specific configurations
 * credential_name = "<cloudbreak credential name>" - Name of Cloudbreak credential which will be used for cluster deployment
-* adls_enabled = False - Parameter which indicates whether Azure Data Lake Store should be used for file system. Default is False. If set to True, a valid value for adls_name should be set as well
-* adls_name = "<Azure Data Lake Store name>" - Azure Data Lake Store name
+* network_name = "<network resource name>" - Name of Cloudbreak network in which the cluster will be created.
 * ssl_verify = False - Parameter which control SSL certificate verification behavior. Possible values are:
-  * False (Default) - no certificate verification performed. We will just trust whatever is presented by cloudbreak. This was made the default option as by default cloudbreak uses very primitive ssl self signed cert.
+  * False (Default) - no certificate verification performed. We will just trust whatever is presented by Cloudbreak. This was made the default option as by default Cloudbreak uses very primitive ssl self signed cert.
   * True - should be set when real certificate is used, or one which trust is established by other means (OS level, corp CA etc.)
   * /<path>/<to>/<trusted public key> - A path containing trusted certs or CA bundles can be set. In this case only the certs in this path will be trusted and no others - even if they are real ones.
 
-### Manage recipes
+#### Cloud provider specific cofigurations
+* cloud_platform - indicates which cloud provider will be used for cluster deployment. Currently, only "AZURE" is supported.
+
+##### Azure
+* region - name of the cloud provider region in which the infrastructure will be created.
+* adls_enabled = False - Parameter which indicates whether Azure Data Lake Store should be used for file system. Default is False. If set to True, a valid value for adls_name should be set as well
+* adls_name = "<Azure Data Lake Store name>" - Azure Data Lake Store name
+
+## Manage recipes
 
 Cloudbreak recipe is a script extension to a cluster that runs on all nodes before or after the Ambari cluster installation.
 Recipes related information is kept in __```/deployment/cloudbreak/recipes/```__ folder. The subfolders __```mandatory```__  and __```custom```__ contain the recipes definitions. __```mandatory```__  folder contains KAVE related recipes, which should not be changed or deleted and all custom recipes should be placed in __```custom```__ folder.
@@ -107,42 +114,6 @@ Looking at the last json object:
 *  _node-count_ - Number of nodes to be deployed
 *  _recipes_ - List of recipe names (as described in recipe_details.py) to be applied to this hostgoup
 
-### Stack
-Prior to insatlling the actual HDP components and cluster a stack needs to be created. "Stack" means the **running cloud infrastructure** that is created based on the hostgroups groups and cluster details (machine templates, credential, instance-types, network, securitygroup etc.). The new cluster will use your templates and by using Azure ARM will launch the cloud stack. To configure the stack details edit the following file:
-```deployment/cloudbreak/stack_template.json```  Example content:
-```json
-{
-  "name": "",
-  "credentialId": null,
-  "region": "North Europe",
-  "failurePolicy": {
-    "adjustmentType": "BEST_EFFORT",
-    "threshold": null
-  },
-  "onFailureAction": "DO_NOTHING",
-  "instanceGroups": [],
-  "parameters": {
-    "persistentStorage": "cbstore",
-    "attachedStorageOption": "SINGLE"
-  },
-  "networkId": 4,
-  "relocateDocker": true,
-  "availabilityZone": null,
-  "orchestrator": {
-    "type": "SALT"
-  },
-  "tags": {
-    "userDefined": {}
-  },
-  "platformVariant": "AZURE",
-  "customImage": null,
-  "flexId": null
-}
-```
-The relevant fields are:
-* **region** Name of the cloud provider region in which the infrastructure will be created.
-* **networkId** ID of the network in which the cluster will be created.
-  * NOTE: To get a list of all the networks configured in Cloudbreak, log into the UI and navigate to: ```https://<CloudbreakIP>/networks/account``` This will return a json list of all networks. A more sophisticated method on selecting the network is planned for future releases
 
 ## Running the deployment script
 
@@ -160,7 +131,7 @@ Additionally, the script accepts parameters ```"--kill-passed"``` , ```"--kill-f
 * --kill-failed - if present, all clusters which reported failure will be deleted
 * --kill-all - if present, all clusters will be deleted after deployment is complete
 
-Use ```"--verbose"``` parameter, if you want to see more information about stack and cluster status druging deployment.
+Use ```"--verbose"``` parameter, if you want to see more information about stack and cluster status during deployment.
 
 ## Deleting clusters
 
@@ -170,4 +141,6 @@ Running the script with given cluster name, the cluster and its infrastructure g
 ./kill_clusters.py --name examplelambda1512132645
 ```
 
+## Known isssues:
 
+* Currently, when deploying clusters that contain FreeIPA, sometimes FreeIPA Client fails to install on some of the nodes. This can be resolved by choosing to manually re-install clients from Ambari UI.

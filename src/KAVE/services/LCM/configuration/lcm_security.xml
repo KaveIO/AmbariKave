@@ -2,13 +2,8 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-	<property>
-		<name>Security_truststoreType</name>
-		<value>JKS</value>
-		<description>LCM client security truststoreType</description>
-	</property>
 	<property require-input="true">
-		<name>admin_password</name>
+		<name>lcm_admin_password</name>
 		<property-type>PASSWORD</property-type>
 		<value></value>
 		<value-attributes>
@@ -17,7 +12,7 @@
 		<description>LCM server administration password </description>
 	</property>
 	<property>
-		<name>lcm.server.security.encryption.key</name>
+		<name>lcm_server_security_encryption_key</name>
 		<description>LCM server security encryption key - This property must
 			be exactly 16 symbols long </description>
 		<property-type>PASSWORD</property-type>
@@ -47,7 +42,7 @@
 			# level as bin, logs etc...
 			# SSL settings for the Grizzly server in the lcm-server module
 			lcm.server.security.keystore=certificates/server.p12
-			lcm.server.security.keystoreType={{Security_truststoreType}}
+			lcm.server.security.keystoreType=JKS
 			lcm.server.security.keystorePassword=
 			lcm.server.security.keystoreAlias=cert-lcm
 			lcm.server.security.keystoreKeypass=

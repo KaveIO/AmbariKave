@@ -19,52 +19,41 @@ import os
 
 from resource_management import *
 import kavecommon as kc
-from kavecommon import ApacheScript
 from resource_management.core.exceptions import ComponentIsNotRunning
 
 
-class Airflow(kc.ApacheScript):
-    airflow_config_path = "/usr/opt/local/airflow/airflow.cfg"
-    airflow_webserver_pidfile_path = "/run/airflow/webserver.pid"
-    systemd_env_init_path = "/etc/sysconfig/airflow"
-    systemd_schd_unitfile_path = "/usr/lib/systemd/system/airflow-scheduler.service"
-    systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
-    # This is a hack to overcome a certain restriction in airflow which requires
-    # the argument to be quoted
-
-    quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
-                 '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
-                 ' `find /usr/lib/python* -name requirements.py`'
-                 )
+class LcmServer(Script):
 
     def install(self, env):
-        print "Installing Airflow"
         import params
         import os
-        super(Airflow, self).install(env)
-        kc.install_epel()
-
-        Execute('curl --tlsv1.2 "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
-        Execute('python get-pip.py')
-        Execute('pip install -U pip setuptools')
-        # Create airflow config/home dir and set permissions
-        Execute('id -u airflow &>/dev/null || useradd -r -s /sbin/nologin airflow')
-        Execute('mkdir -p /usr/opt/local/airflow')
-        Execute('chown airflow:root /usr/opt/local/airflow')
-        # Create directory to store the pid file and set permissions:
-        Execute('mkdir -p /run/airflow')
-        Execute('chown airflow:root /run/airflow')
-        # Set the AIRFLOW_HOME environment variable. Echoing it at the end of /etc/environment
-        # is just one of the possible approaches.
-        Execute('echo "AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
-        # Install base airflow
-        Execute('pip install airflow')
-        # Add Airflow Hive operatiors. We should consider installing "airflow[all]"
-        # for getting all possible features
-        Execute('pip install airflow[hive]')
-
+        
+        print "Installing LCM Server:"
+        super(LcmServer, self).install(env)
+        package = 'lcm-complete-' + params.lcm_releaseversion + '-bin.tar'
         self.configure(env)
+        if len(self.sttmpdir) < 4:
+            raise IOError("where are you using for temp??")
+        Execute("mkdir -p " + self.sttmpdir)
+        Execute("rm -rf " + self.sttmpdir + "/*")
+        installdir = params.lcm_destination_dir + '/' + params.lcm_releaseversion 
 
+        # Create service user, config/home dir and set permissions
+        Execute('id -u ' + params.lcm_service_user +
+                'airflow &>/dev/null || useradd -r -s /sbin/nologin ' + params.lcm_service_user)
+        Execute('mkdir -p ' + params.lcm_destination_dir)
+        Execute('chown -R ' + params.lcm_service_user +
+                ':root' + params.lcm_destination_dir)
+
+        os.chdir(self.sttmpdir)
+#        copy_cache_or_repo shall be used when we have an official release of LCM
+#        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
+        Execute('wget ' +
+                'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
+        Execute('tar -xzf ' + package + ' -C ' + installdir)
+        kc.chown_r(installdir, params.lcm_service_user)
+        
+        
     def configure(self, env):
         import params
         import os
@@ -87,10 +76,7 @@ class Airflow(kc.ApacheScript):
              )
 
         super(Airflow, self).configure(env)
-        Execute("sed -i -e '/Defaults    requiretty/{ s/.*/# Defaults    requiretty/ }' /etc/sudoers")
-        Execute(self.quote_fix)
-        Execute("sudo -u airflow airflow initdb")
-
+        
     def start(self, env):
         import params
         import os

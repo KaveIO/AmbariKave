@@ -28,7 +28,7 @@ The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary config
 * ssl_verify = False - Parameter which control SSL certificate verification behavior. Possible values are:
   * False (Default) - no certificate verification performed. We will just trust whatever is presented by Cloudbreak. This was made the default option as by default Cloudbreak uses very primitive ssl self signed cert.
   * True - should be set when real certificate is used, or one which trust is established by other means (OS level, corp CA etc.)
-  * /<path>/<to>/<trusted public key> - A path containing trusted certs or CA bundles can be set. In this case only the certs in this path will be trusted and no others - even if they are real ones.
+  * /\<path\>/\<to\>/\<trusted public key\> - A path containing trusted certs or CA bundles can be set. In this case only the certs in this path will be trusted and no others - even if they are real ones.
 
 #### Cloud provider specific cofigurations
 * cloud_platform - indicates which cloud provider will be used for cluster deployment. Currently, only "AZURE" is supported.

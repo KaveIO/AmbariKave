@@ -111,11 +111,6 @@ If you have git access, and are working from the git version, See the wiki.
 
 We really recommend installation beginning from a blueprint, but first one must carfully design the blueprint and/or test on some other test resource. The web interface is great for single one-time custom installations, a blueprint is good for pre-tested redeployable installations.
 
-
-Security
-========
-
-
 Installation Kerberization with FreeIPA
 =======================================
 

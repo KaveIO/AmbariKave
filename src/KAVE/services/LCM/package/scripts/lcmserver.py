@@ -58,7 +58,7 @@ class LcmServer(Script):
         import params
         import os
         env.set_params(params)
-        lcmconfigdir = lcmhomedir + 'config/'
+        lcmconfigdir = params.lcm_home_dir + 'config/'
         File(self.lcmconfigdir + 'application.properties',
              content=InlineTemplate(params.application_properties),
              mode=0600

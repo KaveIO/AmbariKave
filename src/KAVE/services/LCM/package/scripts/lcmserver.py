@@ -30,80 +30,92 @@ class LcmServer(Script):
         
         print "Installing LCM Server:"
         super(LcmServer, self).install(env)
-        package = 'lcm-complete-' + params.lcm_releaseversion + '-bin.tar'
+        packagefileonly = 'lcm-complete-' + params.lcm_releaseversion
+        package = packagefileonly + '-bin.tar'
         self.configure(env)
         if len(self.sttmpdir) < 4:
             raise IOError("where are you using for temp??")
         Execute("mkdir -p " + self.sttmpdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
-        installdir = params.lcm_destination_dir + '/' + params.lcm_releaseversion 
 
         # Create service user, config/home dir and set permissions
         Execute('id -u ' + params.lcm_service_user +
-                'airflow &>/dev/null || useradd -r -s /sbin/nologin ' + params.lcm_service_user)
-        Execute('mkdir -p ' + params.lcm_destination_dir)
+                ' &>/dev/null || useradd -r -s /sbin/nologin ' + params.lcm_service_user)
+        Execute('mkdir -p ' + params.lcm_install_dir )
         Execute('chown -R ' + params.lcm_service_user +
-                ':root' + params.lcm_destination_dir)
+                ':root' + params.lcm_install_dir )
 
         os.chdir(self.sttmpdir)
 #        copy_cache_or_repo shall be used when we have an official release of LCM
 #        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
         Execute('wget ' +
                 'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
-        Execute('tar -xzf ' + package + ' -C ' + installdir)
-        kc.chown_r(installdir, params.lcm_service_user)
+        Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir )
+        kc.chown_r(params.lcm_install_dir , params.lcm_service_user)
         
         
     def configure(self, env):
         import params
         import os
         env.set_params(params)
-        File(self.airflow_config_path,
-             content=InlineTemplate(params.airflow_conf),
-             mode=0755
+        lcmconfigdir = lcmhomedir + 'config/'
+        File(self.lcmconfigdir + 'application.properties',
+             content=InlineTemplate(params.application_properties),
+             mode=0600
              )
-        File(self.systemd_env_init_path,
-             content=Template("airflow"),
-             mode=0755
+        File(self.lcmconfigdir + 'security.properties',
+             content=InlineTemplate(params.security_properties),
+             mode=0600
              )
-        File(self.systemd_schd_unitfile_path,
-             content=Template("airflow-scheduler.service"),
-             mode=0755
+        File(self.lcmconfigdir + 'log4j-server.properties',
+             content=InlineTemplate(params.log4j_server_properties),
+             mode=0600
              )
-        File(self.systemd_ws_unitfile_path,
-             content=Template("airflow-webserver.service"),
-             mode=0755
+        File(self.lcmconfigdir + 'log4j-ui.properties',
+             content=InlineTemplate(params.log4j_ui_properties),
+             mode=0600
              )
-
-        super(Airflow, self).configure(env)
+        File(self.lcmconfigdir + 'log4j-ui.properties',
+             content=InlineTemplate(params.log4j_ui_properties),
+             mode=0600
+             )
+        File(systemd_lcmserver_unitfile_path,
+             content=Template("lcm-server.service"),
+             mode=0600
+             )
+        File(systemd_lcmserver_unitfile_path,
+             content=Template("lcm-server.service"),
+             mode=0600
+             )
+             
+        super(LcmServer, self).configure(env)
         
     def start(self, env):
         import params
         import os
 
         self.configure(env)
-        Execute('systemctl start airflow-webserver')
-        Execute('systemctl start airflow-scheduler')
+        Execute('systemctl start lcm-server')
 
     def stop(self, env):
         import params
         import os
 
-        Execute('systemctl stop airflow-webserver')
-        Execute('systemctl stop airflow-scheduler')
+        Execute('systemctl stop lcm-server')
+
 
     def restart(self, env):
 
         self.configure(env)
-        Execute('systemctl restart airflow-webserver')
-        Execute('systemctl restart airflow-scheduler')
+        Execute('systemctl restart lcm-server')
+
 
     def status(self, env):
         import params
         import os
 
-        Execute('systemctl status airflow-webserver')
+        Execute('systemctl status lcm-server')
 
 
 if __name__ == "__main__":
-    Airflow().execute()
+    LcmServer().execute()

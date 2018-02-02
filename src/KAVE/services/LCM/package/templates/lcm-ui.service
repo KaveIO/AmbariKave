@@ -7,7 +7,7 @@ Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
 Type=simple
 User={{lcm_service_user}}
 Group={{lcm_service_user}}
-ExecStart={{lcm_destination_dir}}/bin/start-ui.sh
+ExecStart={{lcm_home_dir}}/bin/start-ui.sh
 PIDFile=/var/run/lcm-webui.pid
 Restart=always
 

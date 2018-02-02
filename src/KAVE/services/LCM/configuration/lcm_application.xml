@@ -24,8 +24,8 @@ LCM Id is used in the communication between LCMs when it is public.</description
       <description>OS service account name to be used by the lcm service</description>
     </property>
         <property>
-      <name>lcm_destination_dir</name>
-      <value>/usr/opt/local/lcm</value>
+      <name>lcm_install_dir</name>
+      <value>/opt/lcm</value>
       <description>LCM destination directory</description>
     </property>
     <property>
@@ -93,7 +93,7 @@ lcm.server.securePort={{Lcm_SecureServer_Port}}
 lcm.server.storage=mongo
 lcm.server.storage.mongo.host={{lcm_mongodb_host}}
 lcm.server.storage.mongo.port={{lcm_mongodb_port}}
-lcm.server.storage.mongo.database=
+lcm.server.storage.mongo.database=lcm
 #use syntax like bellow to authenticate
 #username:password@databaseName
 #or leave this field blank for unauthenticated access

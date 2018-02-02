@@ -23,10 +23,14 @@ import kavecommon as kc
 
 config = Script.get_config()
 
+systemd_lcmserver_unitfile_path = "/usr/lib/systemd/system/lcm-server.service"
+systemd_lcmui_unitfile_path = "/usr/lib/systemd/system/lcm-ui.service"
+
 hostname = config["hostname"]
 lcm_releaseversion = default('/configurations/lcm/lcm_releaseversion', '0.2.4-SNAPSHOT')
 lcm_service_user = kc.default('configurations/lcm/lcm_service_user', 'lcm', kc.is_valid_username)
-lcm_destination_dir = kc.default('configurations/lcm/lcm_destination_dir', '/usr/opt/local/lcm', kc.is_valid_directory)
+lcm_install_dir  = kc.default('configurations/lcm/lcm_install_dir ', '/opt/lcm', kc.is_valid_directory)
+lcm_home_dir = lcm_install_dir + '/lcm-complete-' + lcm_releaseversion + '/'
 
 LCM_UI_URL = kc.default('configurations/lcm/LCM_UI_URL', hostname, kc.is_valid_hostname)
 LCM_UI_PORT = kc.default('configurations/lcm/Lcm_UI_PORT', '8081', kc.is_valid_port)

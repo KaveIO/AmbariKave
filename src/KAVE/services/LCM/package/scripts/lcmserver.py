@@ -41,8 +41,8 @@ class LcmServer(Script):
         Execute('id -u ' + params.lcm_service_user +
                 ' &>/dev/null || useradd -r -s /sbin/nologin ' + params.lcm_service_user)
         Execute('mkdir -p ' + params.lcm_install_dir )
-        Execute('chown -R ' + params.lcm_service_user +
-                ':root' + params.lcm_install_dir )
+#        Execute('chown -R ' + params.lcm_service_user +
+#                ':root ' + params.lcm_install_dir )
 
         os.chdir(self.sttmpdir)
 #        copy_cache_or_repo shall be used when we have an official release of LCM
@@ -50,7 +50,7 @@ class LcmServer(Script):
         Execute('wget ' +
                 'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
         Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir )
-        kc.chown_r(params.lcm_install_dir , params.lcm_service_user)
+        kc.chown_r(params.lcm_install_dir, params.lcm_service_user)
         
         
     def configure(self, env):

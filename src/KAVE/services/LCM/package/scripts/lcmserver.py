@@ -23,6 +23,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class LcmServer(Script):
+    lcm_config_dir = params.lcm_home_dir + 'config/'
 
     def install(self, env):
         import params
@@ -58,7 +59,6 @@ class LcmServer(Script):
         import params
         import os
         env.set_params(params)
-        lcm_config_dir = params.lcm_home_dir + 'config/'
         File(self.lcm_config_dir + 'application.properties',
              content=InlineTemplate(params.application_properties),
              mode=0600
@@ -79,11 +79,11 @@ class LcmServer(Script):
              content=InlineTemplate(params.log4j_ui_properties),
              mode=0600
              )
-        File(systemd_lcmserver_unitfile_path,
+        File(params.systemd_lcmserver_unitfile_path,
              content=Template("lcm-server.service"),
              mode=0600
              )
-        File(systemd_lcmserver_unitfile_path,
+        File(params.systemd_lcmserver_unitfile_path,
              content=Template("lcm-server.service"),
              mode=0600
              )

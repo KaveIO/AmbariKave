@@ -23,7 +23,7 @@ LCM Id is used in the communication between LCMs when it is public.</description
       <value>lcm</value>
       <description>OS service account name to be used by the lcm service</description>
     </property>
-        <property>
+    <property>
       <name>lcm_install_dir</name>
       <value>/opt/lcm</value>
       <description>LCM destination directory</description>
@@ -48,7 +48,7 @@ LCM Id is used in the communication between LCMs when it is public.</description
       <value>localhost</value>
       <description>LCM Server binding FQDN</description>
     </property>
-    	<property>
+    <property>
       <name>LCM_Server_PORT</name>
       <value>8085</value>
       <description>LCM Server binding port</description>

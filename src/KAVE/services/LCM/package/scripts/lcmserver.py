@@ -58,24 +58,24 @@ class LcmServer(Script):
         import params
         import os
         env.set_params(params)
-        lcmconfigdir = params.lcm_home_dir + 'config/'
-        File(self.lcmconfigdir + 'application.properties',
+        lcm_config_dir = params.lcm_home_dir + 'config/'
+        File(self.lcm_config_dir + 'application.properties',
              content=InlineTemplate(params.application_properties),
              mode=0600
              )
-        File(self.lcmconfigdir + 'security.properties',
+        File(self.lcm_config_dir + 'security.properties',
              content=InlineTemplate(params.security_properties),
              mode=0600
              )
-        File(self.lcmconfigdir + 'log4j-server.properties',
+        File(self.lcm_config_dir + 'log4j-server.properties',
              content=InlineTemplate(params.log4j_server_properties),
              mode=0600
              )
-        File(self.lcmconfigdir + 'log4j-ui.properties',
+        File(self.lcm_config_dir + 'log4j-ui.properties',
              content=InlineTemplate(params.log4j_ui_properties),
              mode=0600
              )
-        File(self.lcmconfigdir + 'log4j-ui.properties',
+        File(self.lcm_config_dir + 'log4j-ui.properties',
              content=InlineTemplate(params.log4j_ui_properties),
              mode=0600
              )

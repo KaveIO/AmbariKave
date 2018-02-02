@@ -23,6 +23,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class LcmServer(Script):
+    import params
     lcm_config_dir = params.lcm_home_dir + 'config/'
 
     def install(self, env):

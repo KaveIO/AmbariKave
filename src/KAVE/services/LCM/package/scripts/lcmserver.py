@@ -33,7 +33,6 @@ class LcmServer(Script):
         super(LcmServer, self).install(env)
         packagefileonly = 'lcm-complete-' + params.lcm_releaseversion
         package = packagefileonly + '-bin.tar'
-        self.configure(env)
         if len(self.sttmpdir) < 4:
             raise IOError("where are you using for temp??")
         Execute("mkdir -p " + self.sttmpdir)

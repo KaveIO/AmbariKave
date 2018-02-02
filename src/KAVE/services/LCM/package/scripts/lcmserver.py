@@ -49,7 +49,7 @@ class LcmServer(Script):
 #        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
         Execute('wget ' +
                 'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
-        Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir )
+        Execute('tar -xf ' + package + ' -C ' + params.lcm_install_dir )
         kc.chown_r(params.lcm_install_dir, params.lcm_service_user)
         
         

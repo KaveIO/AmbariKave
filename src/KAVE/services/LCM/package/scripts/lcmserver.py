@@ -86,9 +86,8 @@ class LcmServer(Script):
              content=Template("lcm-server.service"),
              mode=0600
              )
-             
-        super(LcmServer, self).configure(env)
-        
+           
+      
     def start(self, env):
         import params
         import os

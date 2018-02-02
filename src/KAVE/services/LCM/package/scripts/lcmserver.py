@@ -23,12 +23,11 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class LcmServer(Script):
-
+    sttmpdir = '/tmp/lcm_install_dump' 
 
     def install(self, env):
         import params
         import os
-        
         print "Installing LCM Server:"
         super(LcmServer, self).install(env)
         packagefileonly = 'lcm-complete-' + params.lcm_releaseversion

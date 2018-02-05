@@ -43,7 +43,7 @@ LCM_UI_URL = kc.default('configurations/lcm_application/LCM_UI_URL', hostname, k
 
 LCM_UI_PORT = kc.default('configurations/lcm_application/LCM_UI_PORT', '8081', kc.is_valid_port)
 
-LCM_SecureUI_Port = kc.default('configurations/lcm_application/Lcm_SecureUI_Port', '4444', kc.is_valid_port)
+LCM_SecureUI_Port = kc.default('configurations/lcm_application/LCM_SecureUI_Port', '4444', kc.is_valid_port)
 
 LCM_Server_URL = kc.default('configurations/lcm_application/LCM_Server_URL', hostname, kc.is_valid_hostname)
 
@@ -63,9 +63,9 @@ ui_log_file_size = default('configurations/lcm_logs/ui_log_file_size', '20MB')
 
 Security_truststoreType = default('configurations/lcm_security/Security.truststoreType', 'JKS')
 
-lcm_server_security_encryption_key = default('configurations/lcm_security/lcm_server_security_encryption_key', '123456789qwertyu')
+LCM_Server_Security_Encryption_Key = default('configurations/lcm_security/LCM_Server_Security_Encryption_Key', '123456789qwertyu')
 
-lcm_admin_password = default('configurations/lcm_security/lcm_admin_password', 'admin')
+LCM_Admin_Password = default('configurations/lcm_security/LCM_Admin_Password', 'admin')
 
 lcm_mongodb_host = default('/clusterHostInfo/mongodb_master_hosts', [None])[0]
 if lcm_mongodb_host == hostname:

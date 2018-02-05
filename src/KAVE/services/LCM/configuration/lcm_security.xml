@@ -3,7 +3,7 @@
 
 <configuration>
 	<property require-input="true">
-		<name>lcm_admin_password</name>
+		<name>LCM_Admin_Password</name>
 		<property-type>PASSWORD</property-type>
 		<value></value>
 		<value-attributes>
@@ -12,7 +12,7 @@
 		<description>LCM server administration password </description>
 	</property>
 	<property>
-		<name>lcm_server_security_encryption_key</name>
+		<name>LCM_Server_Security_Encryption_Key</name>
 		<description>LCM server security encryption key - This property must
 			be exactly 16 symbols long </description>
 		<property-type>PASSWORD</property-type>
@@ -36,7 +36,7 @@
 			# Username and password for the default admin user. Once a actual admin user is
 			# created these become unused.
 			lcm.server.adminUser="admin"
-			lcm.server.adminPassword={{admin_password}}
+			lcm.server.adminPassword={{LCM_Admin_Password}}
 			# Default ssl configuration location based on installation with the	setup_ssl.sh script.
 			# 'certificates' directory must be in the base application directory i.e. on the same 
 			# level as bin, logs etc...
@@ -77,7 +77,7 @@
 
 			#This property must be exactly 16 symbols long!
 			#Make sure that it is unique and do not share it with anyone!
-			lcm.server.security.encryption.key=
+			lcm.server.security.encryption.key={{LCM_Server_Security_Encryption_Key}}
 
 			############################# UI settings #############################
 

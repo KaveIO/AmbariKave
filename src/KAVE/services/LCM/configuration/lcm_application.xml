@@ -85,8 +85,8 @@ LCM Id is used in the communication between LCMs when it is public.</description
 lcm.server.application.name={{lcm_application_name}}
 
 lcm.server.name={{LCM_Server_URL}}
-lcm.server.port={{Lcm_Server_PORT}}
-lcm.server.securePort={{Lcm_SecureServer_Port}}
+lcm.server.port={{LCM_Server_PORT}}
+lcm.server.securePort={{LCM_SecureServer_Port}}
 
 # Example mongo configuration
 lcm.server.storage=mongo
@@ -105,13 +105,13 @@ lcm.server.session.authentication.enabled=true
 # LCM User Interface configuration properties
 lcm.ui.server.name={{LCM_UI_URL}}
 lcm.ui.server.port={{LCM_UI_PORT}}
-lcm.ui.server.securePort={{Lcm_SecureUI_Port}}
+lcm.ui.server.securePort={{LCM_SecureUI_Port}}
 
 # In case swagger is enabled REST API documentation  will be available.
 # Go to http://{lcm.server.name}:{lcm.server.swagger.port}/docs for example http://localhost:8082/docs
 # and place in the swagger source box: http://{{LCM_Server_URL}}:{lcm.server.swagger.port}/swagger.json
 lcm.server.swagger.enable=true
-lcm.server.swagger.port={{lcm_swagger_port}}
+lcm.server.swagger.port={{LCM_Swagger_PORT}}
 		</value>
 		<description>LCM application.properties template.</description>
 	</property>

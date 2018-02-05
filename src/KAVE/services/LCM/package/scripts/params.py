@@ -31,6 +31,8 @@ systemd_lcmui_unitfile_path = "/usr/lib/systemd/system/lcm-ui.service"
 
 lcm_releaseversion = default('/configurations/lcm_application/lcm_releaseversion', '0.2.4-SNAPSHOT')
 
+lcm_application_name = config["configurations"]["lcm_application"]["lcm_application_name"]
+
 lcm_service_user = kc.default('configurations/lclcm_applicationm/lcm_service_user', 'lcm', kc.is_valid_username)
 
 lcm_install_dir  = kc.default('configurations/lcm_application/lcm_install_dir ', '/opt/lcm', kc.is_valid_directory)

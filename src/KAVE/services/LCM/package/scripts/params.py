@@ -55,7 +55,7 @@ LCM_Swagger_PORT = kc.default('configurations/lcm_application/LCM_Swagger_PORT',
 
 sever_log_file_path = default('configurations/lcm_logs/sever_log_file_path', 'logs/lcm-server.log')
 
-server_log_file_size = default('confgigurations/lcm_logs/server_log_file_size', '20M')
+server_log_file_size = kc.default('confgigurations/lcm_logs/server_log_file_size', '20MB')
 
 ui_log_file_path = default('configurations/lcm_logs/ui_log_file_path', 'logs/lcm-ui.log')
 

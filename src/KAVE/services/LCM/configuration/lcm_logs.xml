@@ -25,38 +25,39 @@
 	<property>
 		<name>log4j-server_properties</name>
 		<value>
-			# Root logger option - default one log4j.rootLogger=INFO, serverLog
-			# All autorization messages are logged with this logger
-			log4j.category.authorizationLogger=DEBUG, authorizationLog
-			# All authentication messages are logged with this logger
-			log4j.category.authenticationLogger=DEBUG, authenticationLog
-			# lcm-ui module logger log4j.category.sout=DEBUG, stdout
-			log4j.appender.serverLog=org.apache.log4j.RollingFileAppender
-			log4j.appender.serverLog.File={{sever_log_file_path}}
-			log4j.appender.serverLog.MaxFileSize={{log_file_size}}
-			log4j.appender.serverLog.MaxBackupIndex=10
-			log4j.appender.serverLog.layout=org.apache.log4j.PatternLayout
-			log4j.appender.serverLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
-			log4j.appender.authorizationLog=org.apache.log4j.RollingFileAppender
-			log4j.appender.authorizationLog.File=logs/authorization.log
-			log4j.appender.authorizationLog.MaxFileSize=20MB
-			log4j.appender.authorizationLog.MaxBackupIndex=10
-			log4j.appender.authorizationLog.layout=org.apache.log4j.PatternLayout
-			log4j.appender.authorizationLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n
+# Root logger option - default one 
+log4j.rootLogger=INFO, serverLog
+# All autorization messages are logged with this logger
+log4j.category.authorizationLogger=DEBUG, authorizationLog
+# All authentication messages are logged with this logger
+log4j.category.authenticationLogger=DEBUG, authenticationLog
+# lcm-ui module logger log4j.category.sout=DEBUG, stdout
+log4j.appender.serverLog=org.apache.log4j.RollingFileAppender
+log4j.appender.serverLog.File={{sever_log_file_path}}
+log4j.appender.serverLog.MaxFileSize={{server_log_file_size}}
+log4j.appender.serverLog.MaxBackupIndex=10
+log4j.appender.serverLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.serverLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+log4j.appender.authorizationLog=org.apache.log4j.RollingFileAppender
+log4j.appender.authorizationLog.File=logs/authorization.log
+log4j.appender.authorizationLog.MaxFileSize=20MB
+log4j.appender.authorizationLog.MaxBackupIndex=10
+log4j.appender.authorizationLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.authorizationLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n
 
-			log4j.appender.authenticationLog=org.apache.log4j.RollingFileAppender
-			log4j.appender.authenticationLog.File=logs/authentication.log
-			log4j.appender.authenticationLog.MaxFileSize=20MB
-			log4j.appender.authenticationLog.MaxBackupIndex=10
-			log4j.appender.authenticationLog.layout=org.apache.log4j.PatternLayout
-			log4j.appender.authenticationLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n
+log4j.appender.authenticationLog=org.apache.log4j.RollingFileAppender
+log4j.appender.authenticationLog.File=logs/authentication.log
+log4j.appender.authenticationLog.MaxFileSize=20MB
+log4j.appender.authenticationLog.MaxBackupIndex=10
+log4j.appender.authenticationLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.authenticationLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n
 
-			# Direct log messages to stdout
-			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
-			log4j.appender.stdout.Target=System.out
-			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
-			log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %C{1}:%L - %m%n
-			log4j.logger.org.mongodb.driver=ERROR
+# Direct log messages to stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %C{1}:%L - %m%n
+log4j.logger.org.mongodb.driver=ERROR
 		</value>
 		<description>
 			LCM log server configuration details.
@@ -65,21 +66,23 @@
 	<property>
 		<name>log4j-ui_properties</name>
 		<value>
-			# Root logger option - defailt one log4j.rootLogger=INFO, uiLog
-			# lcm-ui module logger log4j.category.sout=DEBUG, stdout
+# Root logger option - defailt one 
+log4j.rootLogger=INFO, uiLog
+# lcm-ui module logger 
+log4j.category.sout=DEBUG, stdout
 
-			log4j.appender.uiLog=org.apache.log4j.RollingFileAppender
-			log4j.appender.uiLog.File={{ui_log_file_path}}
-			log4j.appender.uiLog.MaxFileSize={{ui_log_file_size}}
-			log4j.appender.uiLog.MaxBackupIndex=10
-			log4j.appender.uiLog.layout=org.apache.log4j.PatternLayout
-			log4j.appender.uiLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss}%-5p %c{1}:%L - %m%n
+log4j.appender.uiLog=org.apache.log4j.RollingFileAppender
+log4j.appender.uiLog.File={{ui_log_file_path}}
+log4j.appender.uiLog.MaxFileSize={{ui_log_file_size}}
+log4j.appender.uiLog.MaxBackupIndex=10
+log4j.appender.uiLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.uiLog.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss}%-5p %c{1}:%L - %m%n
 
-			# Direct log messages to stdout
-			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
-			log4j.appender.stdout.Target=System.out
-			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
-			log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+# Direct log messages to stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
 		</value>
 		<description>
 			LCM log UI log4j configuration details.

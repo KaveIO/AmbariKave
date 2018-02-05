@@ -96,27 +96,20 @@ class LcmServer(Script):
         Execute('systemctl start lcm-server')
 
     def stop(self, env):
-        import params
         import os
 
         Execute('systemctl stop lcm-server')
 
 
     def restart(self, env):
-
+        import os
         self.configure(env)
         Execute('systemctl restart lcm-server')
 
 
     def status(self, env):
-        import params
-        import subprocess
-
-        check = subprocess.Popen('systemctl is-active --quiet lcm-server', shell=True)
-        check.wait()
-        if int(check.returncode) != 0:
-            raise ComponentIsNotRunning()
-        return True
-
+        import os
+        Execute('systemctl status lcm-server')
+        
 if __name__ == "__main__":
     LcmServer().execute()

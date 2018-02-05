@@ -33,15 +33,15 @@ lcm_releaseversion = default('/configurations/lcm_application/lcm_releaseversion
 
 lcm_application_name = config["configurations"]["lcm_application"]["lcm_application_name"]
 
-lcm_service_user = kc.default('configurations/lclcm_applicationm/lcm_service_user', 'lcm', kc.is_valid_username)
+lcm_service_user = config["configurations"]["lcm_application"]["lcm_service_user"]
 
-lcm_install_dir  = kc.default('configurations/lcm_application/lcm_install_dir ', '/opt/lcm', kc.is_valid_directory)
+lcm_install_dir  = config["configurations"]["lcm_application"]["lcm_install_dir"]
 
 lcm_home_dir = lcm_install_dir + '/lcm-complete-' + lcm_releaseversion + '/'
 
 LCM_UI_URL = kc.default('configurations/lcm_application/LCM_UI_URL', hostname, kc.is_valid_hostname)
 
-LCM_UI_PORT = kc.default('configurations/lcm_application/Lcm_UI_PORT', '8081', kc.is_valid_port)
+LCM_UI_PORT = kc.default('configurations/lcm_application/LCM_UI_PORT', '8081', kc.is_valid_port)
 
 LCM_SecureUI_Port = kc.default('configurations/lcm_application/Lcm_SecureUI_Port', '4444', kc.is_valid_port)
 

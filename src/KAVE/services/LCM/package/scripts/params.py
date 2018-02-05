@@ -51,7 +51,7 @@ LCM_SecureServer_Port = kc.default('configurations/lcm/LCM_SecureServer_Port', '
 
 LCM_Swagger_PORT = kc.default('configurations/lcm/LCM_Swagger_PORT', '8083', kc.is_valid_port)
 
-application_properties = default('configurations/lcm/application_properties', """""") 
+application_properties = default('configurations/lcm/application_properties') 
 
 sever_log_file_path = default('configurations/lcm/sever_log_file_path', 'logs/lcm-server.log')
 

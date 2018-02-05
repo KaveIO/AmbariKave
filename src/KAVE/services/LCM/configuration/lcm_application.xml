@@ -65,8 +65,7 @@ LCM Id is used in the communication between LCMs when it is public.</description
     </property>
     <property>
         <name>application_properties</name>
-        <value>
-# LCM configuration file
+        <value># LCM configuration file
 #
 # The LCM is splitted up in two separate executables. The server and the UI.
 # These both configured with this properties file. the distinction can be easily

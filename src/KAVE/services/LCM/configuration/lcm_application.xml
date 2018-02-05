@@ -104,8 +104,8 @@ lcm.server.session.authentication.enabled=true
 
 # LCM User Interface configuration properties
 lcm.ui.server.name={{LCM_UI_URL}}
-lcm.ui.server.port={{Lcm_UI_PORT}}
-lcm.ui.server.securePort={Lcm_SecureUI_Port}}
+lcm.ui.server.port={{LCM_UI_PORT}}
+lcm.ui.server.securePort={{Lcm_SecureUI_Port}}
 
 # In case swagger is enabled REST API documentation  will be available.
 # Go to http://{lcm.server.name}:{lcm.server.swagger.port}/docs for example http://localhost:8082/docs

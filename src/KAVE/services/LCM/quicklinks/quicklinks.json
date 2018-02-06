@@ -13,7 +13,7 @@
         "name": "lcm_dashboard",
         "label": "LCM Dashboard",
         "requires_user_name": "false",
-        "component_name": "LCM_UI",
+        "component_name": "LCM_SERVER",
         "url": "%@://%@:%@",
         "port":{
           "http_property": "LCM_UI_PORT",

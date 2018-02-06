@@ -4,17 +4,22 @@
   "configuration": {
     "protocol":
     {
-      "type":"https"
-
+      "type":"https",
+      "checks":[
+        {
+          "property":"LCM_Server_URL",
+          "desired":"localhost",
+          "site":"lcm_application"
+        }
+      ]
     },
-
     "links": [
       {
-        "name": "lcm_dashboard",
-        "label": "LCM Dashboard",
+        "name": "lcm_server_link",
+        "label": "LCM",
         "requires_user_name": "false",
-        "component_name": "LCM_SERVER",
-        "url": "%@://%@:%@",
+        "component_name": "LCM_Server",
+        "url":"%@://%@:%@",
         "port":{
           "http_property": "LCM_UI_PORT",
           "http_default_port": "8081",
@@ -22,7 +27,7 @@
           "https_default_port": "4444",
           "regex": "^(\\d+)$",
           "site": "lcm_application"
-        		}
+        }
       }
     ]
   }

@@ -12,18 +12,17 @@
       {
         "name": "lcm_dashboard",
         "label": "LCM Dashboard",
-        "requires_user_name": "true",
+        "requires_user_name": "false",
         "component_name": "LCM_UI",
-        "url": "http://ambari.kave.io:8080",
-        "attributes": ["authenticated", "sso"],
+        "url": "%@://%@:%@",
         "port":{
           "http_property": "LCM_UI_PORT",
           "http_default_port": "8081",
           "https_property": "LCM_SecureUI_Port",
           "https_default_port": "4444",
           "regex": "^(\\d+)$",
-          "site": "application-properties"
-        }
+          "site": "lcm_application"
+        		}
       }
     ]
   }

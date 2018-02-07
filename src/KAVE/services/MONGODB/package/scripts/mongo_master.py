@@ -59,7 +59,7 @@ class MongoMaster(MongoBase):
                 Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')
 
     def stop(self, env):
-        print "stop services.."
+        print "stopping mongodb.."
         Execute('service mongod stop')
 
     def restart(self, env):
@@ -78,9 +78,12 @@ class MongoMaster(MongoBase):
         self.start(env)
 
     def status(self, env):
-        print "checking status..."
-        Execute('service mongod status')
+        import subprocess
 
-
+        check = subprocess.Popen('systemctl is-active --quiet mongod', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 if __name__ == "__main__":
     MongoMaster().execute()

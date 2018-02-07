@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
+# Copyright 2018 KPMG Advisory N.V. (unless otherwise stated)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -19,105 +19,76 @@ import os
 
 from resource_management import *
 import kavecommon as kc
-from kavecommon import ApacheScript
 from resource_management.core.exceptions import ComponentIsNotRunning
 
 
-class Airflow(kc.ApacheScript):
-    airflow_config_path = "/usr/opt/local/airflow/airflow.cfg"
-    airflow_webserver_pidfile_path = "/run/airflow/webserver.pid"
-    systemd_env_init_path = "/etc/sysconfig/airflow"
-    systemd_schd_unitfile_path = "/usr/lib/systemd/system/airflow-scheduler.service"
-    systemd_ws_unitfile_path = "/usr/lib/systemd/system/airflow-webserver.service"
-    # This is a hack to overcome a certain restriction in airflow which requires
-    # the argument to be quoted
-
-    quote_fix = ('sed -i \'/MARKER_EXPR = originalTextFor(MARKER_EXPR())("marker")/c'
-                 '\MARKER_EXPR = originalTextFor(MARKER_EXPR(""))("marker")\''
-                 ' `find /usr/lib/python* -name requirements.py`'
-                 )
+class LcmWebUI(Script):
+    sttmpdir = '/tmp/lcm_install_dump' 
 
     def install(self, env):
-        print "Installing Airflow"
         import params
         import os
-        super(Airflow, self).install(env)
-        kc.install_epel()
-
-        Execute('curl --tlsv1.2 "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"')
-        Execute('python get-pip.py')
-        Execute('pip install -U pip setuptools')
-        # Create airflow config/home dir and set permissions
-        Execute('id -u airflow &>/dev/null || useradd -r -s /sbin/nologin airflow')
-        Execute('mkdir -p /usr/opt/local/airflow')
-        Execute('chown airflow:root /usr/opt/local/airflow')
-        # Create directory to store the pid file and set permissions:
-        Execute('mkdir -p /run/airflow')
-        Execute('chown airflow:root /run/airflow')
-        # Set the AIRFLOW_HOME environment variable. Echoing it at the end of /etc/environment
-        # is just one of the possible approaches.
-        Execute('echo "AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
-        # Install base airflow
-        Execute('pip install airflow')
-        # Add Airflow Hive operatiors. We should consider installing "airflow[all]"
-        # for getting all possible features
-        Execute('pip install airflow[hive]')
-
-        self.configure(env)
-
+        print "Installing LCM Web User Interface:"
+        super(LcmWebUI, self).install(env)
+        packagefileonly = 'lcm-complete-' + params.lcm_releaseversion
+        package = packagefileonly + '-bin.tar'
+        if len(self.sttmpdir) < 4:
+            raise IOError("where are you using for temp??")
+        
+        if not os.path.isfile(params.lcm_home_dir + 'bin/start-ui.sh'):
+            raise EnvironmentError('LCM UI startup script not found at ' +
+                                    params.lcm_home_dir + '/bin' +
+                                    ' Is LCM server installed on this system?')
+            
+     
     def configure(self, env):
         import params
         import os
         env.set_params(params)
-        File(self.airflow_config_path,
-             content=InlineTemplate(params.airflow_conf),
-             mode=0755
+        lcm_config_dir = params.lcm_home_dir + 'config/'
+        File(lcm_config_dir + 'application.properties',
+             content=InlineTemplate(params.application_properties),
+             mode=0600
              )
-        File(self.systemd_env_init_path,
-             content=Template("airflow"),
-             mode=0755
+        File(lcm_config_dir + 'security.properties',
+             content=InlineTemplate(params.security_properties),
+             mode=0600
              )
-        File(self.systemd_schd_unitfile_path,
-             content=Template("airflow-scheduler.service"),
-             mode=0755
+        File(lcm_config_dir + 'log4j-ui.properties',
+             content=InlineTemplate(params.log4j_ui_properties),
+             mode=0600
              )
-        File(self.systemd_ws_unitfile_path,
-             content=Template("airflow-webserver.service"),
-             mode=0755
+        File(params.systemd_lcmui_unitfile_path,
+             content=Template("lcm-ui.service"),
+             mode=0600
              )
-
-        super(Airflow, self).configure(env)
-        Execute("sed -i -e '/Defaults    requiretty/{ s/.*/# Defaults    requiretty/ }' /etc/sudoers")
-        Execute(self.quote_fix)
-        Execute("sudo -u airflow airflow initdb")
-
+           
+      
     def start(self, env):
         import params
         import os
 
         self.configure(env)
-        Execute('systemctl start airflow-webserver')
-        Execute('systemctl start airflow-scheduler')
+        Execute('systemctl start lcm-ui')
 
     def stop(self, env):
-        import params
         import os
+        Execute('systemctl stop lcm-ui')
 
-        Execute('systemctl stop airflow-webserver')
-        Execute('systemctl stop airflow-scheduler')
 
     def restart(self, env):
-
+        import os
         self.configure(env)
-        Execute('systemctl restart airflow-webserver')
-        Execute('systemctl restart airflow-scheduler')
+        Execute('systemctl restart lcm-ui')
+
 
     def status(self, env):
-        import params
-        import os
-
-        Execute('systemctl status airflow-webserver')
-
-
+        import subprocess
+        check = subprocess.Popen('systemctl is-active --quiet lcm-ui', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
+        
 if __name__ == "__main__":
-    Airflow().execute()
+    LcmWebUI().execute()

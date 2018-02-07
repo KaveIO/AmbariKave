@@ -70,18 +70,6 @@ class LcmServer(Script):
              content=InlineTemplate(params.log4j_server_properties),
              mode=0600
              )
-        File(lcm_config_dir + 'log4j-ui.properties',
-             content=InlineTemplate(params.log4j_ui_properties),
-             mode=0600
-             )
-        File(lcm_config_dir + 'log4j-ui.properties',
-             content=InlineTemplate(params.log4j_ui_properties),
-             mode=0600
-             )
-        File(params.systemd_lcmserver_unitfile_path,
-             content=Template("lcm-server.service"),
-             mode=0600
-             )
         File(params.systemd_lcmserver_unitfile_path,
              content=Template("lcm-server.service"),
              mode=0600

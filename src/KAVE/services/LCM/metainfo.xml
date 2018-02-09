@@ -14,7 +14,7 @@
 				and analytics between different Data
 				Lakes / Data Science environments.
 			</comment>
-			<displayName>LocalCatalogManager</displayName>
+			<displayName>LCM</displayName>
 			<version>0.2</version>
 			<components>
 				<component>

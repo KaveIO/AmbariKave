@@ -68,8 +68,7 @@ LCM_Server_Security_Encryption_Key = default('configurations/lcm_security/LCM_Se
 LCM_Admin_Password = default('configurations/lcm_security/LCM_Admin_Password', 'admin')
 
 lcm_mongodb_host = default('/clusterHostInfo/mongodb_master_hosts', [None])[0]
-if lcm_mongodb_host == hostname:
-    lcm_mongodb_host = 'localhost'
+
 if not lcm_mongodb_host:
     raise ValueError("Could not locate MongoDB server, did you install it in the cluster?")
 

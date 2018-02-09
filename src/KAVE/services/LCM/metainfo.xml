@@ -54,7 +54,9 @@
 				</osSpecific>
 			</osSpecifics>
 			<configuration-dependencies>
-				<config-type>lcm</config-type>
+				<config-type>lcm_application</config-type>
+				<config-type>lcm_security</config-type>
+				<config-type>lcm_logs</config-type>
 			</configuration-dependencies>
 			<requiredServices>
 				<service>MONGODB</service>

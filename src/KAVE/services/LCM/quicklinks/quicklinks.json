@@ -7,8 +7,8 @@
       "type":"https",
       "checks":[
         {
-          "property":"LCM_Server_URL",
-          "desired":"localhost",
+          "property":"LCM_SecureUI_Port",
+          "desired":"EXIST",
           "site":"lcm_application"
         }
       ]
@@ -18,7 +18,7 @@
         "name": "lcm_server_link",
         "label": "LCM Web Interface",
         "requires_user_name": "false",
-        "component_name": "LCM_Server",
+        "component_name": "LCM_UI",
         "url":"%@://%@:%@",
         "port":{
           "http_property": "LCM_UI_PORT",

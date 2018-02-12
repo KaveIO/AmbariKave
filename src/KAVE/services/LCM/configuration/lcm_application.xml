@@ -59,6 +59,11 @@ LCM Id is used in the communication between LCMs when it is public.</description
       <description>LCM Server SSL binding port</description>
     </property>
     <property>
+      <name>LCM_UI_access_scheme</name>
+      <value>https</value>
+      <description>http access scheme for LCM UI. Possible values are http or https</description>
+    </property>
+    <property>
       <name>LCM_Swagger_PORT</name>
       <value>8083</value>
       <description>LCM Swagger port</description>

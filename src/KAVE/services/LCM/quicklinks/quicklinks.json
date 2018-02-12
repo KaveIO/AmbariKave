@@ -4,21 +4,14 @@
   "configuration": {
     "protocol":
     {
-      "type":"https",
-      "checks":[
-        {
-          "property":"LCM_SecureUI_Port",
-          "desired":"NOT_BLANK",
-          "site":"lcm_application"
-        }
-      ]
+      "type":"https"
     },
     "links": [
       {
         "name": "lcm_server_link",
         "label": "LCM Web Interface",
         "requires_user_name": "false",
-        "component_name": "LCM_UI",
+        "component_name": "LCM Web UI",
         "url":"%@://%@:%@",
         "port":{
           "https_property": "LCM_SecureUI_Port",

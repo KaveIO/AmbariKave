@@ -8,12 +8,7 @@
       "checks":[
         {
           "property":"LCM_SecureUI_Port",
-          "desired":"EXIST",
-          "site":"lcm_application"
-        },
-        {
-          "property":"LCM_UI_URL",
-          "desired":"EXIST",
+          "desired":"NOT_BLANK",
           "site":"lcm_application"
         }
       ]

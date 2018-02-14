@@ -396,11 +396,11 @@ class CBDeploy():
             print str.format("Unable to create stack for blueprint {}", blueprint_name)
             raise
         if response.status_code == 200:
-            return (blueprint, response.json()["id"])
+            return (blueprint, response.json()["id"], response.json()["name"])
         else:
             raise Exception(str.format("Stack {} could not be created: {}", stack["name"], response.text))
 
-    def create_cluster(self, blueprint, stack_id, credential):
+    def create_cluster(self, blueprint, stack_id, stack_name, credential, local_repo=False):
         """
         Creates Cloudbreak cluster with given blueprint name and stack id
         """
@@ -409,13 +409,6 @@ class CBDeploy():
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(stack_id)
         url = cbparams.cb_https_url + path
-        try:
-            stack = requests.get(url, headers=headers,
-                                 verify=cbparams.ssl_verify).json()
-        except RequestException:
-            print str.format("Unable to get stack with id {} from Cloudbreak.", stack_id)
-            raise
-
         try:
             with open("cluster_template.json") as cl_file:
                 cluster = json.load(cl_file)
@@ -426,7 +419,7 @@ class CBDeploy():
                 hg_info = json.load(hgs_file)
         except (IOError, ValueError):
             raise StandardError("File blueprints/hostgroups.azure.json is not complete or is not readable.")
-        cluster["name"] = stack["name"]
+        cluster["name"] = stack_name
         cluster["blueprintId"] = blueprint["id"]
 
         hgs = [item["name"]
@@ -439,14 +432,17 @@ class CBDeploy():
             hostgroup["constraint"] = {}
             hostgroup["constraint"]["instanceGroupName"] = hg
             hostgroup["constraint"]["hostCount"] = 1
-            hostgroup["recipeIds"] = self.get_recipe_ids(hg_info[hg]["recipes"])
+            recipes = hg_info[hg]["recipes"]
+            if local_repo and (hostgroup["name"] == "admin" or hostgroup["name"] == "admin-freeipa"):
+                recipes[recipes.index("patchambari")] += "-git"
+            hostgroup["recipeIds"] = self.get_recipe_ids(recipes)
             cluster["hostGroups"].append(hostgroup)
 
         if cbparams.adls_enabled and cbparams.adls_name:
             fileSystem = {}
             fileSystem["type"] = "ADLS"
             fileSystem["defaultFs"] = False
-            fileSystem["name"] = stack["name"]
+            fileSystem["name"] = stack_name
             fileSystem["properties"] = {}
             fileSystem["properties"]["tenantId"] = credential["parameters"]["tenantId"]
             fileSystem["properties"]["clientId"] = credential["parameters"]["accessKey"]
@@ -459,13 +455,13 @@ class CBDeploy():
             response = requests.post(url, data=json.dumps(
                 cluster), headers=headers, verify=cbparams.ssl_verify)
         except RequestException:
-            print str.format("Error creating cluster {}", stack["name"])
+            print str.format("Error creating cluster {}", stack_name)
             raise
 
         if response.status_code == 200:
             return response.json()
         else:
-            raise Exception(str.format("Cluster {} could not be created: {}", stack["name"], response.text))
+            raise Exception(str.format("Cluster {} could not be created: {}", stack_name, response.text))
 
     def get_recipe_ids(self, recipe_names):
         recipe_ids = []
@@ -560,20 +556,30 @@ class CBDeploy():
             print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
             return True
 
-    def wait_for_cluster(self, name, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
+    def distribute_package(self, remoteip):
+        import subprocess
+
+        subprocess.call(["tar", "czf", "kave-patch.tar.gz", "-C", "../../src", "KAVE", "shared"])
+        print "Copying KAVE archive to a remote machine..."
+        subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
+                         "kave-patch.tar.gz", "../../dev/dist_kavecommon.py", "cloudbreak@" + remoteip + ":~"])
+        subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
+
+    def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
 
         try:
             credential = self.get_credential()
-            blueprint, stack_id = self.create_stack(name, credential)
-            cluster = self.create_cluster(blueprint, stack_id, credential)
+            blueprint, stack_id, stack_name = self.create_stack(name, credential)
+            if not local_repo:
+                cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, local_repo)
         except Exception as e:
             print "FAILURE: ", e
             return
 
-        print str.format("Cluster {} requested. Waiting for Ambari...", cluster["name"])
+        print str.format("Cluster {} requested. Waiting for Ambari...", stack_name)
 
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
@@ -588,6 +594,7 @@ class CBDeploy():
         max_retries = 5
         latest_status = ""
         latest_status_reason = ""
+        ipset=False
 
         while timer < timeout:
             response = requests.get(
@@ -600,9 +607,9 @@ class CBDeploy():
                 else:
                     print str.format(
                         "FAILURE: Unable to obtain status for cluster {}. Connection to Cloudbreak might be lost.",
-                        cluster["name"])
+                        stack_name)
                     if kill_failed or kill_all:
-                        self.delete_stack_by_name(cluster["name"])
+                        self.delete_stack_by_name(stack_name)
                     return False
             else:
                 if response.json() and response.json().get("status") and response.json().get("cluster"):
@@ -612,36 +619,48 @@ class CBDeploy():
                         latest_status = response.json()["status"]
                         latest_status_reason = response.json()["statusReason"]
                         print str.format("{} -- stack status: {} - {}; cluster status: {}",
-                                         cluster["name"], response.json()["status"], response.json()["statusReason"],
+                                         stack_name, response.json()["status"], response.json()["statusReason"],
                                          response.json()["cluster"]["status"])
                     if response.json()["status"].startswith("DELETE"):
                         print str.format("FAILURE: Requested deletion for cluster {}. Terminating current process.",
-                                         cluster["name"])
+                                         stack_name)
                         return False
-                    if response.json()["status"] == "AVAILABLE" and response.json()["cluster"]["status"] == "AVAILABLE":
+                    if response.json()["status"] == "AVAILABLE" and response.json()["cluster"] and response.json()["cluster"]\
+                            and response.json()["cluster"]["status"] == "AVAILABLE":
                         print str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
                                          response.json()["name"], (timer - start))
                         if kill_passed or kill_all:
-                            print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
-                            self.delete_stack_by_name(cluster["name"])
+                            print str.format("Cluster {} and its infrastructure will be deleted.", stack_name)
+                            self.delete_stack_by_name(stack_name)
                         return True
                     if response.json()["status"].endswith("FAILED") \
-                            or response.json()["cluster"]["status"].endswith("FAILED"):
-                        print str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}. Cluster status- {} : {}", cluster["name"],
-                                         response.json()["status"], response.json()["statusReason"])
+                            or (response.json()["cluster"] and response.json()["cluster"]["status"] \
+                            and response.json()["cluster"]["status"].endswith("FAILED")):
+                        print str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}. Cluster status- {} : {}",
+                                         stack_name, response.json()["status"], response.json()["statusReason"])
                         if kill_failed or kill_all:
-                            print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
-                            self.delete_stack_by_name(cluster["name"])
+                            print str.format("Cluster {} and its infrastructure will be deleted.", stack_name)
+                            self.delete_stack_by_name(stack_name)
                         return False
                 # reset retries_count after success
                 if retries_count != 0:
                     retries_count = 0
+                # when deploying from local repo
+                # transfer the KAVE patch to the remote Ambari node when IP is known
+                if local_repo and not ipset:
+                    ambarinode=[node for node in response.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
+                    if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
+                        ipset = ambarinode['metadata'][0]['publicIp']
+                        if ipset:
+                            self.distribute_package(ipset)
+                            cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, True)
+
                 time.sleep(interval)
                 timer = int(time.time())
 
         print str.format("FAILURE: Cluster {} failed to complete in {} seconds.",
-                         cluster["name"], (max_execution_time))
+                         stack_name, (max_execution_time))
         if kill_failed or kill_all:
-            print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
-            self.delete_stack_by_name(cluster["name"])
+            print str.format("Cluster {} and its infrastructure will be deleted.", stack_name)
+            self.delete_stack_by_name(stack_name)
         return False

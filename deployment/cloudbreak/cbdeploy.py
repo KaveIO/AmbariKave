@@ -30,6 +30,8 @@ params:
         It can also take a list of blueprint names, separated by spaces, as parameter to deploy clusters simultaneously,
         or an --all parameter, which would deploy all clusters described in the blueprints folder at once.
 
+    --this-branch - if present, local Git repo will be used for Ambari patching
+
     --kill-passed - if present, all successfully deployed clusters will be deleted after deployment is complete
 
     --kill-failed - if present, all clusters which reported failure will be deleted after deployment is complete
@@ -56,6 +58,7 @@ if __name__ == "__main__":
     kill_failed_clusters = False
     kill_all_clusters = False
     verbose_enabled = False
+    local_repo = False
 
     cb = cbcommon.CBDeploy()
     if not cb.access_token:
@@ -73,7 +76,8 @@ if __name__ == "__main__":
         blueprints = [b.split("/")[-1].split(".")[0] for b in blueprints]
         blueprints = [b for b in blueprints if b not in disabled]
     else:
-        blueprints = [bp for bp in sys.argv[1:] if not (bp.startswith("--kill-") or bp.startswith("--verbose"))]
+        blueprints = [bp for bp in sys.argv[1:] if not (bp.startswith(
+            "--kill-") or bp.startswith("--verbose") or bp.startswith("--this-branch"))]
     if "--kill-passed" in sys.argv:
         kill_passed_clusters = True
     if "--kill-failed" in sys.argv:
@@ -82,10 +86,13 @@ if __name__ == "__main__":
         kill_all_clusters = True
     if "--verbose" in sys.argv:
         verbose_enabled = True
+    if "--this-branch" in sys.argv:
+        local_repo = True
 
     for i in range(0, len(blueprints)):
         print "Starting cluster deployment for blueprint " + blueprints[i]
         t = Thread(target=cb.wait_for_cluster, args=(blueprints[i],), kwargs={
+                   "local_repo": local_repo,
                    "kill_passed": kill_passed_clusters,
                    "kill_failed": kill_failed_clusters,
                    "kill_all": kill_all_clusters,

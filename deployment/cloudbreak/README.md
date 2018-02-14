@@ -133,6 +133,8 @@ Additionally, the script accepts parameters ```"--kill-passed"``` , ```"--kill-f
 
 Use ```"--verbose"``` parameter, if you want to see more information about stack and cluster status during deployment.
 
+```"--this-branch"``` parameter is used to deploy AmbariKave cluster from the current branch of the local Git repo.
+
 ## Deleting clusters
 
 Cloudbreak clusters can be deleted using the ```deployment/cloudbreak/kill_clusters.py```

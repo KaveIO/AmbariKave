@@ -5,6 +5,12 @@
         "description": "Add the KAVE Stack to ambari",
         "templatePath": "recipes/mandatory/setup_cloudbreak_kavepatch_ambari.sh"
     },
+    "patchambari-git":
+    {
+        "recipeType": "PRE",
+        "description": "Add the KAVE Stack to ambari, using sources from local Git repo",
+        "templatePath": "recipes/mandatory/setup_cloudbreak_local_kavepatch_ambari.sh"
+    },
     "fix-hosts-file":
     {
         "recipeType": "PRE",

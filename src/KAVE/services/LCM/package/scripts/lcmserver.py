@@ -50,7 +50,7 @@ class LcmServer(Script):
         Execute('wget ' +
                 'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
         Execute('tar -xf ' + package + ' -C ' + params.lcm_install_dir )
-        Execute(lcm_home_dir + 'bin/setup-ssl.sh')
+        Execute(params.lcm_home_dir + 'bin/setup-ssl.sh')
         kc.chown_r(params.lcm_install_dir, params.lcm_service_user)
         
         

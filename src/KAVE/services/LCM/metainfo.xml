@@ -18,7 +18,7 @@
 			<version>0.2</version>
 			<components>
 				<component>
-					<name>LCM_Server</name>
+					<name>LCM_SERVER</name>
 					<displayName>LCM Server</displayName>
 					<category>MASTER</category>
 					<cardinality>1+</cardinality>

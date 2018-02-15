@@ -11,7 +11,7 @@
 		</value-attributes>
 		<description>LCM server administration password </description>
 	</property>
-	<property>
+	<property  require-input="true">
 		<name>LCM_Server_Security_Encryption_Key</name>
 		<description>LCM server security encryption key - This property must
 			be exactly 16 symbols long </description>

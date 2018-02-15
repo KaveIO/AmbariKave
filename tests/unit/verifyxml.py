@@ -97,7 +97,13 @@ class TestXMLContent(unittest.TestCase):
                                                        "components": components_struct,
                                                        "osSpecifics": os_struct,
                                                        "requiredServices": ["service"],
-                                                       "configuration-dependencies": ["config-type"]
+                                                       "configuration-dependencies": ["config-type"],
+                                                       "quickLinksConfigurations": {
+                                                           "quickLinksConfiguration": {
+                                                               "fileName": [],
+                                                               "default": [] 
+                                                               }
+                                                            }
                                                        }
                                            }}}
 

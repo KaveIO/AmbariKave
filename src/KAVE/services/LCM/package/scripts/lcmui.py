@@ -23,7 +23,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class LcmWebUI(Script):
-    sttmpdir = '/tmp/lcm_install_dump' 
+    sttmpdir = '/tmp/lcm_install_dump'
 
     def install(self, env):
         import params
@@ -34,13 +34,12 @@ class LcmWebUI(Script):
         package = packagefileonly + '-bin.tar'
         if len(self.sttmpdir) < 4:
             raise IOError("where are you using for temp??")
-        
+
         if not os.path.isfile(params.lcm_home_dir + 'bin/start-ui.sh'):
             raise EnvironmentError('LCM UI startup script not found at ' +
-                                    params.lcm_home_dir + '/bin' +
-                                    ' Is LCM server installed on this system?')
-            
-     
+                                   params.lcm_home_dir + '/bin' +
+                                   ' Is LCM server installed on this system?')
+
     def configure(self, env):
         import params
         import os
@@ -62,8 +61,7 @@ class LcmWebUI(Script):
              content=Template("lcm-ui.service"),
              mode=0600
              )
-           
-      
+
     def start(self, env):
         import params
         import os
@@ -75,20 +73,19 @@ class LcmWebUI(Script):
         import os
         Execute('systemctl stop lcm-ui')
 
-
     def restart(self, env):
         import os
         self.configure(env)
         Execute('systemctl restart lcm-ui')
-
 
     def status(self, env):
         import subprocess
         check = subprocess.Popen('systemctl is-active --quiet lcm-ui', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
-        
+
+
 if __name__ == "__main__":
     LcmWebUI().execute()

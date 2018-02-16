@@ -83,7 +83,7 @@ class MongoMaster(MongoBase):
         check = subprocess.Popen('systemctl is-active --quiet mongod', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 if __name__ == "__main__":
     MongoMaster().execute()

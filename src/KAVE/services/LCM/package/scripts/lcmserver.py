@@ -23,7 +23,7 @@ from resource_management.core.exceptions import ComponentIsNotRunning
 
 
 class LcmServer(Script):
-    sttmpdir = '/tmp/lcm_install_dump' 
+    sttmpdir = '/tmp/lcm_install_dump'
 
     def install(self, env):
         import params
@@ -40,20 +40,17 @@ class LcmServer(Script):
         # Create service user, config/home dir and set permissions
         Execute('id -u ' + params.lcm_service_user +
                 ' &>/dev/null || useradd -r -s /sbin/nologin ' + params.lcm_service_user)
-        Execute('mkdir -p ' + params.lcm_install_dir )
-#        Execute('chown -R ' + params.lcm_service_user +
-#                ':root ' + params.lcm_install_dir )
+        Execute('mkdir -p ' + params.lcm_install_dir)
 
         os.chdir(self.sttmpdir)
 #        copy_cache_or_repo shall be used when we have an official release of LCM
-#        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
+#        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="LCM")
         Execute('wget ' +
                 'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
-        Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir )
+        Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir)
         Execute(params.lcm_home_dir + 'bin/setup-ssl.sh')
         kc.chown_r(params.lcm_install_dir, params.lcm_service_user)
-        
-        
+
     def configure(self, env):
         import params
         import os
@@ -75,8 +72,7 @@ class LcmServer(Script):
              content=Template("lcm-server.service"),
              mode=0600
              )
-           
-      
+
     def start(self, env):
         import params
         import os
@@ -89,12 +85,10 @@ class LcmServer(Script):
 
         Execute('systemctl stop lcm-server')
 
-
     def restart(self, env):
         import os
         self.configure(env)
         Execute('systemctl restart lcm-server')
-
 
     def status(self, env):
         import subprocess
@@ -102,8 +96,9 @@ class LcmServer(Script):
         check = subprocess.Popen('systemctl is-active --quiet lcm-server', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
-        
+
+
 if __name__ == "__main__":
     LcmServer().execute()

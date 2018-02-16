@@ -101,11 +101,11 @@ class TestXMLContent(unittest.TestCase):
                                                        "quickLinksConfigurations": {
                                                            "quickLinksConfiguration": {
                                                                "fileName": [],
-                                                               "default": [] 
-                                                               }
-                                                            }
-                                                       }
-                                           }}}
+                                                               "default": []
+                                                           }
+                              }
+                              }
+    }}}
 
     def velement(self, element, cdict, file=None):
         if element.tag not in cdict:

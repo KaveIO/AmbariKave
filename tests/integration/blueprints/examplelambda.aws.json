@@ -108,6 +108,16 @@
     				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
     				 {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
     				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
+  },
+  { "Name" : "lcm",
+    "Count" : 1,
+    "InstanceType" : "m1.medium",
+    "AccessType" : "none",
+    "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 2, "Attach" : "/dev/sdb" },
+                     {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdc" },
+                     {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" },
+                     {"Mount": "/usr/hdp", "Size" : 4,   "Attach" : "/dev/sde" },
+                     {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
   }
   ]
 }

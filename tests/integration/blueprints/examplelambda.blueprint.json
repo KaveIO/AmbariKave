@@ -292,6 +292,16 @@
         { "name" : "FREEIPA_CLIENT"   }
       ],
       "cardinality" : "1+"
+    },
+    {
+      "name" : "lcm",
+      "components" : [
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_CLIENT"      },
+        { "name" : "LCM_SERVER"},
+        { "name" : "LCM_UI"}
+      ],
+      "cardinality" : "1"
     }
   ],
   "Blueprints" : {

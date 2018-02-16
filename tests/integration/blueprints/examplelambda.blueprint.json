@@ -33,6 +33,14 @@
     	"sonar_database_user_passwd" : "admin"
     	}
     },
+    {
+      "lcm_security" : {
+        "LCM_Server_URL" : "lcm.kave.io",
+        "LCM_UI_URL" : "lcm.kave.io",
+        "LCM_Admin_Password" : "DivingIntoDivineWaters",
+        "LCM_Server_Security_Encryption_Key" : "ZDUzZjEwY2Q0YzEy"
+      }
+    },
     { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711" }  },
     { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },

@@ -2,6 +2,8 @@
  "configurations" : [
     {
       "lcm_security" : {
+        "LCM_Server_URL" : "ambari.kave.io",
+        "LCM_UI_URL" : "ambari.kave.io",
         "LCM_Admin_Password" : "DivingIntoDivineWaters",
         "LCM_Server_Security_Encryption_Key" : "ZDUzZjEwY2Q0YzEy"
       }

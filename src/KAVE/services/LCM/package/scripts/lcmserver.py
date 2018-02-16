@@ -31,7 +31,7 @@ class LcmServer(Script):
         print "Installing LCM Server:"
         super(LcmServer, self).install(env)
         packagefileonly = 'lcm-complete-' + params.lcm_releaseversion
-        package = packagefileonly + '-bin.tar'
+        package = packagefileonly + '-bin.tar.gz'
         if len(self.sttmpdir) < 4:
             raise IOError("where are you using for temp??")
         Execute("mkdir -p " + self.sttmpdir)
@@ -49,7 +49,7 @@ class LcmServer(Script):
 #        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
         Execute('wget ' +
                 'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
-        Execute('tar -xf ' + package + ' -C ' + params.lcm_install_dir )
+        Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir )
         Execute(params.lcm_home_dir + 'bin/setup-ssl.sh')
         kc.chown_r(params.lcm_install_dir, params.lcm_service_user)
         

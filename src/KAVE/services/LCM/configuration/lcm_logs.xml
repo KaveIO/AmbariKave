@@ -66,9 +66,9 @@ log4j.logger.org.mongodb.driver=ERROR
 	<property>
 		<name>log4j-ui_properties</name>
 		<value>
-# Root logger option - defailt one 
+# Root logger option - default one
 log4j.rootLogger=INFO, uiLog
-# lcm-ui module logger 
+# lcm-ui module logger
 log4j.category.sout=DEBUG, stdout
 
 log4j.appender.uiLog=org.apache.log4j.RollingFileAppender

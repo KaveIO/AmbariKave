@@ -36,7 +36,7 @@
 lcm.server.adminUser="admin"
 lcm.server.adminPassword={{LCM_Admin_Password}}
 # Default ssl configuration location based on installation with the	setup_ssl.sh script.
-# 'certificates' directory must be in the base application directory i.e. on the same 
+# 'certificates' directory must be in the base application directory i.e. on the same
 # level as bin, logs etc...
 # SSL settings for the Grizzly server in the lcm-server module
 lcm.server.security.keystore=certificates/lcm-keystore.jks
@@ -66,7 +66,7 @@ lcm.client.security.truststoreType=JKS
 # data is ever encrypted!
 # Unsafe mode is meant for debug as well as a way to fallback on
 # faulty HTTPS.
-# 
+#
 # Disable server module SSL
 lcm.server.unsafe=false
 #

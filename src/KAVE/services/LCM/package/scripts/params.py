@@ -142,17 +142,20 @@ lcm.server.adminPassword={{LCM_Admin_Password}}
 # 'certificates' directory must be in the base application directory i.e. on the same
 # level as bin, logs etc...
 # SSL settings for the Grizzly server in the lcm-server module
-lcm.server.security.keystore=certificates/server.p12
+lcm.server.security.keystore=certificates/lcm-keystore.jks
 lcm.server.security.keystoreType=JKS
-lcm.server.security.keystorePassword=
+lcm.server.security.keystorePassword=storepass
 lcm.server.security.keystoreAlias=cert-lcm
-lcm.server.security.keystoreKeypass=
+lcm.server.security.keystoreKeypass=keypass
 lcm.server.security.debug=ssl
-# SSL settings for requests made in the lcm-server module to another
-LCM
-lcm.client.security.truststore=certificates/lcm.keystore
-lcm.client.security.truststorePassword=
+
+
+# SSL settings for requests made in the lcm-server module to another LCM
+lcm.client.security.truststore=certificates/lcm-truststore.jks
+lcm.client.security.truststorePassword=storepass
 lcm.client.security.truststoreType=JKS
+
+
 # Set this to true if you want to run on HTTP in case of HTTPS misconfiguration;
 # when 'false' and on HTTPS a redirect HTTP -> HTTPS is setup.
 # Please be aware that, as the name suggests, this introduces a safety
@@ -183,13 +186,13 @@ lcm.server.security.encryption.key={{LCM_Server_Security_Encryption_Key}}
 # bin, logs etc...
 #
 #Setting for Grizzly server in lcm-ui module.
-lcm.ui.server.security.keystore=certificates/client.p12
-lcm.ui.server.security.keystoreType=pkcs12
+lcm.ui.server.security.keystore=certificates/ui-keystore.jks
+lcm.ui.server.security.keystoreType=JKS
 lcm.ui.server.security.keystorePassword=storepass
 lcm.ui.server.security.keystoreAlias=cert-ui
-lcm.ui.server.security.keystoreKeypass=storepass
+lcm.ui.server.security.keystoreKeypass=keypass
 #Requests to the lcm-server module will use bellow settings
-lcm.ui.client.security.truststore=certificates/ui.keystore
+lcm.ui.client.security.truststore=certificates/ui-truststore.jks
 lcm.ui.client.security.truststorePassword=storepass
 lcm.ui.client.security.truststoreType=JKS
 #
@@ -209,7 +212,7 @@ lcm.ui.client.security.truststoreType=JKS
 lcm.ui.server.unsafe=false
 #
 #Link to the server certificate - in the UI there is download link
-lcm.ui.client.security.server.certificate=${PWD}/src/main/resources/certificates/lcm-certificate.cer
+lcm.ui.client.security.server.certificate=certificates/lcm-certificate.cer
 """)
 
 log4j_server_properties = default('configurations/lcm_logs/log4j-server_properties', """

@@ -110,7 +110,7 @@
     				 {"Mount": "/tmp", "Size" : 5,   "Attach" : "/dev/sdf" } ]
   },
   { "Name" : "lcm",
-    "Count" : 1,
+    "Count" : -1,
     "InstanceType" : "m1.medium",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/opt",   "Size" : 2, "Attach" : "/dev/sdb" },

@@ -28,9 +28,9 @@ LCM Id is used in the communication between LCMs when it is public.</description
       <value>/opt/lcm</value>
       <description>LCM destination directory</description>
     </property>
-    <property>
+    <property require-input="true">
       <name>LCM_UI_URL</name>
-      <value>localhost</value>
+      <value></value>
       <description>LCM Web UI binding FQDN.</description>
     </property>
 	<property>
@@ -43,9 +43,9 @@ LCM Id is used in the communication between LCMs when it is public.</description
       <value>4444</value>
       <description>LCM UI Secure http binding port</description>
     </property>
-    <property>
+    <property require-input="true">
       <name>LCM_Server_URL</name>
-      <value>localhost</value>
+      <value></value>
       <description>LCM Server binding FQDN</description>
     </property>
     <property>

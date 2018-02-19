@@ -27,9 +27,11 @@ hostname = config["hostname"]
 
 systemd_lcmserver_unitfile_path = "/usr/lib/systemd/system/lcm-server.service"
 
+LCM_UI_access_scheme = default('configurations/lcm_application/LCM_UI_access_scheme', 'https')
+
 systemd_lcmui_unitfile_path = "/usr/lib/systemd/system/lcm-ui.service"
 
-lcm_releaseversion = default('/configurations/lcm_application/lcm_releaseversion', '0.2.4-SNAPSHOT')
+lcm_releaseversion = default('configurations/lcm_application/lcm_releaseversion', '0.2.4-SNAPSHOT')
 
 lcm_application_name = default('configurations/lcm_application/lcm_application_name', 'lcmapp')
 

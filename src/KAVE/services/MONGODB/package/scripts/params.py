@@ -89,7 +89,7 @@ processManagement:
 # network interfaces
 net:
   port: {{tcp_port}}
-  bindIp: {{bind_ip}}  # Listen to local interface only, comment to listen on all interfaces.
+  bindIp: {{bind_ip}}
 
 
 #security:

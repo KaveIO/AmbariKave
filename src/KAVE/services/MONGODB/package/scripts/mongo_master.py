@@ -31,7 +31,7 @@ class MongoMaster(MongoBase):
         env.set_params(params)
         self.install_mongo(env)
         Execute("mkdir -p " + params.db_path)
-        kc.chown_r('mongod', params.db_path)
+        kc.chown_r(params.db_path, 'mongod')
     def configure(self, env):
         import params
         env.set_params(params)

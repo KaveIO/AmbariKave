@@ -100,7 +100,7 @@ net:
 #operationProfiling:
 
 #replication:
-
+{{replicationConfig}}
 #sharding:
 
 ## Enterprise-Only Options

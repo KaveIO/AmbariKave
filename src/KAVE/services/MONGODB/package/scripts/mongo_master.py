@@ -20,6 +20,7 @@ import sys
 
 from resource_management import *
 from mongo_base import MongoBase
+import kavecommon as kc
 
 
 class MongoMaster(MongoBase):
@@ -29,8 +30,8 @@ class MongoMaster(MongoBase):
         import params
         env.set_params(params)
         self.install_mongo(env)
-        self.configure(env)
-
+        Execute("mkdir -p " + params.db_path)
+        kc.chown_r('mongod', params.db_path)
     def configure(self, env):
         import params
         env.set_params(params)

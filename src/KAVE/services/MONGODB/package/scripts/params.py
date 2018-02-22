@@ -51,7 +51,12 @@ if mongo_host == hostname:
 if setname in ["None", "False"]:
     if len(mongo_hosts) < 2:
         setname = ""
-
+replicationConfig = ""
+if setname not in [None, False, "None", "False", ""]:
+    replicationConfig = """
+replication:
+  replSetName: {{setname}}
+    """
 set_with_arbiters = (len(mongo_arbiter_hosts) > 0 and setname not in [None, False, "None", "False", ""])
 
 mongodb_conf = default('configurations/mongodb/mongodb_conf', """
@@ -92,7 +97,7 @@ net:
 #operationProfiling:
 
 #replication:
-
+{{replicationConfig}}
 #sharding:
 
 ## Enterprise-Only Options

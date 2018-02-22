@@ -32,18 +32,19 @@ ignore_services = ["GITLAB", "TWIKI", "KAVENAGIOS", "KAVEGANGLIA", "FREEIPA", "J
 
 services = [s for s, ds in base.find_services() if s not in ignore_services]
 
-checks = {"APACHE": ["http://ambari.kave.io/"],
-          "KAVETOOLBOX": ["/opt/KaveToolbox", '/etc/profile.d/kave.sh'],
-          "ESKAPADE": ["/opt/Eskapade", '/etc/profile.d/kave.sh'],  # check this
-          "KAVELANDING": ["http://ambari.kave.io/"],
-          "JENKINS": ["http://ambari.kave.io:8888/login"],
-          "JBOSS": ["http://ambari.kave.io:8888/"],
-          "TWIKI": ["http://ambari.kave.io/twiki/"],
-          "STORM": ["http://ambari.kave.io:8744/index.html"],
-          "MONGODB": ["/var/lib/mongo"],
-          "SONARQUBE": ["http://ambari.kave.io:5051/"],
-          "AIRFLOW": ["http://ambari.kave.io:8082/admin/"],
-          "GITLAB": ["http://ambari.kave.io:7777/"]
+checks = {"APACHE"      : ["http://ambari.kave.io/"],
+          "KAVETOOLBOX" : ["/opt/KaveToolbox", '/etc/profile.d/kave.sh'],
+          "ESKAPADE"    : ["/opt/Eskapade", '/etc/profile.d/kave.sh'],  # check this
+          "KAVELANDING" : ["http://ambari.kave.io/"],
+          "JENKINS"     : ["http://ambari.kave.io:8888/login"],
+          "JBOSS"       : ["http://ambari.kave.io:8888/"],
+          "TWIKI"       : ["http://ambari.kave.io/twiki/"],
+          "STORM"       : ["http://ambari.kave.io:8744/index.html"],
+          "MONGODB"     : ["/var/lib/mongo"],
+          "SONARQUBE"   : ["http://ambari.kave.io:5051/"],
+          "AIRFLOW"     : ["http://ambari.kave.io:8082/admin/"],
+          "GITLAB"      : ["http://ambari.kave.io:7777/"],
+          "LCM"         : ["https://ambari.kave.io:4444"] 
           }
 
 # service.sh will do all services apart from the ignored services

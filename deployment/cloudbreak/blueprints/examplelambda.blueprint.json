@@ -11,6 +11,18 @@
     	}
     },
     {
+      "lcm_security" : {
+        "LCM_Admin_Password" : "DivingIntoDivineWaters",
+        "LCM_Server_Security_Encryption_Key" : "ZDUzZjEwY2Q0YzEy"
+      }
+    },
+    {
+      "lcm_application" : {
+        "LCM_Server_URL" : "lcm.kave.io",
+        "LCM_UI_URL" : "lcm.kave.io"
+      }
+    },
+    {
       "kavenagios" : {
         "nagios_admin_password" : "averylongandannoyingpassword"
       }
@@ -264,6 +276,16 @@
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
+    },
+    {
+      "name" : "lcm",
+      "components" : [
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_CLIENT"      },
+        { "name" : "LCM_SERVER"},
+        { "name" : "LCM_UI"}
+      ],
+      "cardinality" : "1"
     }
   ],
   "Blueprints" : {

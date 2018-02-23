@@ -45,8 +45,6 @@ is_arbiter = (mongo_arbiter_hosts is not None) and (hostname in mongo_arbiter_ho
 if mongo_host == "unknown":
     if bind_ip not in ['0.0.0.0', '127.0.0.1']:
         mongo_host = bind_ip
-if mongo_host == hostname:
-    mongo_host = 'localhost'
 
 if setname in ["None", "False"]:
     if len(mongo_hosts) < 2:

@@ -636,8 +636,12 @@ class CBDeploy():
                     if response.json()["status"].endswith("FAILED") \
                             or (response.json()["cluster"] and response.json()["cluster"]["status"] \
                             and response.json()["cluster"]["status"].endswith("FAILED")):
-                        print str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}. Cluster status- {} : {}",
+                        msg = str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}.",
                                          stack_name, response.json()["status"], response.json()["statusReason"])
+                        if response.json()["cluster"] and response.json()["cluster"]["status"]:
+                            msg+= str.format(" Cluster status: {} - {}", response.json()["cluster"]["status"],
+                                              response.json()["cluster"]["statusReason"])
+                        print msg
                         if kill_failed or kill_all:
                             print str.format("Cluster {} and its infrastructure will be deleted.", stack_name)
                             self.delete_stack_by_name(stack_name)

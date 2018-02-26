@@ -63,13 +63,7 @@
           "name": "ZOOKEEPER_SERVER"
         },
         {
-          "name": "KAVEGANGLIA_SERVER"
-        },
-        {
           "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "KAVEGANGLIA_MONITOR"
         },
         {
           "name": "ZOOKEEPER_CLIENT"
@@ -95,9 +89,6 @@
         },
         {
           "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "KAVEGANGLIA_MONITOR"
         }
       ],
       "cardinality": "1+"
@@ -135,9 +126,6 @@
         },
         {
           "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "KAVEGANGLIA_MONITOR"
         }
       ],
       "cardinality": "1+"

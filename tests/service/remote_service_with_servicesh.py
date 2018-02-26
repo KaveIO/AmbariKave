@@ -38,7 +38,6 @@ class TestAService(base.LDTest):
         deploy_dir = os.path.realpath(os.path.dirname(lD.__file__) + '/../')
         ambari, iid = self.deploy_dev()
         self.pull(ambari)
-        # restart ganglia and nagios
         if self.branch:
             abranch = self.service
         for restart in ["METRICS_MONITOR", "AMBARI_METRICS", "ZOOKEEPER"]:

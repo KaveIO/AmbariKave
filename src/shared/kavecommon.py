@@ -552,7 +552,7 @@ class ApacheScript(res.Script):
             # wait 3 seconds before calling start
             time.sleep(3)
             try:
-                res.Execute("service httpd start")
+                res.Execute("systemctl start httpd")
             except:
                 res.Execute("apachectl graceful")
 
@@ -562,11 +562,16 @@ class ApacheScript(res.Script):
 
     def stop(self, env):
         print "stop apache.."
-        res.Execute('service httpd stop')
+        res.Execute('systmctl stop httpd')
 
     def status(self, env):
         print "checking status..."
-        res.Execute('service httpd status')
+
+        check = sub.Popen('systemctl status httpd', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+            raise res.ComponentIsNotRunning()
+        return True
 
     def restart(self, env):
         print "restart apache..."

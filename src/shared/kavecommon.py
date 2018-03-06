@@ -562,7 +562,7 @@ class ApacheScript(res.Script):
 
     def stop(self, env):
         print "stop apache.."
-        res.Execute('systmctl stop httpd')
+        res.Execute('systemctl stop httpd')
 
     def status(self, env):
         print "checking status..."

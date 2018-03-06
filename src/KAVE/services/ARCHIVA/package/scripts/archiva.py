@@ -64,23 +64,23 @@ class Archiva(Script):
         self.configure(env)
         # stop needed otherwise start fails on RH7
         try:
-            Execute('systemctl stop archiva')
+            Execute('service archiva stop')
         except:
             pass
 
-        Execute('systemctl start archiva > /dev/null')
+        Execute('service archiva start > /dev/null')
 
     def stop(self, env):
-        Execute('systemctl stop archiva')
+        Execute('service archiva stop')
 
     def restart(self, env):
         self.configure(env)
-        Execute('systemctl restart archiva > /dev/null')
+        Execute('service archiva restart > /dev/null')
 
     def status(self, env):
         import subprocess
 
-        check = subprocess.Popen('systemctl status archiva', shell=True)
+        check = subprocess.Popen('service archiva status', shell=True)
         check.wait()
         if int(check.returncode) != 0:
            raise ComponentIsNotRunning()

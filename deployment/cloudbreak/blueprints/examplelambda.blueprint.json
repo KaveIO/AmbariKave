@@ -8,7 +8,7 @@
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
-    	}
+        }
     },
     {
       "lcm_security" : {
@@ -18,8 +18,8 @@
     },
     {
       "lcm_application" : {
-        "LCM_Server_URL" : "lcm.kave.io",
-        "LCM_UI_URL" : "lcm.kave.io"
+        "LCM_Server_URL" : "0.0.0.0",
+        "LCM_UI_URL" : "0.0.0.0"
       }
     },
     {
@@ -32,8 +32,8 @@
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "sonarqube" : {
-    	"sonar_database_user_passwd" : "admin"
-    	}
+        "sonar_database_user_passwd" : "admin"
+        }
     },
     { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711" }  },
     { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
@@ -73,10 +73,10 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "YARN_CLIENT"        },
-	    { "name" : "MAPREDUCE2_CLIENT"  },
-        { "name" : "SLIDER" 		    },
-	    { "name" : "LOGSEARCH_SERVER"   },
-	    { "name" : "INFRA_SOLR"         },
+        { "name" : "MAPREDUCE2_CLIENT"  },
+        { "name" : "SLIDER"             },
+        { "name" : "LOGSEARCH_SERVER"   },
+        { "name" : "INFRA_SOLR"         },
         { "name" : "INFRA_SOLR_CLIENT"  },
         { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
@@ -89,23 +89,23 @@
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "KAVELANDING"          },
         { "name" : "ESKAPADENODE"         },
-	    { "name" : "ZEPPELIN_MASTER"      },
-		{ "name" : "SQOOP"                },
-	    { "name" : "HDFS_CLIENT"          },
-	    { "name" : "YARN_CLIENT"          },
-	    { "name" : "MAPREDUCE2_CLIENT"    },
-		{ "name" : "HIVE_CLIENT"          },
-		{ "name" : "TEZ_CLIENT"           },
-		{ "name" : "SPARK2_CLIENT"         },
+        { "name" : "ZEPPELIN_MASTER"      },
+        { "name" : "SQOOP"                },
+        { "name" : "HDFS_CLIENT"          },
+        { "name" : "YARN_CLIENT"          },
+        { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "HIVE_CLIENT"          },
+        { "name" : "TEZ_CLIENT"           },
+        { "name" : "SPARK2_CLIENT"         },
         { "name" : "OOZIE_CLIENT"         },
         { "name" : "SONARQUBE_RUNNER"     },
-		{ "name" : "STORMSD_CLIENT"       },
-		{ "name" : "MONGODB_CLIENT"       },
+        { "name" : "STORMSD_CLIENT"       },
+        { "name" : "MONGODB_CLIENT"       },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
-        { "name" : "SLIDER" 		      },
+        { "name" : "SLIDER"               },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
         { "name" : "INFRA_SOLR_CLIENT"    },
@@ -134,13 +134,13 @@
         { "name" : "HIVE_CLIENT"            },
         { "name" : "TEZ_CLIENT"             },
         { "name" : "YARN_CLIENT"            },
-	    { "name" : "MAPREDUCE2_CLIENT"      },
+        { "name" : "MAPREDUCE2_CLIENT"      },
         { "name" : "OOZIE_CLIENT"           },
-		{ "name" : "METRICS_MONITOR"        },
-		{ "name" : "ZOOKEEPER_CLIENT"       },
+        { "name" : "METRICS_MONITOR"        },
+        { "name" : "ZOOKEEPER_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "KAVENAGIOS_MONITOR"     },
-        { "name" : "SLIDER" 		        },
+        { "name" : "SLIDER"                 },
         { "name" : "INFRA_SOLR_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
@@ -155,9 +155,9 @@
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
-        { "name" : "SLIDER" 		      },
+        { "name" : "SLIDER"               },
         { "name" : "YARN_CLIENT"          },
-	    { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
@@ -175,8 +175,8 @@
         { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "YARN_CLIENT"          },
-	    { "name" : "MAPREDUCE2_CLIENT"    },
-        { "name" : "SLIDER" 		      },
+        { "name" : "MAPREDUCE2_CLIENT"    },
+        { "name" : "SLIDER"               },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
@@ -192,7 +192,7 @@
         { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
-        		     ],
+                     ],
       "cardinality" : "1+"
     },
     {
@@ -201,7 +201,7 @@
       "components" : [
         { "name" : "APACHE_WEB_MASTER"     },
         { "name" : "WILDFLY_APP_SERVER"    },
-		{ "name" : "MONGODB_CLIENT"        },
+        { "name" : "MONGODB_CLIENT"        },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR"   },
@@ -213,9 +213,9 @@
     {
       "name" : "ci",
       "configurations" : [
-      	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } },
-      	{ "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
-      	],
+        { "sonarqube" : { "sonar_database_user_passwd" : "admin" } },
+        { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
+        ],
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },
         { "name" : "TWIKI_SERVER"          },
@@ -225,20 +225,20 @@
         { "name" : "SONARQUBE_MYSQL_SERVER"},
         { "name" : "SONARQUBE_RUNNER"      },
         { "name" : "KAVETOOLBOXNODE"       },
-	    { "name" : "HDFS_CLIENT"           },
-	    { "name" : "YARN_CLIENT"           },
-	    { "name" : "MAPREDUCE2_CLIENT"     },
-		{ "name" : "HIVE_CLIENT"           },
-		{ "name" : "TEZ_CLIENT"            },
+        { "name" : "HDFS_CLIENT"           },
+        { "name" : "YARN_CLIENT"           },
+        { "name" : "MAPREDUCE2_CLIENT"     },
+        { "name" : "HIVE_CLIENT"           },
+        { "name" : "TEZ_CLIENT"            },
         { "name" : "OOZIE_CLIENT"          },
-		{ "name" : "SPARK2_CLIENT"          },
-		{ "name" : "STORMSD_CLIENT"        },
-		{ "name" : "MONGODB_CLIENT"        },
+        { "name" : "SPARK2_CLIENT"          },
+        { "name" : "STORMSD_CLIENT"        },
+        { "name" : "MONGODB_CLIENT"        },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "KAVENAGIOS_MONITOR"    },
-        { "name" : "SLIDER" 		       },
+        { "name" : "SLIDER"                },
         { "name" : "INFRA_SOLR_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
@@ -302,6 +302,17 @@
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality": "1"
+    },
+    {
+      "name" : "lcm",
+      "components" : [
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "MONGODB_CLIENT"     },
+        { "name" : "LCM_SERVER"         },
+        { "name" : "LCM_UI"             },
+        { "name" : "LOGSEARCH_LOGFEEDER" }
+      ],
+      "cardinality" : "1"
     }
   ],
   "Blueprints" : {

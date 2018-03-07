@@ -1,7 +1,6 @@
 {
   "name": "",
-  "credentialId": 6,
-  "region": "North Europe",
+  "credentialId": null,
   "failurePolicy": {
     "adjustmentType": "BEST_EFFORT",
     "threshold": null
@@ -12,7 +11,6 @@
     "persistentStorage": "cbstore",
     "attachedStorageOption": "SINGLE"
   },
-  "networkId": 4,
   "relocateDocker": true,
   "availabilityZone": null,
   "orchestrator": {

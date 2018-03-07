@@ -1,5 +1,7 @@
 # The ReleaseNotes file
 
+# 3.5-Beta
+
 Contains a list of the released versions with a summary of the main changes in each version.
 
 # v3.5-Beta

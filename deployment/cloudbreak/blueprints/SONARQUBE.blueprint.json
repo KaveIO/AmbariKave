@@ -60,7 +60,7 @@
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "sonarldap",
+    "blueprint_name" : "SONARQUBE",
     "stack_name" : "HDP",
     "stack_version" : "2.6"
   }

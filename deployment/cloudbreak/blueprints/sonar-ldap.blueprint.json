@@ -13,9 +13,9 @@
     { "kavelanding" : {
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
-    	}
+        }
     },
-    {
+        {
       "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",
@@ -26,73 +26,64 @@
         "install_distribution_user": "cloudbreak",
         "install_with_dns": "True"
       }
+    },
+    { "sonarqube" : {
+        "sonar_database_url":"ci.kave.io",
+        "sonar_database_user_passwd" : "admin"
+        }
     }
-   ],
+  ],
   "host_groups" : [
-  {
+      {
       "name" : "freeipa",
       "configurations" : [ ],
       "components" : [
         { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
     },
     {
       "name" : "admin-freeipa",
+      "configurations" : [ ],
       "components" : [
-        { "name" : "AMBARI_SERVER"       },
-        { "name" : "METRICS_COLLECTOR"   },
-        { "name" : "METRICS_GRAFANA"     },
-        { "name" : "METRICS_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "KAVEGANGLIA_SERVER"  },
-        { "name" : "KAVELANDING"         },
-        { "name" : "STORMSD_UI_SERVER"   },
-        { "name" : "STORMSD_LOG_VIEWER"  },
-        { "name" : "STORMSD_CLIENT"      },
-        { "name" : "STORMSD_DRPC_SERVER" }
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_GRAFANA"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
     },
     {
       "name" : "gateway",
+      "configurations" : [      ],
       "components" : [
-        { "name" : "METRICS_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "KAVELANDING"         },
-        { "name" : "STORMSD_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "KAVELANDING"          },
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     }
       ],
       "cardinality" : "1+"
     },
     {
-      "name" : "nimbus",
+      "name" : "ci",
+      "configurations" : [ ],
       "components" : [
-        { "name" : "METRICS_MONITOR"    },
-        { "name" : "ZOOKEEPER_SERVER"   },
-        { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "NIMBUS_SD_MASTER"   },
-        { "name" : "KAVEGANGLIA_MONITOR" }
-      ],
-      "cardinality" : "1"
-    },
-    {
-      "name" : "supervisor",
-      "components" : [
-        { "name" : "METRICS_MONITOR"     },
-        { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      }
       ],
       "cardinality" : "1+"
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "storm",
+    "blueprint_name" : "sonarldap",
     "stack_name" : "HDP",
     "stack_version" : "2.6"
   }

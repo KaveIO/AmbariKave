@@ -33,7 +33,10 @@ for i in range(4):
     servicedirs = servicedirs + glob.glob(destination + ('/*' * i) + '/package/scripts')
 
 servicedirs = list(set([s for s in servicedirs if len(s)]))
-topcopy = os.path.dirname(__file__) + '/../src/shared/kavecommon.py'
+if len(sys.argv) > 2:
+    topcopy = sys.argv[2]
+else:
+    topcopy = os.path.dirname(__file__) + '/../src/shared/kavecommon.py'
 
 # copy from all files to all destinations
 for s in servicedirs:

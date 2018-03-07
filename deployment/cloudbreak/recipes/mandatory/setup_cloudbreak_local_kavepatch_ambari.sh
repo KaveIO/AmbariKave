@@ -18,19 +18,20 @@
 ##############################################################################
 
 #This is a Cloudbreak pre-recipe for the Ambari node.
-#Log at /var/log/recipes/pre-kaveprepatch.log
+#Used when deploying AmbariKave from local Git repo.
+#Log at /var/log/recipes/pre-patchambari-git-{version}.log
 
-#At every release, please update these variables.
-KAVE_VERSION=3.3
+#At every release, please update this variable.
 HDP_STACK=2.6
-KAVE_STACK=$HDP_STACK.$KAVE_VERSION.KAVE
 
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/$KAVE_VERSION-Beta/ambarikave-package-$KAVE_VERSION-Beta.tar.gz
-tar -xzf ambarikave-package-$KAVE_VERSION-Beta.tar.gz -C /var/lib \
---transform "s/$KAVE_STACK/$HDP_STACK/" \
---exclude ambari-server/resources/stacks/HDP/$KAVE_STACK/metainfo.xml \
---exclude ambari-server/resources/stacks/HDP/$KAVE_STACK/services/stack_advisor.py \
---exclude repoinfo.xml
+sudo tar -xzf /home/cloudbreak/kave-patch.tar.gz -C /var/lib \
+--exclude KAVE/metainfo.xml \
+--exclude KAVE/services/stack_advisor.py \
+--exclude KAVE/repos
+sudo rsync -r /var/lib/KAVE/ /var/lib/ambari-server/resources/stacks/HDP/$HDP_STACK
+
+sudo python /home/cloudbreak/dist_kavecommon.py /var/lib/ambari-server/resources/stacks/HDP /var/lib/shared/kavecommon.py
+
 systemctl stop ambari-server
 systemctl start ambari-server

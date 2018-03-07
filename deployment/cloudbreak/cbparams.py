@@ -15,35 +15,32 @@
 #   limitations under the License.
 #
 ##############################################################################
-kave_version = "33-beta"
+
+# ===============================================
+# Cloudbreak details
+# ===============================================
+
 cb_http_url = "http://<cloudbreak pub. IP>"
-cb_https_url = "https:///<cloudbreak pub. IP>"
+cb_https_url = "https://<cloudbreak pub. IP>"
 uaa_port = 8089
-cb_username = "admin@example.com"
-cb_password = "<cloudbreak accounbt password>"
+
+# ===============================================
+# Deployment specific configurations
+# ===============================================
+
+credential_name = "<cloudbreak credential name>"
+network_name = "default-azure-network"
 ssl_verify = False
-recipes = {
-    "patchambari":
-    {
-        "recipeType": "PRE",
-        "description": "Add the KAVE Stack to ambari",
-        "templatePath": "recipes/setup_cloudbreak_kavepatch_ambari.sh"
-    },
-    "fix-hosts-file":
-    {
-        "recipeType": "PRE",
-        "description": "Fix hosts file on all nodes",
-        "templatePath": "recipes/setup_cloudbreak_fixhostsfile_all.sh"
-    },
-    "distibute-private-key":
-    {
-        "recipeType": "PRE",
-        "description": "Distribute private key on all nodes",
-        "templatePath": "recipes/setup_cloudbreak_keydistrib_all.sh"
-    },
-    "limit-ssh-attempts":
-    {
-        "recipeType": "PRE",
-        "description": "Limit unsuccessful ssh attempts rate",
-        "templatePath": "recipes/limit-ssh-attempts.sh"
-    }}
+
+# ===============================================
+# Cloud provider specific configurations
+# ===============================================
+
+cloud_platform = "AZURE"
+
+# -----------------------------------------------
+# Azure
+# -----------------------------------------------
+region = "North Europe"
+adls_enabled = False
+adls_name = "<Azure Data Lake Store name>"

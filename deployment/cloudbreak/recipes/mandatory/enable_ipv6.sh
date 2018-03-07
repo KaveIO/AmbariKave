@@ -1,4 +1,3 @@
-#!/bin/sh
 ##############################################################################
 #
 # Copyright 2017 KPMG Advisory N.V. (unless otherwise stated)
@@ -16,7 +15,5 @@
 #   limitations under the License.
 #
 ##############################################################################
-iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set --name SSH
-iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --rttl --name SSH -j ULOG --ulog-prefix SSH_brute_force
-iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --rttl --name SSH -j DROP
-iptables-save > /etc/sysconfig/iptables 
+
+sysctl -w net.ipv6.conf.lo.disable_ipv6=0

@@ -45,17 +45,21 @@ class NagiosClient(Script):
     def start(self, env):
         import params
         env.set_params(params)
-        Execute('service nrpe start')
+        Execute('systemctl start nrpe')
         Execute('chkconfig nrpe on')
 
     def stop(self, env):
-        Execute("service nrpe stop")
+        Execute("systemctl stop nrpe")
 
     def restart(self, env):
-        Execute("service nrpe restart")
+        Execute("systemctl restart nrpe")
 
     def status(self, env):
-        Execute("service nrpe status")
+        check = subprocess.Popen('systemctl status nrpe', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
 if __name__ == "__main__":
     NagiosClient().execute()

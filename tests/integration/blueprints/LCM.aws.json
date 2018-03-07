@@ -1,0 +1,13 @@
+{
+  "CloudFormation" : {"Script" : "https://s3-ap-southeast-1.amazonaws.com/kpmg-share-bucket/VPC-Creation.txt" },
+  "InstanceGroups" : [
+  { "Name" : "ambari",
+    "Count" : -1,
+    "InstanceType" : "m4.large",
+    "AccessType" : "admin",
+    "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },
+    				 {"Mount": "/var/lib/ambari-server", "Size" : 2,   "Attach" : "/dev/sdc" },
+    				 {"Mount": "/var/lib/ambari-agent", "Size" : 2,   "Attach" : "/dev/sdd" }]
+  }
+  ]
+}

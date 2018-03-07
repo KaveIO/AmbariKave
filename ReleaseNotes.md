@@ -1,6 +1,32 @@
 # The ReleaseNotes file
 
 Contains a list of the released versions with a summary of the main changes in each version.
+
+# v3.5-Beta
+- March 2018
+
+**MAJOR RELEASE**
+
+* The major changes were:
+    1. LCM (LocalCatalogManager) v.0.2.4-Beta  - Manages, Interprets, and Distributes MetaData - was add as automated deployment of Kave on AWS (see releases at https://github.com/KaveIO/LocalCatalogManager/releases )
+    2. New version of ESKAPADE v0.7 - see releases  at https://github.com/KaveIO/Eskapade/releases
+    3. New version of MongoDB v.3.6 
+    4. Removed Kaveganglia from AmbariKave - deprecated, replaced by Ambari Metrics
+    
+* Minor changes were:
+     Cloudbreak deployment improvements and bug fixes:
+
+        - improved error handling
+        - a lot of previously hard-coded data is now configurable - CB credential, volume size/count, node count, security group
+        - FreeIPA included in the CB blueprints
+        - added validations for hostgroups/ blueprints
+        - separate mandatory and custom recipes
+        - Cloudbreak credentials protection
+        - Implement mechanism to stop/delete clusters via Cloudbreak
+        - Add missing License Agreements
+        - Fix broken formatting in documentation
+        - Fix log message in Cloudbreak deployment script
+        
 # v3.4-Beta
 - November 2017
 

@@ -79,8 +79,14 @@ class Dovecot(Script):
         return Execute('nohup service dovecot stop  2> /dev/null > /dev/null < /dev/null &')
 
     def status(self, env):
+        import subprocess
+
         print "checking status..."
-        Execute('service dovecot status')
+        check = subprocess.Popen('service dovecot status', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
 
 if __name__ == "__main__":

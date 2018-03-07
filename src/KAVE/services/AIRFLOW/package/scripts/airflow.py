@@ -115,8 +115,13 @@ class Airflow(kc.ApacheScript):
     def status(self, env):
         import params
         import os
+        import subprocess
 
-        Execute('systemctl status airflow-webserver')
+        check = subprocess.Popen('systemctl status airflow-webserver', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
 
 if __name__ == "__main__":

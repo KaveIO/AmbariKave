@@ -1,0 +1,15 @@
+[Unit]
+Description=Web UI for the LCM service
+After=network.target postgresql.service mysql.service redis.service rabbitmq-server.service
+Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
+
+[Service]
+Type=simple
+User={{lcm_service_user}}
+Group={{lcm_service_user}}
+ExecStart={{lcm_home_dir}}bin/start-ui.sh
+PIDFile=/var/run/lcm-webui.pid
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -75,17 +75,23 @@ class Jenkins(Script):
 
     def start(self, env):
         self.configure(env)
-        Execute('service jenkins start')
+        Execute('systemctl start jenkins')
 
     def stop(self, env):
-        Execute('service jenkins stop')
+        Execute('systemctl stop jenkins')
 
     def restart(self, env):
         self.configure(env)
-        Execute('service jenkins restart')
+        Execute('systemctl restart jenkins')
 
     def status(self, env):
-        Execute('service jenkins status')
+        import subprocess
+
+        check = subprocess.Popen('systemctl status jenkins', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
     def configure(self, env):
         # stop service if running

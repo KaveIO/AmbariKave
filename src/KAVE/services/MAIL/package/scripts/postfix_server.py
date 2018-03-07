@@ -67,7 +67,13 @@ class PostfixSrv(Script):
 
     def status(self, env):
         # print "checking status..."
-        Execute('service postfix status')
+        import subprocess
+
+        check = subprocess.Popen('service postfix status', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
 
 if __name__ == "__main__":

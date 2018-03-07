@@ -131,7 +131,7 @@ class FreeipaServer(Script):
                  mode=0600
                  )
         # Ensure service is started before trying to interact with it!
-        Execute('service ipa start')
+        Execute('systemctl start ipa')
 
         with freeipa.FreeIPA(self.admin_login, self.admin_password_file, False) as fi:
             # set the default shell
@@ -193,13 +193,13 @@ class FreeipaServer(Script):
     def start(self, env):
         self.conf_on_start(env)
         self.distribute_robot_admin_credentials(env)
-        Execute('service ipa start')
+        Execute('systemctl start ipa')
 
     def stop(self, env):
-        Execute('service ipa stop')
+        Execute('systemctl stop ipa')
 
     def restart(self, env):
-        Execute('service ipa restart')
+        Execute('systemctl restart ipa')
 
     def status(self, env):
         # Pretty weird call here. We need to enforce that the keys are
@@ -218,7 +218,11 @@ class FreeipaServer(Script):
             print e, type(e)
             print sys.exc_info()
 
-        Execute('service ipa status')
+        check = subprocess.Popen('systemctl status ipa', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
     def create_base_accounts(self, env, fi):
         """

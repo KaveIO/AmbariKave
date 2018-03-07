@@ -10,6 +10,12 @@
         "AMBARI_ADMIN_PASS" : "admin"
     	}
     },
+    { "mongodb" : {
+    	"tcp_port" : 27017,
+    	"setname" : "rs0",
+    	"db_path" : "/var/lib/mongo/data"
+    	}
+    },
     {
       "ams-grafana-env" : {
         "metrics_grafana_password" : "SnowCapMountainChap"
@@ -41,7 +47,6 @@
     },
     {
       "name" : "replica",
-      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0","db_path" : "/var/lib/mongo/data" } } ],
       "components" : [
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
@@ -52,7 +57,6 @@
     },
     {
       "name" : "arbiter",
-      "configurations" : [ { "mongodb" : {"tcp_port" : 27017, "setname" : "rs0" } } ],
       "components" : [
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },

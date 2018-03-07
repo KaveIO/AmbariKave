@@ -1,0 +1,15 @@
+[Unit]
+Description=Local Catalog Manager service
+After=network.target postgresql.service mysql.service redis.service rabbitmq-server.service
+Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
+
+[Service]
+Type=simple
+User={{lcm_service_user}}
+Group={{lcm_service_user}}
+ExecStart={{lcm_home_dir}}bin/start-server.sh
+PIDFile=/var/run/lcm-server.pid
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

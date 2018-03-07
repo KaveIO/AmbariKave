@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+	<property>
+      <name>lcm_releaseversion</name>
+      <value>0.2.4-SNAPSHOT</value>
+      <description>Version of LCM to install</description>
+    </property>
+    <property>
+      <name>lcm_application_name</name>
+      <value>lcmapp</value>
+      <description>If the application name property is longer than that only the first 12 symbols are taken.
+The LCM id consists three components:
+ - application name which is defined by the user bellow;
+ - unix timestamp;
+ - random alphanum.
+The length of the whole LCM id must be 32.
+LCM Id is used in the communication between LCMs when it is public.</description>
+    </property>
+    <property>
+      <name>lcm_service_user</name>
+      <value>lcm</value>
+      <description>OS service account name to be used by the lcm service</description>
+    </property>
+    <property>
+      <name>lcm_install_dir</name>
+      <value>/opt/lcm</value>
+      <description>LCM destination directory</description>
+    </property>
+    <property require-input="true">
+      <name>LCM_UI_URL</name>
+      <value></value>
+      <description>LCM Web UI binding FQDN.</description>
+    </property>
+	<property>
+      <name>LCM_UI_PORT</name>
+      <value>8081</value>
+      <description>LCM UI http binding port</description>
+    </property>
+    <property>
+      <name>LCM_SecureUI_Port</name>
+      <value>4444</value>
+      <description>LCM UI Secure http binding port</description>
+    </property>
+    <property require-input="true">
+      <name>LCM_Server_URL</name>
+      <value></value>
+      <description>LCM Server binding FQDN</description>
+    </property>
+    <property>
+      <name>LCM_Server_PORT</name>
+      <value>8085</value>
+      <description>LCM Server binding port</description>
+    </property>
+    <property>
+      <name>LCM_SecureServer_Port</name>
+      <value>4445</value>
+      <description>LCM Server SSL binding port</description>
+    </property>
+    <property>
+      <name>LCM_UI_access_scheme</name>
+      <value>https</value>
+      <description>http access scheme for LCM UI. Possible values are http or https</description>
+    </property>
+    <property>
+      <name>LCM_Swagger_PORT</name>
+      <value>8083</value>
+      <description>LCM Swagger port</description>
+    </property>
+    <property>
+        <name>application_properties</name>
+        <value># LCM configuration file
+#
+# The LCM is splitted up in two separate executables. The server and the UI.
+# These both configured with this properties file. the distinction can be easily
+# made by looking at the property names.
+
+############################# Server settings #############################
+
+#The maximum length of the application name property is 12.
+#If the application name property is longer than that only the first 12 symbols are taken.
+#The LCM id consists three components:
+# - application name which is defined by the user bellow;
+# - unix timestamp;
+# - random alphanum.
+#The length of the whole LCM id must be 32.
+# LCM Id is used in the communication between LCMs when it is public.
+
+lcm.server.application.name={{lcm_application_name}}
+
+lcm.server.name={{LCM_Server_URL}}
+lcm.server.port={{LCM_Server_PORT}}
+lcm.server.securePort={{LCM_SecureServer_Port}}
+
+# Example mongo configuration
+lcm.server.storage=mongo
+lcm.server.storage.mongo.host={{lcm_mongodb_host}}
+lcm.server.storage.mongo.port={{lcm_mongodb_port}}
+lcm.server.storage.mongo.database=lcm
+#use syntax like bellow to authenticate
+#username:password@databaseName
+#or leave this field blank for unauthenticated access
+lcm.server.storage.mongo.credentials=
+
+lcm.server.basic.authentication.enabled=true
+lcm.server.session.authentication.enabled=true
+############################# UI settings #############################
+
+# LCM User Interface configuration properties
+lcm.ui.server.name={{LCM_UI_URL}}
+lcm.ui.server.port={{LCM_UI_PORT}}
+lcm.ui.server.securePort={{LCM_SecureUI_Port}}
+
+# In case swagger is enabled REST API documentation  will be available.
+# Go to http://{lcm.server.name}:{lcm.server.swagger.port}/docs for example http://localhost:8082/docs
+# and place in the swagger source box: http://{{LCM_Server_URL}}:{lcm.server.swagger.port}/swagger.json
+lcm.server.swagger.enable=true
+lcm.server.swagger.port={{LCM_Swagger_PORT}}
+		</value>
+		<description>LCM application.properties template.</description>
+	</property>
+</configuration>

@@ -18,7 +18,7 @@
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" } ]
   },
   { "Name" : "replica",
-    "Count" : 3,
+    "Count" : 2,
     "InstanceType" : "m4.large",
     "AccessType" : "none",
     "ExtraDisks" : [ {"Mount": "/var/log", "Size" : 2,   "Attach" : "/dev/sdb" },

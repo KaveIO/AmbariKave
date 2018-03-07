@@ -11,6 +11,18 @@
     	}
     },
     {
+      "lcm_security" : {
+        "LCM_Admin_Password" : "DivingIntoDivineWaters",
+        "LCM_Server_Security_Encryption_Key" : "ZDUzZjEwY2Q0YzEy"
+      }
+    },
+    {
+      "lcm_application" : {
+        "LCM_Server_URL" : "lcm.kave.io",
+        "LCM_UI_URL" : "lcm.kave.io"
+      }
+    },
+    {
       "kavenagios" : {
         "nagios_admin_password" : "averylongandannoyingpassword"
       }

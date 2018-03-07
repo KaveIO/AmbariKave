@@ -63,8 +63,13 @@ class Mysql(Script):
 
     def status(self, env):
         import status_params
+        import subprocess
 
-        Execute('pgrep -l "^%s$"' % status_params.status_daemon_name)
+        check = subprocess.Popen('pgrep -l "^%s$"' % status_params.status_daemon_name, shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
 
 if __name__ == "__main__":

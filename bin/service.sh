@@ -1,4 +1,4 @@
-l#!/bin/bash
+#!/bin/bash
 ##############################################################################
 #
 # Copyright 2016 KPMG Advisory N.V. (unless otherwise stated)
@@ -193,6 +193,8 @@ function runList {
   echo "	STORMSD_CLIENT"
   echo "	TWIKI"
   echo "	AIRFLOW"
+  echo "	LCM_SERVER"
+  echo "	LCM_UI"
   echo ""
 }
 
@@ -325,6 +327,14 @@ elif [ $service = "ESKAPADE" ]; then
 elif [ $service = "ESKAPADEGATE" ]; then
   service="ESKAPADE"
   component="ESKAPADEGATE"
+elif [ $service = "LCM" ]; then
+  component="LCM_UI"
+elif [ $service = "LCM_SERVER" ]; then
+  service="LCM"
+  component="LCM_SERVER"
+elif [ $service = "LCM_UI" ]; then
+  service="LCM"
+  component="LCM_UI"
 else
   echo "ERROR: unknown service caught: $service"
   runHelp

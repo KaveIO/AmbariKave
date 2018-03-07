@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<metainfo>
+	<schemaVersion>2.0</schemaVersion>
+	<services>
+		<service>
+			<name>LCM</name>
+			<comment>The LocalCatalogManager: Manages, Interprets, and
+				Distributes MetaData.
+				This helps Data Scientists in Curating their
+				Data Sets keeping their
+				work reproducible and reusable. The LCM
+				facilitates distribution of
+				data
+				and analytics between different Data
+				Lakes / Data Science environments.
+			</comment>
+			<displayName>LCM</displayName>
+			<version>0.2</version>
+			<components>
+				<component>
+					<name>LCM_SERVER</name>
+					<displayName>LCM Server</displayName>
+					<category>MASTER</category>
+					<cardinality>1+</cardinality>
+					<commandScript>
+						<script>scripts/lcmserver.py</script>
+						<scriptType>PYTHON</scriptType>
+						<timeout>6000</timeout>
+					</commandScript>
+				</component>
+				<component>
+					<name>LCM_UI</name>
+					<displayName>LCM Web UI</displayName>
+					<category>SLAVE</category>
+					<cardinality>1+</cardinality>
+					<commandScript>
+						<script>scripts/lcmui.py</script>
+						<scriptType>PYTHON</scriptType>
+						<timeout>6000</timeout>
+					</commandScript>
+				</component>
+			</components>
+			<osSpecifics>
+				<osSpecific>
+					<osFamily>any</osFamily>
+					<packages>
+						<package>
+							<name>wget</name>
+						</package>
+						<package>
+							<name>java-1.8.0-openjdk</name>
+						</package>
+					</packages>
+				</osSpecific>
+			</osSpecifics>
+			<configuration-dependencies>
+				<config-type>lcm_application</config-type>
+				<config-type>lcm_security</config-type>
+				<config-type>lcm_logs</config-type>
+			</configuration-dependencies>
+			<requiredServices>
+				<service>MONGODB</service>
+			</requiredServices>
+			<quickLinksConfigurations>
+				<quickLinksConfiguration>
+					<fileName>quicklinks.json</fileName>
+					<default>true</default>
+				</quickLinksConfiguration>
+			</quickLinksConfigurations>
+		</service>
+	</services>
+</metainfo>
+

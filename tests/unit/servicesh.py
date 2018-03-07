@@ -27,7 +27,7 @@ class TestServiceSH(unittest.TestCase):
         """
         # this list is a list of things that you can't install with service.sh, probably because the service has
         # multiple components
-        ignore_services = ["KAVEZOE"]
+        ignore_services = ["KAVEZOE", "LCM"]
         # find the name of all our services
         # check they exist at least twice in service.sh
         import os

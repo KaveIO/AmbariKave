@@ -20,6 +20,7 @@ import sys
 
 from resource_management import *
 from mongo_base import MongoBase
+import kavecommon as kc
 
 
 class MongoMaster(MongoBase):
@@ -29,7 +30,8 @@ class MongoMaster(MongoBase):
         import params
         env.set_params(params)
         self.install_mongo(env)
-        self.configure(env)
+        Execute("mkdir -p " + params.db_path)
+        kc.chown_r(params.db_path, 'mongod')
 
     def configure(self, env):
         import params
@@ -59,7 +61,7 @@ class MongoMaster(MongoBase):
                 Execute('mongo < /tmp/replicaset_conf.js > /tmp/replicaset_debug.txt 2>&1&')
 
     def stop(self, env):
-        print "stop services.."
+        print "stopping mongodb.."
         Execute('service mongod stop')
 
     def restart(self, env):
@@ -78,9 +80,12 @@ class MongoMaster(MongoBase):
         self.start(env)
 
     def status(self, env):
-        print "checking status..."
-        Execute('service mongod status')
+        import subprocess
 
-
+        check = subprocess.Popen('systemctl is-active --quiet mongod', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+            raise ComponentIsNotRunning()
+        return True
 if __name__ == "__main__":
     MongoMaster().execute()

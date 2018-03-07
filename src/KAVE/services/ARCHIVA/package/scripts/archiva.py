@@ -78,7 +78,13 @@ class Archiva(Script):
         Execute('service archiva restart > /dev/null')
 
     def status(self, env):
-        Execute('service archiva status')
+        import subprocess
+
+        check = subprocess.Popen('service archiva status', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
     def configure(self, env):
         import params

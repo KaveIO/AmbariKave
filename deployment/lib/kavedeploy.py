@@ -660,7 +660,8 @@ def _addtoolboxtoremote(remote, github_key_location, git_origin, dest_type="work
     br = ""
     if len(branch) and branch != "HEAD" and branch != "head" and branch != "master":
         br = "-b " + branch
-    remote.git("clone " + br + " " + git_origin.split(':')[0] + ":" + toolbox_proj)
+    remote.git("clone " + br + " " + git_origin.split(':')[0] +
+               ":" + git_origin.split(':')[1] + ":" + toolbox_proj)
     if not background:
         remote.run(installcmd)
     else:

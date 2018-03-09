@@ -32,7 +32,7 @@ from requests.exceptions import RequestException
 
 requests.packages.urllib3.disable_warnings()
 
-KAVE_VERSION = "34-beta"
+KAVE_VERSION = "35-beta"
 
 class CBDeploy():
 

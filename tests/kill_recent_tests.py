@@ -294,8 +294,8 @@ sfails = len([s for s in i_stopped if s in failed])
 vtkfails = len([s for s in vol_to_kill if s in failed])
 stkfails = len([s for s in stacks_to_delete if s in failed])
 # at least one failure, at least one request, and they all failed, this should be a big problem!
-tmyxhfails = (yxhfails and len(i_younger_than_x_hours) and oodfails == len(i_younger_than_x_hours))
-tmsfails = (sfails and len(i_stopped) and oowfails == len(i_stopped))
+tmyxhfails = (yxhfails and len(i_younger_than_x_hours) and yxhfails == len(i_younger_than_x_hours))
+tmsfails = (sfails and len(i_stopped) and sfails == len(i_stopped))
 tmvtkfails = (vtkfails and len(vol_to_kill) and vtkfails == len(vol_to_kill))
 tmstkfails = (stkfails and len(stacks_to_delete) and stkfails == len(stacks_to_delete))
 if tmyxhfails or tmsfails or tmvtkfails or tmstkfails:

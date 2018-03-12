@@ -38,7 +38,7 @@ class Eskapade(Script):
         import params
         import kavecommon as kc
 
-        package = 'Eskapade-' + params.releaseversion + '.tar.gz'
+        package = 'v' + params.releaseversion + '.tar.gz'
         Execute('yum clean all')
         self.install_packages(env)
         env.set_params(params)
@@ -57,17 +57,11 @@ class Eskapade(Script):
         eskapade_path = 'Eskapade/' + params.releaseversion + ''
         install_dir = params.top_dir + eskapade_path
         os.chdir(self.sttmpdir)
-        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="Eskapade")
-        Execute('tar -xzf ' + package)
+        Execute('wget https://github.com/KaveIO/Eskapade/archive/'+ package)
         Execute('mkdir -p ' + install_dir)
-        Execute('cp -R Eskapade-' + params.releaseversion + '/* ' + install_dir)
+        Execute('tar xzf -C 0.7 --strip 1' + package + ' -C ' + install_dir + ' --strip 1')
         os.chdir(install_dir)
-        Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -r requirements.txt'")
-
-        File("/etc/profile.d/eskapade.sh",
-             content=Template("eskapade.sh.j2", setup_script=install_dir + '/setup.sh'),
-             mode=0644
-             )
+        Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -e " + "../" + params.releaseversion + "'")
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/eskapade")

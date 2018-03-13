@@ -59,7 +59,7 @@ class Eskapade(Script):
         os.chdir(self.sttmpdir)
         Execute('wget https://github.com/KaveIO/Eskapade/archive/'+ package)
         Execute('mkdir -p ' + install_dir)
-        Execute('tar xzf -C 0.7 --strip 1' + package + ' -C ' + install_dir + ' --strip 1')
+        Execute('tar xzf ' + package + ' -C ' + install_dir + ' --strip 1')
         os.chdir(install_dir)
         Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -e " + "../" + params.releaseversion + "'")
         os.chdir(topdir)

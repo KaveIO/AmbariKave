@@ -9,12 +9,6 @@
       "eskapade": {
         "top_dir": "/opt/"
       }
-    },
-    {
-      "kavetoolbox" : {
-        "custom_install_template" :
-            "import kavedefaults as cnf\ncnf.li.InstallTopDir=\"{{top_dir}}\""
-      }
     }
   ],
   "host_groups": [

@@ -109,9 +109,8 @@ class TestEskapadeCluster(TestCluster):
         # Since all tests in the suite are run for Centos7, no need to check for OS
 
         test_type = "integration"
-        host.run("sed -i.bak -e '93,103d' /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                   " source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                   " cd /opt/Eskapade/*/tests; eskapade_trial")
+        host.run(" source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                 " cd /opt/Eskapade/*/tests; eskapade_trial")
         """
         TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
         ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"

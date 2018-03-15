@@ -1,0 +1,236 @@
+{
+    "configurations": [{
+            "ams-site": {
+                "timeline.metrics.service.operation.mode": "embedded"
+            }
+        },
+        {
+            "ams-grafana-env": {
+                "metrics_grafana_password": "grafanah"
+            }
+        },
+        {
+            "kafka-broker": {
+                "properties": {
+                    "ssl.truststore.location": "/home/kafka/certs/kafka.client.truststore.jks",
+                    "ssl.truststore.password": "masterpass",
+                    "listeners": "SSL://localhost:6668",
+                    "ssl.keystore.location": "/home/kafka/certs/kafka.client.keystore.jks",
+                    "security.inter.broker.protocol": "SSL",
+                    "ssl.keystore.password": "masterpass",
+                    "ssl.key.password": "masterpass",
+                    "delete.topic.enable": "true",
+                    "kafka.metrics.reporters": "org.apache.hadoop.metrics2.sink.kafka.KafkaTimelineMetricsReporter",
+                    "connections.max.idle.ms": "2400000"                    
+                }
+            }
+        },
+        {
+            "hive-env": {
+                "properties": {
+                    "hive.execution.engine": "mr"
+                }
+            }
+        },
+        {
+            "oozie-site": {
+                "properties": {
+                    "oozie.service.HadoopAccessorService.supported.filesystems": "hdfs,adl"
+                }
+            }
+        },
+        {
+            "spark2-defaults": {
+                "properties": {
+                    "spark.eventLog.dir": "adl://cmacceptancelakestore.azuredatalakestore.net/spark2-history/",
+                    "spark.history.fs.logDirectory": "adl://cmacceptancelakestore.azuredatalakestore.net/spark2-history/"
+                }
+            }
+        },
+        {
+            "hdfs-site": {
+                "properties": {
+                    "dfs.datanode.data.dir": "/hadoop/hdfs/data,/hadoopfs/fs1/hadoop/hdfs/data,/mnt/resource/hadoop/hdfs/data,/hadoopfs/fs2/hadoop/hdfs/data"
+                }
+            }
+        },
+        {
+            "freeipa": {
+                "ldap_bind_password": "testtestdirpass1234",
+                "directory_password": "testtestdirpass1234",
+                "initial_users_and_groups": "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
+                "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
+                "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
+                "install_distribution_user": "cloudbreak",
+                "forwarders": "168.63.129.16",
+                "install_with_dns": "True"
+            }
+        }
+    ],
+    "host_groups": [{
+            "components": [{
+                    "name": "HIVE_SERVER"
+                },
+                {
+                    "name": "SPARK2_CLIENT"
+                },
+                {
+                    "name": "METRICS_MONITOR"
+                },
+                {
+                    "name": "TEZ_CLIENT"
+                },
+                {
+                    "name": "ZOOKEEPER_CLIENT"
+                },
+                {
+                    "name": "HCAT"
+                },
+                {
+                    "name": "WEBHCAT_SERVER"
+                },
+                {
+                    "name": "SECONDARY_NAMENODE"
+                },
+                {
+                    "name": "SLIDER"
+                },
+                {
+                    "name": "ZOOKEEPER_SERVER"
+                },
+                {
+                    "name": "METRICS_COLLECTOR"
+                },
+                {
+                    "name": "METRICS_GRAFANA"
+                },
+                {
+                    "name": "YARN_CLIENT"
+                },
+                {
+                    "name": "HDFS_CLIENT"
+                },
+                {
+                    "name": "MYSQL_SERVER"
+                },
+                {
+                    "name": "SPARK2_THRIFTSERVER"
+                },
+                {
+                    "name": "NAMENODE"
+                },
+                {
+                    "name": "ZEPPELIN_MASTER"
+                },
+                {
+                    "name": "PIG"
+                },
+                {
+                    "name": "MAPREDUCE2_CLIENT"
+                },
+                {
+                    "name": "AMBARI_SERVER"
+                },
+                {
+                    "name": "HIVE_CLIENT"
+                },
+                {
+                    "name": "RESOURCEMANAGER"
+                },
+                {
+                    "name": "HCAT"
+                },
+                {
+                    "name": "SLIDER"
+                },
+                {
+                    "name": "HISTORYSERVER"
+                },
+                {
+                    "name": "APP_TIMELINE_SERVER"
+                },
+                {
+                    "name": "SPARK2_JOBHISTORYSERVER"
+                },
+                {
+                    "name": "HIVE_METASTORE"
+                },
+                {
+                    "name": "OOZIE_SERVER"
+                },
+                {
+                    "name": "OOZIE_CLIENT"
+                }
+            ],
+            "configurations": [
+
+            ],
+            "name": "admin",
+            "cardinality": "1"
+        },
+        {
+            "components": [{
+                "name": "FREEIPA_SERVER"
+            },{
+                "name": "FREEIPA_CLIENT"
+            }],
+            "configurations": [
+
+            ],
+            "name": "freeipa",
+            "cardinality": "1"
+        },
+        {
+            "components": [{
+                    "name": "NODEMANAGER"
+                },
+                {
+                    "name": "DATANODE"
+                },
+                {
+                    "name": "YARN_CLIENT"
+                },
+                {
+                    "name": "HDFS_CLIENT"
+                },
+                {
+                    "name": "SPARK2_CLIENT"
+                },
+                {
+                    "name": "METRICS_MONITOR"
+                },
+                {
+                    "name": "TEZ_CLIENT"
+                },
+                {
+                    "name": "ZOOKEEPER_CLIENT"
+                },
+                {
+                    "name": "PIG"
+                },
+                {
+                    "name": "KAFKA_BROKER"
+                },
+                {
+                    "name": "MAPREDUCE2_CLIENT"
+                },
+                {
+                    "name": "HIVE_CLIENT"
+                },
+                {
+                    "name": "OOZIE_CLIENT"
+                }
+            ],
+            "configurations": [
+
+            ],
+            "name": "worker",
+            "cardinality": "2"
+        }
+    ],
+    "Blueprints": {
+        "blueprint_name": "cmcluster",
+        "stack_name": "HDP",
+        "stack_version": "2.6"
+    }
+}

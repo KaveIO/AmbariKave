@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 ##############################################################################
 #
 # Copyright 2017 KPMG Advisory N.V. (unless otherwise stated)

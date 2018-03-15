@@ -20,16 +20,16 @@
 # Cloudbreak details
 # ===============================================
 
-cb_http_url = "http://<cloudbreak pub. IP>"
-cb_https_url = "https://<cloudbreak pub. IP>"
+cb_http_url = "http://cloudbreak-controller-43ddefqr4cck4.westeurope.cloudapp.azure.com"    #CHANGEME
+cb_https_url = "https://cloudbreak-controller-43ddefqr4cck4.westeurope.cloudapp.azure.com"  #CHANGEME
 uaa_port = 8089
 
 # ===============================================
 # Deployment specific configurations
 # ===============================================
 
-credential_name = "<cloudbreak credential name>"
-network_name = "default-azure-network"
+credential_name = "cmcred"             #CHANGEME
+network_name = "default-azure-network"  #CHANGEME
 ssl_verify = False
 
 # ===============================================
@@ -41,6 +41,6 @@ cloud_platform = "AZURE"
 # -----------------------------------------------
 # Azure
 # -----------------------------------------------
-region = "North Europe"
-adls_enabled = False
-adls_name = "<Azure Data Lake Store name>"
+region = "West Europe"                      #CHANGEME
+adls_enabled = True                         #CHANGEME
+adls_name = "cmacceptancelakestore"         #CHANGEME

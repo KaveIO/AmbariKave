@@ -58,6 +58,15 @@
         "recipeType": "POST",
         "description": "Modify default security settings",
         "templatePath": "recipes/mandatory/ipa_security_settings.sh"
+    },
+    "kafka-certificates-automation": {
+        "recipeType": "PRE",
+        "description": "Creates and installs the JKS archives for a Kafka secure installation",
+        "templatePath": "recipes/custom/kafka_ssl.sh"
+    },
+    "kafka-configroups": {
+        "recipeType": "POST",
+        "description": "Defines config groups for each broker in order to have them listening on their own public IP",
+        "templatePath": "recipes/custom/kafka_configroups.sh"
     }
-    
 }

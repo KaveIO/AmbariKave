@@ -1,186 +1,25 @@
 {
     "admin": {
-        "machine-type": "Standard_D2_v2",
-        "volume-size": 30,
+        "machine-type": "Standard_D3",
+        "volume-size": 48,
         "volume-count": 1,
         "instance-type" : "GATEWAY",
-        "security-group" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-cm",
         "node-count" : 1,
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
                     "limit-ssh-attempts",
-                    "ipv6-lo-enable"
-                    ]
-    },
-    "admin-freeipa": {
-        "machine-type": "Standard_D2_v2",
-        "volume-size": 30,
-        "volume-count": 1,
-        "instance-type" : "GATEWAY",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "patchambari",
-                    "fix-hosts-file",
-                    "limit-ssh-attempts",
-                    "ipv6-lo-enable",
                     "install-ipa-clients",
                     "ipa-security-settings"
                     ]
     },
-    "gateway": {
-        "machine-type": "Standard_D2_v2",
-        "volume-size": 150,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "namenode-1": {
-        "machine-type": "Standard_F4",
-        "volume-size": 50,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "namenode-2": {
-        "machine-type": "Standard_F4",
-        "volume-size": 50,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "data": {
-        "machine-type": "Standard_D2_v2",
-        "volume-size": 50,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "mongo": {
-        "machine-type": "Standard_D1_v2",
-        "volume-size": 50,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "as": {
-        "machine-type": "Standard_F2",
-        "volume-size": 50,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "ci": {
-        "machine-type": "Standard_F4",
-        "volume-size": 50,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "nimbus": {
-        "machine-type": "Standard_F2",
-        "volume-size": 30,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "supervisor": {
-        "machine-type": "Standard_D1_v2",
-        "volume-size": 40,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "kafka": {
-        "machine-type": "Standard_D1_v2",
-        "volume-size": 40,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "ambari": {
-        "machine-type": "Standard_D2_v2",
-        "volume-size": 30,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "patchambari",
-                    "fix-hosts-file",
-                    "limit-ssh-attempts",
-                    "ipv6-lo-enable"
-                    ]
-    },
-    "airflow": {
-        "machine-type": "Standard_A2_v2",
-        "volume-size": 20,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
     "freeipa": {
-        "machine-type": "Standard_D1_v2",
-        "volume-size": 20,
+        "machine-type": "Standard_D2",
+        "volume-size": 48,
         "volume-count": 1,
         "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
+        "security-group" : "default-cm",
         "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",
@@ -188,40 +27,18 @@
                     "ipv6-lo-enable"
                     ]
     },
-    "replica": {
-        "machine-type": "Standard_D2_v2",
-        "volume-size": 50,
-        "volume-count": 1,
+    "worker": {
+        "machine-type": "Standard_D4_v2",
+        "volume-size": 48,
+        "volume-count": 3,
         "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
+        "security-group" : "default-cm",
+        "node-count" : 2,
         "recipes": [
                     "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "arbiter": {
-        "machine-type": "Standard_D1_v2",
-        "volume-size": 20,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
-                    ]
-    },
-    "test": {
-        "machine-type": "Standard_D1_v2",
-        "volume-size": 20,
-        "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
-        "node-count" : 1,
-        "recipes": [
-                    "fix-hosts-file",
-                    "limit-ssh-attempts"
+                    "limit-ssh-attempts",
+                    "kafka-certificates-automation",
+                    "kafka-configroups"
                     ]
     }
 }

@@ -134,9 +134,9 @@ class TestServiceEskapade(TestServiceBlueprint):
         import subprocess as sub
 
         test_type = "unit"
-        ambari.run("sed -i.bak -e '93,103d' /opt/KaveToolbox/pro/scripts/KaveEnv.sh"
-                   "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                   "cd /opt/Eskapade/*/tests; eskapade_trial")
+        ambari.run("sed -i.bak -e '93,103d' /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   " source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   " cd /opt/Eskapade/*/tests; eskapade_trial")
         """
         TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
         ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"

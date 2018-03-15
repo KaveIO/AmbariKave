@@ -134,15 +134,9 @@ class TestServiceEskapade(TestServiceBlueprint):
         import subprocess as sub
 
         test_type = "unit"
-        proc = sub.Popen(ambari.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                                            " source /opt/Eskapade/*/setup.sh;",
-                                            " run_tests.py {}".format(test_type)],
-                         shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
-        output, err = proc.communicate()
-
-        self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
-        self.assertEqual(nowhite(err)[-2:], "OK",
-                         "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
+        ambari.run("sed -i.bak -e '93,103d' /opt/KaveToolbox/pro/scripts/KaveEnv.sh"
+                   "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                   "cd /opt/Eskapade/*/tests; eskapade_trial")
         """
         TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
         ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"

@@ -1,3 +1,6 @@
+tmp/
+.pydevproject
+.project
 *.pyc
 *checkpoint*
 build

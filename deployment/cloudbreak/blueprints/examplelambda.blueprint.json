@@ -29,8 +29,11 @@
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
+    { "hdfs-log4j" : { "hadoop_log_max_backup_size" : "128MB", "hadoop_log_number_of_backup_files" : "5",
+                       "hadoop_security_log_max_backup_size" : "128MB", "hadoop_security_log_number_of_backup_files" : "10" } },
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "yarn-log4j" : { "yarn_rm_summary_log_max_backup_size" : "128MB", "yarn_rm_summary_log_number_of_backup_files" : "10" } },
     { "sonarqube" : {
         "sonar_database_user_passwd" : "admin"
         }

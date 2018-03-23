@@ -556,6 +556,20 @@ class CBDeploy():
             print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
             return True
 
+    def find_nodes_with_component(self, blueprint, component):
+        nodes = []
+        hgs = blueprint['ambariBlueprint']['host_groups']
+        for hg in hgs:
+            for comp in hg["components"]:
+                if comp["name"] == component:
+                    nodes.append(hg["name"])
+        return nodes
+
+    def get_node_public_ip(self, stack, groupName):
+        for ig in stack["instanceGroups"]:
+            if ig["group"] == groupName:
+                return ig["metadata"][0]["publicIp"]
+
     def distribute_package(self, remoteip):
         import subprocess
 
@@ -565,16 +579,40 @@ class CBDeploy():
                          "kave-patch.tar.gz", "../../dev/dist_kavecommon.py", "cloudbreak@" + remoteip + ":~"])
         subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
 
+    def distribute_keys(self, remoteip, ipa_server_node = False):
+        import subprocess
+        subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                          "cloudbreak@52.169.105.45", "sudo", "mkdir", "-p", "/root/.ssh"])
+
+        subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                         "cloudbreak@" + remoteip,
+                         "sudo", "cp", "/home/cloudbreak/.ssh/authorized_keys", "/root/.ssh/authorized_keys"])
+
+        if ipa_server_node:
+            subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
+                             os.path.expanduser('~')+"/.ssh/id_rsa", "cloudbreak@" + remoteip + ":~"])
+            subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                             "cloudbreak@" + remoteip, "sudo", "mv", "/home/cloudbreak/id_rsa", "/root/.ssh/id_rsa"])
+            subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                             "cloudbreak@" + remoteip, "sudo", "chmod", "600", "/root/.ssh/id_rsa"])
+
     def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
 
+        freeipa_included = False
+        freeipa_server_list = []
         try:
             credential = self.get_credential()
             blueprint, stack_id, stack_name = self.create_stack(name, credential)
-            if not local_repo:
-                cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, local_repo)
+            # check if the blueprint has FreeIPA included and provide additional installation steps
+            # due to problems with FreeIPA installation
+            freeipa_server_list = self.find_nodes_with_component(blueprint, "FREEIPA_SERVER")
+            if freeipa_server_list:
+                freeipa_included = True
+#             if not (local_repo or freeipa_included):
+#                 cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, local_repo)
         except Exception as e:
             print "FAILURE: ", e
             return
@@ -594,7 +632,7 @@ class CBDeploy():
         max_retries = 5
         latest_status = ""
         latest_status_reason = ""
-        ipset=False
+        cluster_requested = False
 
         while timer < timeout:
             response = requests.get(
@@ -646,18 +684,36 @@ class CBDeploy():
                             print str.format("Cluster {} and its infrastructure will be deleted.", stack_name)
                             self.delete_stack_by_name(stack_name)
                         return False
+                # infrastructure is ready, but cluster is not requested yet
+                if response.json() and response.json().get("status") and response.json().get("status")=="AVAILABLE" and \
+                        not cluster_requested:
+                    if local_repo:
+                        ambarinode=[node for node in response.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
+                        if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
+                            ambariIp = ambarinode['metadata'][0]['publicIp']
+                            self.distribute_package(ambariIp)
+                    if freeipa_included:
+                        hg_names = [hg["name"] for hg in blueprint["ambariBlueprint"]["host_groups"]]
+                        for hg_name in hg_names:
+                            ip = self.get_node_public_ip(response.json(), hg_name)
+                            if hg_name in freeipa_server_list:
+                                self.distribute_keys(ip, True)
+                            else:
+                                self.distribute_keys(ip)
+                    cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, True)
+                    cluster_requested = True
                 # reset retries_count after success
                 if retries_count != 0:
                     retries_count = 0
                 # when deploying from local repo
                 # transfer the KAVE patch to the remote Ambari node when IP is known
-                if local_repo and not ipset:
-                    ambarinode=[node for node in response.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
-                    if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
-                        ipset = ambarinode['metadata'][0]['publicIp']
-                        if ipset:
-                            self.distribute_package(ipset)
-                            cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, True)
+#                 if (local_repo or freeipa_included) and not stack_ready:
+#                     ambarinode=[node for node in response.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
+#                     if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
+#                         ipset = ambarinode['metadata'][0]['publicIp']
+#                         if ipset:
+#                             self.distribute_package(ipset)
+#                             cluster = self.create_cluster(blueprint, stack_id, stack_name, credential, True)
 
                 time.sleep(interval)
                 timer = int(time.time())

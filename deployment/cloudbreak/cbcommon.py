@@ -582,8 +582,7 @@ class CBDeploy():
     def distribute_keys(self, remoteip, ipa_server_node = False):
         import subprocess
         subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
-                          "cloudbreak@52.169.105.45", "sudo", "mkdir", "-p", "/root/.ssh"])
-
+                          "cloudbreak@" + remoteip, "sudo", "mkdir", "-p", "/root/.ssh"])
         subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
                          "cloudbreak@" + remoteip,
                          "sudo", "cp", "/home/cloudbreak/.ssh/authorized_keys", "/root/.ssh/authorized_keys"])

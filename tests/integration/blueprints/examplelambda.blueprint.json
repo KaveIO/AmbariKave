@@ -22,6 +22,11 @@
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
     { "yarn-log4j" : { "yarn_rm_summary_log_max_backup_size" : "128MB", "yarn_rm_summary_log_number_of_backup_files" : "10" } },
+    { "hive-log4j" : { "hive_log_maxfilesize": "128", "hive_log_maxbackupindex" : "15" } },
+    { "hive-log4j2" : { "hive2_log_maxfilesize": "128", "hive2_log_maxbackupindex" : "15" } },
+    { "llap-cli-log4j2" : { "llap_cli_log_maxfilesize" : "128", "llap_cli_log_maxbackupindex" : "15" } },
+    { "llap-daemon-log4j" : { "hive_llap_log_maxfilesize" : "128", "hive_llap_log_maxbackupindex" : "120"} },
+    { "webhcat-log4j" : { "webhcat_log_maxfilesize" : "128", "webhcat_log_maxbackupindex" : "10" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "forwarders": "10.0.0.10",

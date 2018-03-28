@@ -25,7 +25,7 @@
   ],
   "host_groups" : [
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
@@ -57,6 +57,7 @@
         { "name" : "KAVELANDING"          },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name" : "FREEIPA_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"       }
 
       ],
@@ -68,6 +69,7 @@
       "components" : [
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
+        { "name" : "FREEIPA_CLIENT"       },
         { "name" : "KAVEGANGLIA_MONITOR"        }
       ],
       "cardinality" : "1+"

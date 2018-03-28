@@ -59,7 +59,7 @@
   ],
   "host_groups" : [
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
@@ -78,6 +78,7 @@
         { "name" : "LOGSEARCH_SERVER"   },
         { "name" : "INFRA_SOLR"         },
         { "name" : "INFRA_SOLR_CLIENT"  },
+        { "name": "FREEIPA_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
       "cardinality" : "1"
@@ -109,6 +110,7 @@
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
         { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name": "FREEIPA_CLIENT"        },
         { "name" : "AIRFLOW_SERVER"       }
 
       ],
@@ -142,6 +144,7 @@
         { "name" : "KAVENAGIOS_MONITOR"     },
         { "name" : "SLIDER"                 },
         { "name" : "INFRA_SOLR_CLIENT"      },
+        { "name": "FREEIPA_CLIENT"          },
         { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
       "cardinality" : "1"
@@ -159,6 +162,7 @@
         { "name" : "YARN_CLIENT"          },
         { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name": "FREEIPA_CLIENT"        },
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
@@ -178,6 +182,7 @@
         { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "SLIDER"               },
         { "name" : "INFRA_SOLR_CLIENT"    },
+        { "name": "FREEIPA_CLIENT"        },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1+"
@@ -189,6 +194,7 @@
         { "name" : "MONGODB_CLIENT"       },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
+        { "name": "FREEIPA_CLIENT"        },
         { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
@@ -204,6 +210,7 @@
         { "name" : "MONGODB_CLIENT"        },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
+        { "name": "FREEIPA_CLIENT"         },
         { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "KAVENAGIOS_MONITOR"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
@@ -240,6 +247,7 @@
         { "name" : "KAVENAGIOS_MONITOR"    },
         { "name" : "SLIDER"                },
         { "name" : "INFRA_SOLR_CLIENT"     },
+        { "name": "FREEIPA_CLIENT"         },
         { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"
@@ -257,6 +265,7 @@
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "KAVENAGIOS_MONITOR" },
+        { "name" : "FREEIPA_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"
@@ -271,6 +280,7 @@
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "KAVENAGIOS_MONITOR"  },
+        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
@@ -285,6 +295,7 @@
         { "name" : "ZOOKEEPER_CLIENT" },
         { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "KAVENAGIOS_MONITOR"  },
+        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
@@ -310,6 +321,7 @@
         { "name" : "MONGODB_CLIENT"     },
         { "name" : "LCM_SERVER"         },
         { "name" : "LCM_UI"             },
+        { "name" : "FREEIPA_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1"

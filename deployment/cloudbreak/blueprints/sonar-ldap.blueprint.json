@@ -46,7 +46,7 @@
       "cardinality" : "1"
     },
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
@@ -54,7 +54,8 @@
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "ZOOKEEPER_CLIENT"   }
+        { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "FREEIPA_CLIENT"     }
       ],
       "cardinality" : "1"
     },
@@ -65,6 +66,7 @@
         { "name" : "KAVELANDING"          },
         { "name" : "SONARQUBE_RUNNER"     },
         { "name" : "METRICS_MONITOR"      },
+        { "name" : "FREEIPA_CLIENT"       },
         { "name" : "ZOOKEEPER_CLIENT"     }
       ],
       "cardinality" : "1+"
@@ -77,6 +79,7 @@
         { "name" : "SONARQUBE_MYSQL_SERVER"},
         { "name" : "SONARQUBE_RUNNER"      },
         { "name" : "METRICS_MONITOR"       },
+        { "name" : "FREEIPA_CLIENT"        },
         { "name" : "ZOOKEEPER_CLIENT"      }
       ],
       "cardinality" : "1+"

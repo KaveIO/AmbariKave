@@ -42,7 +42,7 @@
       "cardinality" : "1"
     },
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "METRICS_COLLECTOR"   },
@@ -54,6 +54,7 @@
         { "name" : "STORMSD_UI_SERVER"   },
         { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "STORMSD_CLIENT"      },
+        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "STORMSD_DRPC_SERVER" }
       ],
       "cardinality" : "1"
@@ -65,6 +66,7 @@
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
         { "name" : "STORMSD_CLIENT"      },
+        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "KAVEGANGLIA_MONITOR" }
       ],
       "cardinality" : "1+"
@@ -75,6 +77,7 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "ZOOKEEPER_CLIENT"   },
+        { "name" : "FREEIPA_CLIENT"     },
         { "name" : "NIMBUS_SD_MASTER"   },
         { "name" : "KAVEGANGLIA_MONITOR" }
       ],
@@ -85,6 +88,7 @@
       "components" : [
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
+        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "SUPERVISOR_SD_SLAVE" },
         { "name" : "KAVEGANGLIA_MONITOR" }
       ],

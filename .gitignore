@@ -1,6 +1,8 @@
 tmp/
+.settings
 .pydevproject
 .project
+.gitlab-ci.yml
 *.pyc
 *checkpoint*
 build

@@ -5,8 +5,10 @@
         "timeline.metrics.service.operation.mode" : "embedded"
       }
     },
-    { "hdfs-log4j" : { "log4j.appender.RFA.MaxFileSize" : "128MB", "log4j.appender.RFA.MaxBackupIndex" : "5" } },
+    { "hdfs-log4j" : { "hadoop_log_max_backup_size" : "128MB", "hadoop_log_number_of_backup_files" : "5",
+                       "hadoop_security_log_max_backup_size" : "128MB", "hadoop_security_log_number_of_backup_files" : "10" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "yarn-log4j" : { "yarn_rm_summary_log_max_backup_size" : "128MB", "yarn_rm_summary_log_number_of_backup_files" : "10" } },
     {
       "ams-grafana-env" : {
         "metrics_grafana_password" : "SnowCapMountainChap"

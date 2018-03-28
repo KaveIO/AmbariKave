@@ -11,8 +11,10 @@
     	}
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
-    { "hdfs-log4j" : { "log4j.appender.RFA.MaxFileSize" : "128MB", "log4j.appender.RFA.MaxBackupIndex" : "5" } },
+    { "hdfs-log4j" : { "hadoop_log_max_backup_size" : "128MB", "hadoop_log_number_of_backup_files" : "5",
+                       "hadoop_security_log_max_backup_size" : "128MB", "hadoop_security_log_number_of_backup_files" : "10" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "yarn-log4j" : { "yarn_rm_summary_log_max_backup_size" : "128MB", "yarn_rm_summary_log_number_of_backup_files" : "10" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "directory_password": "testtestdirpass1234",

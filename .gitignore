@@ -1,5 +1,6 @@
 tmp/
 .settings
+.metadata/
 .pydevproject
 .project
 .gitlab-ci.yml

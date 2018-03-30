@@ -39,6 +39,11 @@
     <description>Which port to use for the web interface</description>
   </property>
   <property>
+    <name>JENKINS_HTTPS_PORT</name>
+    <value>8443</value>
+    <description>Which port to use for the web interface</description>
+  </property>
+  <property>
     <name>plugins</name>
     <value>ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, gitlab-plugin, git-parameter, git-tag-message, matrix-project, scm-api, ssh-agent, sonar, sonargraph-plugin</value>
     <description>list of plugins to install</description>

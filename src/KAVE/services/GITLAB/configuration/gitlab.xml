@@ -17,8 +17,8 @@
     <description>Gitlab Admin Password.</description>
   </property>
   <property>
-    <name>gitlab_port</name>
-    <value>80</value>
+    <name>gitlab_ssl_port</name>
+    <value>443</value>
     <description>Port on which gitlab will run.</description>
   </property>
   <property>
@@ -62,7 +62,7 @@
 # Edit the template through the Ambari interface instead
 
 # Change the external_url to the address your users will type in their browser
-external_url 'http://{{gitlab_url}}:{{gitlab_port}}'
+external_url 'https://{{gitlab_url}}:{{gitlab_ssl_port}}'
 
 {% if ldap_enabled %}
 gitlab_rails['ldap_enabled'] = true

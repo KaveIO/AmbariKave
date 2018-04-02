@@ -829,7 +829,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
         # ignore failures here for now, since iptables does not exist on centos7
         try:
             # modify iptables, only in case of Centos6
-            disable_security(ambari)
+            disable_security(ambari, permanent=False)
         except ShellExecuteError:
             pass
         # check file pointed to for failures
@@ -841,7 +841,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
                     cat = cat.replace("[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
                     cat = cat.replace("No errors were found.".lower(), '')
-                    cat = cat.replace("no errors and warnings were found.".lower(), '')
+                    cat = cat.replace("no errors and warnings were found".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
                         raise SystemError("Failure in ambari server start detected!")
         except ShellExecuteError:

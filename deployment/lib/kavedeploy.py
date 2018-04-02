@@ -719,7 +719,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     Add our ambari to a remote machine
     """
     # ignore failures here for now, since iptables does not exist on centos7
-    disable_security(remote)
+    disable_security(remote, permanent=False)
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)

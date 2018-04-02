@@ -519,7 +519,10 @@ class CBDeploy():
         except RequestException:
             print "Unable to get Cloudbreak security group"
             raise
-        return response.json()["id"]
+        if response.json().get("id"):
+            return response.json()["id"]
+        else:
+            raise ValueError("Security group '" + name + "' not found.")
 
     def delete_stack_by_id(self, id):
         headers = {"Authorization": "Bearer " +

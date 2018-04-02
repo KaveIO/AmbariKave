@@ -143,6 +143,7 @@ Running the script with given cluster name, the cluster and its infrastructure g
 ./kill_clusters.py --name examplelambda1512132645
 ```
 
-## Known isssues:
+## Known isssues and notes:
 
 * Currently, when deploying clusters that contain FreeIPA, sometimes FreeIPA Client fails to install on some of the nodes. This can be resolved by choosing to manually re-install clients from Ambari UI.
+* Scripts have been implemented and tested with Python 2. Some problems may occur, if you try to run the scripts with Python 3.

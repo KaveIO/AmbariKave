@@ -66,8 +66,8 @@ def detect_region():
     """
     return lD.run_quiet("aws configure get region")
 
-__region_ami_links__ = {"Centos7": {"default": "ami-6e28b517",
-                                    "eu-west": "ami-6e28b517",
+__region_ami_links__ = {"Centos7": {"default": "ami-192a9460",
+                                    "eu-west": "ami-192a9460",
                                     "ap-northeast": "ami-89634988",
                                     "ap-southeast": "ami-aea582fc",
                                     "eu-central": "ami-9bf712f4",

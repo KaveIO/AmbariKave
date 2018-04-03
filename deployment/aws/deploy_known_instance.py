@@ -149,7 +149,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         if osval.startswith("Centos"):
             remote.run("yum clean all")
         remote.describe()
-        lD.disable_security(remote, permanent=False)
+        lD.disable_security(remote, firewall=False, permanent=False)
     except KeyboardInterrupt:
         pass
 else:

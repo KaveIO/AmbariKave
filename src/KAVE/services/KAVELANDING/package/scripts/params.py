@@ -46,7 +46,7 @@ servername = kc.default('configurations/kavelanding/servername', hostname, kc.is
 if servername == "default":
     servername = hostname
 
-# It's nice to accept " " and '' as values for customlinkskaveganglia_riemann_port without throwing json errors
+# It's nice to accept " " and '' as values for customlinks without throwing json errors
 # smallest valid json will be {}
 if len(customlinks.strip()) <= 2:
     customlinks = '{}'

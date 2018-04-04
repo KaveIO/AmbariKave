@@ -36,7 +36,6 @@
         { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
@@ -49,7 +48,6 @@
         { "name" : "METRICS_GRAFANA"     },
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "KAVEGANGLIA_SERVER"  },
         { "name" : "KAVELANDING"         },
         { "name" : "STORMSD_UI_SERVER"   },
         { "name" : "STORMSD_LOG_VIEWER"  },
@@ -66,8 +64,7 @@
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
         { "name" : "STORMSD_CLIENT"      },
-        { "name" : "FREEIPA_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "FREEIPA_CLIENT"      }
       ],
       "cardinality" : "1+"
     },
@@ -78,8 +75,7 @@
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "FREEIPA_CLIENT"     },
-        { "name" : "NIMBUS_SD_MASTER"   },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "NIMBUS_SD_MASTER"   }
       ],
       "cardinality" : "1"
     },
@@ -89,8 +85,7 @@
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "FREEIPA_CLIENT"      },
-        { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "SUPERVISOR_SD_SLAVE" }
       ],
       "cardinality" : "1+"
     }

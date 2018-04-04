@@ -173,7 +173,6 @@ function buildConfiguration {
 function runList {
   echo "Known services:"
   echo "	GITLAB"
-  echo "	KAVEGANGLIA"
   echo "	KAVENAGIOS"
   echo "	FREEIPA"
   echo "	KAVETOOLBOX"
@@ -281,15 +280,6 @@ elif [ $service = "WILDFLY" ]; then
   component="WILDFLY_APP_SERVER"
 elif [ $service = "MAIL" ]; then
   component="POSTFIX_SERVER"
-elif [ $service = "GANGLIA" ]; then
-  component="GANGLIA_SERVER"
-elif [ $service = "KAVEGANGLIA" ]; then
-  component="KAVEGANGLIA_SERVER"
-elif [ $service = "KAVEGANGLIA_MONITOR" ]; then
-  component="KAVEGANGLIA_MONITOR"
-  service="KAVEGANGLIA"
-elif [ $service = "GANGLIA_MONITOR" ]; then
-  component="GANGLIA_MONITOR"
 elif [ $service = "ARCHIVA" ]; then
   component="ARCHIVA_SERVER"
 elif [ $service = "SONARQUBE" ]; then

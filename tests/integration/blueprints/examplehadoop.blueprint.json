@@ -34,7 +34,7 @@
     	"sonar_database_user_passwd" : "admin"
     	}
     },
-    { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
+    { "gitlab" : {"gitlab_ssl_port" : "443", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
     { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} },
     {
@@ -51,7 +51,6 @@
         { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
@@ -66,8 +65,6 @@
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "KAVEGANGLIA_SERVER" },
-        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "YARN_CLIENT"        },
 	    { "name" : "MAPREDUCE2_CLIENT"  },
@@ -98,7 +95,6 @@
         { "name" : "OOZIE_CLIENT"         },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "SONARQUBE_RUNNER"     },
         { "name" : "SLIDER" 		      },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
@@ -130,7 +126,6 @@
 	    { "name" : "MAPREDUCE2_CLIENT"      },
  		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
-        { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"         },
         { "name" : "SLIDER" 		        },
         { "name" : "INFRA_SOLR_CLIENT"      },
@@ -144,7 +139,6 @@
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "SLIDER" 		      },
         { "name" : "YARN_CLIENT"          },
@@ -162,7 +156,6 @@
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
@@ -195,7 +188,6 @@
         { "name" : "OOZIE_CLIENT"          },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"        },
         { "name" : "SLIDER" 		       },
         { "name" : "INFRA_SOLR_CLIENT"     },

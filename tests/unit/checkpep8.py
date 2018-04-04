@@ -22,8 +22,7 @@ import pep8
 LINES_SKIP = 17
 
 ignore_list = ["WILDFLY/package/scripts/params.py",
-               "JBOSS/package/scripts/params.py",
-               "KAVEGANGLIA/package/scripts/params.py"]
+               "JBOSS/package/scripts/params.py"]
 
 
 class PEP8(pep8.StyleGuide):

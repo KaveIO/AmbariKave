@@ -23,33 +23,31 @@ class TestScan(unittest.TestCase):
     resolves_to_html = """<h3><font size=5px>'MOCK' cluster</font></h3>
 <b>Servers</b><p><ul>
   <li>Ambari <a href='http://test1/'><a href='http://nowhere:8080'>admin</a> </li>
-  <li>Ganglia <a href='http://elsewhere:80/ganglia'>monitor</a> </li>
   <li>Stormsd log <a href='http://nimbus:8008'>log</a> <a href='http://node:8008'>log</a>
        <a href='http://here:8008'>log</a> <a href='http://there:8008'>log</a> </li>
 </ul><p><b>Clients</b><p><ul>
   <li>elsewhere.com []</li>
-  <li>here.com ['kavetoolbox', 'ganglia_monitor']</li>
+  <li>here.com ['kavetoolbox']</li>
   <li>nimbus.com []</li>
   <li>node.com []</li>
   <li>nowhere.none []</li>
-  <li>there.com ['kavetoolbox', 'ganglia_monitor']</li>
+  <li>there.com ['kavetoolbox']</li>
 </ul>"""
     resolves_to_plain = """==================
 * 'MOCK' cluster
 |--* Servers
 |  |--* Ambari <a href='http://test1/'><a href='http://nowhere:8080'>admin</a>
-|  |--* Ganglia <a href='http://elsewhere:80/ganglia'>monitor</a>
 |  |--* Stormsd log <a href='http://nimbus:8008'>log</a>
                 <a href='http://node:8008'>log</a>
                 <a href='http://here:8008'>log</a> <a href='http://there:8008'>log</a>
 |
 |--* Clients
 |  |--* elsewhere.com []
-|  |--* here.com ['kavetoolbox', 'ganglia_monitor']
+|  |--* here.com ['kavetoolbox']
 |  |--* nimbus.com []
 |  |--* node.com []
 |  |--* nowhere.none []
-|  |--* there.com ['kavetoolbox', 'ganglia_monitor']"""
+|  |--* there.com ['kavetoolbox']"""
 
     def runTest(self):
         """
@@ -71,29 +69,25 @@ class TestScan(unittest.TestCase):
         mockout = {"gah": {"chips": "food", "fish": "food"}, "nah": {"foo": "bar"}}
         ls.cloneconfdict(mockd1, mockd2)
         self.assertTrue(mockd2 == mockout, "Cloning dictionaries failed")
-        mockservices = {"MOCK": {"AMBARI_SERVER": ["nowhere.none"], "GANGLIA_SERVER": ["elsewhere.com"],
+        mockservices = {"MOCK": {"AMBARI_SERVER": ["nowhere.none"],
                                  "KAVETOOLBOX": ["here.com", "there.com"],
-                                 "GANGLIA_MONITOR": ["here.com", "there.com"],
                                  "STORMSD_LOG_VIEWER": ["there.com", "node.com", "nimbus.com"]}}
         mocklinks = {"MOCK": {"AMBARI_SERVER": ["<a href='http://test1/'>"]}}
-        mockhosts = {"MOCK": {"nowhere.none": ["AMBARI_SERVER"], "elsewhere.com": ["GANGLIA_SERVER"],
-                              "here.com": ["KAVETOOLBOX", "GANGLIA_MONITOR", "STORMSD_LOG_VIEWER"],
-                              "there.com": ["KAVETOOLBOX", "GANGLIA_MONITOR", "STORMSD_LOG_VIEWER"],
+        mockhosts = {"MOCK": {"nowhere.none": ["AMBARI_SERVER"], "elsewhere.com": [],
+                              "here.com": ["KAVETOOLBOX", "STORMSD_LOG_VIEWER"],
+                              "there.com": ["KAVETOOLBOX", "STORMSD_LOG_VIEWER"],
                               "node.com": ["STORMSD_LOG_VIEWER"],
                               "nimbus.com": ["STORMSD_LOG_VIEWER"]}}
         mockblueprint = {}
-        mockblueprint["host_groups"] = [{"name": "silly1", "components": [{"name": "GANGLIA_SERVER"}]},
-                                        {"name": "silly2",
+        mockblueprint["host_groups"] = [{"name": "silly2",
                                          "components": [{"name": "KAVETOOLBOX"},
-                                                        {"name": "GANGLIA_MONITOR"}, {"name": "STORMSD_LOG_VIEWER"}]},
+                                                        {"name": "STORMSD_LOG_VIEWER"}]},
                                         {"name": "silly3", "components": [
                                             {"name": "NOTHING"}, {"name": "STORMSD_LOG_VIEWER"}]},
                                         {"name": "silly4", "components": [{"name": "STORMSD_LOG_VIEWER"}]}
                                         ]
 
-        self.assertTrue(ls.host_to_hostgroup(["GANGLIA_SERVER", "AMBARI_SERVER"], mockblueprint) == "silly1",
-                        "failed to get correct hostgroup")
-        self.assertTrue(ls.host_to_hostgroup(["KAVETOOLBOX", "GANGLIA_MONITOR", "STORMSD_LOG_VIEWER"],
+        self.assertTrue(ls.host_to_hostgroup(["KAVETOOLBOX", "STORMSD_LOG_VIEWER"],
                                              mockblueprint) == "silly2",
                         "incorrect hostgroup")
         # check that pickprop works

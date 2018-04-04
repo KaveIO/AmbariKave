@@ -43,7 +43,20 @@ class Gitlab(Script):
 
         kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path)
         # reset the password with set_password method
+        # cretae SSL certificate
         Execute('rpm --replacepkgs -i %s' % self.package)
+        Execute('mkdir -p /etc/gitlab/ssl/')
+        country = "NA"
+        state = "NA"
+        locality = "NA"
+        organization = "NA"
+        organizationalun = "NA"
+        commonname = params.hostname
+        email = "gitlab@example.com"
+        Execute(str.format('openssl req -x509 -nodes -days 3650 -newkey rsa:2048' +
+                           ' -keyout /etc/gitlab/ssl/ci.kave.io.key -out /etc/gitlab/ssl/ci.kave.io.crt ' +
+                           '-subj "/C={}/ST={}/L={}/O={}/OU={}/CN={}/emailAddress={}' +
+                           '"', country, state, locality, organization, organizationalun, commonname, email))
         self.configure(env)
         self.set_password(env)
 

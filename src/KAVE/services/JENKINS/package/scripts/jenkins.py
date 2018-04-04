@@ -137,7 +137,6 @@ class Jenkins(Script):
              )
         kc.chmod_up(self.config_file_path, "a+rx")
         kc.chmod_up(params.JENKINS_HOME, "a+rx")
-        kc.mycmd("setfacl -m user:" + params.JENKINS_USER +  ":rwx /tmp/")
         kc.chown_r(self.config_file_path, params.JENKINS_USER)
         kc.chown_r(params.JENKINS_HOME, params.JENKINS_USER)
 

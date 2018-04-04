@@ -92,7 +92,7 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              # need to add 1000 to the port number if it exists!
                              "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"],
                                                 "mongo_web": [28017, "mongodb/tcp_port +1000"]},
-                             "GITLAB_SERVER": {"gitlab": [80, "gitlab/gitlab_port"]},
+                             "GITLAB_SERVER": {"gitlab": [443, "gitlab/gitlab_ssl_port"]},
                              "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/stormsd.ui.port"]},
                              "STORMSD_LOG_VIEWER": {"log": [8013, "stormsd/stormsd.logviewer.port"]},
                              "HUE_SERVER": {"hue": [8744, "hue/web_ui_port"]},

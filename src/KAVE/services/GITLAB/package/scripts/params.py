@@ -23,7 +23,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 gitlab_conf_file = "/etc/gitlab/gitlab.rb"
-gitlab_port = kc.default("configurations/gitlab/gitlab_port", "80", kc.is_valid_port)
+gitlab_ssl_port = kc.default("configurations/gitlab/gitlab_ssl_port", "443", kc.is_valid_port)
 gitlab_url = kc.default("configurations/gitlab/gitlab_url", hostname, kc.is_valid_hostname)
 unicorn_port = kc.default("configurations/gitlab/unicorn_port", "8080", kc.is_valid_port)
 unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
@@ -69,7 +69,7 @@ gitlabrb = default('configurations/gitlab/gitlabrb', """# Created automatically 
 # Edit the template through the Ambari interface instead
 
 # Change the external_url to the address your users will type in their browser
-external_url 'http://{{gitlab_url}}:{{gitlab_port}}'
+external_url 'https://{{gitlab_url}}:{{gitlab_ssl_port}}'
 
 {% if ldap_enabled %}
 gitlab_rails['ldap_enabled'] = true

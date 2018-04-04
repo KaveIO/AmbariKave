@@ -25,6 +25,7 @@ hostname = config["hostname"]
 
 JENKINS_HOME = kc.default("configurations/jenkins/JENKINS_HOME", "/var/lib/jenkins", kc.is_valid_directory)
 JENKINS_PORT = kc.default("configurations/jenkins/JENKINS_PORT", "8080", kc.is_valid_port)
+JENKINS_HTTPS_PORT = kc.default("configurations/jenkins/JENKINS_HTTPS_PORT", "8443", kc.is_valid_port)
 JENKINS_USER = kc.default("configurations/jenkins/JENKINS_USER", "jenkins", kc.is_valid_username)
 JENKINS_ADMIN = kc.default("configurations/jenkins/JENKINS_ADMIN", "admin", kc.is_valid_username)
 JENKINS_ADMIN_EMAIL = default("configurations/jenkins/JENKINS_ADMIN_EMAIL", "default")

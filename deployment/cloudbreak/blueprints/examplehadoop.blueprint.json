@@ -140,6 +140,7 @@
         { "name" : "KAVEGANGLIA_MONITOR"  },
 		{ "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "SLIDER" 		      },
+        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },

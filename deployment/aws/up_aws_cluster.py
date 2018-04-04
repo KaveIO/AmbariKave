@@ -422,7 +422,7 @@ allremotes.run("yum install -y firewalld")
 allremotes.run("systemctl enable firewalld")
 allremotes.run("systemctl restart firewalld")
 time.sleep(20)
-lD.disable_security(allremotes)
+lD.disable_security(allremotes, firewall=False, permanent=False)
 
 print "==================================="
 print "add any extra disk space (parallelized per instance)"

@@ -829,7 +829,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
         # ignore failures here for now, since iptables does not exist on centos7
         try:
             # modify iptables, only in case of Centos6
-            disable_security(ambari)
+            disable_security(ambari, firewall=False, permanent=False)
         except ShellExecuteError:
             pass
         # check file pointed to for failures

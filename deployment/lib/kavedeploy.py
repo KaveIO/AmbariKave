@@ -719,7 +719,7 @@ def _addambaritoremote(remote, github_key_location, git_origin, branch="", backg
     Add our ambari to a remote machine
     """
     # ignore failures here for now, since iptables does not exist on centos7
-    disable_security(remote, firewall=False, permanent=False)
+    disable_security(remote)
     if not os.path.exists(os.path.expanduser(github_key_location)):
         raise IOError("Your git access key must exist " + github_key_location)
     remote.prep_git(github_key_location)
@@ -829,7 +829,7 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
         # ignore failures here for now, since iptables does not exist on centos7
         try:
             # modify iptables, only in case of Centos6
-            disable_security(ambari, firewall=False, permanent=False)
+            disable_security(ambari)
         except ShellExecuteError:
             pass
         # check file pointed to for failures
@@ -986,11 +986,11 @@ def disable_security(remote, selinux=True, firewall=True, permanent=True):
                 remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
         if firewall:
             try:
-                remote.run("systemctl stop firewalld")
+                remote.run("systemctl stop firewalld || true")
             except ShellExecuteError:
                 pass
             if permanent:
-                remote.run("systemctl disable firewalld")
+                remote.run("systemctl disable firewalld || true")
 
 
 def wait_until_up(remote, max_wait):

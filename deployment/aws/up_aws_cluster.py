@@ -422,7 +422,7 @@ allremotes.run("yum install -y firewalld")
 allremotes.run("systemctl enable firewalld")
 allremotes.run("systemctl restart firewalld")
 time.sleep(20)
-lD.disable_security(allremotes, firewall=False, permanent=False)
+lD.disable_security(allremotes)
 
 print "==================================="
 print "add any extra disk space (parallelized per instance)"
@@ -439,7 +439,8 @@ lA.add_ebs_volumes(adtoiids, admounts, amazon_keyfile)
 #        #for conf in instancegroup["ExtraDisks"]:
 #        #    for instance in instancegroups[instancegroup["Name"]]:
 #        #        lA.add_new_ebs_vol(instance, conf, amazon_keyfile)
-
+# Fix permissions on /tmp
+allremotes.run("chmod 777 /tmp")
 print "=============================================="
 print "Add ambari to admin node"
 print "=============================================="

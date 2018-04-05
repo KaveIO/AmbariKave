@@ -162,7 +162,7 @@ if os.path.exists(os.path.realpath(os.path.expanduser(keyloc))):
         if ambaridev:
             if "GIT" in security_config["AccessKeys"]:
                 remote.prep_git(security_config["AccessKeys"]["GIT"]["KeyFile"], force=True)
-        lD.disable_security(remote, firewall=False, permanent=False)
+        lD.disable_security(remote)
         remote.run("yum clean all")
         remote.describe()
     except KeyboardInterrupt:

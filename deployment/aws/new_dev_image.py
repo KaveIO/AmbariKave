@@ -168,7 +168,7 @@ if iid is None:
     # nope! Don't want 443 as ssh by default any longer!
     # lD.confremotessh(remote)
     # This is not needed for Centos7
-    lD.disable_security(remote, firewall=False, permanent=False)
+    lD.disable_security(remote)
     lD.confallssh(remote, restart=False)
     lD.confsshpermissions(remote)
     vols = []

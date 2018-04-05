@@ -144,7 +144,7 @@ lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_i
 lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
 # This is not needed for Centos7
 tos = remote.detect_linux_version()
-lD.disable_security(remote, firewall=False, permanent=False)
+lD.disable_security(remote)
 
 lD.confallssh(remote, restart=False)
 lD.confremotessh(remote, restart=False)

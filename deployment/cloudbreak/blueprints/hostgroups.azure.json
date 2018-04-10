@@ -53,7 +53,7 @@
     "data": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 50,
-        "volume-count": 1,
+        "volume-count": 3,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
         "node-count" : 1,
@@ -176,7 +176,7 @@
     "replica": {
         "machine-type": "Standard_D2_v2",
         "volume-size": 50,
-        "volume-count": 1,
+        "volume-count": 2,
         "instance-type" : "CORE",
         "security-group" : "default-azure-only-ssh-and-ssl",
         "node-count" : 1,

@@ -111,12 +111,6 @@ class TestEskapadeCluster(TestCluster):
         test_type = "integration"
         host.run(" source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
                  " cd /opt/Eskapade/*/tests; eskapade_trial")
-        """
-        TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
-        ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                   " source /opt/Eskapade/*/setup.sh;"
-                   " run_tests.py {}".foramt(test_type))
-        """
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)

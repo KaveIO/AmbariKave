@@ -35,7 +35,7 @@ services = [s for s, ds in base.find_services() if s not in ignore_services]
 checks = {"APACHE": ["http://ambari.kave.io/"],
           "KAVETOOLBOX": ["/opt/KaveToolbox", '/etc/profile.d/kave.sh'],
           "KAVELANDING": ["http://ambari.kave.io/"],
-          "JENKINS": ["http://ambari.kave.io:8443/login"],
+          "JENKINS": ["https://ambari.kave.io:8443/login"],
           "JBOSS": ["http://ambari.kave.io:8888/"],
           "TWIKI": ["http://ambari.kave.io/twiki/"],
           "STORM": ["http://ambari.kave.io:8744/index.html"],

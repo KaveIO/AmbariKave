@@ -20,15 +20,15 @@
 # Cloudbreak details
 # ===============================================
 
-cb_http_url = "http://<cloudbreak pub. IP>"
-cb_https_url = "https://<cloudbreak pub. IP>"
+cb_http_url = "http://13.64.195.21"
+cb_https_url = "https://13.64.195.21"
 uaa_port = 8089
 
 # ===============================================
 # Deployment specific configurations
 # ===============================================
 
-credential_name = "<cloudbreak credential name>"
+credential_name = "tsvetan"
 network_name = "default-azure-network"
 ssl_verify = False
 

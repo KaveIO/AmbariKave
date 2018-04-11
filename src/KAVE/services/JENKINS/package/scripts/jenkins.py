@@ -85,6 +85,7 @@ class Jenkins(Script):
              )
         kc.chown_r(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
         Execute('chkconfig jenkins on')
+        Execute('mv /var/lib/jenkins/plugins/ /var/lib/jenkins/plugins_old/')
         self.start(env)
         # using curl to create username password for jenkinsl
         curl_command = ('curl -k -d "username=' + params.JENKINS_ADMIN

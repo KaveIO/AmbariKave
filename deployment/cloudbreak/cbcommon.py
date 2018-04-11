@@ -576,27 +576,38 @@ class CBDeploy():
     def distribute_package(self, remoteip):
         import subprocess
 
+        # if no SSH private key location is set, use the default ~/.ssh/id_rsa
+        if not cbparams.ssh_private_key:
+            cbparams.ssh_private_key = os.path.expanduser('~')+"/.ssh/id_rsa"
         subprocess.call(["tar", "czf", "kave-patch.tar.gz", "-C", "../../src", "KAVE", "shared"])
         print "Copying KAVE archive to a remote machine..."
         subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
-                         "kave-patch.tar.gz", "../../dev/dist_kavecommon.py", "cloudbreak@" + remoteip + ":~"])
+                        "-i", cbparams.ssh_private_key, "kave-patch.tar.gz", "../../dev/dist_kavecommon.py",
+                        "cloudbreak@" + remoteip + ":~"])
         subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
 
     def distribute_keys(self, remoteip, ipa_server_node = False):
         import subprocess
+
+        # if no SSH private key location is set, use the default ~/.ssh/id_rsa
+        if not cbparams.ssh_private_key:
+            cbparams.ssh_private_key = os.path.expanduser('~')+"/.ssh/id_rsa"
         subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
-                          "cloudbreak@" + remoteip, "sudo", "mkdir", "-p", "/root/.ssh"])
+                         "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                         "sudo", "mkdir", "-p", "/root/.ssh"])
         subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
-                         "cloudbreak@" + remoteip,
+                         "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
                          "sudo", "cp", "/home/cloudbreak/.ssh/authorized_keys", "/root/.ssh/authorized_keys"])
 
         if ipa_server_node:
             subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
-                             os.path.expanduser('~')+"/.ssh/id_rsa", "cloudbreak@" + remoteip + ":~"])
+                             "-i", cbparams.ssh_private_key, cbparams.ssh_private_key, "cloudbreak@" + remoteip + ":~/id_rsa"])
             subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
-                             "cloudbreak@" + remoteip, "sudo", "mv", "/home/cloudbreak/id_rsa", "/root/.ssh/id_rsa"])
+                             "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                             "sudo", "mv", "/home/cloudbreak/id_rsa", "/root/.ssh/id_rsa"])
             subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
-                             "cloudbreak@" + remoteip, "sudo", "chmod", "600", "/root/.ssh/id_rsa"])
+                             "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                             "sudo", "chmod", "600", "/root/.ssh/id_rsa"])
 
     def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
         """

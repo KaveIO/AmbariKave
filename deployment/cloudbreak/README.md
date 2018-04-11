@@ -24,6 +24,7 @@ The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary config
 
 #### Deployment specific configurations
 * credential_name = "<cloudbreak credential name>" - Name of Cloudbreak credential which will be used for cluster deployment
+* ssh_private_key = "" - Absolute path to the private SSH key that corresponds to the public key, registered in the credential. If no path is specified, ```~/.ssh/id_rsa``` will be used by default.
 * network_name = "<network resource name>" - Name of Cloudbreak network in which the cluster will be created.
 * ssl_verify = False - Parameter which control SSL certificate verification behavior. Possible values are:
   * False (Default) - no certificate verification performed. We will just trust whatever is presented by Cloudbreak. This was made the default option as by default Cloudbreak uses very primitive ssl self signed cert.

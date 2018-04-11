@@ -7,10 +7,7 @@
     },
     {
       "kavetoolbox": {
-        "custom_install_template": "cnf.li.InstallTopDir=\"{{top_dir}}\"
-cnf.spark.doInstall=True
-cnf.spark.node=True
-cnf.spark.workstation=True"
+        "custom_install_template": "cnf.li.InstallTopDir=\"{{top_dir}}\""
       }
     },
     {

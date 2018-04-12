@@ -41,7 +41,7 @@
       "cardinality" : "1"
     },
     {
-      "name" : "admin",
+      "name" : "admin-freeipa",
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "METRICS_COLLECTOR"   },

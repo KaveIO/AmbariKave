@@ -46,7 +46,7 @@
       "cardinality" : "1"
     },
     {
-      "name" : "admin",
+      "name" : "admin-freeipa",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },

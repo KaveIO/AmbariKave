@@ -10,6 +10,20 @@
                     "patchambari",
                     "fix-hosts-file",
                     "limit-ssh-attempts",
+                    "ipv6-lo-enable"
+                    ]
+    },
+    "admin-freeipa": {
+        "machine-type": "Standard_D2_v2",
+        "volume-size": 30,
+        "volume-count": 1,
+        "instance-type" : "GATEWAY",
+        "security-group" : "default-azure-only-ssh-and-ssl",
+        "node-count" : 1,
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "limit-ssh-attempts",
                     "ipv6-lo-enable",
                     "ipa-security-settings"
                     ]

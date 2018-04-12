@@ -67,7 +67,7 @@
   ],
   "host_groups" : [
     {
-      "name" : "admin",
+      "name" : "admin-freeipa",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },

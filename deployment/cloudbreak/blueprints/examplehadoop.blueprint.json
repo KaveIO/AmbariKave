@@ -47,7 +47,7 @@
   ],
   "host_groups" : [
     {
-      "name" : "admin",
+      "name" : "admin-freeipa",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
@@ -139,7 +139,7 @@
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
-        { "name": "FREEIPA_CLIENT"        },
+        { "name" : "FREEIPA_CLIENT"        },
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],

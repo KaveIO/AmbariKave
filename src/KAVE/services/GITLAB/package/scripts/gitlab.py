@@ -54,7 +54,8 @@ class Gitlab(Script):
         commonname = params.hostname
         email = "gitlab@example.com"
         Execute(str.format('openssl req -x509 -nodes -days 3650 -newkey rsa:2048' +
-                           ' -keyout /etc/gitlab/ssl/' + str(params.hostname) + '.key -out /etc/gitlab/ssl/' + str(params.hostname) + '.crt ' +
+                           ' -keyout /etc/gitlab/ssl/' + str(params.hostname) + '.key -out ' +
+                           '/etc/gitlab/ssl/' + str(params.hostname) + '.crt ' +
                            '-subj "/C={}/ST={}/L={}/O={}/OU={}/CN={}/emailAddress={}' +
                            '"', country, state, locality, organization, organizationalun, commonname, email))
         self.configure(env)

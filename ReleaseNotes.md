@@ -14,6 +14,7 @@ Contains a list of the released versions with a summary of the main changes in e
     2. New version of ESKAPADE v0.7 - see releases  at https://github.com/KaveIO/Eskapade/releases
     3. New version of MongoDB v.3.6 
     4. Removed Kaveganglia from AmbariKave - deprecated, replaced by Ambari Metrics
+    5. Removed JBOSS from AmbariKave - deprecated, replaced by WildFly
     
 * Minor changes were:
      Cloudbreak deployment improvements and bug fixes:

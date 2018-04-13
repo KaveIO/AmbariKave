@@ -178,7 +178,6 @@ function runList {
   echo "	KAVETOOLBOX"
   echo "    ESKAPADE"
   echo "	KAVELANDING"
-  echo "	JBOSS"
   echo "	WILDFLY"
   echo "	MAIL"
   echo "	SONARQUBE"
@@ -274,8 +273,6 @@ elif [ $service = "APACHE" ]; then
 	component="APACHE_WEB_MASTER"
 elif [ $service = "JENKINS" ]; then
 	component="JENKINS_MASTER"
-elif [ $service = "JBOSS" ]; then
-  component="JBOSS_APP_SERVER"
 elif [ $service = "WILDFLY" ]; then
   component="WILDFLY_APP_SERVER"
 elif [ $service = "MAIL" ]; then

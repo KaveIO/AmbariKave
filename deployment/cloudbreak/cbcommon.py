@@ -608,6 +608,9 @@ class CBDeploy():
             subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
                              "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
                              "sudo", "chmod", "600", "/root/.ssh/id_rsa"])
+            subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                             "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                             "sudo", "chown", "root:root", "/root/.ssh/id_rsa"])
 
     def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
         """

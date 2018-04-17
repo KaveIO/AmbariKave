@@ -138,7 +138,7 @@ security_properties = default('configurations/lcm_security/security.properties',
 ############################# Server settings #############################
 # Username and password for the default admin user. Once a actual admin user is
 # created these become unused.
-lcm.server.adminUser="admin"
+lcm.server.adminUser=admin
 lcm.server.adminPassword={{LCM_Admin_Password}}
 # Default ssl configuration location based on installation with the    setup_ssl.sh script.
 # 'certificates' directory must be in the base application directory i.e. on the same

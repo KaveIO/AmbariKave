@@ -73,8 +73,23 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 		"recipes": [
 			"patchambari",
 			"fix-hosts-file",
-			"distibute-private-key",
-			"limit-ssh-attempts"
+			"limit-ssh-attempts",
+			"ipv6-lo-enable"
+		]
+	},
+	"admin-freeipa": {
+		"machine-type": "Standard_D2_v2",
+		"volume-size": 30,
+		"volume-count": 1,
+		"instance-type": "GATEWAY",
+		"security-group": "default-azure-only-ssh-and-ssl",
+		"node-count" : 1,
+		"recipes": [
+			"patchambari",
+			"fix-hosts-file",
+			"limit-ssh-attempts",
+			"ipv6-lo-enable",
+			"ipa-security-settings"
 		]
 	},
 	"gateway": {
@@ -86,7 +101,6 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 		"node-count" : 1,
 		"recipes": [
 			"fix-hosts-file",
-			"distibute-private-key",
 			"limit-ssh-attempts"
 		]
 	},
@@ -99,7 +113,6 @@ Cloudbreak requires a machine template to be created and selected for each hostg
 		"node-count" : 1,
 		"recipes": [
 			"fix-hosts-file",
-			"distibute-private-key",
 			"limit-ssh-attempts"
 		]
 	}
@@ -115,6 +128,7 @@ Looking at the last json object:
 *  _node-count_ - Number of nodes to be deployed
 *  _recipes_ - List of recipe names (as described in recipe_details.py) to be applied to this hostgoup
 
+Note: "admin-freeipa" hostgroup is used for Ambari node template in clusters with FreeIPA included. Otherwise "admin" hostgroup is used.
 
 ## Running the deployment script
 

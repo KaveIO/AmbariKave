@@ -84,8 +84,8 @@ class KaveToolbox(Script):
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute('touch /etc/kave/toolbox_ok')
         Execute('yum -y install python-pip')
-        Execute('pip install --upgrade pip')
-        Execute('pip install lightning-python')
+        Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ;pip install --upgrade pip"')
+        Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; pip install lightning-python"')
 
     def configure(self, env):
         import params

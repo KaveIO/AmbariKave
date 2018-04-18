@@ -1,0 +1,18 @@
+{
+    "name": "<security-group-name>",
+    "description": "<security-group-description>",
+    "securityRules": [
+        {
+            "subnet": "x.x.x.x/y",
+            "ports": "1234,5678",
+            "protocol": "tcp",
+            "modifiable": false
+        },
+        {
+            "subnet": "x.x.x.x/y",
+            "ports": "1-65535",
+            "protocol": "*",
+            "modifiable": false
+        }
+    ]
+}

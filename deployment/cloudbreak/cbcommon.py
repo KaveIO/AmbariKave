@@ -376,7 +376,7 @@ class CBDeploy():
             instance["group"] = hg
             instance["nodeCount"] = hg_info[hg]["node-count"]
             instance["type"] = hg_info[hg]["instance-type"]
-            instance["securityGroupId"] = self.get_security_group_id(hg_info[hg]["security-group"])
+            instance["securityGroupId"] = self.check_for_security_group(hg_info[hg]["security-group"])
             stack["instanceGroups"].append(instance)
 
         stack["credentialId"] = credential["id"]
@@ -509,20 +509,46 @@ class CBDeploy():
         else:
             raise ValueError("Missing credential name. Please provide correct value for credential_name in cbparams.py")
 
-    def get_security_group_id(self, name):
+    def check_for_security_group(self, name):
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/securitygroups/account/' + name
         url = cbparams.cb_https_url + path
+
         try:
             response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
         except RequestException:
-            print "Unable to get Cloudbreak security group"
+            print str.format("Unable to get details for security group {} from Cloudbreak: {}", name, response.text)
             raise
-        if response.json().get("id"):
+        if response.status_code == 200:
             return response.json()["id"]
         else:
-            raise ValueError("Security group '" + name + "' not found.")
+            print str.format("Security group with name {} does not exist and will be created.", name)
+            return self.create_security_group(name)
+
+    def create_security_group(self, name):
+        headers = {"Authorization": "Bearer " +
+                   self.access_token, "Content-type": "application/json"}
+        path = '/cb/api/v1/securitygroups/user'
+        url = cbparams.cb_https_url + path
+
+        try:
+            with open('securitygroups/' + name + '.json') as sg_file:
+                sg = json.load(sg_file)
+        except (IOError, ValueError) as e:
+            raise StandardError("Json file " + name + ".json is missing or unreadable. ")
+
+        try:
+            response = requests.post(url, data=json.dumps(
+                sg), headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to create Cloudbreak security group {}", name)
+            raise
+        if response.status_code == 200:
+            print str.format("Created new Cloudbreak security group {}", name)
+            return response.json()["id"]
+        else:
+            raise StandardError("Error creating Cloudbreak security group {}: {}", name, response.text)
 
     def delete_stack_by_id(self, id):
         headers = {"Authorization": "Bearer " +

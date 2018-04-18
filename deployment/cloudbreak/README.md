@@ -39,28 +39,13 @@ The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary config
 * adls_enabled = False - Parameter which indicates whether Azure Data Lake Store should be used for file system. Default is False. If set to True, a valid value for adls_name should be set as well
 * adls_name = "<Azure Data Lake Store name>" - Azure Data Lake Store name
 
-## Manage recipes
-
-Cloudbreak recipe is a script extension to a cluster that runs on all nodes before or after the Ambari cluster installation.
-Recipes related information is kept in __```/deployment/cloudbreak/recipes/```__ folder. The subfolders __```mandatory```__  and __```custom```__ contain the recipes definitions. __```mandatory```__  folder contains KAVE related recipes, which should not be changed or deleted and all custom recipes should be placed in __```custom```__ folder.
-Each recipe should be described in  __```recipe_details.json```__ file in the following format:
-
-```json
-{ "recipe-name-to-be-used":   
-    {
-        "recipeType": "PRE", 
-        "description": "This description with show up in CLoudbreak UI",
-        "templatePath": "recipes/custom/script-to-be-executed-by-recipe.sh"
-    }}
-```
-
 
 ## What is needed to deploy a cluster:
 ### Blueprint(s)
 Out of the box KAVE comes with a set of blueprints used for executing the integration tests and some example scenarios. They can be found in the __```/deployment/cloudbreak/blueprints/```__ folder. These are standard [ambari blueprints.](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints) so new ones can be created accordingly.
 
 ### Hostgourps and machine template mapping.
-Cloudbreak requires a machine template to be created and selected for each hostgoup in the selected blueprint. It uses this information to bring up the infrastructure (actual VMs) in the selected cloud provider (Azure). The file __```/deployment/cloudbreak/blueprints/hostgroups.azure.json```__ stores this information for each and every different hostgoup in all the blueprints. If a new blueprint is being created then all new/different hostgoups must be described in this file as well. Example:
+Cloudbreak requires a machine template to be created and selected for each hostgroup in the selected blueprint. It uses this information to bring up the infrastructure (actual VMs) in the selected cloud provider (Azure). The file __```/deployment/cloudbreak/blueprints/hostgroups.azure.json```__ stores this information for each and every different hostgroup in all the blueprints. If a new blueprint is being created then all new/different hostgoups must be described in this file as well. Example:
 ```json
 {
 	"admin": {
@@ -130,6 +115,26 @@ Looking at the last json object:
 
 Note: "admin-freeipa" hostgroup is used for Ambari node template in clusters with FreeIPA included. Otherwise "admin" hostgroup is used.
 
+### Manage recipes
+
+Cloudbreak recipe is a script extension to a cluster that runs on all nodes before or after the Ambari cluster installation.
+Recipes related information is kept in __```/deployment/cloudbreak/recipes/```__ folder. The subfolders __```mandatory```__  and __```custom```__ contain the recipes definitions. __```mandatory```__  folder contains KAVE related recipes, which should not be changed or deleted and all custom recipes should be placed in __```custom```__ folder.
+Each recipe should be described in  __```recipe_details.json```__ file in the following format:
+
+```json
+{ "recipe-name-to-be-used":
+    {
+        "recipeType": "PRE",
+        "description": "This description with show up in CLoudbreak UI",
+        "templatePath": "recipes/custom/script-to-be-executed-by-recipe.sh"
+    }
+}
+```
+### Manage security groups
+
+Security groups are part of each hostgroup definition. Either existing Cloudbreak security groups or not existing but predefines ones can be used.
+The script will first check if the security group exists in Cloudbreak and will use it if present. Otherwise a new one will be automatically created during the deployment process. All that is needed in the second case is a valid security group definition file. This is a JSON file, which name corresponds to the security group name, and is located in __```/deployment/cloudbreak/securitygroups/```__ folder. For reference on how a security group definition looks like, check __```security_group_templte.json```__ file in the same folder.
+
 ## Running the deployment script
 
 Presuming all is set correctly a cluster may be deployed by running the ```deployment/cloudbreak/cbdeploy.py```
@@ -158,7 +163,7 @@ Running the script with given cluster name, the cluster and its infrastructure g
 ./kill_clusters.py --name examplelambda1512132645
 ```
 
-## Known isssues and notes:
+## Known issues and notes:
 
 * Currently, when deploying clusters that contain FreeIPA, sometimes FreeIPA Client fails to install on some of the nodes. This can be resolved by choosing to manually re-install clients from Ambari UI.
 * Scripts have been implemented and tested with Python 2. Some problems may occur, if you try to run the scripts with Python 3.

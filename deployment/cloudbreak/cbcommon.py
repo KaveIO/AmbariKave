@@ -242,9 +242,7 @@ class CBDeploy():
             return False
         # Verify that AMBARI_SREVER and FREEIPA_SREVER components won't be installed on the same host
         for hg in bp["host_groups"]:
-            print hg["name"]
             comps = [cn["name"] for cn in hg["components"]]
-            print comps
             if "AMBARI_SERVER" in comps and "FREEIPA_SERVER" in comps:
                 print "Both AMBARI_SERVER and FREEIPA_SERVER components detected in hostgroup " + \
                     hg["name"] + ". Make sure these components don't reside in the same hostgroup."

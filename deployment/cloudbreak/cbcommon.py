@@ -240,6 +240,15 @@ class CBDeploy():
         if "Blueprints" not in bp:
             print str.format("Missing 'Blueprints' definition in {}.blueprint.json", bp_name)
             return False
+        # Verify that AMBARI_SREVER and FREEIPA_SREVER components won't be installed on the same host
+        for hg in bp["host_groups"]:
+            print hg["name"]
+            comps = [cn["name"] for cn in hg["components"]]
+            print comps
+            if "AMBARI_SERVER" in comps and "FREEIPA_SERVER" in comps:
+                print "Both AMBARI_SERVER and FREEIPA_SERVER components detected in hostgroup " + \
+                    hg["name"] + ". Make sure these components don't reside in the same hostgroup."
+                return False
         return True
 
     def verify_hostgroups(self, hg_names):
@@ -270,6 +279,11 @@ class CBDeploy():
                 if not hg_defs[hg][prop]:
                     print str.format("Invalid or missing value for '{}' property in '{}' hostgroup definition",
                                      prop, hg)
+                    return False
+                # Verify that "patchambari" recipe is executed only on Ambari nodes
+                if "patchambari" in hg_defs[hg]["recipes"] and hg_defs[hg]["instance-type"] != "GATEWAY":
+                    print str.format('Wrong hostgroup definition for {}. "patchamabri" recipe can be only executed ' \
+                    'on Ambari Server nodes.', hg)
                     return False
         return True
 

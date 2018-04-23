@@ -284,7 +284,6 @@
     },
     {
       "name" : "kafka",
-      "configurations" : [ { "kafka-broker" : { "zookeeper.connect" : "nimbus.kave.io:2181,nno-001.kave.io:2181,nno-002.kave.io:2181" }  } ],
       "components" : [
         { "name" : "METRICS_MONITOR"  },
         { "name" : "KAVETOOLBOXNODE"  },

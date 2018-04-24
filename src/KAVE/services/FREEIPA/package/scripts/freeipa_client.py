@@ -87,6 +87,10 @@ class FreeipaClient(Script):
 
             Execute('chkconfig ntpd on')
 
+            if ((not os.path.exists(self.ipa_client_install_lock_file)) and
+            os.path.exists('/etc/ipa/default.conf')):
+                Execute('ipa-client-install --uninstall')
+                   
             # installs ipa-client software
             rm.client_install(params.ipa_server, params.domain, params.realm, params.client_init_wait,
                               params.install_with_dns, params.install_distribution_user)

@@ -678,7 +678,7 @@ class CBDeploy():
         path = '/cb/api/v1/stacks/' + str(stack_id)
         url = cbparams.cb_https_url + path
 
-        max_execution_time = 5400
+        max_execution_time = 7200
         start = timer = int(time.time())
         timeout = start + max_execution_time
         interval = 10

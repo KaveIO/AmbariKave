@@ -21,7 +21,7 @@ A Python module, containing functions for interaction with Cloudbreak.
 
 import requests
 import json
-import cbparams
+from config import cbparams
 import urlparse
 import base64
 from string import Template
@@ -129,13 +129,13 @@ class CBDeploy():
                    self.access_token, "Content-type": "application/json"}
 
         try:
-            with open('blueprints/hostgroups.azure.json') as hg_file:
+            with open('config/hostgroups.azure.json') as hg_file:
                 hgjson = json.load(hg_file)
         except (IOError, ValueError):
             raise StandardError("Error reading blueprints/hostgrups.azure.json file")
         if not (hgjson and hgjson.get(hostgroup)):
             raise ValueError(
-                str.format("Description for hostgroup {} is missing in blueprints/hostgroups.azure.json file.",
+                str.format("Description for hostgroup {} is missing in config/hostgroups.azure.json file.",
                            hostgroup))
 
         name = hostgroup + '-' + KAVE_VERSION
@@ -254,13 +254,13 @@ class CBDeploy():
         Check if list of hostgroups, have the corresponding definitions in hostgroups.azure.json
         """
 
-        h = os.path.exists('blueprints/hostgroups.azure.json')
+        h = os.path.exists('config/hostgroups.azure.json')
         if not h:
             print str.format("File hostgroups.azure.json not found")
             return False
         hg_defs = {}
         try:
-            with open('blueprints/hostgroups.azure.json') as hgs_file:
+            with open('config/hostgroups.azure.json') as hgs_file:
                 hg_defs = json.load(hgs_file)
         except (IOError, ValueError):
             print "Json file hostgroups.azure.json is not complete or is not readable."
@@ -378,10 +378,10 @@ class CBDeploy():
         if not self.verify_hostgroups(hgs):
             raise Exception("Terminating stack creation for blueprint " + blueprint_name)
         try:
-            with open("blueprints/hostgroups.azure.json") as hgs_file:
+            with open("config/hostgroups.azure.json") as hgs_file:
                 hg_info = json.load(hgs_file)
         except (IOError, ValueError) as e:
-            raise StandardError("Json file blueprints/hostgroups.azure.json is not complete or is not readable.")
+            raise StandardError("Json file config/hostgroups.azure.json is not complete or is not readable.")
         for hg in hgs:
             instance = {}
             instance["templateId"] = self.check_for_template(hg)
@@ -427,10 +427,10 @@ class CBDeploy():
         except (IOError, ValueError):
             raise StandardError("File cluster_template.json is not complete or is not readable.")
         try:
-            with open("blueprints/hostgroups.azure.json") as hgs_file:
+            with open("config/hostgroups.azure.json") as hgs_file:
                 hg_info = json.load(hgs_file)
         except (IOError, ValueError):
-            raise StandardError("File blueprints/hostgroups.azure.json is not complete or is not readable.")
+            raise StandardError("File config/hostgroups.azure.json is not complete or is not readable.")
         cluster["name"] = stack_name
         cluster["blueprintId"] = blueprint["id"]
 
@@ -678,7 +678,7 @@ class CBDeploy():
         path = '/cb/api/v1/stacks/' + str(stack_id)
         url = cbparams.cb_https_url + path
 
-        max_execution_time = 5400
+        max_execution_time = 7200
         start = timer = int(time.time())
         timeout = start + max_execution_time
         interval = 10

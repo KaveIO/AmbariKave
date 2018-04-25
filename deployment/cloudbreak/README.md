@@ -15,7 +15,7 @@ Note: In case of storing incorrect credentails, delete ~/.cbcredstore file.
 
 ## Configuring target cloudbreak instance details
 
-The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary configuration, related to the Cloudbreak deployment:
+The file __```/deployment/cloudbreak/config/cbparams.py```__ holds the necessary configuration, related to the Cloudbreak deployment:
 
 #### Cloudbreak details
 * cb_http_url = "http://<cloudbreak public IP>"	- Cloudbreak Url for http requests
@@ -45,7 +45,7 @@ The file __```/deployment/cloudbreak/cbparams.py```__ holds the necessary config
 Out of the box KAVE comes with a set of blueprints used for executing the integration tests and some example scenarios. They can be found in the __```/deployment/cloudbreak/blueprints/```__ folder. These are standard [ambari blueprints.](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints) so new ones can be created accordingly.
 
 ### Hostgourps and machine template mapping.
-Cloudbreak requires a machine template to be created and selected for each hostgroup in the selected blueprint. It uses this information to bring up the infrastructure (actual VMs) in the selected cloud provider (Azure). The file __```/deployment/cloudbreak/blueprints/hostgroups.azure.json```__ stores this information for each and every different hostgroup in all the blueprints. If a new blueprint is being created then all new/different hostgoups must be described in this file as well. Example:
+Cloudbreak requires a machine template to be created and selected for each hostgroup in the selected blueprint. It uses this information to bring up the infrastructure (actual VMs) in the selected cloud provider (Azure). The file __```/deployment/cloudbreak/config/hostgroups.azure.json```__ stores this information for each and every different hostgroup in all the blueprints. If a new blueprint is being created then all new/different hostgoups must be described in this file as well. Example:
 ```json
 {
 	"admin": {

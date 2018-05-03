@@ -34,6 +34,7 @@ requests.packages.urllib3.disable_warnings()
 
 KAVE_VERSION = "34-beta"
 
+
 class CBDeploy():
 
     access_token = ""
@@ -54,8 +55,8 @@ class CBDeploy():
         if stored_credentials:
             try:
                 with open(os.path.expanduser('~/.cbcredstore')) as cred_file:
-                    user=cred_file.readline().strip()
-                    passwd=base64.b64decode(cred_file.readline().strip())
+                    user = cred_file.readline().strip()
+                    passwd = base64.b64decode(cred_file.readline().strip())
             except (IOError, ValueError):
                 print "Error reading Cloudbreak login credentials."
                 raise
@@ -89,7 +90,7 @@ class CBDeploy():
 
         try:
             file = open(os.path.expanduser('~/.cbcredstore'), "w")
-            content = [username+'\n', password+'\n']
+            content = [username + '\n', password + '\n']
             file.writelines(content)
             file.close()
             os.chmod(os.path.expanduser('~/.cbcredstore'), 0600)
@@ -280,8 +281,8 @@ class CBDeploy():
                     return False
                 # Verify that "patchambari" recipe is executed only on Ambari nodes
                 if "patchambari" in hg_defs[hg]["recipes"] and hg_defs[hg]["instance-type"] != "GATEWAY":
-                    print str.format('Wrong hostgroup definition for {}. "patchamabri" recipe can be only executed ' \
-                    'on Ambari Server nodes.', hg)
+                    print str.format('Wrong hostgroup definition for {}. "patchamabri" recipe can be only executed '
+                                     'on Ambari Server nodes.', hg)
                     return False
         return True
 
@@ -497,8 +498,8 @@ class CBDeploy():
                 if response.status_code == 200:
                     return response.json()["id"]
                 else:
-                    raise ValueError(str.format("Unable to obtain Cloudbreak network {}: {} - {}", cbparams.network_name,
-                                                response.status_code, response.text))
+                    raise ValueError(str.format("Unable to obtain Cloudbreak network {}: {} - {}",
+                                                cbparams.network_name, response.status_code, response.text))
         else:
             raise ValueError("Missing network name. Please provide correct value for network_name in cbparams.py")
 
@@ -616,20 +617,20 @@ class CBDeploy():
 
         # if no SSH private key location is set, use the default ~/.ssh/id_rsa
         if not cbparams.ssh_private_key:
-            cbparams.ssh_private_key = os.path.expanduser('~')+"/.ssh/id_rsa"
+            cbparams.ssh_private_key = os.path.expanduser('~') + "/.ssh/id_rsa"
         subprocess.call(["tar", "czf", "kave-patch.tar.gz", "-C", "../../src", "KAVE", "shared"])
         print "Copying KAVE archive to a remote machine..."
         subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
-                        "-i", cbparams.ssh_private_key, "kave-patch.tar.gz", "../../dev/dist_kavecommon.py",
-                        "cloudbreak@" + remoteip + ":~"])
+                         "-i", cbparams.ssh_private_key, "kave-patch.tar.gz", "../../dev/dist_kavecommon.py",
+                         "cloudbreak@" + remoteip + ":~"])
         subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
 
-    def distribute_keys(self, remoteip, ipa_server_node = False):
+    def distribute_keys(self, remoteip, ipa_server_node=False):
         import subprocess
 
         # if no SSH private key location is set, use the default ~/.ssh/id_rsa
         if not cbparams.ssh_private_key:
-            cbparams.ssh_private_key = os.path.expanduser('~')+"/.ssh/id_rsa"
+            cbparams.ssh_private_key = os.path.expanduser('~') + "/.ssh/id_rsa"
         subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
                          "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
                          "sudo", "mkdir", "-p", "/root/.ssh"])
@@ -639,7 +640,8 @@ class CBDeploy():
 
         if ipa_server_node:
             subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
-                             "-i", cbparams.ssh_private_key, cbparams.ssh_private_key, "cloudbreak@" + remoteip + ":~/id_rsa"])
+                             "-i", cbparams.ssh_private_key, cbparams.ssh_private_key,
+                             "cloudbreak@" + remoteip + ":~/id_rsa"])
             subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
                              "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
                              "sudo", "mv", "/home/cloudbreak/id_rsa", "/root/.ssh/id_rsa"])
@@ -650,7 +652,8 @@ class CBDeploy():
                              "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
                              "sudo", "chown", "root:root", "/root/.ssh/id_rsa"])
 
-    def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
+    def wait_for_cluster(self, name, local_repo=False, kill_passed=False,
+                         kill_failed=False, kill_all=False, verbose=False):
         """
         Creates Cloudbreak cluster with given blueprint name and waits for it to be up
         """
@@ -717,8 +720,8 @@ class CBDeploy():
                         print str.format("FAILURE: Requested deletion for cluster {}. Terminating current process.",
                                          stack_name)
                         return False
-                    if response.json()["status"] == "AVAILABLE" and response.json()["cluster"] and response.json()["cluster"]\
-                            and response.json()["cluster"]["status"] == "AVAILABLE":
+                    if response.json()["status"] == "AVAILABLE" and response.json()["cluster"] and \
+                            response.json()["cluster"] and response.json()["cluster"]["status"] == "AVAILABLE":
                         print str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
                                          response.json()["name"], (timer - start))
                         if kill_passed or kill_all:
@@ -726,12 +729,12 @@ class CBDeploy():
                             self.delete_stack_by_name(stack_name)
                         return True
                     if response.json()["status"].endswith("FAILED") \
-                            or (response.json()["cluster"] and response.json()["cluster"]["status"] \
-                            and response.json()["cluster"]["status"].endswith("FAILED")):
+                            or (response.json()["cluster"] and response.json()["cluster"]["status"]
+                                and response.json()["cluster"]["status"].endswith("FAILED")):
                         msg = str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}.",
                                          stack_name, response.json()["status"], response.json()["statusReason"])
                         if response.json()["cluster"] and response.json()["cluster"]["status"]:
-                            msg+= str.format(" Cluster status: {} - {}", response.json()["cluster"]["status"],
+                            msg += str.format(" Cluster status: {} - {}", response.json()["cluster"]["status"],
                                               response.json()["cluster"]["statusReason"])
                         print msg
                         if kill_failed or kill_all:
@@ -739,13 +742,15 @@ class CBDeploy():
                             self.delete_stack_by_name(stack_name)
                         return False
                 # infrastructure is ready, but cluster is not requested yet
-                if response.json() and response.json().get("status") and response.json().get("status")=="AVAILABLE" and \
-                        not cluster_requested:
+                if response.json() and response.json().get("status") and response.json().get(
+                        "status") == "AVAILABLE" and not cluster_requested:
                     if local_repo:
-                        ambarinode=[node for node in response.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
-                        if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
-                            ambariIp = ambarinode['metadata'][0]['publicIp']
-                            self.distribute_package(ambariIp)
+                        ambarinode = [node for node in response.json()['instanceGroups']
+                                      if node["type"] == 'GATEWAY'][0]
+                        if ambarinode['metadata'] and ambarinode['metadata'][0] and \
+                                ambarinode['metadata'][0]['publicIp']:
+                            ambari_ip = ambarinode['metadata'][0]['publicIp']
+                            self.distribute_package(ambari_ip)
                     if freeipa_included:
                         hg_names = [hg["name"] for hg in blueprint["ambariBlueprint"]["host_groups"]]
                         for hg_name in hg_names:

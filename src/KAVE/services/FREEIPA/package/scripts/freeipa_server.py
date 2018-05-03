@@ -221,7 +221,7 @@ class FreeipaServer(Script):
         check = subprocess.Popen('systemctl status ipa', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def create_base_accounts(self, env, fi):

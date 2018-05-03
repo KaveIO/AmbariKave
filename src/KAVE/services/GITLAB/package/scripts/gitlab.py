@@ -99,7 +99,7 @@ class Gitlab(Script):
         check = Popen('gitlab-ctl status', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def restart(self, env):

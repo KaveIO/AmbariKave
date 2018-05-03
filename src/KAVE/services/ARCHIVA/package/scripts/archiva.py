@@ -83,7 +83,7 @@ class Archiva(Script):
         check = subprocess.Popen('service archiva status', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def configure(self, env):

@@ -198,48 +198,50 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
         # Part 2: now check in the params file to see that the same default is set there
         for root, dirs, files in os.walk(os.path.realpath(__file__ + '/../../../')):
             for f in [os.path.join(root, f) for f in files if f == 'params.py' and f not in self.skip]:
-                existingdefaults = None
-                for existingdefaults in defaults:
-                    if f.startswith(existingdefaults[:existingdefaults.find('configuration')]):
-                        break
-                if not existingdefaults:
+                confname = None
+                existingdefaultslist = []
+                for confname in defaults:
+                    if f.startswith(confname[:confname.find('configuration')]):
+                        existingdefaultslist.append(confname)
+                if not existingdefaultslist:
                     continue
-                servicename = existingdefaults.split('/')[-1].lower().split('.')[0]
-                all_params = ""
-                with open(f) as fp:
-                    all_params = fp.read()
-                all_params = self.rm_unchecked_chars(all_params)
-                for defaultp, defaultv in defaults[existingdefaults].iteritems():
-                    if servicename + '/' + defaultp in self.skip_prop:
-                        continue
-                    defaultvs = self.rm_unchecked_chars(defaultv)
-                    search_string = 'default(configurations/' + servicename + '/' + defaultp + ',' + defaultvs
-                    if search_string not in all_params:
-                        failingpyfiles[f + '/' + servicename + '/' + defaultp] = search_string
-                        # If the default is longer than 80 characters it' very difficult to debug, and best if I return
-                        # just some substring instead
-                        if len(search_string) > 80:
-                            begin = 'default(configurations/' + servicename + '/' + defaultp + ','
-                            if begin not in all_params:
-                                failingpyfiles[f + '/' + servicename + '/' + defaultp] = search_string[:80] + '... )'
-                            else:
-                                # find the first non-matching character and return 80 chars including 10 before
-                                search_string = 'default(configurations/' + servicename + '/' + defaultp + ','
-                                this_default = all_params[all_params.find(search_string) + len(search_string):]
-                                print this_default[:10]
-                                start = 0
-                                for start in range(len(defaultvs)):
-                                    if len(this_default) < start:
-                                        start = 0
-                                        break
-                                    if defaultvs[start] != this_default[start]:
-                                        start = max(start - 10, 0)
-                                        break
-                                failingpyfiles[f + '/' + servicename + '/' + defaultp
-                                               ] = ('( ... '
-                                                    + this_default[start:start + 80]
-                                                    + '... )'
-                                                    )
+                for existingdefaults in existingdefaultslist:
+                    configname = existingdefaults.split('/')[-1].lower().split('.')[0]
+                    all_params = ""
+                    with open(f) as fp:
+                        all_params = fp.read()
+                    all_params = self.rm_unchecked_chars(all_params)
+                    for defaultp, defaultv in defaults[existingdefaults].iteritems():
+                        if configname + '/' + defaultp in self.skip_prop:
+                            continue
+                        defaultvs = self.rm_unchecked_chars(defaultv)
+                        search_string = 'default(configurations/' + configname + '/' + defaultp + ',' + defaultvs
+                        if search_string not in all_params:
+                            failingpyfiles[f + '/' + configname + '/' + defaultp] = search_string
+                            # If the default is longer than 80 characters it' very difficult to debug, and best if I return
+                            # just some substring instead
+                            if len(search_string) > 80:
+                                begin = 'default(configurations/' + configname + '/' + defaultp + ','
+                                if begin not in all_params:
+                                    failingpyfiles[f + '/' + configname + '/' + defaultp] = search_string[:80] + '... )'
+                                else:
+                                    # find the first non-matching character and return 80 chars including 10 before
+                                    search_string = 'default(configurations/' + configname + '/' + defaultp + ','
+                                    this_default = all_params[all_params.find(search_string) + len(search_string):]
+                                    print this_default[:10]
+                                    start = 0
+                                    for start in range(len(defaultvs)):
+                                        if len(this_default) < start:
+                                            start = 0
+                                            break
+                                        if defaultvs[start] != this_default[start]:
+                                            start = max(start - 10, 0)
+                                            break
+                                    failingpyfiles[f + '/' + configname + '/' + defaultp
+                                                   ] = ('( ... '
+                                                        + this_default[start:start + 80]
+                                                        + '... )'
+                                                        )
 
         self.assertEqual(len(failingpyfiles), 0,
                          "Found " + str(len(failingpyfiles))

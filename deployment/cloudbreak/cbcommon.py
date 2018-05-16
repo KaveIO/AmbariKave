@@ -63,7 +63,7 @@ class CBDeploy():
             user = raw_input("Please enter Cloudbreak username: ")
             passwd = getpass.getpass()
 
-        url = (cbparams.cb_http_url + ':' + str(cbparams.uaa_port) + '/oauth/authorize?response_type=token'
+        url = (cbparams.cb_https_url + '/identity/oauth/authorize?response_type=token'
                + '&client_id=cloudbreak_shell&ope.0=openid&source=login&redirect_uri=http://cloudbreak.shell')
         headers = {'Accept': 'application/x-www-form-urlencoded',
                    'Content-type': 'application/x-www-form-urlencoded'}
@@ -72,7 +72,7 @@ class CBDeploy():
 
         try:
             auth = requests.post(
-                url, data=data, headers=headers, allow_redirects=False)
+                url, data=data, headers=headers, allow_redirects=False, verify=cbparams.ssl_verify)
             location_header = urlparse.urlparse(auth.headers["Location"])
             parsed_params = urlparse.parse_qsl(location_header.fragment)
             for item in parsed_params:

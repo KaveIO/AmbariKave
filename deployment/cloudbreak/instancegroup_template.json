@@ -1,0 +1,21 @@
+{
+    "parameters": {
+        
+    },
+    "template": {
+        "parameters": {
+            "encrypted": false,
+            "managedDisk": true
+        },
+        "instanceType": "Standard_D3_v2",
+        "volumeType": "Standard_LRS",
+        "volumeCount": 1,
+        "volumeSize": 100
+    },
+    "nodeCount": 1,
+    "group": "",
+    "type": "GATEWAY",
+    "recoveryMode": "MANUAL",
+    "recipeNames": [],
+    "securityGroup": {}
+}

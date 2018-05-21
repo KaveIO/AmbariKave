@@ -20,18 +20,19 @@
 # Cloudbreak details
 # ===============================================
 
-cb_http_url = "http://<cloudbreak pub. IP>"
-cb_https_url = "https://<cloudbreak pub. IP>"
-uaa_port = 8089
+cb_url = ""
 
 # ===============================================
 # Deployment specific configurations
 # ===============================================
 
-credential_name = "<cloudbreak credential name>"
+credential_name = ""
 ssh_private_key = ""
-network_name = "default-azure-network"
+ssh_public_key = ""
 ssl_verify = False
+
+image_catalog = "cloudbreak-default"
+image_id = "a99d040b-c8ea-488b-5fa7-d526e22600e1"
 
 # ===============================================
 # Cloud provider specific configurations

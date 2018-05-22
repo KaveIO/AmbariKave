@@ -63,7 +63,7 @@ class CBDeploy():
             user = raw_input("Please enter Cloudbreak username: ")
             passwd = getpass.getpass()
 
-        url = (cbparams.cb_https_url + '/identity/oauth/authorize?response_type=token'
+        url = (cbparams.cb_url + '/identity/oauth/authorize?response_type=token'
                + '&client_id=cloudbreak_shell&ope.0=openid&source=login&redirect_uri=http://cloudbreak.shell')
         headers = {'Accept': 'application/x-www-form-urlencoded',
                    'Content-type': 'application/x-www-form-urlencoded'}
@@ -104,7 +104,7 @@ class CBDeploy():
 
         bp_name = name + '-' + KAVE_VERSION
         path = '/cb/api/v1/blueprints/account/' + bp_name
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
@@ -130,7 +130,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/blueprints/user'
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
 
         try:
             with open('blueprints/' + name + '.blueprint.json') as bp_file:
@@ -227,7 +227,7 @@ class CBDeploy():
 
         recipe_name = name + '-' + KAVE_VERSION
         path = '/cb/api/v1/recipes/account/' + recipe_name
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
 
@@ -251,7 +251,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/recipes/user'
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
 
         try:
             with open('recipes/recipe_details.json') as rd_file:
@@ -330,7 +330,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/securitygroups/user'
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
 
         try:
             with open('securitygroups/' + name + '.json') as sg_file:
@@ -343,7 +343,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(id)
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
         params = {"forced": True}
         try:
             response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
@@ -360,7 +360,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/user/' + name
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
         params = {"forced": True}
         try:
             response = requests.delete(url, headers=headers, params=json.dumps(params), verify=cbparams.ssl_verify)
@@ -384,7 +384,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v2/stacks/user'
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
         try:
             with open("cluster_template.json") as cl_file:
                 cluster = json.load(cl_file)
@@ -436,7 +436,7 @@ class CBDeploy():
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(cluster["id"]) + '/status'
-        url = cbparams.cb_https_url + path
+        url = cbparams.cb_url + path
 
         max_execution_time = 7200
         start = timer = int(time.time())

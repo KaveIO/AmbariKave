@@ -293,7 +293,7 @@ class CBDeploy():
             raise StandardError("Error creating Cloudbreak recipe {}-{}: {}",
                                 name, KAVE_VERSION, response.text)
 
-    def create_instancegroup(self, instancegroup):
+    def create_instancegroup(self, instancegroup, local_repo):
 
         try:
             with open('config/hostgroups.azure.json') as hg_file:
@@ -323,6 +323,9 @@ class CBDeploy():
         instance["securityGroup"] = self.create_security_group(hostgroup_info['security-group'])
         instance["recipeNames"] = []
         for recipe in hostgroup_info["recipes"]:
+            if local_repo and (instancegroup == "admin" or instancegroup == "admin-freeipa") and \
+                    recipe == "patchambari":
+                recipe += "-git"
             instance["recipeNames"].append(self.check_for_recipe(recipe))
         return instance
 
@@ -379,8 +382,20 @@ class CBDeploy():
             if ig["group"] == groupName:
                 return ig["metadata"][0]["publicIp"]
 
+    def distribute_package(self, remoteip):
+        import subprocess
 
-    def create_cluster(self, name):
+        # if no SSH private key location is set, use the default ~/.ssh/id_rsa
+        if not cbparams.ssh_private_key:
+            cbparams.ssh_private_key = os.path.expanduser('~')+"/.ssh/id_rsa"
+        subprocess.call(["tar", "czf", "kave-patch.tar.gz", "-C", "../../src", "KAVE", "shared"])
+        print "Copying KAVE archive to a remote machine..."
+        subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
+                        "-i", cbparams.ssh_private_key, "kave-patch.tar.gz", "../../dev/dist_kavecommon.py",
+                        "cloudbreak@" + remoteip + ":~"])
+        subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
+
+    def create_cluster(self, name, local_repo):
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v2/stacks/user'
@@ -410,7 +425,7 @@ class CBDeploy():
         if not self.verify_hostgroups(hgs):
             raise Exception("Terminating stack creation for blueprint ", name)
         for hg in hgs:
-            instance = self.create_instancegroup(hg)
+            instance = self.create_instancegroup(hg, local_repo)
             cluster["instanceGroups"].append(instance)
 
         try:
@@ -426,7 +441,7 @@ class CBDeploy():
 
     def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
         try:
-            cluster = self.create_cluster(name)
+            cluster = self.create_cluster(name, local_repo)
         except Exception as e:
             print "FAILURE: ", e
             return
@@ -435,7 +450,7 @@ class CBDeploy():
 
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
-        path = '/cb/api/v1/stacks/' + str(cluster["id"]) + '/status'
+        path = '/cb/api/v2/stacks/' + str(cluster["id"]) + '/status'
         url = cbparams.cb_url + path
 
         max_execution_time = 7200
@@ -446,7 +461,7 @@ class CBDeploy():
         max_retries = 5
         latest_status = ""
         latest_status_reason = ""
-        cluster_requested = False
+        package_distributed = False
 
         while timer < timeout:
             response = requests.get(
@@ -496,6 +511,15 @@ class CBDeploy():
                             print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
                             self.delete_stack_by_name(cluster['name'])
                         return False
+                    if local_repo and not package_distributed:
+                        cluster_info = requests.get(url[0:url.rfind('/')],
+                                                    headers=headers, verify=cbparams.ssl_verify)
+                        ambarinode=[node for node in cluster_info.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
+                        if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
+                            ambariIp = ambarinode['metadata'][0]['publicIp']
+                            if ambariIp:
+                                self.distribute_package(ambariIp)
+                                package_distributed = True
                 # reset retries_count after success
                 if retries_count != 0:
                     retries_count = 0

@@ -55,7 +55,7 @@
     },
     "ipa-security-settings":
     {
-        "recipeType": "POST_AMBARI_START",
+        "recipeType": "POST_CLUSTER_INSTALL",
         "description": "Modify default security settings",
         "templatePath": "recipes/mandatory/ipa_security_settings.sh"
     }

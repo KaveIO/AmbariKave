@@ -377,10 +377,14 @@ class CBDeploy():
             print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
             return True
 
-    def get_node_public_ip(self, stack, groupName):
-        for ig in stack["instanceGroups"]:
-            if ig["group"] == groupName:
-                return ig["metadata"][0]["publicIp"]
+    def get_public_ips(self, instances):
+        ips = {}
+        for ig in instances:
+            if ig["metadata"] and ig["metadata"][0] and ig["metadata"][0]["publicIp"]:
+                 ips[ig["group"]] = ig["metadata"][0]["publicIp"]
+            else:
+                return False
+        return ips
 
     def distribute_package(self, remoteip):
         import subprocess
@@ -394,6 +398,41 @@ class CBDeploy():
                         "-i", cbparams.ssh_private_key, "kave-patch.tar.gz", "../../dev/dist_kavecommon.py",
                         "cloudbreak@" + remoteip + ":~"])
         subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
+
+    def distribute_keys(self, remoteip, ipa_server_node = False):
+        import subprocess
+
+        # if no SSH private key location is set, use the default ~/.ssh/id_rsa
+        if not cbparams.ssh_private_key:
+            cbparams.ssh_private_key = os.path.expanduser('~')+"/.ssh/id_rsa"
+        subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                         "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                         "sudo", "mkdir", "-p", "/root/.ssh"])
+        subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                         "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                         "sudo", "cp", "/home/cloudbreak/.ssh/authorized_keys", "/root/.ssh/authorized_keys"])
+
+        if ipa_server_node:
+            subprocess.call(["scp", "-o", "UserKnownHostsFile=/dev/null", "-o", "StrictHostKeyChecking=no",
+                             "-i", cbparams.ssh_private_key, cbparams.ssh_private_key, "cloudbreak@" + remoteip + ":~/id_rsa"])
+            subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                             "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                             "sudo", "mv", "/home/cloudbreak/id_rsa", "/root/.ssh/id_rsa"])
+            subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                             "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                             "sudo", "chmod", "600", "/root/.ssh/id_rsa"])
+            subprocess.call(["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+                             "-i", cbparams.ssh_private_key, "cloudbreak@" + remoteip,
+                             "sudo", "chown", "root:root", "/root/.ssh/id_rsa"])
+
+    def find_nodes_with_component(self, cluster, component):
+        nodes = []
+        bp = json.loads(base64.b64decode(cluster['cluster']['blueprint']['ambariBlueprint']))
+        for hg in bp['host_groups']:
+            for comp in hg["components"]:
+                if comp["name"] == component:
+                    nodes.append(hg["name"])
+        return nodes
 
     def create_cluster(self, name, local_repo):
         headers = {"Authorization": "Bearer " +
@@ -440,8 +479,13 @@ class CBDeploy():
             raise Exception(str.format("Cluster {} could not be created: {}", cluster["general"]["name"], response.text))
 
     def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
+        freeipa_included = False
+        freeipa_server_list = []
         try:
             cluster = self.create_cluster(name, local_repo)
+            freeipa_server_list = self.find_nodes_with_component(cluster, "FREEIPA_SERVER")
+            if freeipa_server_list:
+                freeipa_included = True
         except Exception as e:
             print "FAILURE: ", e
             return
@@ -462,6 +506,7 @@ class CBDeploy():
         latest_status = ""
         latest_status_reason = ""
         package_distributed = False
+        keys_distributed = False
 
         while timer < timeout:
             response = requests.get(
@@ -511,15 +556,26 @@ class CBDeploy():
                             print str.format("Cluster {} and its infrastructure will be deleted.", cluster["name"])
                             self.delete_stack_by_name(cluster['name'])
                         return False
-                    if local_repo and not package_distributed:
+                    if (local_repo and not package_distributed) or (freeipa_included and not keys_distributed):
                         cluster_info = requests.get(url[0:url.rfind('/')],
                                                     headers=headers, verify=cbparams.ssl_verify)
-                        ambarinode=[node for node in cluster_info.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
-                        if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
-                            ambariIp = ambarinode['metadata'][0]['publicIp']
-                            if ambariIp:
-                                self.distribute_package(ambariIp)
-                                package_distributed = True
+                        if local_repo and not package_distributed:
+                            ambarinode=[node for node in cluster_info.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
+                            if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
+                                ambariIp = ambarinode['metadata'][0]['publicIp']
+                                if ambariIp:
+                                    self.distribute_package(ambariIp)
+                                    package_distributed = True
+                        if freeipa_included and not keys_distributed:
+                            instancegroups = cluster_info.json()['instanceGroups']
+                            igs = self.get_public_ips(instancegroups)
+                            if igs:
+                                for ig in igs:
+                                    if ig in freeipa_server_list:
+                                        self.distribute_keys(igs[ig], True)
+                                    else:
+                                        self.distribute_keys(igs[ig])
+                                keys_distributed = True
                 # reset retries_count after success
                 if retries_count != 0:
                     retries_count = 0

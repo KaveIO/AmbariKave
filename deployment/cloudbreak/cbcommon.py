@@ -114,12 +114,26 @@ class CBDeploy():
             print str.format("Unable to get Cloudbreak blueprint with name {}: {}", name, response.text)
             raise
         if response.status_code == 200:
-            return response.json()
+            if self.compare_blueprints(response.json(), name):
+                # local and Cloudbreak versions are the same; use this resource
+                return response.json()
+            else:
+                # try to delete the resource from Cloudbreak and create a new one
+                print str.format("Trying to delete existing {} blueprint...", name)
+                if self.delete_blueprint(name):
+                    # resource was deleted successfully; create a new one with the same name
+                    return self.create_blueprint(name)
+                else:
+                    # resource was not deleted; create a new one with a different name
+                    import random, string
+                    print str.format("Creating new {} blueprint... ", name)
+                    rnd_str = ''.join([random.choice(string.ascii_letters) for n in range(5)])
+                    return self.create_blueprint(name, rnd_str)
         else:
             print str.format("Blueprint with name {} does not exist.\nBlueprint {} will be created.", bp_name, bp_name)
             return self.create_blueprint(name)
 
-    def create_blueprint(self, name):
+    def create_blueprint(self, name, random =False):
         """
         Creates Cloudbreak blueprint with given name
         """
@@ -139,7 +153,10 @@ class CBDeploy():
             raise StandardError(str.format("No correct blueprint .json file found for {}: {}", name, e))
 
         data = {}
-        bp_name = name + '-' + KAVE_VERSION
+        if (random):
+            bp_name = name + '-' + random + '-' + KAVE_VERSION
+        else:
+            bp_name = name + '-' + KAVE_VERSION
         data['name'] = bp_name
         data['ambariBlueprint'] = base64.b64encode(json.dumps(bp))
 
@@ -154,6 +171,58 @@ class CBDeploy():
             return response.json()
         else:
             raise StandardError("Error creating Cloudbreak blueprint with name {}: {}", bp_name, response.text)
+
+    def delete_blueprint(self, name):
+        headers = {"Authorization": "Bearer " +
+                   self.access_token, "Content-type": "application/json"}
+        path = '/cb/api/v1/blueprints/user/' + name + '-' + KAVE_VERSION
+        url = cbparams.cb_url + path
+
+        try:
+            response = requests.delete(url, headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to delete Cloudbreak blueprint with name {}: {}",
+                             name + '-' + KAVE_VERSION, response.text)
+            raise
+        if response.status_code == 200:
+            print str.format("Blueprint {} successfully deleted.", name + '-' + KAVE_VERSION)
+            return True
+        else:
+            print str.format("Error deleting Cloudbreak blueprint with name {}: {}",
+                             name + '-' + KAVE_VERSION, response.text)
+            return False
+
+    def compare_blueprints(self, res, name):
+        local_resource_name = 'blueprints/' + name + '.blueprint.json'
+        res = json.loads(base64.b64decode(res['ambariBlueprint']))
+        try:
+            with open(local_resource_name) as lr_file:
+                loc_res = json.load(lr_file)
+        except (IOError, ValueError) as e:
+            raise StandardError(
+                str.format(
+                    "File blueprints/{}.blueprint.json is not complete or is not readable.",
+                    name))
+        if res == loc_res:
+            return True
+        else:
+            print str.format("Local and remote versions of blueprint {} don't match!", name)
+            return False
+
+    def compare_recipes(self, res, name):
+        res = base64.b64decode(res['content'])
+        try:
+            with open('recipes/recipe_details.json') as rd_file:
+                rd = json.load(rd_file)
+        except (IOError, ValueError) as e:
+            raise StandardError("Json file recipe_details.json is not complete or is not readable. ")
+        with open(rd[name]['templatePath']) as rf:
+            loc_rec = rf.read()
+        if res == loc_rec:
+            return True
+        else:
+            print str.format("Local and remote versions of recipe {} don't match!", name)
+            return False
 
     def verify_blueprint(self, bp_name):
 
@@ -237,7 +306,20 @@ class CBDeploy():
             print str.format("Unable to get details for recipe {} from Cloudbreak: {}", recipe_name, response.text)
             raise
         if response.status_code == 200:
-            return response.json()['name']
+            if self.compare_recipes(response.json(), name):
+                # local and Cloudbreak versions are the same; use this resource
+                return response.json()['name']
+            else:
+                # delete recipe from Cloudbreak and create a new one
+                if self.delete_recipe(name):
+                    print str.format("Recipe {} was successfully deleted from Cloudbreak.")
+                    return self.create_recipe(name)
+                else:
+                    print str.format("Local version of recipe {} is different from the version, registered  in" \
+                    " Cloudbreak. Recipe {} from Cloudbreak will be used for the current cluster deployment. If " \
+                    " you want to use the local version, rename it properly or make sure it is not in use in Cloudbreak.",
+                    recipe_name, recipe_name)
+                    return response.json()['name']
         else:
             print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.",
                              recipe_name, recipe_name)
@@ -292,6 +374,24 @@ class CBDeploy():
         else:
             raise StandardError("Error creating Cloudbreak recipe {}-{}: {}",
                                 name, KAVE_VERSION, response.text)
+
+    def delete_recipe(self, name):
+        headers = {"Authorization": "Bearer " +
+                   self.access_token, "Content-type": "application/json"}
+        path = '/cb/api/v1/recipes/user/' + name + '-' + KAVE_VERSION
+        url = cbparams.cb_url + path
+
+        try:
+            response = requests.delete(url, headers=headers, verify=cbparams.ssl_verify)
+        except RequestException:
+            print str.format("Unable to delete Cloudbreak recipe {}-{}", name, KAVE_VERSION)
+            raise
+        if response.status_code == 200:
+            print str.format("Successfully deleted Cloudbreak recipe {}-{}", name, KAVE_VERSION)
+            return True
+        else:
+            print str.format("Error deleting Cloudbreak recipe {}-{}: {}", name, KAVE_VERSION, response.text)
+            return False
 
     def create_instancegroup(self, instancegroup, local_repo):
 

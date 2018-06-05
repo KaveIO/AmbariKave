@@ -184,7 +184,7 @@ class CBDeploy():
             print str.format("Unable to delete Cloudbreak blueprint with name {}: {}",
                              name + '-' + KAVE_VERSION, response.text)
             raise
-        if response.status_code == 200:
+        if response.status_code == 204:
             print str.format("Blueprint {} successfully deleted.", name + '-' + KAVE_VERSION)
             return True
         else:
@@ -386,7 +386,7 @@ class CBDeploy():
         except RequestException:
             print str.format("Unable to delete Cloudbreak recipe {}-{}", name, KAVE_VERSION)
             raise
-        if response.status_code == 200:
+        if response.status_code == 204:
             print str.format("Successfully deleted Cloudbreak recipe {}-{}", name, KAVE_VERSION)
             return True
         else:

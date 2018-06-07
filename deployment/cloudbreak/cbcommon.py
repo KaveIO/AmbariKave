@@ -127,7 +127,7 @@ class CBDeploy():
                     # resource was not deleted; create a new one with a different name
                     import random, string
                     print str.format("Creating new {} blueprint... ", name)
-                    rnd_str = ''.join([random.choice(string.ascii_letters) for n in range(5)])
+                    rnd_str = ''.join([random.choice(string.ascii_lowercase) for n in range(5)])
                     return self.create_blueprint(name, rnd_str)
         else:
             print str.format("Blueprint with name {} does not exist.\nBlueprint {} will be created.", bp_name, bp_name)
@@ -269,6 +269,7 @@ class CBDeploy():
         except (IOError, ValueError):
             print "Json file hostgroups.azure.json is not complete or is not readable."
             return False
+        hostgroups={}
         for hg in hg_names:
             if hg not in hg_defs:
                 print str.format("Missing details for hostgroup '{}' in hostgroups.azure.json file.", hg)
@@ -287,7 +288,8 @@ class CBDeploy():
                     print str.format('Wrong hostgroup definition for {}. "patchamabri" recipe can be only executed ' \
                     'on Ambari Server nodes.', hg)
                     return False
-        return True
+                hostgroups[hg] = hg_defs[hg]
+        return hostgroups
 
     def check_for_recipe(self, name):
         """
@@ -311,21 +313,21 @@ class CBDeploy():
                 return response.json()['name']
             else:
                 # delete recipe from Cloudbreak and create a new one
+                print str.format("Trying to delete existing recipe {} ...", name)
                 if self.delete_recipe(name):
-                    print str.format("Recipe {} was successfully deleted from Cloudbreak.")
                     return self.create_recipe(name)
                 else:
-                    print str.format("Local version of recipe {} is different from the version, registered  in" \
-                    " Cloudbreak. Recipe {} from Cloudbreak will be used for the current cluster deployment. If " \
-                    " you want to use the local version, rename it properly or make sure it is not in use in Cloudbreak.",
-                    recipe_name, recipe_name)
-                    return response.json()['name']
+                    # recipe was not deleted; create a new one with a different name
+                    import random, string
+                    print str.format("Creating new {} recipe... ", name)
+                    rnd_str = ''.join([random.choice(string.ascii_lowercase) for n in range(5)])
+                    return self.create_recipe(name, rnd_str)
         else:
             print str.format("Recipe with name {} does not exist.\nRecipe {} will be created.",
                              recipe_name, recipe_name)
             return self.create_recipe(name)
 
-    def create_recipe(self, name):
+    def create_recipe(self, name, random=False):
         """
         Creates Cloudbreak recipe with given name
         """
@@ -347,7 +349,11 @@ class CBDeploy():
             raise ValueError("Missing details for recipe {} in recipe_details.json", name)
 
         data = {}
-        data['name'] = name + '-' + KAVE_VERSION
+        if random:
+            rec_name = name + '-' + random + '-' + KAVE_VERSION
+        else:
+            rec_name = name + '-' + KAVE_VERSION
+        data['name'] = rec_name
         data['recipeType'] = details['recipeType']
         data['description'] = details['description']
         try:
@@ -366,14 +372,13 @@ class CBDeploy():
             response = requests.post(url, data=json.dumps(
                 data), headers=headers, verify=cbparams.ssl_verify)
         except RequestException:
-            print str.format("Unable to create Cloudbreak recipe {}-{}", name, KAVE_VERSION)
+            print str.format("Unable to create Cloudbreak recipe {}", rec_name)
             raise
         if response.status_code == 200:
-            print str.format("Created new Cloudbreak recipe {}-{}", name, KAVE_VERSION)
+            print str.format("Created new Cloudbreak recipe {}", rec_name)
             return response.json()["name"]
         else:
-            raise StandardError("Error creating Cloudbreak recipe {}-{}: {}",
-                                name, KAVE_VERSION, response.text)
+            raise StandardError("Error creating Cloudbreak recipe {}: {}", rec_name, response.text)
 
     def delete_recipe(self, name):
         headers = {"Authorization": "Bearer " +
@@ -393,7 +398,7 @@ class CBDeploy():
             print str.format("Error deleting Cloudbreak recipe {}-{}: {}", name, KAVE_VERSION, response.text)
             return False
 
-    def create_instancegroup(self, instancegroup, local_repo):
+    def create_instancegroup(self, instancegroup, recipes):
 
         try:
             with open('config/hostgroups.azure.json') as hg_file:
@@ -423,10 +428,7 @@ class CBDeploy():
         instance["securityGroup"] = self.create_security_group(hostgroup_info['security-group'])
         instance["recipeNames"] = []
         for recipe in hostgroup_info["recipes"]:
-            if local_repo and (instancegroup == "admin" or instancegroup == "admin-freeipa") and \
-                    recipe == "patchambari":
-                recipe += "-git"
-            instance["recipeNames"].append(self.check_for_recipe(recipe))
+            instance["recipeNames"].append(recipes[recipe])
         return instance
 
     def create_security_group(self, name):
@@ -561,10 +563,20 @@ class CBDeploy():
             ambp = json.loads(base64.b64decode(blueprint["ambariBlueprint"]))
             hgs = [item["name"] for item in ambp["host_groups"]]
 
-        if not self.verify_hostgroups(hgs):
+        hg_defs = self.verify_hostgroups(hgs)
+        if not hg_defs:
             raise Exception("Terminating stack creation for blueprint ", name)
+        recipes = set()
+        recipes_mapping = {}
         for hg in hgs:
-            instance = self.create_instancegroup(hg, local_repo)
+            recipes = recipes.union(hg_defs[hg]["recipes"])
+        for recipe in recipes:
+            if local_repo and recipe == "patchambari":
+                recipes_mapping[recipe] = self.check_for_recipe(recipe + "-git")
+            else:
+                recipes_mapping[recipe] = self.check_for_recipe(recipe)
+        for hg in hgs:
+            instance = self.create_instancegroup(hg, recipes_mapping)
             cluster["instanceGroups"].append(instance)
 
         try:

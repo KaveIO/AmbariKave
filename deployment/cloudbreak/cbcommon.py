@@ -536,6 +536,25 @@ class CBDeploy():
                     nodes.append(hg["name"])
         return nodes
 
+    def get_credential(self):
+        if cbparams.credential_name:
+            headers = {"Authorization": "Bearer " +
+                       self.access_token, "Content-type": "application/json"}
+            path = '/cb/api/v1/credentials/account/' + cbparams.credential_name
+            url = cbparams.cb_url + path
+            try:
+                response = requests.get(url, headers=headers, verify=cbparams.ssl_verify)
+            except RequestException as e:
+                print "Unable to obtain Cloudbreak credential."
+                raise
+            else:
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    raise ValueError("Unable to obtain Cloudbreak credential.")
+        else:
+            raise ValueError("Missing credential name. Please provide correct value for credential_name in cbparams.py")
+
     def create_cluster(self, name, local_repo):
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
@@ -578,6 +597,19 @@ class CBDeploy():
         for hg in hgs:
             instance = self.create_instancegroup(hg, recipes_mapping)
             cluster["instanceGroups"].append(instance)
+
+        if cbparams.adls_enabled and cbparams.adls_name:
+            credential = self.get_credential()
+            fileSystem = {}
+            fileSystem["type"] = "ADLS"
+            fileSystem["defaultFs"] = False
+            fileSystem["name"] = cluster["general"]["name"]
+            fileSystem["properties"] = {}
+            fileSystem["properties"]["tenantId"] = credential["parameters"]["tenantId"]
+            fileSystem["properties"]["clientId"] = credential["parameters"]["accessKey"]
+            fileSystem["properties"]["accountName"] = cbparams.adls_name
+            fileSystem["properties"]["secure"] = False
+            cluster["fileSystem"] = fileSystem
 
         try:
             response = requests.post(url, data=json.dumps(

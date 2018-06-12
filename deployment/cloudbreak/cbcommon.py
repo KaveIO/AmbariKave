@@ -479,6 +479,14 @@ class CBDeploy():
             print str.format("Cluster {} and its infrastructure were successfully deleted.", name)
             return True
 
+    def get_ssh_public_key(self, path):
+        try:
+            with open(path) as key_file:
+                pkey_content = key_file.read()
+            return pkey_content
+        except IOError, ValueError:
+            raise
+
     def get_public_ips(self, instances):
         ips = {}
         for ig in instances:
@@ -573,7 +581,7 @@ class CBDeploy():
         cluster["placement"]["region"] = cbparams.region
         cluster["cluster"]["ambari"]["blueprintName"] = blueprint["name"]
 
-        cluster["stackAuthentication"]["publicKey"] = cbparams.ssh_public_key
+        cluster["stackAuthentication"]["publicKey"] = self.get_ssh_public_key(cbparams.ssh_public_key)
 
         cluster["imageSettings"]["imageCatalog"] = cbparams.image_catalog
         cluster["imageSettings"]["imageId"] = cbparams.image_id

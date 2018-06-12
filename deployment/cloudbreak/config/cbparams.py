@@ -20,19 +20,19 @@
 # Cloudbreak details
 # ===============================================
 
-cb_url = ""
+cb_url = "https://<cloudbreak dns name>"
 
 # ===============================================
 # Deployment specific configurations
 # ===============================================
 
-credential_name = ""
-ssh_private_key = ""
-ssh_public_key = ""
+credential_name = "<cloudbreak credential name>"
+ssh_private_key = "<full path to SSH private key>"
+ssh_public_key = "<full path to SSH public key>"
 ssl_verify = False
 
-image_catalog = "cloudbreak-default"
-image_id = "a99d040b-c8ea-488b-5fa7-d526e22600e1"
+image_catalog = "<cloudbreak image catalog name>"
+image_id = "<cloudbreak image uuid>"
 
 # ===============================================
 # Cloud provider specific configurations

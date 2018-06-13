@@ -27,8 +27,8 @@ cb_url = "https://<cloudbreak dns name>"
 # ===============================================
 
 credential_name = "<cloudbreak credential name>"
-ssh_private_key = "<full path to SSH private key>"
-ssh_public_key = "<full path to SSH public key>"
+ssh_private_key = ""
+ssh_public_key = ""
 ssl_verify = False
 
 image_catalog = "<cloudbreak image catalog name>"

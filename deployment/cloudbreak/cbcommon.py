@@ -480,10 +480,13 @@ class CBDeploy():
             return True
 
     def get_ssh_public_key(self, path):
+        if not path:
+            path = os.path.expanduser('~')+"/.ssh/id_rsa.pub"
         try:
+            print "path = ", path
             with open(path) as key_file:
                 pkey_content = key_file.read()
-            return pkey_content
+            return pkey_content.rstrip('\r\n')
         except IOError, ValueError:
             raise
 

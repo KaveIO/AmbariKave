@@ -7,7 +7,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -23,7 +22,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -40,7 +38,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -54,7 +51,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -68,7 +64,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -82,7 +77,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -96,7 +90,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -110,7 +103,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -124,7 +116,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -138,7 +129,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -152,7 +142,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -178,7 +167,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "patchambari",
                     "fix-hosts-file",
@@ -194,7 +182,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -208,7 +195,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts",
@@ -223,7 +209,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -237,7 +222,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -251,7 +235,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -265,7 +248,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"
@@ -279,7 +261,6 @@
         "volume-type": "Standard_LRS",
         "security-group" : "default_security_group",
         "node-count" : 1,
-        "recovery-mode": "MANUAL",
         "recipes": [
                     "fix-hosts-file",
                     "limit-ssh-attempts"

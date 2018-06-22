@@ -3,10 +3,10 @@ Description=Apache Archiva service
 
 [Service]
 Type=forking
-ExecStart={{install_topdir}}{{install_subdir}}bin/archiva start
-ExecStop={{install_topdir}}{{install_subdir}}bin/archiva stop
-ExecReload={{install_topdir}}{{install_subdir}}bin/archiva restart
-PIDFile={{install_topdir}}{{install_subdir}}logs/archiva.pid
+ExecStart={{install_topdir}}{{install_subdir}}/bin/archiva start
+ExecStop={{install_topdir}}{{install_subdir}}/bin/archiva stop
+ExecReload={{install_topdir}}{{install_subdir}}/bin/archiva restart
+PIDFile={{install_topdir}}{{install_subdir}}/logs/archiva.pid
 Restart=always
 
 [Install]

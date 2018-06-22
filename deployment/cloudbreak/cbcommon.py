@@ -275,7 +275,7 @@ class CBDeploy():
                 print str.format("Missing details for hostgroup '{}' in hostgroups.azure.json file.", hg)
                 return False
             for prop in ["instance-type", "volume-size", "volume-count", "type",
-                         "security-group", "node-count", "recovery-mode", "recipes"]:
+                         "security-group", "node-count", "recipes"]:
                 if prop not in hg_defs[hg]:
                     print str.format("'{}' for '{}' hostgroup is not definined in hostgroups.azure.json", prop, hg)
                     return False
@@ -424,7 +424,6 @@ class CBDeploy():
         instance['template']['volumeCount'] = hostgroup_info['volume-count']
         instance['template']['volumeSize'] = hostgroup_info['volume-size']
         instance['template']['volumeType'] = hostgroup_info['volume-type']
-        instance['recoveryMode'] = hostgroup_info['recovery-mode']
         instance["securityGroup"] = self.create_security_group(hostgroup_info['security-group'])
         instance["recipeNames"] = []
         for recipe in hostgroup_info["recipes"]:

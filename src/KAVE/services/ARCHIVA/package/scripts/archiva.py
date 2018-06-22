@@ -99,6 +99,10 @@ class Archiva(Script):
              content=Template("security.properties.j2"),
              mode=0600
              )
+        File(params.systemd_archiva_unitfile_path,
+             content=Template("archiva.service"),
+             mode=0600
+             )
 
 
 if __name__ == "__main__":

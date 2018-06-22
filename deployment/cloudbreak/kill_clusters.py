@@ -33,7 +33,7 @@ params:
 import cbcommon
 
 def help():
-    print __doc__
+    print (__doc__)
 
 if __name__ == "__main__":
     import sys
@@ -48,4 +48,4 @@ if __name__ == "__main__":
             try:
                 cb.delete_stack_by_name(cl)
             except Exception as e:
-                print "ERROR: ", e
+                print ("ERROR: ", e)

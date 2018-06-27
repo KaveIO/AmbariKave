@@ -38,8 +38,13 @@ kc.is_valid_emailid(JENKINS_ADMIN_EMAIL, "jenkins/JENKINS_ADMIN_EMAIL")
 JENKINS_ADMIN_PASSWORD = config['configurations']['jenkins']['JENKINS_ADMIN_PASSWORD']
 Logger.sensitive_strings[JENKINS_ADMIN_PASSWORD] = "[PROTECTED]"
 
-download_version = default("configurations/jenkins/download_version", "1.642")
+download_version = default("configurations/jenkins/download_version", "2.129")
 plugins = default("configurations/jenkins/plugins",
-                  "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, "
-                  "gitlab-plugin, git-parameter, git-tag-message, matrix-project, "
-                  "scm-api, ssh-agent, sonar, sonargraph-plugin")
+                  "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, "
+                  "gitlab-plugin, git-parameter, git-tag-message, matrix-project, matrix-auth, "
+                  "scm-api, ssh-agent, sonar, sonargraph-plugin, "
+                  "workflow-support, javadoc, mailer, "
+                  "jackson2-api, display-url-api, credentials, maven-plugin, "
+                  "workflow-scm-step, apache-httpcomponents-client-4-api, workflow-api, "
+                  "jsch, structs, workflow-job, junit, script-security, bouncycastle-api, "
+                  "ssh-credentials, workflow-step-api, token-macro, plain-credentials, jquery")

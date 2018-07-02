@@ -11,7 +11,8 @@
                     "patchambari",
                     "fix-hosts-file",
                     "limit-ssh-attempts",
-                    "ipv6-lo-enable"
+                    "ipv6-lo-enable",
+                    "mysql-connector-install"
                     ]
     },
     "admin-freeipa": {
@@ -27,7 +28,8 @@
                     "fix-hosts-file",
                     "limit-ssh-attempts",
                     "ipv6-lo-enable",
-                    "ipa-security-settings"
+                    "ipa-security-settings",
+                    "mysql-connector-install"
                     ]
     },
     "gateway": {
@@ -148,11 +150,12 @@
                     ]
     },
     "kafka": {
-        "machine-type": "Standard_D1_v2",
+        "instance-type": "Standard_D1_v2",
         "volume-size": 40,
+        "type" : "CORE",
         "volume-count": 1,
-        "instance-type" : "CORE",
-        "security-group" : "default-azure-only-ssh-and-ssl",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
         "node-count" : 1,
         "recipes": [
                     "fix-hosts-file",

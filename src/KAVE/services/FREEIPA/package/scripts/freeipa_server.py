@@ -96,6 +96,8 @@ class FreeipaServer(Script):
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
 
+        Execute("sysctl -w net.ipv6.conf.lo.disable_ipv6=0")
+
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
             % (params.realm, params.directory_password, admin_password, _hostname)

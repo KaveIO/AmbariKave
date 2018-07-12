@@ -56,6 +56,41 @@
     </description>
   </property>
   <property>
+    <name>use_external_postgres</name>
+    <value>false</value>
+    <description>
+        Use external Postgres server or embedded one
+    </description>
+  </property>
+  <property>
+    <name>postgres_database_host</name>
+    <value>127.0.0.1</value>
+    <description>
+        External Postgres server host
+    </description>
+  </property>
+  <property>
+    <name>postgres_database_port</name>
+    <value>5432</value>
+    <description>
+        External Postgres server port
+    </description>
+  </property>
+  <property>
+    <name>postgres_database_name</name>
+    <value>gitlabhq_production</value>
+    <description>
+        Postgres database name
+    </description>
+  </property>
+  <property>
+    <name>postgres_database_user</name>
+    <value>gitlab</value>
+    <description>
+        Postgres database user
+    </description>
+  </property>
+  <property>
     <name>gitlabrb</name>
     <value># Created automatically with Ambari
 # All manual changes will be undone in the case of a server restart

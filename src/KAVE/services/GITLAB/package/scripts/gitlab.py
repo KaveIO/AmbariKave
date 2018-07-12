@@ -15,8 +15,6 @@
 #   limitations under the License.
 #
 ##############################################################################
-import os
-import shutil
 
 from resource_management import *
 from subprocess import Popen, PIPE, STDOUT
@@ -27,12 +25,6 @@ class Gitlab(Script):
     installer_cache_path = '/tmp/'
 
     def install(self, env):
-        # TODO: instead of throwing an exception here, I should enter gitlabs into the existing postgre database
-        # correctly
-        if os.path.exists('/var/lib/pgsql/data/pg_hba.conf'):
-            raise SystemError(
-                "You appear to already have a default postgre database installed (probably you're trying to put "
-                "Gitlabs on the same machine as Ambari). This type of operation is not implemented yet.")
         import params
         # intelligently choose architecture
         import kavecommon as kc
@@ -42,9 +34,23 @@ class Gitlab(Script):
         env.set_params(params)
 
         kc.copy_cache_or_repo(self.package, cache_dir=self.installer_cache_path)
+
+        if params.use_external_postgres:
+            Execute('sudo -u postgres psql -d template1 -c "CREATE USER ' + str(params.postgres_database_user) +
+                    ' WITH PASSWORD \'%s\';"' % params.gitlab_admin_password)
+            Execute('sudo -u postgres psql -d template1 -c "ALTER USER %s CREATEDB;"' % params.postgres_database_user)
+            Execute('sudo -u postgres psql -d template1 -c ' +
+                    '"CREATE DATABASE {} OWNER {};"'.format(params.postgres_database_name,
+                                                            params.postgres_database_user))
+            Execute('sudo -u postgres psql -d template1 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"')
+
         # reset the password with set_password method
         # cretae SSL certificate
         Execute('rpm --replacepkgs -i %s' % self.package)
+
+        if params.use_external_postgres:
+            Execute('gitlab-ctl reconfigure')
+            Execute('gitlab-rake gitlab:setup force=yes')
         Execute('mkdir -p /etc/gitlab/ssl/')
         country = "NA"
         state = "NA"

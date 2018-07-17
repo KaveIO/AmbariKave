@@ -53,6 +53,12 @@
         "description": "Install FreeIPA Client on all hosts",
         "templatePath": "recipes/mandatory/distribute-secrets-and-install-ipa-client.sh"
     },
+    "setup-ambari-agent-tls":
+    {
+        "recipeType": "POST_AMBARI_START",
+        "description": "Setup ambari-agent TLS to PROTOCOL_TLSv1_2",
+        "templatePath": "recipes/mandatory/setup_ambari_agent_tls.sh"
+    },
     "ipa-security-settings":
     {
         "recipeType": "POST_CLUSTER_INSTALL",

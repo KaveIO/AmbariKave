@@ -276,6 +276,8 @@ if ambari.detect_linux_version() in ["Centos7"]:
 
 # set the ambari node address with a sed/regex
 whole_cluster.run(" sed -i 's/hostname=.*/hostname=" + admin + "/' /etc/ambari-agent/conf/ambari-agent.ini")
+whole_cluster.run(" sed -i 's/\\\[security\\\]/\\\[security\\\]\\\\nforce_https_protocol=PROTOCOL_TLSv1_2/g' "
+                  " /etc/ambari-agent/conf/ambari-agent.ini")
 try:
     whole_cluster.run("ambari-agent restart")
 except lD.ShellExecuteError:

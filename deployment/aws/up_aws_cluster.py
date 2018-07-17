@@ -309,7 +309,7 @@ if dnsiid is not None:
     if repos.startswith("repos.kave.io has address "):
         repos = repos[len("repos.kave.io has address "):]
     else:
-        repos = '94.143.213.26'
+        repos = '40.78.111.155'
     # print nameandpriv_ip
     forward = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (

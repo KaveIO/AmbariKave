@@ -218,8 +218,8 @@ class TestMatchRequiredOrDefault(unittest.TestCase):
                         search_string = 'default(configurations/' + configname + '/' + defaultp + ',' + defaultvs
                         if search_string not in all_params:
                             failingpyfiles[f + '/' + configname + '/' + defaultp] = search_string
-                            # If the default is longer than 80 characters it' very difficult to debug, and best if I return
-                            # just some substring instead
+                            # If the default is longer than 80 characters it' very difficult to debug, and best
+                            # if I return just some substring instead
                             if len(search_string) > 80:
                                 begin = 'default(configurations/' + configname + '/' + defaultp + ','
                                 if begin not in all_params:

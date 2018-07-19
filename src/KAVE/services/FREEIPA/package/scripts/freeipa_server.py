@@ -29,8 +29,9 @@ class FreeipaServer(Script):
     packages = ['ipa-server', 'bind', 'bind-dyndb-ldap']
     expected_services = ['chronyd', 'ntpd', 'ns-slapd']
 
-    #This should not be needed but somehow something reverts the v6 enable recipe.
-    os.system("sysctl -w net.ipv6.conf.lo.disable_ipv6=0; ifconfig | grep -q ::1; if [ $? = 1 ]; then ifconfig lo inet6 add ::1; fi")
+    # This should not be needed but somehow something reverts the v6 enable recipe.
+    os.system("sysctl -w net.ipv6.conf.lo.disable_ipv6=0; ifconfig | grep -q ::1; if [ $? = 1 ]; "
+              "then ifconfig lo inet6 add ::1; fi")
 
     def checkport(self, number):
         """

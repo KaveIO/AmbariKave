@@ -10,6 +10,7 @@
                     "patchambari",
                     "fix-hosts-file",
                     "limit-ssh-attempts",
+                    "setup-ambari-agent-tls",
                     "ipv6-lo-enable"
                     ]
     },
@@ -25,6 +26,7 @@
                     "fix-hosts-file",
                     "limit-ssh-attempts",
                     "ipv6-lo-enable",
+                    "setup-ambari-agent-tls",
                     "ipa-security-settings"
                     ]
     },

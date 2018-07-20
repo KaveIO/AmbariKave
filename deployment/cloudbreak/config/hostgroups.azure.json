@@ -12,7 +12,8 @@
                     "fix-hosts-file",
                     "limit-ssh-attempts",
                     "ipv6-lo-enable",
-                    "mysql-connector-install"
+                    "mysql-connector-install",
+                    "setup-ambari-agent-tls"
                     ]
     },
     "admin-freeipa": {
@@ -29,7 +30,8 @@
                     "limit-ssh-attempts",
                     "ipv6-lo-enable",
                     "ipa-security-settings",
-                    "mysql-connector-install"
+                    "mysql-connector-install",
+                    "setup-ambari-agent-tls"
                     ]
     },
     "gateway": {

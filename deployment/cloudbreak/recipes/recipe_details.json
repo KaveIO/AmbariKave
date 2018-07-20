@@ -1,67 +1,73 @@
 {
     "patchambari":
     {
-        "recipeType": "PRE",
+        "recipeType": "PRE_AMBARI_START",
         "description": "Add the KAVE Stack to ambari",
         "templatePath": "recipes/mandatory/setup_cloudbreak_kavepatch_ambari.sh"
     },
     "patchambari-git":
     {
-        "recipeType": "PRE",
+        "recipeType": "PRE_AMBARI_START",
         "description": "Add the KAVE Stack to ambari, using sources from local Git repo",
         "templatePath": "recipes/mandatory/setup_cloudbreak_local_kavepatch_ambari.sh"
     },
     "fix-hosts-file":
     {
-        "recipeType": "PRE",
+        "recipeType": "PRE_AMBARI_START",
         "description": "Fix hosts file on all nodes",
         "templatePath": "recipes/mandatory/setup_cloudbreak_fixhostsfile_all.sh"
     },
     "distibute-private-key":
     {
-        "recipeType": "PRE",
+        "recipeType": "PRE_AMBARI_START",
         "description": "Distribute private key on all nodes",
         "templatePath": "recipes/mandatory/setup_cloudbreak_keydistrib_all.sh"
     },
     "limit-ssh-attempts":
     {
-        "recipeType": "PRE",
+        "recipeType": "PRE_AMBARI_START",
         "description": "Limit unsuccessful ssh attempts rate",
         "templatePath": "recipes/mandatory/limit-ssh-attempts.sh"
     },
     "harden-sshd-config":
     {
-        "recipeType": "PRE",
+        "recipeType": "PRE_AMBARI_START",
         "description": "Harden the configuration of the SSH daemon",
         "templatePath": "recipes/mandatory/harden-sshd-config.sh"
     },
     "add-missing-jars":
     {
-        "recipeType": "POST",
+        "recipeType": "POST_AMBARI_START",
         "description": "Add missing jars, needed for ADLS integration",
         "templatePath": "recipes/mandatory/add_missing_jars.sh"
     },
     "ipv6-lo-enable":
     {
-        "recipeType": "PRE",
+        "recipeType": "POST_AMBARI_START",
         "description": "Enable IPv6 on the loop-back interface",
         "templatePath": "recipes/mandatory/enable_ipv6.sh"
     },
+    "mysql-connector-install":
+    {
+        "recipeType": "POST_AMBARI_START",
+        "description": "Install and link mysql-connector-java.jar",
+        "templatePath": "recipes/mandatory/mysql-connector-install.sh"
+    },
     "install-ipa-clients":
     {
-        "recipeType": "POST",
+        "recipeType": "POST_AMBARI_START",
         "description": "Install FreeIPA Client on all hosts",
         "templatePath": "recipes/mandatory/distribute-secrets-and-install-ipa-client.sh"
     },
     "setup-ambari-agent-tls":
     {
-        "recipeType": "POST",
+        "recipeType": "POST_AMBARI_START",
         "description": "Setup ambari-agent TLS to PROTOCOL_TLSv1_2",
         "templatePath": "recipes/mandatory/setup_ambari_agent_tls.sh"
     },
     "ipa-security-settings":
     {
-        "recipeType": "POST",
+        "recipeType": "POST_CLUSTER_INSTALL",
         "description": "Modify default security settings",
         "templatePath": "recipes/mandatory/ipa_security_settings.sh"
     }

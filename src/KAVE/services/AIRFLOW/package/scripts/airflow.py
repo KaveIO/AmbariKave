@@ -57,6 +57,7 @@ class Airflow(kc.ApacheScript):
         # Set the AIRFLOW_HOME environment variable. Echoing it at the end of /etc/environment
         # is just one of the possible approaches.
         Execute('echo "AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
+        Execute('yum remove python2-psutil -y')
         # Install base airflow
         Execute('pip install airflow')
         # Add Airflow Hive operatiors. We should consider installing "airflow[all]"

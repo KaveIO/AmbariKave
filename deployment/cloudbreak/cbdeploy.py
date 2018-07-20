@@ -47,7 +47,7 @@ import cbcommon
 
 
 def help():
-    print __doc__
+    print (__doc__)
 
 if __name__ == "__main__":
     import sys
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         help()
         sys.exit(0)
     if sys.argv.__len__() < 2:
-        print "ERROR: Blueprint name not specified"
+        print ("ERROR: Blueprint name not specified")
         help()
         sys.exit(0)
     if "--all" in sys.argv:
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         local_repo = True
 
     for i in range(0, len(blueprints)):
-        print "Starting cluster deployment for blueprint " + blueprints[i]
+        print ("Starting cluster deployment for blueprint " + blueprints[i])
         t = Thread(target=cb.wait_for_cluster, args=(blueprints[i],), kwargs={
                    "local_repo": local_repo,
                    "kill_passed": kill_passed_clusters,

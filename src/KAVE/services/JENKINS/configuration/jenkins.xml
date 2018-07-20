@@ -45,12 +45,12 @@
   </property>
   <property>
     <name>plugins</name>
-    <value>ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, gitlab-plugin, git-parameter, git-tag-message, matrix-project, scm-api, ssh-agent, sonar, sonargraph-plugin</value>
+    <value>ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-plugin, git-parameter, git-tag-message, matrix-project, matrix-auth, scm-api, ssh-agent, sonar, sonargraph-plugin, workflow-support, javadoc, mailer, jackson2-api, display-url-api, credentials, maven-plugin, workflow-scm-step, apache-httpcomponents-client-4-api, workflow-api, jsch, structs, workflow-job, junit, script-security, bouncycastle-api, ssh-credentials, workflow-step-api, token-macro, plain-credentials, jquery</value>
     <description>list of plugins to install</description>
   </property>
   <property>
     <name>download_version</name>
-    <value>1.642</value>
+    <value>2.129</value>
     <description>Which version of Jenkins to download initially</description>
   </property>
 </configuration>

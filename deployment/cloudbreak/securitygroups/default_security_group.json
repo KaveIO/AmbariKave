@@ -1,0 +1,19 @@
+{
+    "securityRules": [
+        {
+            "subnet": "0.0.0.0/0",
+            "ports": "9443",
+            "protocol": "tcp"
+        },
+        {
+            "subnet": "0.0.0.0/0",
+            "ports": "22",
+            "protocol": "tcp"
+        },
+        {
+            "subnet": "0.0.0.0/0",
+            "protocol": "tcp",
+            "ports": "443"
+        }
+    ]
+}

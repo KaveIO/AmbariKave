@@ -33,6 +33,8 @@ if not install_topdir.endswith('/'):
 
 install_subdir = default('configurations/archiva/install_subdir', 'archiva')
 
+systemd_archiva_unitfile_path = "/usr/lib/systemd/system/archiva.service"
+
 if not len(install_subdir) or install_subdir.count('/'):
     raise ValueError('archiva/install_subdir must be a simple string, with no "/"')
 

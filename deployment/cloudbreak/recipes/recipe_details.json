@@ -43,9 +43,15 @@
     },
     "ipv6-lo-enable":
     {
-        "recipeType": "PRE_AMBARI_START",
+        "recipeType": "POST_AMBARI_START",
         "description": "Enable IPv6 on the loop-back interface",
         "templatePath": "recipes/mandatory/enable_ipv6.sh"
+    },
+    "mysql-connector-install":
+    {
+        "recipeType": "POST_AMBARI_START",
+        "description": "Install and link mysql-connector-java.jar",
+        "templatePath": "recipes/mandatory/mysql-connector-install.sh"
     },
     "install-ipa-clients":
     {

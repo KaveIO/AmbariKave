@@ -121,7 +121,7 @@ class Airflow(kc.ApacheScript):
         check = subprocess.Popen('systemctl status airflow-webserver', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
 

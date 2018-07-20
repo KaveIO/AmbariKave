@@ -57,11 +57,13 @@ class Eskapade(Script):
         eskapade_path = 'Eskapade/' + params.releaseversion + ''
         install_dir = params.top_dir + eskapade_path
         os.chdir(self.sttmpdir)
-        Execute('wget https://github.com/KaveIO/Eskapade/archive/'+ package)
+        Execute('wget https://github.com/KaveIO/Eskapade/archive/' + package)
         Execute('mkdir -p ' + install_dir)
         Execute('tar xzf ' + package + ' -C ' + install_dir + ' --strip 1')
         os.chdir(install_dir)
-        Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -e " + "../" + params.releaseversion + "'")
+        Execute(
+            "bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -e " +
+            "../" + params.releaseversion + "'")
         Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install pyspark'")
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
@@ -99,6 +101,7 @@ class Eskapade(Script):
 
     def restart(self, env):
         Execute("echo 0 > " + self.status_file)
+
 
 if __name__ == "__main__":
     Eskapade().execute()

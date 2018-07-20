@@ -58,7 +58,7 @@ class NagiosClient(Script):
         check = subprocess.Popen('systemctl status nrpe', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
 if __name__ == "__main__":

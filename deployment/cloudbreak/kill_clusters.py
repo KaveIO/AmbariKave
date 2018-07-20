@@ -25,12 +25,14 @@ ex: ./kill_clusters.py --name examplelambda1512132645
 params:
     --help/-h - shows this helper message and exits
 
-    --name cluster_name/list_of_cluster_names - Cloudbreak cluster name or list of cluster names, separated by spaces, to be deleted.
+    --name cluster_name/list_of_cluster_names - Cloudbreak cluster name or list of cluster names,
+        separated by spaces, to be deleted.
         Both the cluster(s) and infrastructure will be deleted.
 
 """
 
 import cbcommon
+
 
 def help():
     print (__doc__)

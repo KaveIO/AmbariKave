@@ -80,7 +80,7 @@ class Archiva(Script):
         check = subprocess.Popen('systemctl status archiva', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def configure(self, env):

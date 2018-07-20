@@ -93,7 +93,7 @@ class Nagios(ApacheScript):
         check = subprocess.Popen('systemctl status nagios', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
         super(Nagios, self).status(env)
 

@@ -34,10 +34,10 @@ class Nagios(ApacheScript):
         env.set_params(params)
         self.install_packages(env)
         kc.install_epel()
-        Execute('yum -y install nagios')
-        Execute('yum -y install nagios-plugins')
-        Execute('yum -y install nagios-plugins-all')
-        Execute('yum -y install nagios-plugins-nrpe')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 nagios')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 nagios-plugins')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 nagios-plugins-all')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 nagios-plugins-nrpe')
         self.configure(env)
 
     def configure(self, env):

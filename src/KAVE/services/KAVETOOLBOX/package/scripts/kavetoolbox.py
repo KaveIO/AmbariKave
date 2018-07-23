@@ -83,7 +83,7 @@ class KaveToolbox(Script):
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute('touch /etc/kave/toolbox_ok')
-        Execute('yum -y install python-pip')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 python-pip')
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ;pip install --upgrade pip"')
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; pip install lightning-python"')
 

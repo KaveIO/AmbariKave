@@ -65,6 +65,12 @@
         "description": "Setup ambari-agent TLS to PROTOCOL_TLSv1_2",
         "templatePath": "recipes/mandatory/setup_ambari_agent_tls.sh"
     },
+    "setup-snmp-daemon":
+    {
+        "recipeType": "POST_AMBARI_START",
+        "description": "Setup SNMP daemon for Ambari notifications",
+        "templatePath": "recipes/mandatory/setup_snmp_daemon.sh"
+    },
     "ipa-security-settings":
     {
         "recipeType": "POST_CLUSTER_INSTALL",

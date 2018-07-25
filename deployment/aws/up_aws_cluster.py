@@ -451,6 +451,9 @@ for instancegroup in cluster_config["InstanceGroups"]:
         for instance in instancegroups[instancegroup["Name"]]:
             # lD.confremotessh(instance_to_remote[instance])
             lD.deploy_our_soft(instance_to_remote[instance], git=git, gitenv=gitenv, pack="ambarikave", version=version)
+            instance_to_remote[instance].run("yum install mysql-connector-java* -y && "
+                                             "cd /var/lib/ambari-server/resources/ && ln -s "
+                                             "/usr/share/java/mysql-connector-java.jar mysql-connector-java.jar")
 
 if "Tags" in security_config and vpcid:
     print "=============================================="

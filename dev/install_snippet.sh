@@ -92,6 +92,9 @@ fi
 ##########################################################
 # By default enable two-way ssl between server and agents!
 echo "security.server.two_way_ssl = true" >> /etc/ambari-server/conf/ambari.properties
+# Increase timeouts for agent jobs
+sed -i -e 's/agent.stack.retry.tries=5/agent.stack.retry.tries=20/g' /etc/ambari-server/conf/ambari.properties
+sed -i -e 's/agent.task.timeout=900/agent.task.timeout=1800/g' /etc/ambari-server/conf/ambari.properties
 ##########################################################
 # By default encrypt passwords stored in the database!
 yum -y install expect

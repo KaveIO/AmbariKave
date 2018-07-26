@@ -83,7 +83,9 @@ elif [[ "$version" == "1.7."* ]]; then
 elif [[ "$version" == "2.4."* ]]; then
 	encrypt_number="2"
 elif [[ "$version" == "2.5."* ]]; then
-	encrypt_number="2"	
+	encrypt_number="2"
+elif [[ "$version" == "2.6."* ]]; then
+	encrypt_number="2"
 else
 	echo "This script is not tested/ready for this version of Ambari"
 	exit 1

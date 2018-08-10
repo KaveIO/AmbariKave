@@ -35,6 +35,12 @@
         "description": "Harden the configuration of the SSH daemon",
         "templatePath": "recipes/mandatory/harden-sshd-config.sh"
     },
+    "increase-agent-task-timeout":
+    {
+        "recipeType": "PRE_AMBARI_START",
+        "description": "Increase Ambari agent task timeout",
+        "templatePath": "recipes/mandatory/increase_agent_task_timeout.sh"
+    },
     "add-missing-jars":
     {
         "recipeType": "POST_AMBARI_START",

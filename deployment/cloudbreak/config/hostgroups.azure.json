@@ -14,7 +14,8 @@
                     "ipv6-lo-enable",
                     "mysql-connector-install",
                     "setup-ambari-agent-tls",
-                    "setup-snmp-daemon"
+                    "setup-snmp-daemon",
+                    "increase-agent-task-timeout"
                     ]
     },
     "admin-freeipa": {
@@ -32,7 +33,8 @@
                     "ipv6-lo-enable",
                     "ipa-security-settings",
                     "mysql-connector-install",
-                    "setup-ambari-agent-tls"
+                    "setup-ambari-agent-tls",
+                    "increase-agent-task-timeout"
                     ]
     },
     "gateway": {

@@ -86,7 +86,9 @@ class KaveToolbox(Script):
         Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 python-pip')
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ;pip install --upgrade pip"')
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; pip install lightning-python"')
-        Execute('systemctl restart salt-minion.service')
+        # Restart salt minion service. Otherwise it fails because of some python package installs/upgrades required
+        # by KaveToolbox
+        Execute('systemctl is-active --quiet salt-minion.service && systemctl restart salt-minion.service')
 
     def configure(self, env):
         import params

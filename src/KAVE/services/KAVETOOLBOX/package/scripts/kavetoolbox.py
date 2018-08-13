@@ -18,6 +18,7 @@
 import sys
 import os
 import shutil
+import subprocess
 
 from resource_management import *
 
@@ -88,7 +89,10 @@ class KaveToolbox(Script):
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; pip install lightning-python"')
         # Restart salt minion service. Otherwise it fails because of some python package installs/upgrades required
         # by KaveToolbox
-        Execute('systemctl is-active --quiet salt-minion.service && systemctl restart salt-minion.service')
+        salt_check = subprocess.Popen('systemctl is-active --quiet salt-minion.service', shell=True)
+        salt_check.wait()
+        if int(salt_check.returncode) == 0:
+            Execute('systemctl restart salt-minion.service')
 
     def configure(self, env):
         import params

@@ -202,4 +202,5 @@ Running the script with given cluster name, the cluster and its infrastructure g
 ## Known issues and notes:
 
 * Currently, when deploying clusters that contain FreeIPA, sometimes FreeIPA Client fails to install on some of the nodes. This can be resolved by choosing to manually re-install clients from Ambari UI.
+* Clusters containing FreeIPA server may fail to deploy due to a certificates generation issue. No stable workaround found yet.
 * Scripts support both Python 2 and 3 environments.

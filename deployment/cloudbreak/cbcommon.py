@@ -23,7 +23,7 @@ import requests
 import json
 from config import cbparams
 import sys
-if sys.version_info[0]>2:
+if sys.version_info[0] > 2:
     import urllib.parse as urlparse
 else:
     import urlparse
@@ -38,7 +38,8 @@ requests.packages.urllib3.disable_warnings()
 
 KAVE_VERSION = "34-beta"
 
-class CBDeploy():
+
+class CBDeploy:
 
     access_token = ""
 
@@ -65,7 +66,7 @@ class CBDeploy():
                 print ("Error reading Cloudbreak login credentials.")
                 raise
         else:
-            if sys.version_info[0]>2:
+            if sys.version_info[0] > 2:
                 user = input("Please enter Cloudbreak username: ")
             else:
                 user = raw_input("Please enter Cloudbreak username: ")
@@ -104,7 +105,6 @@ class CBDeploy():
         except:
             print ("Cloudbreak credentials were not successfully stored.")
 
-
     def check_for_blueprint(self, name):
         """
         Checks if Cloudbreak blueprint with given name exists
@@ -133,16 +133,17 @@ class CBDeploy():
                     return self.create_blueprint(name)
                 else:
                     # resource was not deleted; create a new one with a different name
-                    import random, string
+                    import random
+                    import string
                     print (str.format("Creating new {} blueprint... ", name))
                     rnd_str = ''.join([random.choice(string.ascii_lowercase) for n in range(5)])
                     return self.create_blueprint(name, rnd_str)
         else:
             print (str.format("Blueprint with name {} does not exist.\nBlueprint {} will be created.",
-                               bp_name, bp_name))
+                              bp_name, bp_name))
             return self.create_blueprint(name)
 
-    def create_blueprint(self, name, random =False):
+    def create_blueprint(self, name, random=False):
         """
         Creates Cloudbreak blueprint with given name
         """
@@ -191,14 +192,14 @@ class CBDeploy():
             response = requests.delete(url, headers=headers, verify=cbparams.ssl_verify)
         except RequestException:
             print (str.format("Unable to delete Cloudbreak blueprint with name {}: {}",
-                             name + '-' + KAVE_VERSION, response.text))
+                              name + '-' + KAVE_VERSION, response.text))
             raise
         if response.status_code == 204:
             print (str.format("Blueprint {} successfully deleted.", name + '-' + KAVE_VERSION))
             return True
         else:
             print (str.format("Error deleting Cloudbreak blueprint with name {}: {}",
-                             name + '-' + KAVE_VERSION, response.text))
+                              name + '-' + KAVE_VERSION, response.text))
             return False
 
     def compare_blueprints(self, res, name):
@@ -257,8 +258,8 @@ class CBDeploy():
         for hg in bp["host_groups"]:
             comps = [cn["name"] for cn in hg["components"]]
             if "AMBARI_SERVER" in comps and "FREEIPA_SERVER" in comps:
-                print ("Both AMBARI_SERVER and FREEIPA_SERVER components detected in hostgroup " + \
-                    hg["name"] + ". Make sure these components don't reside in the same hostgroup.")
+                print ("Both AMBARI_SERVER and FREEIPA_SERVER components detected in hostgroup " +
+                       hg["name"] + ". Make sure these components don't reside in the same hostgroup.")
                 return False
         return True
 
@@ -278,7 +279,7 @@ class CBDeploy():
         except (IOError, ValueError):
             print ("Json file hostgroups.azure.json is not complete or is not readable.")
             return False
-        hostgroups={}
+        hostgroups = {}
         for hg in hg_names:
             if hg not in hg_defs:
                 print (str.format("Missing details for hostgroup '{}' in hostgroups.azure.json file.", hg))
@@ -290,12 +291,12 @@ class CBDeploy():
                     return False
                 if not hg_defs[hg][prop]:
                     print (str.format("Invalid or missing value for '{}' property in '{}' hostgroup definition",
-                                     prop, hg))
+                                      prop, hg))
                     return False
                 # Verify that "patchambari" recipe is executed only on Ambari nodes
                 if "patchambari" in hg_defs[hg]["recipes"] and hg_defs[hg]["type"] != "GATEWAY":
-                    print (str.format('Wrong hostgroup definition for {}. "patchamabri" recipe can be only executed ' \
-                    'on Ambari Server nodes.', hg))
+                    print (str.format('Wrong hostgroup definition for {}. "patchamabri" recipe can be only executed '
+                                      'on Ambari Server nodes.', hg))
                     return False
                 hostgroups[hg] = hg_defs[hg]
         return hostgroups
@@ -327,13 +328,14 @@ class CBDeploy():
                     return self.create_recipe(name)
                 else:
                     # recipe was not deleted; create a new one with a different name
-                    import random, string
+                    import random
+                    import string
                     print (str.format("Creating new {} recipe... ", name))
                     rnd_str = ''.join([random.choice(string.ascii_lowercase) for n in range(5)])
                     return self.create_recipe(name, rnd_str)
         else:
             print (str.format("Recipe with name {} does not exist.\nRecipe {} will be created.",
-                             recipe_name, recipe_name))
+                              recipe_name, recipe_name))
             return self.create_recipe(name)
 
     def create_recipe(self, name, random=False):
@@ -352,7 +354,7 @@ class CBDeploy():
         except (IOError, ValueError) as e:
             raise StandardError("Json file recipe_details.json is not complete or is not readable. ")
 
-        if (rd.get(name)):
+        if rd.get(name):
             details = rd[name]
         else:
             raise ValueError("Missing details for recipe {} in recipe_details.json", name)
@@ -489,7 +491,7 @@ class CBDeploy():
 
     def get_ssh_public_key(self, path):
         if not path:
-            path = os.path.expanduser('~')+"/.ssh/id_rsa.pub"
+            path = os.path.expanduser('~') + "/.ssh/id_rsa.pub"
         try:
             with open(path) as key_file:
                 pkey_content = key_file.read()
@@ -501,7 +503,7 @@ class CBDeploy():
         ips = {}
         for ig in instances:
             if ig["metadata"] and ig["metadata"][0] and ig["metadata"][0]["publicIp"]:
-                 ips[ig["group"]] = ig["metadata"][0]["publicIp"]
+                ips[ig["group"]] = ig["metadata"][0]["publicIp"]
             else:
                 return False
         return ips
@@ -639,9 +641,11 @@ class CBDeploy():
         if response.status_code == 200:
             return response.json()
         else:
-            raise Exception(str.format("Cluster {} could not be created: {}", cluster["general"]["name"], response.text))
+            raise Exception(str.format("Cluster {} could not be created: {}", cluster["general"]["name"],
+                                       response.text))
 
-    def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False, verbose=False):
+    def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False,
+                         verbose=False):
         freeipa_included = False
         freeipa_server_list = []
         try:
@@ -694,15 +698,15 @@ class CBDeploy():
                         latest_status = response.json()["status"]
                         latest_status_reason = response.json()["statusReason"]
                         print (str.format("{} -- stack status: {} - {}; cluster status: {} - {}",
-                                         cluster['name'], response.json()["status"], response.json()["statusReason"],
-                                         response.json()["clusterStatus"], response.json()["clusterStatusReason"]))
+                                          cluster['name'], response.json()["status"], response.json()["statusReason"],
+                                          response.json()["clusterStatus"], response.json()["clusterStatusReason"]))
                     if response.json()["status"].startswith("DELETE"):
                         print (str.format("FAILURE: Requested deletion for cluster {}. Terminating current process.",
-                                         cluster['name']))
+                                          cluster['name']))
                         return False
                     if response.json()["status"] == "AVAILABLE" and response.json()["clusterStatus"] == "AVAILABLE":
                         print (str.format("SUCCESS: Cluster {} was deployed in {} seconds.",
-                                         cluster["name"], (timer - start)))
+                                          cluster["name"], (timer - start)))
                         if kill_passed or kill_all:
                             print (str.format("Cluster {} and its infrastructure will be deleted.", cluster['name']))
                             self.delete_stack_by_name(cluster['name'])
@@ -712,7 +716,7 @@ class CBDeploy():
                         msg = str.format("FAILURE: Cluster deployment {} failed. Stack status - {}: {}.",
                                          cluster['name'], response.json()["status"], response.json()["statusReason"])
                         if response.json()["clusterStatus"] and response.json()["clusterStatusReason"]:
-                            msg+= str.format(" Cluster status: {} - {}", response.json()["clusterStatus"],
+                            msg += str.format(" Cluster status: {} - {}", response.json()["clusterStatus"],
                                               response.json()["clusterStatusReason"])
                         print (msg)
                         if kill_failed or kill_all:
@@ -723,11 +727,13 @@ class CBDeploy():
                         cluster_info = requests.get(url[0:url.rfind('/')],
                                                     headers=headers, verify=cbparams.ssl_verify)
                         if local_repo and not package_distributed:
-                            ambarinode=[node for node in cluster_info.json()['instanceGroups'] if node["type"]=='GATEWAY'][0]
-                            if ambarinode['metadata'] and ambarinode['metadata'][0] and ambarinode['metadata'][0]['publicIp']:
-                                ambariIp = ambarinode['metadata'][0]['publicIp']
-                                if ambariIp:
-                                    self.distribute_package(ambariIp)
+                            ambarinode = [node for node in cluster_info.json()['instanceGroups']
+                                          if node["type"] == 'GATEWAY'][0]
+                            if ambarinode['metadata'] and ambarinode['metadata'][0]\
+                                    and ambarinode['metadata'][0]['publicIp']:
+                                ambari_ip = ambarinode['metadata'][0]['publicIp']
+                                if ambari_ip:
+                                    self.distribute_package(ambari_ip)
                                     package_distributed = True
                         if freeipa_included and not keys_distributed:
                             instancegroups = cluster_info.json()['instanceGroups']
@@ -746,7 +752,7 @@ class CBDeploy():
                 timer = int(time.time())
 
         print (str.format("FAILURE: Cluster {} failed to complete in {} seconds.",
-                         cluster['name'], (max_execution_time)))
+                          cluster['name'], (max_execution_time)))
         if kill_failed or kill_all:
             print (str.format("Cluster {} and its infrastructure will be deleted.", cluster['name']))
             self.delete_stack_by_name(cluster['name'])

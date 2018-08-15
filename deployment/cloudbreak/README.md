@@ -199,6 +199,41 @@ Running the script with given cluster name, the cluster and its infrastructure g
 ./kill_clusters.py --name examplelambda1512132645
 ```
 
+## Using custom images
+As Cloudbreak uses its own images with which include default configuration and default tooling for provisioning you 
+need to build your own image using this [tool](https://github.com/hortonworks/cloudbreak-images) provided by Hortonworks. 
+ 
+Basically you should follow these steps when creating custom image.
+1. Find and clone the correct branch. The repository contains different branches for different Cloudbreak versions. If you are using 1.16.3 or 1.16.4-rc.7 version of Cloudbreak then the related branch is rc-1.16). 
+If you are using 2.0.1 version of Cloudbreak then the related image branch is rc-2.0 and so on.
+
+2. Set environment variables. 
+Example for environment variables:
+    ```
+    export ARM_CLIENT_ID=3234bb21-e6d0-*****-****-**********
+    export ARM_CLIENT_SECRET=2c8bzH******************************
+    export ARM_SUBSCRIPTION_ID=a9d4456e-349f-*****-****-**********
+    export ARM_TENANT_ID=b60c9401-2154-*****-****-**********
+    export ARM_GROUP_NAME=resourcegroupname
+    export ARM_STORAGE_ACCOUNT=storageaccountname
+    ```
+3. Images for Cloudbreak are created by [Packer](https://www.packer.io/docs/). The main entry point for creating an image is the `Makefile` which provides wrapper functionality around Packer scripts. 
+You can find more details about how it works in the [Packer documentation](https://www.packer.io/docs/).
+
+    Main configuration of Packer for building the Cloudbreak images is located in the `packer.json` file. 
+    
+    Execute the following command: 
+    
+    CentOS 7: ```make build-azure-centos7``` 
+    
+    RHEL 6: ```make build-azure-rhel6```  
+4. Prepare the custom image catalog JSON file and save it in a location accessible to the Cloudbreak VM. Example JSON [file](https://docs.hortonworks.com/HDPDocuments/Cloudbreak/Cb-doc-resources/custom-image-catalog.json).
+5. Register the image in Cloudbreak using ``cb imagecatalog create`` ([documentation](https://hortonworks.github.io/cloudbreak-documentation/latest/cli-reference/index.html#imagecatalog-create))
+or manually [register image in the profile](https://hortonworks.github.io/cloudbreak-documentation/latest/images/index.html#register-image-catalog-in-the-profile). 
+
+If you want to start from your own base image, follow the instructions in [Advanced topics](https://github.com/hortonworks/cloudbreak-images/blob/master/README.dev.md) 
+to modify the package.json to start from your own base image. Then use the commands above to build that image.
+
 ## Known issues and notes:
 
 * Currently, when deploying clusters that contain FreeIPA, sometimes FreeIPA Client fails to install on some of the nodes. This can be resolved by choosing to manually re-install clients from Ambari UI.

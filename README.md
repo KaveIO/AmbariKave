@@ -231,3 +231,37 @@ We currently name our stack within ambari to reflect both the version of the HDP
 * X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.4.KAVE is KAVE release 3.4 running on top of Ambari HDP stack 2.6
 
 This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.
+
+## Configuring Kave provided services over SSL
+
+*	Airflow – detailed configuration may be found here:
+https://airflow.apache.org/security.html#ssl
+*	Apache – detailed configuration may be found here:
+https://httpd.apache.org/docs/2.4/ssl/ssl_howto.html
+*	Archiva – As Archiva is using Jetty you should setup according to Jetty documentation found here: http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html
+*	FreeIPA – Client certificate authentication setup may be found here:
+https://www.freeipa.org/page/Howto/Client_Certificate_Authentication_with_LDAP
+*	GitLab – installing custom certificates documentation may be found here:
+https://docs.gitlab.com/omnibus/settings/ssl.html
+*	Jenkins – Running Jenkins with native SSL / HTTPS documentation may be found here:
+https://wiki.jenkins.io/pages/viewpage.action?pageId=135468777
+*	KaveLanding – As the service is using Apache web server refer to point 2.
+*	KaveNagios – detailed configuration may be found here:
+https://support.nagios.com/kb/article/nagios-core-configuring-ssl-tls-595.html
+*	LCM – The service is using only self-signed certificates which are distributed through a custom script bin/setup-ssl.sh More information is available in project README at Github:
+https://github.com/KaveIO/LocalCatalogManager/
+*	Mail 
+    * Postfix TLS/SSL setup may be found in the official documentation here: 
+http://www.postfix.org/TLS_README.html
+    *	Dovecot SSL configuration may be found here: 
+https://wiki.dovecot.org/SSL/DovecotConfiguration
+*	MongoDB – detailed configuration may be found here:
+https://docs.mongodb.com/manual/tutorial/configure-ssl/
+*	SonarQube – detailed configuration may be found here:
+https://docs.sonarqube.org/display/SONARQUBE52/Running+SonarQube+Over+HTTPS
+*	StormSD – detailed configuration about running Apache Storm Securely may be found here:
+http://storm.apache.org/releases/2.0.0-SNAPSHOT/SECURITY.html
+*	TWiki – As the service is using Apache web server refer to point 2.
+*	WildFly – How to configure SSL for WildFly may be found in the following article:
+http://www.mastertheboss.com/jboss-server/jboss-security/complete-tutorial-for-configuring-ssl-https-on-wildfly
+

@@ -95,7 +95,11 @@ class CBDeploy:
             self.store_cloudbreak_user_credentials(user, base64.b64encode(passwd.encode()).decode())
 
     def store_cloudbreak_user_credentials(self, username, password):
-
+        """
+        Store Cloudbreak username and password in the user home to be used for further authentication
+        :param username: Cloudbreak username
+        :param password: Cloudbreak password
+        """
         try:
             content = username + ',' + password
             file = open(os.path.expanduser('~/.cbcredstore'), "w")
@@ -183,6 +187,10 @@ class CBDeploy:
             raise StandardError("Error creating Cloudbreak blueprint with name {}: {}", bp_name, response.text)
 
     def delete_blueprint(self, name):
+        """
+        Delete blueprint from Cloudbreak server
+        :param name: blueprint name
+        """
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/blueprints/user/' + name + '-' + KAVE_VERSION
@@ -203,6 +211,12 @@ class CBDeploy:
             return False
 
     def compare_blueprints(self, res, name):
+        """
+        Compare if the local blueprint is the same as this returned from Cloudbreak server
+        :param res: data returned from CB server API
+        :param name: name of the local blueprint to compare
+        """
+
         local_resource_name = 'blueprints/' + name + '.blueprint.json'
         res = json.loads(base64.b64decode(res['ambariBlueprint']))
         try:
@@ -220,6 +234,12 @@ class CBDeploy:
             return False
 
     def compare_recipes(self, res, name):
+        """
+        Compare if the local recipe is the same as this returned from Cloudbreak server
+        :param res: data returned from CB server API
+        :param name: name of the local recipe to compare
+        """
+
         res = base64.b64decode(res['content'])
         try:
             with open('recipes/recipe_details.json') as rd_file:
@@ -235,6 +255,12 @@ class CBDeploy:
             return False
 
     def verify_blueprint(self, bp_name):
+        """
+        Verifies if a blueprint with [bp_name].blueprint.json exists in blueprints directory.
+        Verifies that the JSON contains definitions about host_groups and Blueprints
+        Verifies that AMBARI_SERVER and FREEIPA_SERVER components are not installed on the same host
+        :param bp_name: blueprint name
+        """
 
         b = os.path.exists('blueprints/' + bp_name + '.blueprint.json')
         if not b:
@@ -304,6 +330,7 @@ class CBDeploy:
     def check_for_recipe(self, name):
         """
         Checks if Cloudbreak recipe with given name exists
+        :param name: name of the recipe
         """
 
         recipe_name = name + '-' + KAVE_VERSION
@@ -341,6 +368,10 @@ class CBDeploy:
     def create_recipe(self, name, random=False):
         """
         Creates Cloudbreak recipe with given name
+        If random parameter is passed the name of the recipe is build with this parameter in it to avoid
+        overwriting of existing recipe
+        :param name: recipe name
+        :param random: random string to append to recipe name
         """
 
         headers = {"Authorization": "Bearer " +
@@ -392,6 +423,10 @@ class CBDeploy:
             raise StandardError("Error creating Cloudbreak recipe {}: {}", rec_name, response.text)
 
     def delete_recipe(self, name):
+        """
+        Delete recipe from Cloudbreak server
+        :param name: recipe name
+        """
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/recipes/user/' + name + '-' + KAVE_VERSION
@@ -410,6 +445,11 @@ class CBDeploy:
             return False
 
     def create_instancegroup(self, instancegroup, recipes):
+        """
+        Return instance configuration based on hostgroups.azure.json
+        :param instancegroup: name of the instance group
+        :param recipes: recipes to be applied for this instance
+        """
 
         try:
             with open('config/hostgroups.azure.json') as hg_file:
@@ -442,10 +482,10 @@ class CBDeploy:
         return instance
 
     def create_security_group(self, name):
-        headers = {"Authorization": "Bearer " +
-                   self.access_token, "Content-type": "application/json"}
-        path = '/cb/api/v1/securitygroups/user'
-        url = cbparams.cb_url + path
+        """
+        Read local security groups config file
+        :param name: name of the config file
+        """
 
         try:
             with open('securitygroups/' + name + '.json') as sg_file:
@@ -455,6 +495,11 @@ class CBDeploy:
         return sg
 
     def delete_stack_by_id(self, id):
+        """
+        Try to delete cluster by its Cloudbreak ID
+        :param id: cluster ID
+        """
+
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/' + str(id)
@@ -472,6 +517,11 @@ class CBDeploy:
             print (str.format("Cluster with id {} and its infrastructure were successfully deleted.", id))
 
     def delete_stack_by_name(self, name):
+        """
+        Try to delete cluster by cluster name
+        :param name: cluster name
+        """
+
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v1/stacks/user/' + name
@@ -490,6 +540,10 @@ class CBDeploy:
             return True
 
     def get_ssh_public_key(self, path):
+        """
+        Get the public ssh key from path. If param not set defaults to ~/.ssh/id_rsa.pub
+        :param path: path to the public key - default ~/.ssh/id_rsa.pub
+        """
         if not path:
             path = os.path.expanduser('~') + "/.ssh/id_rsa.pub"
         try:
@@ -500,6 +554,11 @@ class CBDeploy:
             raise
 
     def get_public_ips(self, instances):
+        """
+        Collect public IPs of all the hosts in the cluster
+        :param instances: deployed instances data returned by Amabri server API
+        """
+
         ips = {}
         for ig in instances:
             if ig["metadata"] and ig["metadata"][0] and ig["metadata"][0]["publicIp"]:
@@ -509,6 +568,11 @@ class CBDeploy:
         return ips
 
     def distribute_package(self, remoteip):
+        """
+        Create tarball with Kave patch and copy to remoteip
+        :param remoteip: the IP address of the remote machine
+        """
+
         import subprocess
 
         # if no SSH private key location is set, use the default ~/.ssh/id_rsa
@@ -522,6 +586,14 @@ class CBDeploy:
         subprocess.call(["rm", "-rf", "kave-patch.tar.gz"])
 
     def distribute_keys(self, remoteip, ipa_server_node=False):
+        """
+        Create /root/.ssh folder in the remoteip host, than copy the authorized_keys file from cloudbreak user to
+        root user. If the remote host has FreeIPA component (ipa_server_node parameter),
+        copy local public key to remote root user folder
+        :param remoteip: the IP address of the remote machine
+        :param ipa_server_node: does the remote machine contains FreeIPA server component
+        """
+
         import subprocess
 
         # if no SSH private key location is set, use the default ~/.ssh/id_rsa
@@ -549,6 +621,12 @@ class CBDeploy:
                              "sudo", "chown", "root:root", "/root/.ssh/id_rsa"])
 
     def find_nodes_with_component(self, cluster, component):
+        """
+        Find all nodes in the cluster that contains give component
+        :param cluster: cluster data
+        :param component: name of the component to search
+        """
+
         nodes = []
         bp = json.loads(base64.b64decode(cluster['cluster']['blueprint']['ambariBlueprint']))
         for hg in bp['host_groups']:
@@ -558,6 +636,10 @@ class CBDeploy:
         return nodes
 
     def get_credential(self):
+        """
+        Try to obtain account details from Cloudbreak account
+        """
+
         if cbparams.credential_name:
             headers = {"Authorization": "Bearer " +
                        self.access_token, "Content-type": "application/json"}
@@ -577,6 +659,12 @@ class CBDeploy:
             raise ValueError("Missing credential name. Please provide correct value for credential_name in cbparams.py")
 
     def create_cluster(self, name, local_repo):
+        """
+        Try to collect and send all the information for cluster creation to Cloudbreak server
+        :param name: blueprint name that will be submitted
+        :param local_repo: should we use local repository or we will checkout from git
+        """
+
         headers = {"Authorization": "Bearer " +
                    self.access_token, "Content-type": "application/json"}
         path = '/cb/api/v2/stacks/user'
@@ -646,6 +734,15 @@ class CBDeploy:
 
     def wait_for_cluster(self, name, local_repo=False, kill_passed=False, kill_failed=False, kill_all=False,
                          verbose=False):
+        """
+        Wait for cluster until it is ready. Check for cluster status and report errors is any
+        :param name: blueprint name
+        :param local_repo: use local repository for Kave patch or checkout it from git
+        :param kill_passed: terminate all clusters that are successfully built - for testing purposes
+        :param kill_failed: terminate all clusters that failed to built - for testing purposes
+        :param kill_all: terminate all clusters at the end - for testing purposes
+        :param verbose: be more verbose
+        """
         freeipa_included = False
         freeipa_server_list = []
         try:
@@ -664,11 +761,14 @@ class CBDeploy:
         path = '/cb/api/v2/stacks/' + str(cluster["id"]) + '/status'
         url = cbparams.cb_url + path
 
+        # How much time to wait for the cluster to become ready
         max_execution_time = 7200
         start = timer = int(time.time())
         timeout = start + max_execution_time
+        # How much seconds to sleep between the server checks
         interval = 10
         retries_count = 0
+        # How many times to try to obtain HTTP status 200 from the cluster
         max_retries = 5
         latest_status = ""
         latest_status_reason = ""

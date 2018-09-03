@@ -41,6 +41,20 @@ cnf.spark.workstation=False
     Any strings surrounded by double-curled-braces will be replaced by the relevant parameter when written to disk
     </description>
   </property>
+  <property>
+    <name>kave_env_excluded_users</name>
+    <value>root
+ams
+postgres
+zookeeper
+ambari-qa
+hdfs
+yarn
+</value>
+    <description>List of users to exclude from setting up the Kave environment.
+      These users will use the default environment.
+    </description>
+  </property>
     <property>
     <name>command_line_args</name>
     <value>False</value>

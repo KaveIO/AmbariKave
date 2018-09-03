@@ -87,6 +87,10 @@ class KaveToolbox(Script):
         Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 python-pip')
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ;pip install --upgrade pip"')
         Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; pip install lightning-python"')
+        File("/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf",
+             content=InlineTemplate(params.kave_env_excluded_users),
+             mode=0644
+             )
         # Restart salt minion service. Otherwise it fails because of some python package installs/upgrades required
         # by KaveToolbox
         salt_check = subprocess.Popen('systemctl is-active --quiet salt-minion.service', shell=True)
@@ -119,6 +123,13 @@ class KaveToolbox(Script):
              content=InlineTemplate(params.custom_install_template),
              mode=0644
              )
+        # On the first call (see func: install) this config does not exists.
+        # Later if configuration is changed it should be present
+        if os.path.exists('/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf'):
+            File("/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf",
+                 content=InlineTemplate(params.kave_env_excluded_users),
+                 mode=0644
+                 )
         Execute("chmod -R a+r /etc/kave")
 
 

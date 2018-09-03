@@ -49,5 +49,17 @@ cnf.spark.workstation=False
 # -------------------------------
 """
 custom_install_template = default('configurations/kavetoolbox/custom_install_template', custom_install_template_default)
+
+kave_env_excluded_users = """
+root
+ams
+postgres
+zookeeper
+ambari-qa
+hdfs
+yarn
+"""
+kave_env_excluded_users = default('configurations/kavetoolbox/kave_env_excluded_users', kave_env_excluded_users)
+
 if alternative_download == "none":
     alternative_download = ""

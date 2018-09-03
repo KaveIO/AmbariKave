@@ -12,18 +12,6 @@
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     {
-      "freeipa": {
-        "ldap_bind_password": "testtestdirpass1234",
-        "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups": "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
-        "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
-        "forwarders": "168.63.129.16",
-        "install_distribution_user": "cloudbreak",
-        "install_with_dns": "True"
-      }
-    },
-    {
       "sonarqube": {
         "sonar_database_url": "ci.kave.io",
         "sonar_database_user_passwd": "admin"
@@ -40,25 +28,13 @@
   ],
    "host_groups" : [
     {
-      "name" : "freeipa",
-      "configurations" : [ ],
-      "components" : [
-        { "name" : "FREEIPA_SERVER"     },
-        { "name" : "FREEIPA_CLIENT"     },
-        { "name" : "METRICS_MONITOR"    },
-        { "name" : "ZOOKEEPER_CLIENT"   }
-      ],
-      "cardinality" : "1"
-    },
-    {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "ZOOKEEPER_SERVER"   },
-        { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
@@ -72,8 +48,7 @@
         { "name" : "KAVETOOLBOXGATE"      },
         { "name" : "SONARQUBE_RUNNER"     },
         { "name" : "METRICS_MONITOR"      },
-        { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "FREEIPA_CLIENT"       }
+        { "name" : "ZOOKEEPER_CLIENT"     }
       ],
       "cardinality" : "1+"
     },
@@ -90,8 +65,7 @@
         { "name" : "SONARQUBE_RUNNER"      },
         { "name" : "KAVETOOLBOXNODE"       },
         { "name" : "METRICS_MONITOR"       },
-        { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "FREEIPA_CLIENT"        }
+        { "name" : "ZOOKEEPER_CLIENT"      }
       ],
       "cardinality" : "1+"
     }

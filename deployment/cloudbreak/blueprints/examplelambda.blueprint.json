@@ -51,23 +51,11 @@
       "ams-grafana-env" : {
         "metrics_grafana_password" : "SnowCapMountainChap"
       }
-    },
-    {
-      "freeipa": {
-        "ldap_bind_password": "testtestdirpass1234",
-        "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups": "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
-        "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
-        "forwarders": "168.63.129.16",
-        "install_distribution_user": "cloudbreak",
-        "install_with_dns": "True"
-      }
     }
   ],
   "host_groups" : [
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
@@ -84,7 +72,6 @@
         { "name" : "LOGSEARCH_SERVER"   },
         { "name" : "INFRA_SOLR"         },
         { "name" : "INFRA_SOLR_CLIENT"  },
-        { "name": "FREEIPA_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
       "cardinality" : "1"
@@ -115,7 +102,6 @@
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
         { "name" : "INFRA_SOLR_CLIENT"    },
-        { "name": "FREEIPA_CLIENT"        },
         { "name" : "AIRFLOW_SERVER"       }
 
       ],
@@ -148,7 +134,6 @@
         { "name" : "KAVENAGIOS_MONITOR"     },
         { "name" : "SLIDER"                 },
         { "name" : "INFRA_SOLR_CLIENT"      },
-        { "name": "FREEIPA_CLIENT"          },
         { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
       "cardinality" : "1"
@@ -165,7 +150,6 @@
         { "name" : "YARN_CLIENT"          },
         { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
-        { "name": "FREEIPA_CLIENT"        },
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
@@ -184,7 +168,6 @@
         { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "SLIDER"               },
         { "name" : "INFRA_SOLR_CLIENT"    },
-        { "name": "FREEIPA_CLIENT"        },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1+"
@@ -196,7 +179,6 @@
         { "name" : "MONGODB_CLIENT"       },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name": "FREEIPA_CLIENT"        },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
                      ],
@@ -211,7 +193,6 @@
         { "name" : "MONGODB_CLIENT"        },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name": "FREEIPA_CLIENT"         },
         { "name" : "KAVENAGIOS_MONITOR"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
@@ -246,7 +227,6 @@
         { "name" : "KAVENAGIOS_MONITOR"    },
         { "name" : "SLIDER"                },
         { "name" : "INFRA_SOLR_CLIENT"     },
-        { "name": "FREEIPA_CLIENT"         },
         { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"
@@ -263,7 +243,6 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "KAVENAGIOS_MONITOR" },
-        { "name" : "FREEIPA_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"
@@ -277,7 +256,6 @@
         { "name" : "SUPERVISOR_SD_SLAVE" },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVENAGIOS_MONITOR"  },
-        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
@@ -290,23 +268,9 @@
         { "name" : "KAFKA_BROKER"     },
         { "name" : "ZOOKEEPER_CLIENT" },
         { "name" : "KAVENAGIOS_MONITOR"  },
-        { "name" : "FREEIPA_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1+"
-    },
-    {
-      "name": "freeipa",
-      "configurations": [],
-      "components": [
-        { "name": "METRICS_MONITOR"      },
-        { "name": "ZOOKEEPER_CLIENT"     },
-        { "name": "FREEIPA_SERVER"       },
-        { "name": "FREEIPA_CLIENT"       },
-        { "name" : "KAVENAGIOS_MONITOR"  },
-        { "name" : "LOGSEARCH_LOGFEEDER" }
-      ],
-      "cardinality": "1"
     },
     {
       "name" : "lcm",
@@ -315,7 +279,6 @@
         { "name" : "MONGODB_CLIENT"     },
         { "name" : "LCM_SERVER"         },
         { "name" : "LCM_UI"             },
-        { "name" : "FREEIPA_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER" }
       ],
       "cardinality" : "1"

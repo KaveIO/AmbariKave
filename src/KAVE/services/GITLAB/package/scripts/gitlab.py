@@ -82,7 +82,11 @@ class Gitlab(Script):
         Execute('gitlab-ctl reconfigure')
 
     def status(self, env):
-        Execute('gitlab-ctl status')
+        check = Popen('gitlab-ctl status', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
     def restart(self, env):
         self.configure(env)

@@ -21,13 +21,9 @@
 
 #Make sure you insert the desired private key below and that you replace that with a new one on every host when the deployment is finished.
 USER=cloudbreak
-KEYFILE=/home/$USER/.ssh/id_rsa
-cat << EOF > $KEYFILE
------BEGIN RSA PRIVATE KEY-----
-C353D87F87DFG87FG7DF7G96FD768G78FDG67SF67GSF
-KEYCONTENT
-ADSADFSDAFSADFSAFRV35655V45C35C13C5234C
------END RSA PRIVATE KEY-----
+KEYFILE=/home/$USER/.ssh/authorized_keys
+cat << EOF >> $KEYFILE
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJKDRYe54LKtlGX6i8pXoRR33n8vaCLyNxF1V7U1RTg2mv8siQT1JZkQ4rtRF+5nwGIUW8hSPFU1r3aDx6M7D5tcN9f0iWn9V6aXDEGxJHqX69yvinvAsVaCLkUFNxhTN3NxQpAxBE5vaRdQh2h+PAVT8XwXtA9OobEiPLHEgBd2UAl1YyECavZPWwRUFbCHuodlYP/9j1xcplAm60zJqSSlHDBWV3ysayulZlE16YfGkBRn16E0EdVk4oKC3L5gyz9YPdKRSyxj0ym514rVkrtvXba/7pfPM/kHTZnVo93x8P/HKvAeZ7K7ARjarAqW09aAspRHqlfm0S2qH9EjFn ksheytanov@intracol.com
 EOF
 chown $USER:$USER $KEYFILE
 chmod 600 $KEYFILE

@@ -30,7 +30,7 @@ tcp_port = kc.default('configurations/mongodb/tcp_port', '27017', kc.is_valid_po
 setname = default('configurations/mongodb/setname', 'None')
 
 mongodb_baseurl = default('configurations/mongodb/mongodb_baseurl',
-                          'http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/')
+                          'https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64/')
 
 
 # The web status page is always accessible at a port number that is 1000 greater than the port determined by tcp_port.
@@ -45,104 +45,65 @@ is_arbiter = (mongo_arbiter_hosts is not None) and (hostname in mongo_arbiter_ho
 if mongo_host == "unknown":
     if bind_ip not in ['0.0.0.0', '127.0.0.1']:
         mongo_host = bind_ip
-if mongo_host == hostname:
-    mongo_host = 'localhost'
 
 if setname in ["None", "False"]:
     if len(mongo_hosts) < 2:
         setname = ""
-
+replicationConfig = ""
+if setname not in [None, False, "None", "False", ""]:
+    replicationConfig = """
+replication:
+  replSetName: %(setname)s
+    """ % {'setname': setname}
 set_with_arbiters = (len(mongo_arbiter_hosts) > 0 and setname not in [None, False, "None", "False", ""])
 
 mongodb_conf = default('configurations/mongodb/mongodb_conf', """
 # mongod.conf
 
-#where to log
-logpath={{logpath}}
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
 
-logappend=true
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{logpath}}
 
-# fork and run in background
-fork=true
+# Where and how to store data.
+storage:
+  dbPath: {{db_path}}
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
 
-#which port to listen for client connections?
-port={{tcp_port}}
-#
-# The web status page is always accessible at a port number that is 1000 greater than the port determined by port.
-#
+# how the process runs
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: /var/run/mongodb/mongod.pid  # location of pidfile
+  timeZoneInfo: /usr/share/zoneinfo
 
-#where to store the database?
-dbpath={{db_path}}
+# network interfaces
+net:
+  port: {{tcp_port}}
+  bindIp: {{bind_ip}}
 
-# location of pidfile
-pidfilepath=/var/run/mongodb/mongod.pid
 
-# Listen to local interface only. Comment out to listen on all interfaces.
-# bind_ip=127.0.0.1
-bind_ip={{bind_ip}}
+#security:
 
-# Disables write-ahead journaling
-# nojournal=true
-{% if is_arbiter %}
-nojournal=true
-{% endif %}
+#operationProfiling:
 
-# Enables periodic logging of CPU utilization and I/O wait
-#cpu=true
+#replication:
+{{replicationConfig}}
+#sharding:
 
-# Turn on/off security.  Off is currently the default
-#noauth=true
-#auth=true
+## Enterprise-Only Options
 
-# Verbose logging output.
-#verbose=true
+#auditLog:
 
-# Inspect all client data for validity on receipt (useful for
-# developing drivers)
-#objcheck=true
-
-# Enable db quota management
-#quota=true
-
-# Set oplogging level where n is
-#   0=off (default)
-#   1=W
-#   2=R
-#   3=both
-#   7=W+some reads
-#diaglog=0
-
-# Ignore query hints
-#nohints=true
-
-# Enable the HTTP interface (Defaults to port 28017).
-httpinterface=true
-
-# Turns off server-side scripting.  This will result in greatly limited
-# functionality
-#noscripting=true
-
-# Turns off table scans.  Any query that would do a table scan fails.
-#notablescan=true
-
-# Disable data file preallocation.
-#noprealloc=true
-{% if is_arbiter %}
-noprealloc=true
-{% endif %}
-
-# Specify .ns file size for new databases.
-# nssize=<size>
-
-# Replication Options
-
-# in replicated mongo databases, specify the replica set name here
-replSet={{setname}}
-# maximum size in megabytes for replication operation log
-#oplogSize=1024
-# path to a key file storing authentication info for connections
-# between replica set members
-#keyFile=/path/to/keyfile """)
+#snmp:
+""")
 
 replica_config_params = {"_id": setname, "members": []}
 init_id = 0

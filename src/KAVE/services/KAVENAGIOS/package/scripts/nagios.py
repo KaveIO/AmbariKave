@@ -79,18 +79,22 @@ class Nagios(ApacheScript):
         import params
         env.set_params(params)
         super(Nagios, self).start(env)
-        Execute('service nagios start')
+        Execute('systemctl start nagios')
 
     def stop(self, env):
-        Execute("service nagios stop")
+        Execute("systemctl stop nagios")
         super(Nagios, self).stop(env)
 
     def restart(self, env):
-        Execute("service nagios restart")
+        Execute("systemctl restart nagios")
         super(Nagios, self).restart(env)
 
     def status(self, env):
-        Execute("service nagios status")
+        check = subprocess.Popen('systemctl status nagios', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
         super(Nagios, self).status(env)
 
 if __name__ == "__main__":

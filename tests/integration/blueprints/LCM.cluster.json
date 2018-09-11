@@ -1,0 +1,13 @@
+{
+    "blueprint" : "lcm",
+    "default_password" : "admin",
+    "configurations" : [
+    ],
+    "host_groups" : [
+	{
+	    "name" : "admin",
+	    "configurations" : [  ],
+	    "hosts" : [ { "fqdn" : "ambari.kave.io" } ]
+	    }
+    ]
+}

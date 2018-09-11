@@ -103,7 +103,11 @@ class SonarQube(Script):
         Execute('service sonar restart > /dev/null')
 
     def status(self, env):
-        Execute('service sonar status')
+        check = subprocess.Popen('service sonar status', shell=True)
+        check.wait()
+        if int(check.returncode) != 0:
+           raise ComponentIsNotRunning()
+        return True
 
     def configure(self, env):
         import params

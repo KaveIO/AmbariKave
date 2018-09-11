@@ -63,6 +63,11 @@
 	    "name" : "kafka",
 	    "configurations" : [   ],
 	    "hosts" : [ { "fqdn" : "kafka-001.kave.io" } ]
-	}
+	},
+	{
+        "name" : "lcm",
+        "configurations" : [   ],
+        "hosts" : [ { "fqdn" : "lcm.kave.io" } ]
+    }
     ]
 }

@@ -182,6 +182,15 @@ echo "http://my/local/apache/mirror" >> /etc/kave/mirror
 
 So long as the directory structure of the nearside cache is identical to our website, you can drop, remove or replace, any local packages you will never install from this directory structure, and update it as our repo server updates.
 
+VPN Access
+----------
+
+OpenVPN can be installed and setup on the desired node(s) by running the below command:
+
+```
+wget https://git.io/vpn -O openvpn-install.sh && bash openvpn-install.sh
+```
+This is an interactive OpenVPN installation and administration tool.
 
 Versioning System
 =========================================

@@ -97,6 +97,8 @@ echo "security.server.two_way_ssl = true" >> /etc/ambari-server/conf/ambari.prop
 # Increase timeouts for agent jobs
 sed -i -e 's/agent.stack.retry.tries=5/agent.stack.retry.tries=20/g' /etc/ambari-server/conf/ambari.properties
 sed -i -e 's/agent.task.timeout=900/agent.task.timeout=3600/g' /etc/ambari-server/conf/ambari.properties
+# Install MySQL-connector and link it to be available for agent nodes
+yum install mysql-connector-java* -y && cd /var/lib/ambari-server/resources/ && ln -s /usr/share/java/mysql-connector-java.jar mysql-connector-java.jar
 ##########################################################
 # By default encrypt passwords stored in the database!
 yum -y install expect

@@ -5,7 +5,7 @@
 Contains a list of the released versions with a summary of the main changes in each version.
 
 # v3.5-Beta
-- March 2018
+- Sept 2018
 
 **MAJOR RELEASE**
 
@@ -15,13 +15,12 @@ Contains a list of the released versions with a summary of the main changes in e
     3. New version of MongoDB v.3.6 
     4. Removed Kaveganglia from AmbariKave - deprecated, replaced by Ambari Metrics
     5. Removed JBOSS from AmbariKave - deprecated, replaced by WildFly
-    
+    6. Cloudbreak 2.x support
 * Minor changes were:
      Cloudbreak deployment improvements and bug fixes:
 
         - improved error handling
         - a lot of previously hard-coded data is now configurable - CB credential, volume size/count, node count, security group
-        - FreeIPA included in the CB blueprints
         - added validations for hostgroups/ blueprints
         - separate mandatory and custom recipes
         - Cloudbreak credentials protection

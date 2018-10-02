@@ -64,7 +64,6 @@ class Eskapade(Script):
         Execute(
             "bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install -e " +
             "../" + params.releaseversion + "'")
-        Execute("bash -c 'source /opt/KaveToolbox/pro/scripts/KaveEnv.sh &>/dev/null; pip install pyspark'")
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute("mkdir -p /etc/eskapade")

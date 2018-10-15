@@ -92,6 +92,10 @@ class KaveToolbox(Script):
              content=InlineTemplate(params.kave_env_excluded_users),
              mode=0644
              )
+        File("/etc/profile.d/ktb_custom_env.sh",
+             content=InlineTemplate(params.kave_custom_environment),
+             mode=0644
+             )
         # Restart salt minion service. Otherwise it fails because of some python package installs/upgrades required
         # by KaveToolbox
         salt_check = subprocess.Popen('systemctl is-active --quiet salt-minion.service', shell=True)

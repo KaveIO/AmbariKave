@@ -26,6 +26,15 @@
     </description>
   </property>
   <property>
+    <name>kave_custom_environment</name>
+    <value># -------------------------------
+
+# -------------------------------
+</value>
+    <description>Export any shell environment variables you want activated in the Kave environment,
+    </description>
+  </property>
+  <property>
     <name>custom_install_template</name>
     <value># -------------------------------
 import kavedefaults as cnf

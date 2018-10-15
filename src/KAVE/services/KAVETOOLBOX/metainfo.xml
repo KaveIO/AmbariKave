@@ -26,7 +26,7 @@
                     <name>KAVETOOLBOXNODE</name>
                     <displayName>KaveToolbox (Node)</displayName>
                     <comment>Install this on all your worker nodes, storm/namenode/nimbus etc.</comment>
-                    <category>CLIENT</category>
+                    <category>SLAVE</category>
                     <commandScript>
                         <script>scripts/kavetoolbox.py</script>
                         <scriptType>PYTHON</scriptType>

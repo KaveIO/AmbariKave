@@ -26,6 +26,7 @@ from resource_management import *
 class KaveToolbox(Script):
     sttmpdir = "/tmp/kavetoolbox_install/dump"
     kind = "node"
+    status_file = "/etc/kave/status"
 
     def status(self, env):
         raise ClientComponentHasNoStatus()
@@ -123,6 +124,10 @@ class KaveToolbox(Script):
              content=InlineTemplate(params.custom_install_template),
              mode=0644
              )
+        File("/etc/profile.d/ktb_custom_env.sh",
+             content=InlineTemplate(params.kave_custom_environment),
+             mode=0644
+             )
         # On the first call (see func: install) this config does not exists.
         # Later if configuration is changed it should be present
         if os.path.exists('/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf'):
@@ -132,6 +137,23 @@ class KaveToolbox(Script):
                  )
         Execute("chmod -R a+r /etc/kave")
 
+    def status(self, env):
+        with open(self.status_file, 'r') as content_file:
+            content = content_file.read()
+        if int(content) != 0:
+            raise ComponentIsNotRunning()
+        return True
+
+    def start(self, env):
+        Execute("echo 0 > " + self.status_file)
+
+    def stop(self, env):
+        Execute("echo 1 > " + self.status_file)
+
+    def restart(self, env):
+        self.stop(env)
+        self.configure(env)
+        self.start(env)
 
 if __name__ == "__main__":
     KaveToolbox().execute()

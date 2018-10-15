@@ -38,6 +38,10 @@ except TypeError, ValueError:
     else:
         print "could not interpret value of command_line_args correctly"
         raise
+kave_custom_environment = default('configurations/kavetoolbox/kave_custom_environment',"""# -------------------------------
+
+# -------------------------------""")
+
 custom_install_template_default = """
 # -------------------------------
 import kavedefaults as cnf

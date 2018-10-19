@@ -26,7 +26,7 @@
       }
     }
   ],
-   "host_groups" : [
+  "host_groups" : [
     {
       "name" : "admin",
       "configurations" : [ ],

@@ -40,7 +40,22 @@ except TypeError, ValueError:
         raise
 kave_custom_environment_default = """
 # -------------------------------
+PY4JSRC="/usr/hdp/current/spark2-client/python/lib/py4j-0.10.6-src.zip"
+PYSPARK="/usr/hdp/current/spark2-client/python/lib/pyspark.zip"
 
+if [ -f $PY4JSRC ]; then
+  [[ ":$PYTHONPATH:" != *"$PY4JSRC"* ]] && export PYTHONPATH="${PYTHONPATH}$PY4JSRC:"
+fi
+
+if [ -f $PYSPARK ]; then
+  [[ ":$PYTHONPATH:" != *"$PYSPARK"* ]] && export PYTHONPATH="${PYTHONPATH}$PYSPARK:"
+fi
+
+
+export SPARK_HOME=/usr/hdp/current/spark2-client
+export SPARK_MAJOR_VERSION=2
+export PYSPARK_PYTHON=/opt/anaconda/pro/bin/python
+export PYSPARK_DRIVER_PYTHON=python3.6
 # -------------------------------
 """
 kave_custom_environment = default('configurations/kavetoolbox/kave_custom_environment', kave_custom_environment_default)

@@ -28,10 +28,25 @@
   <property>
     <name>kave_custom_environment</name>
     <value># -------------------------------
+PY4JSRC="/usr/hdp/current/spark2-client/python/lib/py4j-0.10.6-src.zip"
+PYSPARK="/usr/hdp/current/spark2-client/python/lib/pyspark.zip"
 
+if [ -f $PY4JSRC ]; then
+  [[ ":$PYTHONPATH:" != *"$PY4JSRC"* ]] &amp;&amp; export PYTHONPATH="${PYTHONPATH}$PY4JSRC:"
+fi
+
+if [ -f $PYSPARK ]; then
+  [[ ":$PYTHONPATH:" != *"$PYSPARK"* ]] &amp;&amp; export PYTHONPATH="${PYTHONPATH}$PYSPARK:"
+fi
+
+
+export SPARK_HOME=/usr/hdp/current/spark2-client
+export SPARK_MAJOR_VERSION=2
+export PYSPARK_PYTHON=/opt/anaconda/pro/bin/python
+export PYSPARK_DRIVER_PYTHON=python3.6
 # -------------------------------
-</value>
-    <description>Export any shell environment variables you want activated in the Kave environment,
+    </value>
+    <description>Custom environment setup for all users. Stored in /etc/profile.d/
     </description>
   </property>
   <property>

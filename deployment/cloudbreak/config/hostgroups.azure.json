@@ -18,7 +18,7 @@
                     "increase-agent-task-timeout"
                     ]
     },
-    "admin-freeipa": {
+    "admin_freeipa": {
         "instance-type": "Standard_D2_v2",
         "volume-size": 30,
         "volume-count": 1,
@@ -50,7 +50,7 @@
                     "limit-ssh-attempts"
                     ]
     },
-    "namenode-1": {
+    "namenode_1": {
         "instance-type": "Standard_F4",
         "volume-size": 50,
         "volume-count": 1,
@@ -63,7 +63,7 @@
                     "limit-ssh-attempts"
                     ]
     },
-    "namenode-2": {
+    "namenode_2": {
         "instance-type": "Standard_F4",
         "volume-size": 50,
         "volume-count": 1,

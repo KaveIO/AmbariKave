@@ -33,14 +33,6 @@
           "hive.exec.dynamic.partition.mode" : "nonstrict"
           }
       }
-    },
-    {
-      "kavetoolbox" : {
-        "properties_attributes" : { },
-        "properties" : {
-          "kave_custom_environment" : "export SPARK_HOME=/usr/hdp/current/spark2-client\nexport PYTHONPATH=$SPARK_HOME/python/lib/pyspark.zip:$SPARK_HOME/python/lib/py4j-0.10.6-src.zip:$PYTHONPATH\nexport SPARK_MAJOR_VERSION=2\nexport PYSPARK_PYTHON=/opt/anaconda/pro/bin/python\nexport PYSPARK_DRIVER_PYTHON=python3.6"
-        }
-      }
     }
   ],
   "host_groups" : [
@@ -88,7 +80,7 @@
       "cardinality" : "0-10"
     },
     {
-      "name":"namenode-1",
+      "name":"namenode_1",
       "components" : [
         { "name" : "NAMENODE"               },
         { "name" : "SECONDARY_NAMENODE"   },

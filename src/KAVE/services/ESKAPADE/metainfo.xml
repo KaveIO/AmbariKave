@@ -7,7 +7,7 @@
             <displayName>Eskapade</displayName>
             <comment>A light-weight, Python-based data-analysis framework, meant for all sorts of data-analysis problems (see http://eskapade.kave.io/).
             </comment>
-            <version>0.6</version>
+            <version>0.7</version>
             <components>
                 <component>
                     <name>ESKAPADENODE</name>

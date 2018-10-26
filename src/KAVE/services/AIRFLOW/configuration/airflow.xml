@@ -3,6 +3,11 @@
 
 <configuration>
     <property>
+        <name>AirflowVersion</name>
+        <value>1.8.0</value>
+        <description>Tell pip which version of Airflow to install</description>
+    </property>
+    <property>
         <name>PORT</name>
         <value>82</value>
         <description>HTTP PORT</description>

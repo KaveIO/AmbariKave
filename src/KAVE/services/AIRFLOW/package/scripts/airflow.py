@@ -59,10 +59,10 @@ class Airflow(kc.ApacheScript):
         Execute('echo "AIRFLOW_HOME=/usr/opt/local/airflow" >> /etc/environment')
         Execute('yum remove python2-psutil -y')
         # Install base airflow
-        Execute('pip install airflow')
+        Execute('pip install airflow==' + params.AirflowVersion)
         # Add Airflow Hive operatiors. We should consider installing "airflow[all]"
         # for getting all possible features
-        Execute('pip install airflow[hive]')
+        Execute('pip install airflow[hive]==' + params.AirflowVersion)
         Execute('chmod 755 /usr/bin/airflow')
 
         self.configure(env)

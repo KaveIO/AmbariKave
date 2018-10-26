@@ -6,7 +6,7 @@
             <name>AIRFLOW</name>
             <comment>Airflow is a platform to programmatically author, schedule and monitor workflows.</comment>
             <displayName>Airflow</displayName>
-            <version>1.7</version>
+            <version>1.8.0</version>
             <components>
                     <component>
                     <name>AIRFLOW_SERVER</name>

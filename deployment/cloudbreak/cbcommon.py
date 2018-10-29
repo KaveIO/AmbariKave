@@ -31,6 +31,7 @@ import base64
 from string import Template
 import time
 import os
+from socket import gethostbyname
 from requests.exceptions import RequestException
 
 
@@ -481,15 +482,34 @@ class CBDeploy:
             instance["recipeNames"].append(recipes[recipe])
         return instance
 
+    def get_my_public_ip(self):
+        """
+        Try to determine the public IP by
+        parsing output from http://jsonip.com
+        """
+        try:
+            response = requests.get('http://jsonip.com')
+        except RequestException as e:
+            print ("Unable to get public IP address")
+            raise
+        else:
+            if response.status_code == 200:
+                return str(response.json()['ip'])
+
     def create_security_group(self, name):
         """
         Read local security groups config file
         :param name: name of the config file
         """
-
+        cbhost = urlparse.urlparse(cbparams.cb_url)
+        cb_ip = gethostbyname(cbhost.hostname)
         try:
+            filtered_data = ''
             with open('securitygroups/' + name + '.json') as sg_file:
-                sg = json.load(sg_file)
+                raw_data = sg_file.read()
+                filtered_data = raw_data.replace('<only-me>', self.get_my_public_ip() +
+                                                 "/32").replace('<cloudbreak-ip>', cb_ip + "/32")
+            sg = json.loads(filtered_data)
         except (IOError, ValueError) as e:
             raise StandardError("Json file " + name + ".json is missing or unreadable. ")
         return sg

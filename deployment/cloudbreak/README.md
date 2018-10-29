@@ -139,26 +139,48 @@ Each recipe should be described in  __```recipe_details.json```__ file in the fo
 ### Manage security groups
 
 Security groups are part of each hostgroup definition. Either existing security groups that is already available in the selected provider region or predefined set of rules can be used.
-Security groups referenced in hostgroups definitions need a matching JOSN file, located in __```/deployment/cloudbreak/securitygroups/```__ folder. The content of the file depends on the type of the security group. If you prefer using an existing security group, you need to specify the corresponding security group id. Check __```existing_security_group.json```__ for reference. Otherwise, a list of security rules that relates to the security group should be defined. By default __```default_security_group```__ is used in the predefined blueprints:
+Security groups referenced in hostgroups definitions need a matching JOSN file, located in __```/deployment/cloudbreak/securitygroups/```__ folder. The content of the file depends on the type of the security group. If you prefer using an existing security group, you need to specify the corresponding security group id. Check __```existing_security_group.json```__ for reference. Otherwise, a list of security rules that relates to the security group should be defined. 
+
+*The following subnet placeholders are supported:*
+
+* <only-me> - when this string is set as subnet, the deployment script will substitute it witht he public IP address of the machine, where the script is executed.
+
+* <cloudbreak-ip> - Public IP address of the cloudbreak instance. This firewall rule is required so Cloudbreak can manage the cluster.
+
+
+ By default __```default_security_group```__ is used in the predefined blueprints:
+
 
 ```json
 {
     "securityRules": [
         {
-            "subnet": "0.0.0.0/0",
+            "subnet": "<only-me>",
             "ports": "9443",
             "protocol": "tcp"
         },
         {
-            "subnet": "0.0.0.0/0",
+            "subnet": "<cloudbreak-ip>",
+            "ports": "9443",
+            "protocol": "tcp"
+        },
+        {
+            "subnet": "<cloudbreak-ip>",
+            "ports": "22",
+            "protocol": "tcp"
+        },
+        
+        {
+            "subnet": "<only-me>",
             "ports": "22",
             "protocol": "tcp"
         },
         {
-            "subnet": "0.0.0.0/0",
+            "subnet": "<only-me>",
             "protocol": "tcp",
             "ports": "443"
         }
+        
     ]
 }
 ```

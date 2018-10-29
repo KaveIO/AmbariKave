@@ -24,7 +24,7 @@ from resource_management import *
 
 
 class KaveToolbox(Script):
-    sttmpdir = "/tmp/kavetoolbox_install/dump"
+    sttmpdir = "/opt/kavetoolbox_install/dump"
     kind = "node"
     status_file = "/etc/kave/status"
 

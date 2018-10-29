@@ -20,6 +20,7 @@ import os
 from resource_management import *
 import kavecommon as kc
 from resource_management.core.base import Fail
+import subprocess
 
 
 class Jenkins(Script):
@@ -172,7 +173,8 @@ class Jenkins(Script):
         kc.chmod_up(params.JENKINS_HOME, "a+rx")
         kc.chown_r(self.config_file_path, params.JENKINS_USER)
         kc.chown_r(params.JENKINS_HOME, params.JENKINS_USER)
-
+        if 'noexec' in subprocess.check_output('mount | grep "/tmp "', shell=True):
+            Execute("mount -o remount,exec /tmp")
 
 if __name__ == "__main__":
     Jenkins().execute()

@@ -485,10 +485,10 @@ class CBDeploy:
     def get_my_public_ip(self):
         """
         Try to determine the public IP by
-        parsing output from http://jsonip.com
+        parsing output from https://jsonip.com
         """
         try:
-            response = requests.get('http://jsonip.com')
+            response = requests.get('https://jsonip.com')
         except RequestException as e:
             print ("Unable to get public IP address")
             raise
@@ -511,7 +511,7 @@ class CBDeploy:
                                                  "/32").replace('<cloudbreak-ip>', cb_ip + "/32")
             sg = json.loads(filtered_data)
         except (IOError, ValueError) as e:
-            raise StandardError("Json file " + name + ".json is missing or unreadable. ")
+            raise StandardError("Error processing" + name + ".json")
         return sg
 
     def delete_stack_by_id(self, id):

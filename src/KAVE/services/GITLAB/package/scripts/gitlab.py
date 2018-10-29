@@ -57,7 +57,10 @@ class Gitlab(Script):
         locality = "NA"
         organization = "NA"
         organizationalun = "NA"
-        commonname = params.hostname
+        if len(params.hostname)<=64:
+            commonname = params.hostname
+        else:
+            commonname = params.hostname.split(".",1)[0]
         email = "gitlab@example.com"
         Execute(str.format('openssl req -x509 -nodes -days 3650 -newkey rsa:2048' +
                            ' -keyout /etc/gitlab/ssl/' + str(params.hostname) + '.key -out ' +

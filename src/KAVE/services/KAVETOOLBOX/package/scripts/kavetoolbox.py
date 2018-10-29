@@ -80,6 +80,12 @@ class KaveToolbox(Script):
         commandlineargs = ""
         if params.command_line_args:
             commandlineargs = " " + params.command_line_args
+
+        noexecDetected = 0
+        if 'noexec' in subprocess.check_output('mount | grep "/tmp "', shell=True):
+            noexecDetected = 1
+            Execute("mount -o remount,exec /tmp")
+
         Execute(instscript + ' --' + self.kind + extraopts + commandlineargs,
                 logoutput=True)
         os.chdir(topdir)
@@ -102,6 +108,8 @@ class KaveToolbox(Script):
         salt_check.wait()
         if int(salt_check.returncode) == 0:
             Execute('systemctl restart salt-minion.service')
+        if noexecDetected:
+            Execute("mount -o remount,noexec /tmp")
 
     def configure(self, env):
         import params

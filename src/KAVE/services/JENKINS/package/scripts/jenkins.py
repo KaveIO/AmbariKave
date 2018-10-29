@@ -173,7 +173,7 @@ class Jenkins(Script):
         kc.chmod_up(params.JENKINS_HOME, "a+rx")
         kc.chown_r(self.config_file_path, params.JENKINS_USER)
         kc.chown_r(params.JENKINS_HOME, params.JENKINS_USER)
-        if 'noexec' in subprocess.check_output('mount | grep "/tmp "', shell=True):
+        if 'noexec' in subprocess.check_output('if mountpoint -q /tmp; then mount | grep "/tmp "; fi', shell=True):
             Execute("mount -o remount,exec /tmp")
 
 if __name__ == "__main__":

@@ -82,7 +82,7 @@ class KaveToolbox(Script):
             commandlineargs = " " + params.command_line_args
 
         noexec_detected = 0
-        if 'noexec' in subprocess.check_output('mount | grep "/tmp "', shell=True):
+        if 'noexec' in subprocess.check_output('if mountpoint -q /tmp; then mount | grep "/tmp "; fi', shell=True):
             noexec_detected = 1
             Execute("mount -o remount,exec /tmp")
 

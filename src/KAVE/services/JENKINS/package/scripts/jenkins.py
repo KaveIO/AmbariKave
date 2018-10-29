@@ -59,10 +59,10 @@ class Jenkins(Script):
         locality = "NA"
         organization = "NA"
         organizationalun = "NA"
-        if len(params.hostname)<=64:
+        if len(params.hostname) <= 64:
             commonname = params.hostname
         else:
-            commonname = params.hostname.split(".",1)[0]
+            commonname = params.hostname.split(".", 1)[0]
         email = "na@example.com"
 #         Optional
         password = "qaz123WSX"

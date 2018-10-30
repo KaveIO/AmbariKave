@@ -85,8 +85,6 @@
         { "name" : "YARN_CLIENT"        },
         { "name" : "MAPREDUCE2_CLIENT"  },
         { "name" : "SLIDER"             },
-        { "name" : "LOGSEARCH_SERVER"   },
-        { "name" : "INFRA_SOLR"         },
         { "name" : "INFRA_SOLR_CLIENT"  },
         { "name" : "LOGSEARCH_LOGFEEDER"}
       ],
@@ -117,7 +115,6 @@
         { "name" : "SLIDER"               },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
-        { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "AIRFLOW_SERVER"       }
 
       ],
@@ -159,6 +156,7 @@
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "ZOOKEEPER_SERVER"     },
+        { "name" : "LOGSEARCH_SERVER"     },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVENAGIOS_MONITOR"   },
@@ -167,6 +165,7 @@
         { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
         { "name" : "KAVETOOLBOXNODE"      },
+        { "name" : "INFRA_SOLR"           },
         { "name" : "LOGSEARCH_LOGFEEDER"  }
       ],
       "cardinality" : "1"

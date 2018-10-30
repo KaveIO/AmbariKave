@@ -69,7 +69,7 @@ class Gitlab(Script):
                            '"', country, state, locality, organization, organizationalun, commonname, email))
         self.configure(env)
         self.set_password(env)
-        Execute("rm -rf" + self.installer_cache_path + self.package)
+        Execute("rm -rf " + self.installer_cache_path + self.package)
 
     def start(self, env):
         self.configure(env)

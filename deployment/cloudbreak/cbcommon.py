@@ -511,7 +511,7 @@ class CBDeploy:
                                                  "/32").replace('<cloudbreak-ip>', cb_ip + "/32")
             sg = json.loads(filtered_data)
         except (IOError, ValueError) as e:
-            raise StandardError("Error processing" + name + ".json")
+            raise StandardError("Error processing " + name + ".json")
         return sg
 
     def delete_stack_by_id(self, id):

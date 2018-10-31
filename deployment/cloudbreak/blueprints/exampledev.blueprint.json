@@ -21,6 +21,11 @@
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
     { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} },
     {
+      "kavetoolbox": {
+        "custom_install_template": "import kavedefaults as cnf\ncnf.li.InstallTopDir=\"{{top_dir}}\"\ncnf.hpy.doInstall = False\ncnf.spark.doInstall=False\ncnf.spark.node=False\ncnf.spark.workstation=False"
+      }
+    },
+    {
       "ams-grafana-env" : {
         "metrics_grafana_password" : "SnowCapMountainChap"
       }

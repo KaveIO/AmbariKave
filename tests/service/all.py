@@ -80,7 +80,7 @@ for service in blueprint_not_services:
     else:
         blueprint_not_serviceargs.append(service)
 
-modargs = {test_kavetoolbox_head: ['Centos7', 'Redhat7'],
+modargs = {test_kavetoolbox_head: ['Centos7'],
            remote_service_with_servicesh: serviceargs,
            remote_service_with_blueprint: blueprint_serviceargs,
            remote_blueprint: blueprint_not_serviceargs

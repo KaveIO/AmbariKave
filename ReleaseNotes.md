@@ -5,7 +5,7 @@
 Contains a list of the released versions with a summary of the main changes in each version.
 
 # v3.5-Beta
-- Sept 2018
+- Oct 2018
 
 **MAJOR RELEASE**
 
@@ -15,19 +15,30 @@ Contains a list of the released versions with a summary of the main changes in e
     3. New version of MongoDB v.3.6 
     4. Removed Kaveganglia from AmbariKave - deprecated, replaced by Ambari Metrics
     5. Removed JBOSS from AmbariKave - deprecated, replaced by WildFly
-    6. Cloudbreak 2.x support
+    6. Cloudbreak 2.7 support
 * Minor changes were:
-     Cloudbreak deployment improvements and bug fixes:
+
+* Cloudbreak deployment improvements and bug fixes:
 
         - improved error handling
         - a lot of previously hard-coded data is now configurable - CB credential, volume size/count, node count, security group
         - added validations for hostgroups/ blueprints
         - separate mandatory and custom recipes
         - Cloudbreak credentials protection
-        - Implement mechanism to stop/delete clusters via Cloudbreak
-        - Add missing License Agreements
+        - Mechanism to stop/delete clusters via Cloudbreak
         - Fix broken formatting in documentation
         - Fix log message in Cloudbreak deployment script
+
+* Improvements in KaveToolbox service:
+    	
+    	- Ability to define custom env. script for all users
+    	- Default settings for Spark env. compatibility with Anaconda python (3.6)
+    	- KaveToolboxNode defined as slave instead of client service
+    	
+* Self-signed SSL certificates for Jenkins and Gitlab created at install time.
+
+
+
         
 # v3.4-Beta
 - November 2017

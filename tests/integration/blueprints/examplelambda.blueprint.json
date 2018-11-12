@@ -17,8 +17,16 @@
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     { "hdfs-site" : { "dfs.webhdfs.enabled" : "true" } },
+    { "hdfs-log4j" : { "hadoop_log_max_backup_size" : "128MB", "hadoop_log_number_of_backup_files" : "5",
+                       "hadoop_security_log_max_backup_size" : "128MB", "hadoop_security_log_number_of_backup_files" : "10" } },
     { "hive-site" : { "hive.server2.enable.impersonation" : "true", "javax.jdo.option.ConnectionPassword" : "admin" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "yarn-log4j" : { "yarn_rm_summary_log_max_backup_size" : "128MB", "yarn_rm_summary_log_number_of_backup_files" : "10" } },
+    { "hive-log4j" : { "hive_log_maxfilesize": "128", "hive_log_maxbackupindex" : "15" } },
+    { "hive-log4j2" : { "hive2_log_maxfilesize": "128", "hive2_log_maxbackupindex" : "15" } },
+    { "llap-cli-log4j2" : { "llap_cli_log_maxfilesize" : "128", "llap_cli_log_maxbackupindex" : "15" } },
+    { "llap-daemon-log4j" : { "hive_llap_log_maxfilesize" : "128", "hive_llap_log_maxbackupindex" : "120"} },
+    { "webhcat-log4j" : { "webhcat_log_maxfilesize" : "128", "webhcat_log_maxbackupindex" : "10" } },
     { "freeipa": {
         "ldap_bind_password": "testtestdirpass1234",
         "forwarders": "10.0.0.10",
@@ -46,12 +54,28 @@
       }
     },
     { "stormsd" : { "stormsd.supervisor.slots.ports" : "6700, 6701, 6702, 6703, 6704, 6705, 6706, 6707, 6708, 6709, 6710, 6711" }  },
-    { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
+    { "gitlab" : {"gitlab_ssl_port" : "443", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
     { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} },
     {
       "ams-grafana-env" : {
         "metrics_grafana_password" : "SnowCapMountainChap"
+      }
+    },
+        {
+      "spark2-env" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "content" : "\n#!/usr/bin/env bash\n\n# This file is sourced when running various Spark programs.\n# Copy it as spark-env.sh and edit that to configure Spark for your site.\n\n# Options read in YARN client mode\n#SPARK_EXECUTOR_INSTANCES=\"2\" #Number of workers to start (Default: 2)\n#SPARK_EXECUTOR_CORES=\"1\" #Number of cores for the workers (Default: 1).\n#SPARK_EXECUTOR_MEMORY=\"1G\" #Memory per Worker (e.g. 1000M, 2G) (Default: 1G)\n#SPARK_DRIVER_MEMORY=\"512M\" #Memory for Master (e.g. 1000M, 2G) (Default: 512 Mb)\n#SPARK_YARN_APP_NAME=\"spark\" #The name of your application (Default: Spark)\n#SPARK_YARN_QUEUE=\"default\" #The hadoop queue to use for allocation requests (Default: default)\n#SPARK_YARN_DIST_FILES=\"\" #Comma separated list of files to be distributed with the job.\n#SPARK_YARN_DIST_ARCHIVES=\"\" #Comma separated list of archives to be distributed with the job.\n\n# Generic options for the daemons used in the standalone deploy mode\n\n# Alternate conf dir. (Default: ${SPARK_HOME}/conf)\nexport SPARK_CONF_DIR=${SPARK_CONF_DIR:-{{spark_home}}/conf}\n\n# Where log files are stored.(Default:${SPARK_HOME}/logs)\n#export SPARK_LOG_DIR=${SPARK_HOME:-{{spark_home}}}/logs\nexport SPARK_LOG_DIR={{spark_log_dir}}\n\n# Where the pid file is stored. (Default: /tmp)\nexport SPARK_PID_DIR={{spark_pid_dir}}\n\n#Memory for Master, Worker and history server (default: 1024MB)\nexport SPARK_DAEMON_MEMORY={{spark_daemon_memory}}m\n\n# A string representing this instance of spark.(Default: $USER)\nSPARK_IDENT_STRING=$USER\n\n# The scheduling priority for daemons. (Default: 0)\nSPARK_NICENESS=0\n\nexport HADOOP_HOME=${HADOOP_HOME:-{{hadoop_home}}}\nexport HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-{{hadoop_conf_dir}}}\n\n# The java implementation to use.\nexport JAVA_HOME={{java_home}}\nexport PATH=/usr/bin:$PATH\nexport PYSPARK_PYTHON=/opt/anaconda/pro/bin/python\nexport PYSPARK_DRIVER_PYTHON=python3.6"
+        }
+      }
+    },
+    {
+      "spark2-hive-site-override" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "hive.exec.dynamic.partition.mode" : "nonstrict"
+          }
       }
     }
   ],
@@ -63,7 +87,6 @@
         { "name" : "FREEIPA_SERVER"     },
         { "name" : "FREEIPA_CLIENT"     },
         { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "KAVENAGIOS_MONITOR" },
         { "name" : "ZOOKEEPER_CLIENT"   }
       ],
@@ -77,10 +100,8 @@
         { "name" : "ZOOKEEPER_SERVER"       },
         { "name" : "METRICS_COLLECTOR"  },
         { "name" : "METRICS_GRAFANA"    },
-        { "name" : "KAVEGANGLIA_SERVER" },
         { "name" : "KAVENAGIOS_SERVER"  },
         { "name" : "KAVENAGIOS_MONITOR" },
-        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
         { "name" : "FREEIPA_CLIENT"     },
@@ -115,7 +136,6 @@
 		{ "name" : "MONGODB_CLIENT"       },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "SLIDER" 		      },
@@ -150,11 +170,11 @@
         { "name" : "OOZIE_CLIENT"           },
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
-        { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "KAVENAGIOS_MONITOR"     },
         { "name" : "FREEIPA_CLIENT"         },
         { "name" : "SLIDER" 		        },
         { "name" : "INFRA_SOLR_CLIENT"      },
+        { "name" : "KAVETOOLBOXNODE"        },        
         { "name" : "LOGSEARCH_LOGFEEDER"    }
       ],
       "cardinality" : "1"
@@ -166,10 +186,10 @@
         { "name" : "ZOOKEEPER_SERVER"     },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "SLIDER" 		      },
+        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
@@ -185,7 +205,6 @@
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"       },
         { "name" : "YARN_CLIENT"          },
@@ -203,7 +222,6 @@
         { "name" : "MONGODB_CLIENT"       },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "FREEIPA_CLIENT"       }
       ],
@@ -218,7 +236,6 @@
 		{ "name" : "MONGODB_CLIENT"        },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "KAVENAGIOS_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"        }
       ],
@@ -228,7 +245,7 @@
       "name" : "ci",
       "configurations" : [
       	{ "sonarqube" : { "sonar_database_user_passwd" : "admin" } },
-      	{ "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
+      	{ "gitlab" : {"gitlab_ssl_port" : "443", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
       	],
       "components" : [
         { "name" : "ARCHIVA_SERVER"        },
@@ -250,7 +267,6 @@
 		{ "name" : "MONGODB_CLIENT"        },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "KAVENAGIOS_MONITOR"    },
         { "name" : "FREEIPA_CLIENT"        },
         { "name" : "SLIDER" 		       },
@@ -270,7 +286,6 @@
         { "name" : "KAVETOOLBOXNODE"    },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "KAVENAGIOS_MONITOR" },
         { "name" : "FREEIPA_CLIENT"     }
       ],
@@ -285,7 +300,6 @@
         { "name" : "SUPERVISOR_SD_SLAVE" },
         { "name" : "STORMSD_LOG_VIEWER"  },
         { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "KAVENAGIOS_MONITOR"  },
         { "name" : "FREEIPA_CLIENT"      }
       ],
@@ -299,7 +313,6 @@
         { "name" : "KAVETOOLBOXNODE"  },
         { "name" : "KAFKA_BROKER"     },
         { "name" : "ZOOKEEPER_CLIENT" },
-        { "name" : "KAVEGANGLIA_MONITOR" },
         { "name" : "KAVENAGIOS_MONITOR"  },
         { "name" : "FREEIPA_CLIENT"   }
       ],

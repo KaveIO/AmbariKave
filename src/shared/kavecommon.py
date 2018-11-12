@@ -475,11 +475,11 @@ def install_epel(clean=True):
     install epel independent of redhat or centos version
     """
     if detect_linux_version() in ["Centos6"]:
-        res.Execute('yum -y install epel-release')
+        res.Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 epel-release')
     else:
         status, stdout, _stderr = shell_call_wrapper('yum info epel-release')
         if status or 'installed' not in stdout:
-            res.Execute('yum -y install wget')
+            res.Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 wget')
             res.Execute('wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
             res.Execute('yum -y install epel-release-latest-7.noarch.rpm')
     if clean:

@@ -3,6 +3,11 @@
 
 <configuration>
     <property>
+        <name>AirflowVersion</name>
+        <value>1.8.0</value>
+        <description>Tell pip which version of Airflow to install</description>
+    </property>
+    <property>
         <name>PORT</name>
         <value>82</value>
         <description>HTTP PORT</description>
@@ -12,4 +17,56 @@
         <value>hostname</value>
         <description>The name of the server. if blank or set to 'hostname', use the evaluated hostname (probably fqdn)</description>
     </property>
+    <property>
+        <name>airflow_executor</name>
+        <value>SequentialExecutor</value>
+    </property>
+    <property>
+        <name>airflow_parallelism</name>
+        <value>32</value>
+    </property>
+    <property>
+        <name>airflow_dag_concurrency</name>
+        <value>16</value>
+    </property>
+    <property>
+        <name>airflow_dags_are_paused_at_creation</name>
+        <value>True</value>
+    </property>
+    <property>
+        <name>airflow_non_pooled_task_slot_count</name>
+        <value>128</value>
+    </property>
+    <property>
+        <name>airflow_max_active_runs_per_dag</name>
+        <value>16</value>
+    </property>
+    <property>
+        <name>airflow_load_examples</name>
+        <value>True</value>
+    </property>
+    <property>
+        <name>airflow_donot_pickle</name>
+        <value>False</value>
+    </property>
+    <property>
+        <name>airflow_dagbag_import_timeout</name>
+        <value>30</value>
+    </property>    
+    <property>
+        <name>airflow_expose_config</name>
+        <value>True</value>
+    </property>
+    <property>
+        <name>airflow_filter_by_owner</name>
+        <value>False</value>
+    </property>
+    <property>
+        <name>airflow_job_heartbeat_sec</name>
+        <value>5</value>
+    </property>
+    <property>
+        <name>airflow_max_threads</name>
+        <value>2</value>
+    </property>               
 </configuration>

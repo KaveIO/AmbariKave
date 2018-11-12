@@ -23,7 +23,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 gitlab_conf_file = "/etc/gitlab/gitlab.rb"
-gitlab_port = kc.default("configurations/gitlab/gitlab_port", "80", kc.is_valid_port)
+gitlab_ssl_port = kc.default("configurations/gitlab/gitlab_ssl_port", "443", kc.is_valid_port)
 gitlab_url = kc.default("configurations/gitlab/gitlab_url", hostname, kc.is_valid_hostname)
 unicorn_port = kc.default("configurations/gitlab/unicorn_port", "8080", kc.is_valid_port)
 unicorn_interface = default("configurations/gitlab/unicorn_interface", '127.0.0.1')
@@ -39,9 +39,13 @@ gitlab_admin_password = config['configurations']['gitlab']['gitlab_admin_passwor
 Logger.sensitive_strings[gitlab_admin_password] = "[PROTECTED]"
 restrict_public_projects = default('configurations/gitlab/restrict_public_projects', 'true')
 restrict_public_projects = kc.trueorfalse(restrict_public_projects)
+use_external_postgres = default('configurations/gitlab/use_external_postgres', 'false')
+use_external_postgres = kc.trueorfalse(use_external_postgres)
+postgres_database_name = default('configurations/gitlab/postgres_database_name', 'gitlabhq_production')
+postgres_database_port = default('configurations/gitlab/postgres_database_port', '5432')
+postgres_database_host = default('configurations/gitlab/postgres_database_host', '127.0.0.1')
+postgres_database_user = default('configurations/gitlab/postgres_database_user', 'gitlab')
 
-# postgre configuration in case it is already installed!
-postgre_disabled = False
 # doesn't work at the moment, check in gitlabs explicitly and throw an exception instead
 ldap_group = ''
 ldap_admin_group = ''
@@ -69,7 +73,7 @@ gitlabrb = default('configurations/gitlab/gitlabrb', """# Created automatically 
 # Edit the template through the Ambari interface instead
 
 # Change the external_url to the address your users will type in their browser
-external_url 'http://{{gitlab_url}}:{{gitlab_port}}'
+external_url 'https://{{gitlab_url}}:{{gitlab_ssl_port}}'
 
 {% if ldap_enabled %}
 gitlab_rails['ldap_enabled'] = true
@@ -93,17 +97,17 @@ gitlab_rails['gitlab_signin_enabled'] = false
 gitlab_rails['gitlab_restricted_visibility_levels'] = [ "public" ]
 {% endif %}
 
-{% if postgre_disabled %}
+{% if use_external_postgres %}
 # Disable the built-in Postgres? This doesn't work for the moment, leave here as a placeholder for the full solution
 postgresql['enable'] = false
 
 gitlab_rails['db_adapter'] = 'postgresql'
 gitlab_rails['db_encoding'] = 'unicode'
 # Create database manually and place its name here.
-gitlab_rails['db_database'] = 'gitlabhq_production'
-gitlab_rails['db_host'] = '127.0.0.1'
-gitlab_rails['db_port'] = '5432'
-gitlab_rails['db_username'] = 'git' # Database owner.
+gitlab_rails['db_database'] = '{{postgres_database_name}}'
+gitlab_rails['db_host'] = '{{postgres_database_host}}'
+gitlab_rails['db_port'] = '{{postgres_database_port}}'
+gitlab_rails['db_username'] = '{{postgres_database_user}}' # Database owner.
 gitlab_rails['db_password'] = '{{gitlab_admin_password}}' # Database owner's password.
 {% endif %}
 

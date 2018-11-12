@@ -6,14 +6,13 @@
       }
     },
     {
-      "eskapade": {
-        "top_dir": "/opt/"
+      "kavetoolbox": {
+        "custom_install_template": "cnf.li.InstallTopDir=\"{{top_dir}}\" \ncnf.spark.doInstall=True \ncnf.spark.node=True \ncnf.spark.workstation=True"
       }
     },
     {
-      "kavetoolbox" : {
-        "custom_install_template" :
-            "import kavedefaults as cnf\ncnf.li.InstallTopDir=\"{{top_dir}}\""
+      "eskapade": {
+        "top_dir": "/opt/"
       }
     }
   ],

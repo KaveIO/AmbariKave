@@ -2,8 +2,8 @@
  "configurations" : [
         {
         "lcm_application" : {
-        "LCM_Server_URL" : "ambari.kave.io",
-        "LCM_UI_URL" : "ambari.kave.io"
+        "LCM_Server_URL" : "0.0.0.0",
+        "LCM_UI_URL" : "0.0.0.0"
       }
         },
     {

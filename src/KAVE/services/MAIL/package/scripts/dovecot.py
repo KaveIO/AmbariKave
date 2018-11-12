@@ -85,7 +85,7 @@ class Dovecot(Script):
         check = subprocess.Popen('service dovecot status', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
 

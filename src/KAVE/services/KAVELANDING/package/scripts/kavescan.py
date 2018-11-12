@@ -76,9 +76,7 @@ default_ambari_password = "admin"
 # the default port should always be given, even if it is 80
 # Simple addition, subtraction and multiplication is supported, when separated with a space from the parameter
 #  ["apache/APACHE_PORT +1000"] would return the result of adding 1000 to the apache port if set
-service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
-                             "KAVEGANGLIA_SERVER": {"ganglia": ["80/ganglia"]},
-                             "NAGIOS_SERVER": {"alerts": ["80/nagios"]},
+service_portproperty_dict = {"NAGIOS_SERVER": {"alerts": ["80/nagios"]},
                              "KAVENAGIOS_SERVER": {"alerts": ["80/nagios"]},
                              "METRICS_GRAFANA": {"grafana": [3000, 'ams-grafana-ini/port']},
                              "AMBARI_SERVER": {"admin": [8080]},
@@ -92,7 +90,7 @@ service_portproperty_dict = {"GANGLIA_SERVER": {"monitor": ["80/ganglia"]},
                              # need to add 1000 to the port number if it exists!
                              "MONGODB_MASTER": {"mongo_tcp": [27017, "mongodb/tcp_port"],
                                                 "mongo_web": [28017, "mongodb/tcp_port +1000"]},
-                             "GITLAB_SERVER": {"gitlab": [80, "gitlab/gitlab_port"]},
+                             "GITLAB_SERVER": {"gitlab": [443, "gitlab/gitlab_ssl_port"]},
                              "STORMSD_UI_SERVER": {"storm": [8744, "stormsd/stormsd.ui.port"]},
                              "STORMSD_LOG_VIEWER": {"log": [8013, "stormsd/stormsd.logviewer.port"]},
                              "HUE_SERVER": {"hue": [8744, "hue/web_ui_port"]},

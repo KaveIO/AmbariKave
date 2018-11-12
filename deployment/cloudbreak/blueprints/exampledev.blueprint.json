@@ -5,176 +5,74 @@
         "timeline.metrics.service.operation.mode": "embedded"
       }
     },
-    {
-      "kavelanding": {
-        "AMBARI_ADMIN": "admin",
-        "AMBARI_ADMIN_PASS": "admin"
-      }
+    { "kavelanding" : {
+        "AMBARI_ADMIN" : "admin",
+        "AMBARI_ADMIN_PASS" : "admin"
+    	}
     },
-    {
-      "archiva": {
-        "ARCHIVA_ADMIN_PASSWORD": "LVCxm<85"
-      }
-    },
-    {
-      "freeipa": {
-        "ldap_bind_password": "testtestdirpass1234",
-        "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups": "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
-        "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
-        "forwarders": "168.63.129.16",
-        "install_distribution_user": "cloudbreak",
-        "install_with_dns": "True"
-      }
-    },
+    { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
     {
       "sonarqube": {
         "sonar_database_url": "ci.kave.io",
         "sonar_database_user_passwd": "admin"
       }
     },
+    { "gitlab" : {"gitlab_ssl_port" : "443", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
+    { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
+    { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} },
     {
-      "gitlab": {
-        "gitlab_port": "8888",
-        "gitlab_admin_password": "temptest999999",
-        "unicorn_port": "8887"
+      "kavetoolbox": {
+        "custom_install_template": "import kavedefaults as cnf\ncnf.li.InstallTopDir=\"{{top_dir}}\"\ncnf.hpy.doInstall = False\ncnf.spark.doInstall=False\ncnf.spark.node=False\ncnf.spark.workstation=False"
       }
     },
     {
-      "twiki": {
-        "ldap_bind_password": "testtestdirpass1234"
-      }
-    },
-    {
-      "jenkins": {
-        "JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"
-      }
-    },
-    {
-      "ams-grafana-env": {
-        "metrics_grafana_password": "SnowCapMountainChap"
+      "ams-grafana-env" : {
+        "metrics_grafana_password" : "SnowCapMountainChap"
       }
     }
   ],
-  "host_groups": [
-  {
-      "name" : "freeipa",
+  "host_groups" : [
+    {
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
-        {
-          "name" : "FREEIPA_SERVER"
-        },
-        {
-          "name" : "FREEIPA_CLIENT"
-        },
-        {
-          "name" : "METRICS_MONITOR"
-        },
-        {
-          "name" : "KAVEGANGLIA_MONITOR"
-        },
-        {
-          "name" : "ZOOKEEPER_CLIENT"
-        }
+        { "name" : "AMBARI_SERVER"      },
+        { "name" : "METRICS_COLLECTOR"  },
+        { "name" : "METRICS_GRAFANA"    },
+        { "name" : "ZOOKEEPER_SERVER"   },
+        { "name" : "METRICS_MONITOR"    },
+        { "name" : "ZOOKEEPER_CLIENT"   }
       ],
       "cardinality" : "1"
     },
     {
-      "name": "admin-freeipa",
-      "configurations": [],
-      "components": [
-        {
-          "name": "AMBARI_SERVER"
-        },
-        {
-          "name": "METRICS_COLLECTOR"
-        },
-        {
-          "name": "METRICS_GRAFANA"
-        },
-        {
-          "name": "ZOOKEEPER_SERVER"
-        },
-        {
-          "name": "KAVEGANGLIA_SERVER"
-        },
-        {
-          "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "KAVEGANGLIA_MONITOR"
-        },
-        {
-          "name": "ZOOKEEPER_CLIENT"
-        }
+      "name" : "gateway",
+      "configurations" : [      ],
+      "components" : [
+        { "name" : "KAVELANDING"          },
+        { "name" : "KAVETOOLBOXGATE"      },
+        { "name" : "SONARQUBE_RUNNER"     },
+        { "name" : "METRICS_MONITOR"      },
+        { "name" : "ZOOKEEPER_CLIENT"     }
       ],
-      "cardinality": "1"
+      "cardinality" : "1+"
     },
     {
-      "name": "gateway",
-      "configurations": [],
-      "components": [
-        {
-          "name": "KAVELANDING"
-        },
-        {
-          "name": "KAVETOOLBOXGATE"
-        },
-        {
-          "name": "SONARQUBE_RUNNER"
-        },
-        {
-          "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "KAVEGANGLIA_MONITOR"
-        }
+      "name" : "ci",
+      "configurations" : [ ],
+      "components" : [
+        { "name" : "ARCHIVA_SERVER"        },
+        { "name" : "JENKINS_MASTER"        },
+        { "name" : "TWIKI_SERVER"          },
+        { "name" : "GITLAB_SERVER"         },
+        { "name" : "SONARQUBE_SERVER"      },
+        { "name" : "SONARQUBE_MYSQL_SERVER"},
+        { "name" : "SONARQUBE_RUNNER"      },
+        { "name" : "KAVETOOLBOXNODE"       },
+        { "name" : "METRICS_MONITOR"       },
+        { "name" : "ZOOKEEPER_CLIENT"      }
       ],
-      "cardinality": "1+"
-    },
-    {
-      "name": "ci",
-      "configurations": [],
-      "components": [
-        {
-          "name": "ARCHIVA_SERVER"
-        },
-        {
-          "name": "JENKINS_MASTER"
-        },
-        {
-          "name": "TWIKI_SERVER"
-        },
-        {
-          "name": "GITLAB_SERVER"
-        },
-        {
-          "name": "SONARQUBE_SERVER"
-        },
-        {
-          "name": "SONARQUBE_MYSQL_SERVER"
-        },
-        {
-          "name": "SONARQUBE_RUNNER"
-        },
-        {
-          "name": "KAVETOOLBOXNODE"
-        },
-        {
-          "name": "METRICS_MONITOR"
-        },
-        {
-          "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "KAVEGANGLIA_MONITOR"
-        }
-      ],
-      "cardinality": "1+"
+      "cardinality" : "1+"
     }
   ],
   "Blueprints": {

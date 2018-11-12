@@ -29,9 +29,9 @@ class NagiosClient(Script):
         env.set_params(params)
         self.install_packages(env)
         kc.install_epel()
-        Execute('yum -y install nrpe')
-        Execute('yum -y install nagios-plugins-all')
-        Execute('yum -y install openssl')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 nrpe')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 nagios-plugins-all')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 openssl')
         self.configure(env)
 
     def configure(self, env):
@@ -58,7 +58,7 @@ class NagiosClient(Script):
         check = subprocess.Popen('systemctl status nrpe', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
 if __name__ == "__main__":

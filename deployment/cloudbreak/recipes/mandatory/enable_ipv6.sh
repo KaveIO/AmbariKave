@@ -1,3 +1,4 @@
+#!/bin/sh
 ##############################################################################
 #
 # Copyright 2017 KPMG Advisory N.V. (unless otherwise stated)
@@ -15,5 +16,9 @@
 #   limitations under the License.
 #
 ##############################################################################
-
 sysctl -w net.ipv6.conf.lo.disable_ipv6=0
+ifconfig | grep -q ::1
+if [ $? = 1 ]; then
+    ifconfig lo inet6 add ::1
+fi
+

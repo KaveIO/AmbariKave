@@ -18,13 +18,15 @@
 import sys
 import os
 import shutil
+import subprocess
 
 from resource_management import *
 
 
 class KaveToolbox(Script):
-    sttmpdir = "/tmp/kavetoolbox_install/dump"
+    sttmpdir = "/opt/kavetoolbox_install/dump"
     kind = "node"
+    status_file = "/etc/kave/status"
 
     def status(self, env):
         raise ClientComponentHasNoStatus()
@@ -78,14 +80,36 @@ class KaveToolbox(Script):
         commandlineargs = ""
         if params.command_line_args:
             commandlineargs = " " + params.command_line_args
+
+        noexec_detected = 0
+        if 'noexec' in subprocess.check_output('if mountpoint -q /tmp; then mount | grep "/tmp "; fi', shell=True):
+            noexec_detected = 1
+            Execute("mount -o remount,exec /tmp")
+
         Execute(instscript + ' --' + self.kind + extraopts + commandlineargs,
                 logoutput=True)
         os.chdir(topdir)
         Execute("rm -rf " + self.sttmpdir + "/*")
         Execute('touch /etc/kave/toolbox_ok')
-        Execute('yum -y install python-pip')
-        Execute('pip install --upgrade pip')
-        Execute('pip install lightning-python')
+        Execute('yum -y install --setopt=retries=20 --setopt=timeout=60 python-pip')
+        Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ;pip install --upgrade pip"')
+        Execute('bash -c "source /opt/KaveToolbox/pro/scripts/KaveEnv.sh ; pip install lightning-python"')
+        File("/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf",
+             content=InlineTemplate(params.kave_env_excluded_users),
+             mode=0644
+             )
+        File("/etc/profile.d/ktb_custom_env.sh",
+             content=InlineTemplate(params.kave_custom_environment),
+             mode=0644
+             )
+        # Restart salt minion service. Otherwise it fails because of some python package installs/upgrades required
+        # by KaveToolbox
+        salt_check = subprocess.Popen('systemctl is-active --quiet salt-minion.service', shell=True)
+        salt_check.wait()
+        if int(salt_check.returncode) == 0:
+            Execute('systemctl restart salt-minion.service')
+        if noexec_detected:
+            Execute("mount -o remount,noexec /tmp")
 
     def configure(self, env):
         import params
@@ -112,8 +136,36 @@ class KaveToolbox(Script):
              content=InlineTemplate(params.custom_install_template),
              mode=0644
              )
+        File("/etc/profile.d/ktb_custom_env.sh",
+             content=InlineTemplate(params.kave_custom_environment),
+             mode=0644
+             )
+        # On the first call (see func: install) this config does not exists.
+        # Later if configuration is changed it should be present
+        if os.path.exists('/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf'):
+            File("/opt/KaveToolbox/pro/config/kave-env-exclude-users.conf",
+                 content=InlineTemplate(params.kave_env_excluded_users),
+                 mode=0644
+                 )
         Execute("chmod -R a+r /etc/kave")
 
+    def status(self, env):
+        with open(self.status_file, 'r') as content_file:
+            content = content_file.read()
+        if int(content) != 0:
+            raise ComponentIsNotRunning()
+        return True
+
+    def start(self, env):
+        Execute("echo 0 > " + self.status_file)
+
+    def stop(self, env):
+        Execute("echo 1 > " + self.status_file)
+
+    def restart(self, env):
+        self.stop(env)
+        self.configure(env)
+        self.start(env)
 
 if __name__ == "__main__":
     KaveToolbox().execute()

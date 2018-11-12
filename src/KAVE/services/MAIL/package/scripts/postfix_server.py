@@ -72,7 +72,7 @@ class PostfixSrv(Script):
         check = subprocess.Popen('service postfix status', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
 

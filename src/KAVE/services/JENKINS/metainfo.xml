@@ -6,7 +6,7 @@
             <name>JENKINS</name>
             <comment>jenkins, build your code and distribute internally</comment>
             <displayName>Jenkins</displayName>
-            <version>1.642</version>
+            <version>2.129</version>
             <components>
                     <component>
                     <name>JENKINS_MASTER</name>

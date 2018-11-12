@@ -1,3 +1,9 @@
+tmp/
+.settings
+.metadata/
+.pydevproject
+.project
+.gitlab-ci.yml
 *.pyc
 *checkpoint*
 build

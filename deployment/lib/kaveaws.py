@@ -22,13 +22,10 @@ python functions for interacting with aws
 # Functions specific to AWS
 #
 import kavedeploy as lD
-import commands
-import subprocess as sub
 import json
 import os
 import sys
 import time
-import re
 
 import threading
 import thread
@@ -49,6 +46,11 @@ def testaws():
 
 
 def runawstojson(cmd):
+    """
+    Run aws CLI command and return the response as JSON
+    :param cmd: command to be executed
+    """
+
     prox = lD.detect_proxy() and lD.no_ssl_over_proxy
     if prox:
         cmd = "--no-verify-ssl " + cmd
@@ -66,8 +68,8 @@ def detect_region():
     """
     return lD.run_quiet("aws configure get region")
 
-__region_ami_links__ = {"Centos7": {"default": "ami-e4ff5c93",
-                                    "eu-west": "ami-e4ff5c93",
+__region_ami_links__ = {"Centos7": {"default": "ami-192a9460",
+                                    "eu-west": "ami-192a9460",
                                     "ap-northeast": "ami-89634988",
                                     "ap-southeast": "ami-aea582fc",
                                     "eu-central": "ami-9bf712f4",
@@ -91,6 +93,12 @@ __region_ami_links__ = {"Centos7": {"default": "ami-e4ff5c93",
 
 
 def chooseamiid(os, region):
+    """
+    Choose Amazon image based on operating system and region passed
+    :param os: operation system [Centos7, Ubuntu14...]
+    :param region: the region where the instance will live [eu-central, eu-west...]
+    """
+
     if os not in __region_ami_links__:
         raise ValueError("OS " + os + " not known for linking to amiid")
     try:
@@ -110,6 +118,16 @@ def chooseamiid(os, region):
 
 
 def up_default(type, security_group, keys, count=1, subnet=None, ambaridev=False):
+    """
+    Raise instance and if $AMIAMBDEV is defined use this pre-installed image
+    :param type: type of the machine that will be raised [t2.small, m1.medium...]
+    :param security_group: AWS security group to be used
+    :param keys: AWS key name
+    :param count: how much instances to rise
+    :param subnet: AWS subnet to use
+    :param ambaridev: use pre-installed image or choose one based on region and OS
+    """
+
     region = "default"
     amiid = ""
     if subnet is not None:
@@ -129,6 +147,16 @@ def up_default(type, security_group, keys, count=1, subnet=None, ambaridev=False
 
 
 def up_os(os, type, security_group, keys, count=1, subnet=None):
+    """
+    Raise instance on AWS
+    :param os: operating system to use
+    :param type: type of the machine that will be raised [t2.small, m1.medium...]
+    :param security_group: AWS security group to be used
+    :param keys: AWS key name
+    :param count: how much instances to rise
+    :param subnet: AWS subnet to use
+    """
+
     region = "default"
     if subnet is not None:
         region = detect_region()
@@ -155,6 +183,17 @@ def chooseinstancetype(instancetype):
 
 
 def upamiid(amiid, type, security_group, keys, count=1, subnet=None, rootsize=15):
+    """
+    Prepare AWS CLI command for raising an instance
+    :param amiid: AWS image id to use
+    :param type: type of the machine that will be raised [t2.small, m1.medium...]
+    :param security_group: AWS security group to be used
+    :param keys: AWS key name
+    :param count: how much instances to rise
+    :param subnet: AWS subnet to use
+    :param rootsize: size of the root partition
+    """
+
     cmd = " ec2 run-instances --image-id " + amiid + " --count " + str(
         count) + " --instance-type " + type + " --b '[{ \"DeviceName\": \"/dev/sda1\", \"Ebs\": {\"VolumeSize\":" + str(
         rootsize) + " }}]'" + " --key-name " + keys
@@ -190,6 +229,11 @@ def tag_resources(resources, tags):
 
 
 def desc_instance(iid=None):
+    """
+    Get instance information from AWS or return all instances information
+    :param iid: instance ID
+    """
+
     if iid is not None:
         return runawstojson("ec2 describe-instances --instance " + iid)
     else:
@@ -197,6 +241,11 @@ def desc_instance(iid=None):
 
 
 def volumeids_from_instance(iid):
+    """
+    Get all volume IDs for instance
+    :param iid: instance ID
+    """
+
     resp = runawstojson("ec2 describe-volumes --filter  Name=attachment.instance-id,Values=" + iid)
     return [v["VolumeId"] for v in resp["Volumes"]]
 
@@ -215,11 +264,21 @@ def instances_from_sn_or_sg(sn_or_sg):
 
 
 def subnets_from_vpcid(id):
+    """
+    Get all subnet IDs for vpc ID
+    :param id: vpc ID
+    """
+
     resp = runawstojson("ec2 describe-subnets --filter  Name=vpc-id,Values=" + id)
     return [v["SubnetId"] for v in resp["Subnets"]]
 
 
 def sgroups_from_vpcid(id):
+    """
+    Get all security group IDs for vpc ID
+    :param id: vpc ID
+    """
+
     resp = runawstojson("ec2 describe-security-groups --filter  Name=vpc-id,Values=" + id)
     return [v["GroupId"] for v in resp["SecurityGroups"]]
 
@@ -493,6 +552,12 @@ def add_ebs_volumes(iids, mounts, access_key, nthreads=10):
 
 
 def waitforstate(iid, state="running"):
+    """
+    Wait until image ID takes given status
+    :param iid: AWS image id
+    :param state: state to wait for. Defaults to "running"
+    """
+
     import time
     # wait until ambari server is up
     rounds = 1
@@ -510,6 +575,13 @@ def waitforstate(iid, state="running"):
 
 
 def checksecjson(json, requirefield=["SecurityGroup"], requirekeys=["AWS", "GIT", "SSH"]):
+    """
+    Check if security JSON file has all required fields and if the key file has the correct
+    permissions
+    :param requirefield: which is the required field
+    :param requirekeys: ssh keys to be verified
+    """
+
     missing = [k for k in requirefield if k not in json.keys()]
     if len(missing):
         raise IOError("Your json file is missing the following keys " + missing.__str__())

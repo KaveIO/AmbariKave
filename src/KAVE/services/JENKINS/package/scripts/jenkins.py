@@ -20,6 +20,7 @@ import os
 from resource_management import *
 import kavecommon as kc
 from resource_management.core.base import Fail
+import subprocess
 
 
 class Jenkins(Script):
@@ -50,20 +51,53 @@ class Jenkins(Script):
             dest = params.JENKINS_HOME + "/plugins/" + source.split('/')[-1]
             Execute(kc.copymethods(source, dest))
 
+        Execute('mkdir -p /var/lib/jenkins/.ssl')
+        cpath = "/var/lib/jenkins/.ssl"
+        print str(cpath)
+#         #Change to your company details
+        country = "NA"
+        state = "NA"
+        locality = "NA"
+        organization = "NA"
+        organizationalun = "NA"
+        if len(params.hostname) <= 64:
+            commonname = params.hostname
+        else:
+            commonname = params.hostname.split(".", 1)[0]
+        email = "na@example.com"
+#         Optional
+        password = "qaz123WSX"
+        print "Generating key request"
+#         #Generate a key
+        Execute(str.format('openssl req -x509 -newkey rsa:4096' +
+                           ' -passout pass:{} -keyout /var/lib/jenkins/.ssl/key.pem -out' +
+                           ' /var/lib/jenkins/.ssl/cert.pem' +
+                           ' -days 365 -subj "/C={}/ST={}/L={}/O={}/OU={}/CN={}/emailAddress={} ' +
+                           '"', password, country, state, locality, organization, organizationalun, commonname, email))
+#         #Import the key to pckc12
+        Execute(str.format('openssl pkcs12 -inkey /var/lib/jenkins/.ssl/key.pem' +
+                           ' -in /var/lib/jenkins/.ssl/cert.pem -export -out /var/lib/jenkins/.ssl/cert.p12' +
+                           ' -passin pass:{} -passout pass:{}', password, password))
+#         #Import keystore
+        Execute(str.format('keytool -importkeystore -srckeystore /var/lib/jenkins/.ssl/cert.p12' +
+                           ' -destkeystore /var/lib/jenkins/.ssl/jenkins.jks -srcstoretype pkcs12' +
+                           ' -deststoretype JKS -srcstorepass {} -deststorepass {}', password, password))
+
         File(params.JENKINS_HOME + '/config.xml',
              content=Template("config.xml.j2"),
              mode=0644
              )
         kc.chown_r(params.JENKINS_HOME + '/config.xml', params.JENKINS_USER)
         Execute('chkconfig jenkins on')
+
         self.start(env)
         # using curl to create username password for jenkinsl
-        curl_command = ('curl -d "username=' + params.JENKINS_ADMIN
+        curl_command = ('curl -k -d "username=' + params.JENKINS_ADMIN
                         + '&password1=' + params.JENKINS_ADMIN_PASSWORD
                         + '&email=' + params.JENKINS_ADMIN_EMAIL + '&password2='
                         + params.JENKINS_ADMIN_PASSWORD + '&fullname='
-                        + params.JENKINS_ADMIN + '&Submit=Sign%20up" "http://'
-                        + params.hostname + ':' + str(params.JENKINS_PORT) + '/securityRealm/createAccount"')
+                        + params.JENKINS_ADMIN + '&Submit=Sign%20up" "https://'
+                        + params.hostname + ':' + str(params.JENKINS_HTTPS_PORT) + '/securityRealm/createAccount"')
         try:
             Execute(curl_command)
         except Fail as ex:
@@ -90,7 +124,7 @@ class Jenkins(Script):
         check = subprocess.Popen('systemctl status jenkins', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def configure(self, env):
@@ -139,7 +173,8 @@ class Jenkins(Script):
         kc.chmod_up(params.JENKINS_HOME, "a+rx")
         kc.chown_r(self.config_file_path, params.JENKINS_USER)
         kc.chown_r(params.JENKINS_HOME, params.JENKINS_USER)
-
+        if 'noexec' in subprocess.check_output('if mountpoint -q /tmp; then mount | grep "/tmp "; fi', shell=True):
+            Execute("mount -o remount,exec /tmp")
 
 if __name__ == "__main__":
     Jenkins().execute()

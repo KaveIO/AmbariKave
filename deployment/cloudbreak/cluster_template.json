@@ -1,36 +1,64 @@
 {
-  "name": "",
-  "enableShipyard": false,
-  "hostGroups": [],
-  "password": "admin",
-  "userName": "admin",
-  "enableSecurity": false,
-  "gateway": {
-    "enableGateway": false,
-    "exposedServices": [
-      "ALL"
-    ]
-  },
-  "kerberos": {},
-  "ldapRequired": false,
-  "sssdConfigId": null,
-  "validateBlueprint": true,
-  "fileSystem": null,
-  "customContainer": null,
-  "customQueue": "default",
-  "ambariRepoDetailsJson": {
-    "version": "2.5.1.0",
-    "gpgKeyUrl": "http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.1.0/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins",
-    "baseUrl": "http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.1.0"
-  },
-  "ambariStackDetails": {
-    "stack": "HDP",
-    "version": "2.6.1",
-    "stackRepoId": "HDP-2.6",
-    "stackBaseURL": "http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.1.0",
-    "utilsRepoId": "HDP-UTILS-1.1.0.21",
-    "utilsBaseURL": "http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.21/repos/centos7",
-    "verify": true
-  },
-  "configStrategy": "ALWAYS_APPLY_DONT_OVERRIDE_CUSTOM_VALUES"
+    "tags": {
+        "userDefinedTags": {
+        }
+    },
+    "placement": {
+        "region": ""
+    },
+    "flexId": null,
+    "general": {
+        "name": "",
+        "credentialName": ""
+    },
+    "cluster": {
+        "ambari": {
+            "userName": "admin",
+            "password": "admin",
+            "blueprintName": "",
+            "ambariRepoDetailsJson": {
+                "version": "2.6.2.0",
+                "baseUrl": "http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.0",
+                "gpgKeyUrl": "http://public-repo-1.hortonworks.com/ambari/centos7/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins"
+            },
+            "ambariStackDetails": {
+                "stack": "HDP",
+                "version": "2.6",
+                "verify": false,
+                "enableGplRepo": false,
+                "repositoryVersion": "2.6.5.0-292",
+                "versionDefinitionFileUrl": "http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.5.0/HDP-2.6.5.0-292.xml"
+            },
+            "gateway": {
+                "enableGateway": false,
+                "gatewayType": "INDIVIDUAL"
+            },
+            "validateBlueprint": false,
+            "ambariSecurityMasterKey": null
+        }
+    },
+    "imageSettings": {
+        "imageId": "3f68857e-a3fb-42b0-751d-00082b69403f",
+        "imageCatalog": "cloudbreak-default"
+    },
+    "instanceGroups": [],
+    "network": {
+        "parameters": {
+            "publicNetId": null,
+            "routerId": null,
+            "internetGatewayId": null,
+            "noPublicIp": false,
+            "noFirewallRules": false,
+            "networkId": null,
+            "vpcId": null
+        },
+        "subnetCIDR": "10.0.0.0/16"
+    },
+    "stackAuthentication": {
+        "publicKey": "",
+        "publicKeyId": null
+    },
+    "parameters": {
+        "encryptStorage": false
+    }
 }

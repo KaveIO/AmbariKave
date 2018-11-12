@@ -21,17 +21,23 @@
 #Used when deploying AmbariKave from local Git repo.
 #Log at /var/log/recipes/pre-patchambari-git-{version}.log
 
+KAVE_ARCH=/home/cloudbreak/kave-patch.tar.gz
+DIST_FILE=/home/cloudbreak/dist_kavecommon.py
 #At every release, please update this variable.
 HDP_STACK=2.6
 
 yum -y install wget curl tar zip unzip gzip python
-sudo tar -xzf /home/cloudbreak/kave-patch.tar.gz -C /var/lib \
+if [ ! -e $KAVE_ARCH ] && [ ! -e $DIST_FILE ]
+then
+    sleep 5m
+fi
+sudo tar -xzf $KAVE_ARCH -C /var/lib \
 --exclude KAVE/metainfo.xml \
 --exclude KAVE/services/stack_advisor.py \
 --exclude KAVE/repos
 sudo rsync -r /var/lib/KAVE/ /var/lib/ambari-server/resources/stacks/HDP/$HDP_STACK
 
-sudo python /home/cloudbreak/dist_kavecommon.py /var/lib/ambari-server/resources/stacks/HDP /var/lib/shared/kavecommon.py
+sudo python $DIST_FILE /var/lib/ambari-server/resources/stacks/HDP /var/lib/shared/kavecommon.py
 
 systemctl stop ambari-server
 systemctl start ambari-server

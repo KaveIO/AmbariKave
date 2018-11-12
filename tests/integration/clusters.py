@@ -107,24 +107,10 @@ class TestEskapadeCluster(TestCluster):
 
         # Hack for Centos7
         # Since all tests in the suite are run for Centos7, no need to check for OS
-        host.run("sed -i s/std=c++14/std=c++11/ /opt/Eskapade/{version}/Makefile".format(version=version), exit=False)
 
         test_type = "integration"
-        proc = sub.Popen(host.sshcmd() + ["source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                                          " source /opt/Eskapade/{version}/setup.sh;".format(version=version),
-                                          " run_tests.py {test_type}".format(test_type=test_type)],
-                         shell=False, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
-        output, err = proc.communicate()
-
-        self.assertFalse("FAILED" in err, "Eskapade {} tests failed.".format(test_type))
-        self.assertEqual(''.join(err.split())[-2:], "OK",
-                         "Eskapade {} tests supposedly failed, did not get OK response.".format(test_type))
-        """
-        TODO: Change the code above to the one below once run_tests.py returns error exit code if the tests fail.
-        ambari.run("source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
-                   " source /opt/Eskapade/*/setup.sh;"
-                   " run_tests.py {}".foramt(test_type))
-        """
+        host.run(" source /opt/KaveToolbox/pro/scripts/KaveEnv.sh;"
+                 " cd /opt/Eskapade/*/tests; eskapade_trial")
 
     def check(self, ambari):
         super(TestCluster, self).check(ambari)

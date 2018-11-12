@@ -25,7 +25,7 @@ config = Script.get_config()
 hostname = config["hostname"]
 
 top_dir = kc.default("configurations/kavetoolbox/top_dir", "/opt/", kc.is_valid_directory)
-releaseversion = default('configurations/kavetoolbox/releaseversion', "3.6-Beta")
+releaseversion = default('configurations/kavetoolbox/releaseversion', "3.7-Beta")
 alternative_download = default('configurations/kavetoolbox/alternative_download', "none")
 ignore_missing_groups = default('configurations/kavetoolbox/ignore_missing_groups', "False")
 ignore_missing_groups = kc.trueorfalse(ignore_missing_groups)
@@ -38,6 +38,27 @@ except TypeError, ValueError:
     else:
         print "could not interpret value of command_line_args correctly"
         raise
+kave_custom_environment = default('configurations/kavetoolbox/kave_custom_environment', """
+# -------------------------------
+PY4JSRC="/usr/hdp/current/spark2-client/python/lib/py4j-0.10.6-src.zip"
+PYSPARK="/usr/hdp/current/spark2-client/python/lib/pyspark.zip"
+
+if [ -f $PY4JSRC ]; then
+  [[ ":$PYTHONPATH:" != *"$PY4JSRC"* ]] && export PYTHONPATH="${PYTHONPATH}$PY4JSRC:"
+fi
+
+if [ -f $PYSPARK ]; then
+  [[ ":$PYTHONPATH:" != *"$PYSPARK"* ]] && export PYTHONPATH="${PYTHONPATH}$PYSPARK:"
+fi
+
+
+export SPARK_HOME=/usr/hdp/current/spark2-client
+export SPARK_MAJOR_VERSION=2
+export PYSPARK_PYTHON=/opt/anaconda/pro/bin/python
+export PYSPARK_DRIVER_PYTHON=python3.6
+# -------------------------------
+""")
+
 custom_install_template_default = """
 # -------------------------------
 import kavedefaults as cnf
@@ -49,5 +70,16 @@ cnf.spark.workstation=False
 # -------------------------------
 """
 custom_install_template = default('configurations/kavetoolbox/custom_install_template', custom_install_template_default)
+
+kave_env_excluded_users = default('configurations/kavetoolbox/kave_env_excluded_users', """
+root
+ams
+postgres
+zookeeper
+ambari-qa
+hdfs
+yarn
+""")
+
 if alternative_download == "none":
     alternative_download = ""

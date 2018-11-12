@@ -41,7 +41,7 @@ else
 fi
 
 yum install -y wget curl
-wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.5.1.0/ambari.repo -O ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/${os}/2.x/updates/2.6.2.0/ambari.repo -O ambari.repo
 cp ambari.repo /etc/yum.repos.d/
 # conflicts with HDP utils and pre-installed pdsh version on centos6, need HDP repo file
 
@@ -83,7 +83,9 @@ elif [[ "$version" == "1.7."* ]]; then
 elif [[ "$version" == "2.4."* ]]; then
 	encrypt_number="2"
 elif [[ "$version" == "2.5."* ]]; then
-	encrypt_number="2"	
+	encrypt_number="2"
+elif [[ "$version" == "2.6."* ]]; then
+	encrypt_number="2"
 else
 	echo "This script is not tested/ready for this version of Ambari"
 	exit 1
@@ -92,6 +94,11 @@ fi
 ##########################################################
 # By default enable two-way ssl between server and agents!
 echo "security.server.two_way_ssl = true" >> /etc/ambari-server/conf/ambari.properties
+# Increase timeouts for agent jobs
+sed -i -e 's/agent.stack.retry.tries=5/agent.stack.retry.tries=20/g' /etc/ambari-server/conf/ambari.properties
+sed -i -e 's/agent.task.timeout=900/agent.task.timeout=3600/g' /etc/ambari-server/conf/ambari.properties
+# Install MySQL-connector and link it to be available for agent nodes
+yum install mysql-connector-java* -y && cd /var/lib/ambari-server/resources/ && ln -s /usr/share/java/mysql-connector-java.jar mysql-connector-java.jar
 ##########################################################
 # By default encrypt passwords stored in the database!
 yum -y install expect

@@ -33,7 +33,7 @@ class TestVersions(unittest.TestCase):
     ignore = ["ReleaseNotes.md", "metainfo.xml", "kavetoolbox.xml", "params.py", "kavetoolbox.py",
               "new_dev_machine.py", "repoimports.py", "eskapade.xml", "eskapade.py"]
     check_against = "3.5-Beta"
-    check_against_stack = "2.6.3.4.KAVE"
+    check_against_stack = "2.6.3.5.KAVE"
     check_against_stack_advisor = "HDP2634KAVEStackAdvisor"
 
     def findversion(self, fullpath, regex):

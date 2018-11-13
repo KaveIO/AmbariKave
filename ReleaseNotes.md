@@ -5,7 +5,7 @@
 Contains a list of the released versions with a summary of the main changes in each version.
 
 # v3.5-Beta
-- Oct 2018
+- Nov 2018
 
 **MAJOR RELEASE**
 
@@ -16,6 +16,7 @@ Contains a list of the released versions with a summary of the main changes in e
     4. Removed Kaveganglia from AmbariKave - deprecated, replaced by Ambari Metrics
     5. Removed JBOSS from AmbariKave - deprecated, replaced by WildFly
     6. Cloudbreak 2.7 support
+    7. HDP stack version switched from 2.6.3.4 to 2.6.3.5, So the stack now looks like 2.6.3.5.KAVE (HDP-version.KAVE-version.KAVE)
 * Minor changes were:
 
 * Cloudbreak deployment improvements and bug fixes:

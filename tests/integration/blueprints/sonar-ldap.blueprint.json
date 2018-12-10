@@ -87,6 +87,6 @@
   "Blueprints" : {
     "blueprint_name" : "sonarldap",
     "stack_name" : "HDP",
-    "stack_version" : "2.6.3.4.KAVE"
+    "stack_version" : "2.6.3.5.KAVE"
   }
 }

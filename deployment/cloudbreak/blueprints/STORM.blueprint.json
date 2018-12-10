@@ -14,42 +14,17 @@
         "AMBARI_ADMIN" : "admin",
         "AMBARI_ADMIN_PASS" : "admin"
     	}
-    },
-    {
-      "freeipa": {
-        "ldap_bind_password": "testtestdirpass1234",
-        "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups": "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
-        "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
-        "forwarders": "168.63.129.16",
-        "install_distribution_user": "cloudbreak",
-        "install_with_dns": "True"
-      }
     }
    ],
   "host_groups" : [
-  {
-      "name" : "freeipa",
-      "configurations" : [ ],
-      "components" : [
-        { "name" : "FREEIPA_SERVER"     },
-        { "name" : "FREEIPA_CLIENT"     },
-        { "name" : "METRICS_MONITOR"    },
-        { "name" : "KAVEGANGLIA_MONITOR" },
-        { "name" : "ZOOKEEPER_CLIENT"   }
-      ],
-      "cardinality" : "1"
-    },
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "components" : [
         { "name" : "AMBARI_SERVER"       },
         { "name" : "METRICS_COLLECTOR"   },
         { "name" : "METRICS_GRAFANA"     },
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "KAVEGANGLIA_SERVER"  },
         { "name" : "KAVELANDING"         },
         { "name" : "STORMSD_UI_SERVER"   },
         { "name" : "STORMSD_LOG_VIEWER"  },
@@ -64,8 +39,7 @@
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
         { "name" : "KAVELANDING"         },
-        { "name" : "STORMSD_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "STORMSD_CLIENT"      }
       ],
       "cardinality" : "1+"
     },
@@ -75,8 +49,7 @@
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_SERVER"   },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "NIMBUS_SD_MASTER"   },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "NIMBUS_SD_MASTER"   }
       ],
       "cardinality" : "1"
     },
@@ -85,8 +58,7 @@
       "components" : [
         { "name" : "METRICS_MONITOR"     },
         { "name" : "ZOOKEEPER_CLIENT"    },
-        { "name" : "SUPERVISOR_SD_SLAVE" },
-        { "name" : "KAVEGANGLIA_MONITOR" }
+        { "name" : "SUPERVISOR_SD_SLAVE" }
       ],
       "cardinality" : "1+"
     }

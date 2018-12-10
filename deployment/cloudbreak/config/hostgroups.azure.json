@@ -1,0 +1,286 @@
+{
+    "admin": {
+        "instance-type": "Standard_D2_v2",
+        "volume-size": 30,
+        "volume-count": 1,
+        "type" : "GATEWAY",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable",
+                    "mysql-connector-install",
+                    "setup-ambari-agent-tls",
+                    "setup-snmp-daemon",
+                    "increase-agent-task-timeout"
+                    ]
+    },
+    "admin_freeipa": {
+        "instance-type": "Standard_D2_v2",
+        "volume-size": 30,
+        "volume-count": 1,
+        "type" : "GATEWAY",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable",
+                    "ipa-security-settings",
+                    "mysql-connector-install",
+                    "setup-ambari-agent-tls",
+                    "increase-agent-task-timeout"
+                    ]
+    },
+    "gateway": {
+        "instance-type": "Standard_D2_v2",
+        "volume-size": 150,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "namenode_1": {
+        "instance-type": "Standard_F4",
+        "volume-size": 50,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "namenode_2": {
+        "instance-type": "Standard_F4",
+        "volume-size": 50,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "data": {
+        "instance-type": "Standard_D2_v2",
+        "volume-size": 50,
+        "volume-count": 3,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "mongo": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 50,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "as": {
+        "instance-type": "Standard_F2",
+        "volume-size": 50,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "ci": {
+        "instance-type": "Standard_F4",
+        "volume-size": 50,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "nimbus": {
+        "instance-type": "Standard_F2",
+        "volume-size": 30,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "supervisor": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 40,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "kafka": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 40,
+        "type" : "CORE",
+        "volume-count": 1,
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "ambari": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 40,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "patchambari",
+                    "fix-hosts-file",
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable"
+                    ]
+    },
+    "airflow": {
+        "instance-type": "Standard_A2_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "freeipa": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts",
+                    "ipv6-lo-enable"
+                    ]
+    },
+    "worker": {
+        "machine-type": "Standard_D4_v2",
+        "volume-size": 48,
+        "volume-count": 3,
+        "instance-type" : "CORE",
+        "security-group" : "default-cm",
+        "node-count" : 2,
+    "replica": {
+        "instance-type": "Standard_D2_v2",
+        "volume-size": 50,
+        "volume-count": 2,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "arbiter": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "test": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "lcm": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts"
+                    ]
+    },
+    "default": {
+        "instance-type": "Standard_D1_v2",
+        "volume-size": 20,
+        "volume-count": 1,
+        "type" : "CORE",
+        "volume-type": "Standard_LRS",
+        "security-group" : "default_security_group",
+        "node-count" : 1,
+        "recipes": [
+                    "fix-hosts-file",
+                    "limit-ssh-attempts",
+                    "kafka-certificates-automation",
+                    "kafka-configroups"
+                    ]
+    }
+}

@@ -96,6 +96,14 @@ class FreeipaServer(Script):
         admin_password = freeipa.generate_random_password()
         Logger.sensitive_strings[admin_password] = "[PROTECTED]"
 
+        # This should not be needed but somehow something reverts the v6 enable recipe.
+        Execute("sysctl -w net.ipv6.conf.lo.disable_ipv6=0; ifconfig | grep -q ::1; if [ $? = 1 ]; "
+                "then ifconfig lo inet6 add ::1; fi")
+
+        # Try to reload dbus configuration due to a bug in dbus
+        Execute("systemctl stop dbus")
+        Execute("systemctl start dbus")
+
         install_command = 'ipa-server-install -U  --realm="%s" \
             --ds-password="%s" --admin-password="%s" --hostname="%s"' \
             % (params.realm, params.directory_password, admin_password, _hostname)
@@ -221,7 +229,7 @@ class FreeipaServer(Script):
         check = subprocess.Popen('systemctl status ipa', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def create_base_accounts(self, env, fi):

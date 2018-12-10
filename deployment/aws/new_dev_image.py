@@ -162,6 +162,7 @@ if iid is None:
     lD.rename_remote_host(remote, "ambari", 'kave.io')
     remote.run("mkdir -p /etc/kave/")
     remote.run("/bin/echo http://repos:kaverepos@repos.dna.kpmglab.com/ >> /etc/kave/mirror")
+    remote.run('yum install curl nss -y; yum update curl nss -y --enablerepo="updates"')
     lD.add_as_host(edit_remote=remote, add_remote=remote, dest_internal_ip=lA.priv_ip(iid))
     lD.configure_keyless(remote, remote, dest_internal_ip=lA.priv_ip(iid), preservehostname=True)
     # nope! Don't want 443 as ssh by default any longer!

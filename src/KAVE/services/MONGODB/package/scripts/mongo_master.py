@@ -41,7 +41,7 @@ class MongoMaster(MongoBase):
     def start(self, env):
         print "start mongodb"
         self.configure(env)
-        Execute('service mongod start', wait_for_finish=False)
+        Execute('systemctl start mongod')
 
         # Start replication if it has a valid replicaset and at least 2 members (min 3 recommended)
         import params
@@ -62,7 +62,7 @@ class MongoMaster(MongoBase):
 
     def stop(self, env):
         print "stopping mongodb.."
-        Execute('service mongod stop')
+        Execute('systemctl stop mongod')
 
     def restart(self, env):
         """MongoDB service is not very quick to shut down.

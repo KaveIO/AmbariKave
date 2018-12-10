@@ -46,7 +46,7 @@ class LcmServer(Script):
 #        copy_cache_or_repo shall be used when we have an official release of LCM
 #        kc.copy_cache_or_repo(package, arch='noarch', ver=params.releaseversion, dir="LCM")
         Execute('wget ' +
-                'http://repos:kaverepos@repos.dna.kpmglab.com/noarch/LocalCatalogManager/nightly/' + package)
+                'https://github.com/KaveIO/LocalCatalogManager/releases/download/v0.2.5.1-beta/' + package)
         Execute('tar -xzf ' + package + ' -C ' + params.lcm_install_dir)
         Execute(params.lcm_home_dir + 'bin/setup-ssl.sh')
         kc.chown_r(params.lcm_install_dir, params.lcm_service_user)

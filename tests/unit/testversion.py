@@ -29,10 +29,12 @@ class TestVersions(unittest.TestCase):
     """
     regex = re.compile("([0-9]\.[0-9]-Beta(-Pre)?)")
     restack = re.compile("([0-9]\.[0-9]\.[0-9]\.[0-9]\.KAVE)")
+    st_adv_regex = re.compile("(HDP[0-9][0-9][0-9][0-9]KAVEStackAdvisor)")
     ignore = ["ReleaseNotes.md", "metainfo.xml", "kavetoolbox.xml", "params.py", "kavetoolbox.py",
               "new_dev_machine.py", "repoimports.py", "eskapade.xml", "eskapade.py"]
-    check_against = "3.4-Beta"
-    check_against_stack = "2.6.3.4.KAVE"
+    check_against = "3.5-Beta"
+    check_against_stack = "2.6.3.5.KAVE"
+    check_against_stack_advisor = "HDP2634KAVEStackAdvisor"
 
     def findversion(self, fullpath, regex):
         found = []
@@ -70,7 +72,8 @@ class TestVersions(unittest.TestCase):
         """
         self.assertTrue(self.check_against[:3] == self.check_against_stack[4:7],
                         "This version does not appear in the stack name!! Modify the stack name if required.")
-        for regex, version in [(self.regex, self.check_against), (self.restack, self.check_against_stack)]:
+        for regex, version in [(self.regex, self.check_against), (self.restack, self.check_against_stack),
+                               (self.st_adv_regex, self.check_against_stack_advisor)]:
             found, foundn = self.iterfiles(regex)
             self.assertTrue(len(set(foundn)) == 1, "Mis-matching version numbers found! \n\t" +
                             '\n\t'.join([str(i) for i in found]))

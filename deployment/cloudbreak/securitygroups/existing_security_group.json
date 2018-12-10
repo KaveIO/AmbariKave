@@ -1,0 +1,3 @@
+{
+    "securityGroupId": "/subscriptions/<sucriptionID>/resourceGroups/<resourcelGroupName>/providers/Microsoft.Network/networkSecurityGroups/<securityGroupName>"
+}

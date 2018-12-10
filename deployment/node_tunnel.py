@@ -15,12 +15,18 @@
 #   limitations under the License.
 #
 ##############################################################################
-import base
-import os
+"""
+Open ssh tunnel to remote machine. Creates the passed user if not existing on the remote machine
+and generate new ssh keys for it.
+:param 1: gate port to forward
+:param 2: node IP to connect to
+:param 3: node port to forward
+:param 4: public key path for ssh auth
+:param 5: user to be used for the connection or create new one if missing
+"""
+
 from resource_management import *
-from subprocess import Popen, PIPE, call
-import string
-import random
+from subprocess import Popen, PIPE
 
 
 def node_tunneling(gateport, node, nodeport, pub_key_path, user):
@@ -35,10 +41,6 @@ def node_tunneling(gateport, node, nodeport, pub_key_path, user):
     return
 
 
-# def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
-#     return ''.join(random.choice(chars) for _ in range(size))
-
-
 if __name__ == "__main__":
     import sys
 
@@ -46,12 +48,6 @@ if __name__ == "__main__":
     if "--verbose" in sys.argv:
         verbose = True
         sys.argv = [s for s in sys.argv if s != "--verbose"]
-    # if "--branch" in sys.argv:
-    #     branch = "__service__"
-    #     sys.argv = [s for s in sys.argv if s != "--branch"]
-    # if "--this-branch" in sys.argv:
-    #     branch = "__local__"
-    #     sys.argv = [s for s in sys.argv if s != "--this-branch"]
     if "--gateport" in sys.argv:
         sys.argv = [s for s in sys.argv if s != "--gateport"]
     if "--node" in sys.argv:
@@ -59,7 +55,7 @@ if __name__ == "__main__":
     if "--nodeport" in sys.argv:
         sys.argv = [s for s in sys.argv if s != "--nodeport"]
     if len(sys.argv) < 2:
-        raise KeyError("You must specify which service to test")
+        raise KeyError("Insufficient arguments")
 
     gateport = sys.argv[1]
     node = sys.argv[2]
@@ -68,15 +64,14 @@ if __name__ == "__main__":
     user = sys.argv[5]
 
     cmd = "chmod u+x user_check.sh"
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     p.wait()
 
     if user not in ['centos', 'root']:
         new_user = input('Enter the username:')
-        # random_password = password_generator()
 
         cmd = "user_check.sh" + new_user
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
 
         if not stdout:

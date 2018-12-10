@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>releaseversion</name>
-    <value>3.6-Beta</value>
+    <value>3.7-Beta</value>
     <description>Which version to use.</description>
   </property>
   <property>
@@ -26,6 +26,30 @@
     </description>
   </property>
   <property>
+    <name>kave_custom_environment</name>
+    <value># -------------------------------
+PY4JSRC="/usr/hdp/current/spark2-client/python/lib/py4j-0.10.6-src.zip"
+PYSPARK="/usr/hdp/current/spark2-client/python/lib/pyspark.zip"
+
+if [ -f $PY4JSRC ]; then
+  [[ ":$PYTHONPATH:" != *"$PY4JSRC"* ]] &amp;&amp; export PYTHONPATH="${PYTHONPATH}$PY4JSRC:"
+fi
+
+if [ -f $PYSPARK ]; then
+  [[ ":$PYTHONPATH:" != *"$PYSPARK"* ]] &amp;&amp; export PYTHONPATH="${PYTHONPATH}$PYSPARK:"
+fi
+
+
+export SPARK_HOME=/usr/hdp/current/spark2-client
+export SPARK_MAJOR_VERSION=2
+export PYSPARK_PYTHON=/opt/anaconda/pro/bin/python
+export PYSPARK_DRIVER_PYTHON=python3.6
+# -------------------------------
+    </value>
+    <description>Custom environment setup for all users. Stored in /etc/profile.d/
+    </description>
+  </property>
+  <property>
     <name>custom_install_template</name>
     <value># -------------------------------
 import kavedefaults as cnf
@@ -39,6 +63,20 @@ cnf.spark.workstation=False
 </value>
     <description>KaveToolbox is very customizable. You can turn on and off features and minutely control the install with the CustomInstall.py file
     Any strings surrounded by double-curled-braces will be replaced by the relevant parameter when written to disk
+    </description>
+  </property>
+  <property>
+    <name>kave_env_excluded_users</name>
+    <value>root
+ams
+postgres
+zookeeper
+ambari-qa
+hdfs
+yarn
+</value>
+    <description>List of users to exclude from setting up the Kave environment.
+      These users will use the default environment.
     </description>
   </property>
     <property>

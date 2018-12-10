@@ -25,11 +25,11 @@ If you are looking for the extensive documentation, including descriptions of di
 
 * Ambari is a cluster installation management system for hadoop-based clusters. It installs separate services on different machines across a cluster. AmbariKave is a small extention fo this. If what you're looking for is a common set of data science tools to install on one single machine (without a database or hdfs) consider [KaveToolbox](http://github.com/KaveIO/KaveToolbox)
 
-* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.4-Beta, with username repos and password kaverepos, including downloading and installing ambari:
+* To download and install a released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.5-Beta, with username repos and password kaverepos, including downloading and installing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.4-Beta/ambarikave-installer-3.4-Beta.sh
-sudo bash ambarikave-installer-3.4-Beta.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.5-Beta/ambarikave-installer-3.5-Beta.sh
+sudo bash ambarikave-installer-3.5-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -59,11 +59,11 @@ Then to provision your cluster go to: http://YOUR_AMBARI_NODE:8080 or deploy usi
 Installation (patch) over existing Ambari
 =========================================
 
-* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.4-Beta, with username repos and password kaverepos, over existing ambari:
+* Released version of AmbariKave from the repos server: http://repos.kave.io , e.g. 3.5-Beta, with username repos and password kaverepos, over existing ambari:
 ```
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.4-Beta/ambarikave-package-3.4-Beta.tar.gz
-tar -xzf ambarikave-package-3.4-Beta.tar.gz -C /var/lib/
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.5-Beta/ambarikave-package-3.5-Beta.tar.gz
+tar -xzf ambarikave-package-3.5-Beta.tar.gz -C /var/lib/
 ```
 
 * OR to install the HEAD from git: example given with ssh copying from this github repo.
@@ -94,8 +94,8 @@ pull-update also respects git branches, as a command-line argument and is linked
 To update between released versions, simply install the new version over the old version after stopping the ambari server. Installing a new version of the stack, will not trigger an update of any running service. You would need to do this manually in the current state.
 ```
 sudo ambari-server stop
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.4-Beta/ambarikave-installer-3.4-Beta.sh
-sudo bash ambarikave-installer-3.4-Beta.sh
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.5-Beta/ambarikave-installer-3.5-Beta.sh
+sudo bash ambarikave-installer-3.5-Beta.sh
 ```
 
 ( NB: the repository server uses a semi-private password only as a means of avoiding robots and reducing DOS attacks
@@ -149,8 +149,8 @@ Downloading deployment tools
 
 ```
 yum -y install wget curl tar zip unzip gzip python
-wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.4-Beta/ambarikave-deployment-3.4-Beta.tar.gz
-tar -xzf ambarikave-deployment-3.4-Beta.tar.gz
+wget http://repos:kaverepos@repos.kave.io/noarch/AmbariKave/3.5-Beta/ambarikave-deployment-3.5-Beta.tar.gz
+tar -xzf ambarikave-deployment-3.5-Beta.tar.gz
 ```
 
 Or download the head from github. See the github readme on the deployment tools, the help written for each tool, or better yet, contact us if you'd like some advice on how to use anything here. [Deployment readme](https://github.com/KaveIO/AmbariKave/tree/master/deployment)
@@ -207,7 +207,7 @@ The HDP stack number looks like X.Y, with a major and minor version. The KAVE al
 
 A KAVE official version tag appears like:
 
-* **Major.minor-qualifier** i.e. **3.4-Beta**
+* **Major.minor-qualifier** i.e. **3.5-Beta**
 
 The tag is split into four parts:
 
@@ -228,6 +228,40 @@ A new major version is started whenever changes of the following type are made:
 
 We currently name our stack within ambari to reflect both the version of the HDP stack we depend on, and the installed version of the KAVE.
 
-* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.4.KAVE is KAVE release 3.4 running on top of Ambari HDP stack 2.6
+* X.Y.W.Z.KAVE implies HDP stack X.Y with KAVE stack W.Z . In this way we are explicit about our dependencies. E.g.: 2.6.3.5.KAVE is KAVE release 3.5 running on top of Ambari HDP stack 2.6
 
 This is the stack name you will see in blueprints and in the ambari web interface. In older KAVE versions we used a different approach, not including the KAVE stack tag.
+
+## Configuring Kave provided services over SSL
+
+*	Airflow – detailed configuration may be found here:
+https://airflow.apache.org/security.html#ssl
+*	Apache – detailed configuration may be found here:
+https://httpd.apache.org/docs/2.4/ssl/ssl_howto.html
+*	Archiva – As Archiva is using Jetty you should setup according to Jetty documentation found here: http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html
+*	FreeIPA – Client certificate authentication setup may be found here:
+https://www.freeipa.org/page/Howto/Client_Certificate_Authentication_with_LDAP
+*	GitLab – installing custom certificates documentation may be found here:
+https://docs.gitlab.com/omnibus/settings/ssl.html
+*	Jenkins – Running Jenkins with native SSL / HTTPS documentation may be found here:
+https://wiki.jenkins.io/pages/viewpage.action?pageId=135468777
+*	KaveLanding – As the service is using Apache web server refer to point 2.
+*	KaveNagios – detailed configuration may be found here:
+https://support.nagios.com/kb/article/nagios-core-configuring-ssl-tls-595.html
+*	LCM – The service is using only self-signed certificates which are distributed through a custom script bin/setup-ssl.sh More information is available in project README at Github:
+https://github.com/KaveIO/LocalCatalogManager/
+*	Mail 
+    * Postfix TLS/SSL setup may be found in the official documentation here: 
+http://www.postfix.org/TLS_README.html
+    *	Dovecot SSL configuration may be found here: 
+https://wiki.dovecot.org/SSL/DovecotConfiguration
+*	MongoDB – detailed configuration may be found here:
+https://docs.mongodb.com/manual/tutorial/configure-ssl/
+*	SonarQube – detailed configuration may be found here:
+https://docs.sonarqube.org/display/SONARQUBE52/Running+SonarQube+Over+HTTPS
+*	StormSD – detailed configuration about running Apache Storm Securely may be found here:
+http://storm.apache.org/releases/2.0.0-SNAPSHOT/SECURITY.html
+*	TWiki – As the service is using Apache web server refer to point 2.
+*	WildFly – How to configure SSL for WildFly may be found in the following article:
+http://www.mastertheboss.com/jboss-server/jboss-security/complete-tutorial-for-configuring-ssl-https-on-wildfly
+

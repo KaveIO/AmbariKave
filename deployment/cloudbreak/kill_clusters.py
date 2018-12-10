@@ -25,15 +25,17 @@ ex: ./kill_clusters.py --name examplelambda1512132645
 params:
     --help/-h - shows this helper message and exits
 
-    --name cluster_name/list_of_cluster_names - Cloudbreak cluster name or list of cluster names, separated by spaces, to be deleted.
+    --name cluster_name/list_of_cluster_names - Cloudbreak cluster name or list of cluster names,
+        separated by spaces, to be deleted.
         Both the cluster(s) and infrastructure will be deleted.
 
 """
 
 import cbcommon
 
+
 def help():
-    print __doc__
+    print (__doc__)
 
 if __name__ == "__main__":
     import sys
@@ -48,4 +50,4 @@ if __name__ == "__main__":
             try:
                 cb.delete_stack_by_name(cl)
             except Exception as e:
-                print "ERROR: ", e
+                print ("ERROR: ", e)

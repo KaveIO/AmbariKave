@@ -10,7 +10,7 @@
         "metrics_grafana_password" : "SnowCapMountainChap"
       }
     },
-    { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
+    { "gitlab" : {"gitlab_ssl_port" : "443", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} }
   ],
   "host_groups" : [
     {
@@ -40,6 +40,6 @@
   "Blueprints" : {
     "blueprint_name" : "gitlab",
     "stack_name" : "HDP",
-    "stack_version" : "2.6.3.4.KAVE"
+    "stack_version" : "2.6.3.5.KAVE"
   }
 }

@@ -25,6 +25,8 @@ config = Script.get_config()
 
 hostname = config["hostname"]
 
+AirflowVersion = default('configurations/airflow/AirflowVersion', '1.8.0')
+
 airflow_home = kc.default('configurations/airflow/airflow_home', '/usr/opt/local/airflow', kc.is_valid_directory)
 
 airflow_dags_folder = default('configurations/airflow/airflow_dags_folder', '/usr/opt/local/airflow/dags')

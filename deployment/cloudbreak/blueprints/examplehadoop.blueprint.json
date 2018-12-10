@@ -11,13 +11,20 @@
     	}
     },
     { "archiva" : { "ARCHIVA_ADMIN_PASSWORD" : "LVCxm<85" } },
-    { "hdfs-log4j" : { "log4j.appender.RFA.MaxFileSize" : "128MB", "log4j.appender.RFA.MaxBackupIndex" : "5" } },
+    { "hdfs-log4j" : { "hadoop_log_max_backup_size" : "128MB", "hadoop_log_number_of_backup_files" : "5",
+                       "hadoop_security_log_max_backup_size" : "128MB", "hadoop_security_log_number_of_backup_files" : "10" } },
     { "yarn-site" : { "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore" } },
+    { "yarn-log4j" : { "yarn_rm_summary_log_max_backup_size" : "128MB", "yarn_rm_summary_log_number_of_backup_files" : "10" } },
+    { "hive-log4j" : { "hive_log_maxfilesize": "128", "hive_log_maxbackupindex" : "15" } },
+    { "hive-log4j2" : { "hive2_log_maxfilesize": "128", "hive2_log_maxbackupindex" : "15" } },
+    { "llap-cli-log4j2" : { "llap_cli_log_maxfilesize" : "128", "llap_cli_log_maxbackupindex" : "15" } },
+    { "llap-daemon-log4j" : { "hive_llap_log_maxfilesize" : "128", "hive_llap_log_maxbackupindex" : "120"} },
+    { "webhcat-log4j" : { "webhcat_log_maxfilesize" : "128", "webhcat_log_maxbackupindex" : "10" } },
     { "sonarqube" : {
     	"sonar_database_user_passwd" : "admin"
     	}
     },
-    { "gitlab" : {"gitlab_port" : "8888", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
+    { "gitlab" : {"gitlab_ssl_port" : "443", "gitlab_admin_password": "temptest999999", "unicorn_port":"8887"} },
     { "twiki" : {"ldap_bind_password": "testtestdirpass1234"} },
     { "jenkins" : {"JENKINS_ADMIN_PASSWORD": "blahblahsomeadminthingy"} },
     {
@@ -26,21 +33,25 @@
       }
     },
     {
-      "freeipa": {
-        "ldap_bind_password": "testtestdirpass1234",
-        "directory_password": "testtestdirpass1234",
-        "initial_users_and_groups": "{\"Users\" : [\"someadmin\"], \"Groups\" : {\"admins\" : [\"someadmin\"]}}",
-        "initial_user_passwords": "{\"someadmin\": \"ProbablySwimmingNearestDriver\"}",
-        "initial_sudoers": "{\"Users\":[\"someadmin\"],\"Groups\":[\"admins\"],\"cmdcat\":\"all\",\"hostcat\":\"all\",\"runasusercat\":\"all\",\"runasgroupcat\":\"all\"}",
-        "forwarders": "168.63.129.16",
-        "install_distribution_user": "cloudbreak",
-        "install_with_dns": "True"
+      "spark2-env" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "content" : "\n#!/usr/bin/env bash\n\n# This file is sourced when running various Spark programs.\n# Copy it as spark-env.sh and edit that to configure Spark for your site.\n\n# Options read in YARN client mode\n#SPARK_EXECUTOR_INSTANCES=\"2\" #Number of workers to start (Default: 2)\n#SPARK_EXECUTOR_CORES=\"1\" #Number of cores for the workers (Default: 1).\n#SPARK_EXECUTOR_MEMORY=\"1G\" #Memory per Worker (e.g. 1000M, 2G) (Default: 1G)\n#SPARK_DRIVER_MEMORY=\"512M\" #Memory for Master (e.g. 1000M, 2G) (Default: 512 Mb)\n#SPARK_YARN_APP_NAME=\"spark\" #The name of your application (Default: Spark)\n#SPARK_YARN_QUEUE=\"default\" #The hadoop queue to use for allocation requests (Default: default)\n#SPARK_YARN_DIST_FILES=\"\" #Comma separated list of files to be distributed with the job.\n#SPARK_YARN_DIST_ARCHIVES=\"\" #Comma separated list of archives to be distributed with the job.\n\n# Generic options for the daemons used in the standalone deploy mode\n\n# Alternate conf dir. (Default: ${SPARK_HOME}/conf)\nexport SPARK_CONF_DIR=${SPARK_CONF_DIR:-{{spark_home}}/conf}\n\n# Where log files are stored.(Default:${SPARK_HOME}/logs)\n#export SPARK_LOG_DIR=${SPARK_HOME:-{{spark_home}}}/logs\nexport SPARK_LOG_DIR={{spark_log_dir}}\n\n# Where the pid file is stored. (Default: /tmp)\nexport SPARK_PID_DIR={{spark_pid_dir}}\n\n#Memory for Master, Worker and history server (default: 1024MB)\nexport SPARK_DAEMON_MEMORY={{spark_daemon_memory}}m\n\n# A string representing this instance of spark.(Default: $USER)\nSPARK_IDENT_STRING=$USER\n\n# The scheduling priority for daemons. (Default: 0)\nSPARK_NICENESS=0\n\nexport HADOOP_HOME=${HADOOP_HOME:-{{hadoop_home}}}\nexport HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-{{hadoop_conf_dir}}}\n\n# The java implementation to use.\nexport JAVA_HOME={{java_home}}\nexport PATH=/usr/bin:$PATH\nexport PYSPARK_PYTHON=/opt/anaconda/pro/bin/python\nexport PYSPARK_DRIVER_PYTHON=python3.6"
+        }
+      }
+    },
+    {
+      "spark2-hive-site-override" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "hive.exec.dynamic.partition.mode" : "nonstrict"
+          }
       }
     }
   ],
   "host_groups" : [
     {
-      "name" : "admin-freeipa",
+      "name" : "admin",
       "configurations" : [ ],
       "components" : [
         { "name" : "AMBARI_SERVER"      },
@@ -49,8 +60,6 @@
         { "name" : "METRICS_GRAFANA"    },
         { "name" : "METRICS_MONITOR"    },
         { "name" : "ZOOKEEPER_CLIENT"   },
-        { "name" : "KAVEGANGLIA_SERVER" },
-        { "name" : "KAVEGANGLIA_MONITOR"},
         { "name" : "YARN_CLIENT"        },
 	    { "name" : "MAPREDUCE2_CLIENT"  },
         { "name" : "SLIDER" 		    },
@@ -79,7 +88,6 @@
 		{ "name" : "SPARK2_CLIENT"        },
         { "name" : "OOZIE_CLIENT"         },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "SONARQUBE_RUNNER"     },
         { "name" : "SLIDER" 		      },
         { "name" : "LOGSEARCH_LOGFEEDER"  },
@@ -90,7 +98,7 @@
       "cardinality" : "0-10"
     },
     {
-      "name":"namenode-1",
+      "name":"namenode_1",
       "components" : [
         { "name" : "NAMENODE"               },
         { "name" : "RESOURCEMANAGER"        },
@@ -113,7 +121,6 @@
         { "name" : "OOZIE_CLIENT"           },
 		{ "name" : "METRICS_MONITOR"        },
 		{ "name" : "ZOOKEEPER_CLIENT"       },
-        { "name" : "KAVEGANGLIA_MONITOR"    },
         { "name" : "SLIDER" 		        },
         { "name" : "INFRA_SOLR_CLIENT"      },
         { "name" : "LOGSEARCH_LOGFEEDER"    }
@@ -121,15 +128,15 @@
       "cardinality" : "1"
     },
     {
-      "name":"namenode-2",
+      "name":"namenode_2",
       "components" : [
         { "name" : "SECONDARY_NAMENODE"   },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
         { "name" : "KAVENAGIOS_SERVER"    },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
 		{ "name" : "KAVENAGIOS_MONITOR"   },
         { "name" : "SLIDER" 		      },
+        { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "INFRA_SOLR_CLIENT"    },
@@ -146,7 +153,6 @@
         { "name" : "KAVETOOLBOXNODE"      },
         { "name" : "METRICS_MONITOR"      },
         { "name" : "ZOOKEEPER_CLIENT"     },
-        { "name" : "KAVEGANGLIA_MONITOR"  },
         { "name" : "YARN_CLIENT"          },
 	    { "name" : "MAPREDUCE2_CLIENT"    },
         { "name" : "SLIDER" 		      },
@@ -178,24 +184,11 @@
         { "name" : "OOZIE_CLIENT"          },
         { "name" : "METRICS_MONITOR"       },
         { "name" : "ZOOKEEPER_CLIENT"      },
-        { "name" : "KAVEGANGLIA_MONITOR"   },
         { "name" : "SLIDER" 		       },
         { "name" : "INFRA_SOLR_CLIENT"     },
         { "name" : "LOGSEARCH_LOGFEEDER"   }
       ],
       "cardinality" : "1+"
-    },
-        {
-      "name": "freeipa",
-      "configurations": [],
-      "components": [
-        { "name": "METRICS_MONITOR"        },
-        { "name": "ZOOKEEPER_CLIENT"       },
-        { "name": "FREEIPA_SERVER"         },
-        { "name": "FREEIPA_CLIENT"         },
-        { "name" : "LOGSEARCH_LOGFEEDER"   }
-      ],
-      "cardinality": "1"
     }
   ],
   "Blueprints" : {

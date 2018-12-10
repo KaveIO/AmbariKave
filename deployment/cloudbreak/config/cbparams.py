@@ -19,18 +19,20 @@
 # ===============================================
 # Cloudbreak details
 # ===============================================
+cb_url = "https://<cloudbreak dns name>"
 
-cb_http_url = "http://cloudbreak-controller-43ddefqr4cck4.westeurope.cloudapp.azure.com"    #CHANGEME
-cb_https_url = "https://cloudbreak-controller-43ddefqr4cck4.westeurope.cloudapp.azure.com"  #CHANGEME
-uaa_port = 8089
 
 # ===============================================
 # Deployment specific configurations
 # ===============================================
 
-credential_name = "cmcred"             #CHANGEME
-network_name = "default-azure-network"  #CHANGEME
+credential_name = "<cloudbreak credential name>"
+ssh_private_key = ""
+ssh_public_key = ""
 ssl_verify = False
+
+image_catalog = "<cloudbreak image catalog name>"
+image_id = "<cloudbreak image uuid>"
 
 # ===============================================
 # Cloud provider specific configurations

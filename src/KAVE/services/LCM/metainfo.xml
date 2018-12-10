@@ -15,7 +15,7 @@
 				Lakes / Data Science environments.
 			</comment>
 			<displayName>LCM</displayName>
-			<version>0.2</version>
+			<version>0.2.5</version>
 			<components>
 				<component>
 					<name>LCM_SERVER</name>

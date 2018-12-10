@@ -62,14 +62,21 @@ if [ -z "$mongo_port" ]; then
   exit 1
 fi
 
+mongo_connect=${mongo_host}:${mongo_port}
+# Detect primary server if in replication
+primary=`mongo --host ${mongo_connect} --eval 'rs.isMaster().primary' --quiet`
 
+if [ ! -z ${primary} ]; then
+    # If primary server is found connect to it
+    mongo_connect=${primary}
+fi
 
 if [ -z "$1" ]; then
-  mongo ${mongo_host}:${mongo_port}
+  mongo ${mongo_connect}
 elif [[ "$known_commands" == *"$1"* ]]; then
-  mongo$@ --host ${mongo_host}:${mongo_port}
+  mongo$@ --host ${mongo_connect}
 elif [[ "${1:0:1}" == "/" ]]; then
-  mongo ${mongo_host}:${mongo_port}$@
+  mongo ${mongo_connect}$@
 else
-  mongo ${mongo_host}:${mongo_port} $@
+  mongo ${mongo_connect} $@
 fi

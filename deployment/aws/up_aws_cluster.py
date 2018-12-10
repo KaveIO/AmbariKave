@@ -309,7 +309,7 @@ if dnsiid is not None:
     if repos.startswith("repos.kave.io has address "):
         repos = repos[len("repos.kave.io has address "):]
     else:
-        repos = '94.143.213.26'
+        repos = '40.78.111.155'
     # print nameandpriv_ip
     forward = """$TTL 86400
 @   IN  SOA     ns.%DOMAIN%. root.%DOMAIN%. (
@@ -439,7 +439,8 @@ lA.add_ebs_volumes(adtoiids, admounts, amazon_keyfile)
 #        #for conf in instancegroup["ExtraDisks"]:
 #        #    for instance in instancegroups[instancegroup["Name"]]:
 #        #        lA.add_new_ebs_vol(instance, conf, amazon_keyfile)
-
+# Fix permissions on /tmp
+allremotes.run("chmod 777 /tmp")
 print "=============================================="
 print "Add ambari to admin node"
 print "=============================================="

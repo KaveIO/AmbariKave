@@ -755,7 +755,7 @@ def deploy_our_soft(remote, version="latest", git=False, gitenv=None, pack="amba
     if version == "latest" and git:
         version = "master"
     if version == "latest":
-        version = "3.4-Beta"
+        version = "3.5-Beta"
     if (version == "HEAD" or version == "master") and (not git or gitenv is None):
         raise ValueError("master and HEAD imply a git checkout, but you didn't ask to use git!")
     if version == "local" and git:
@@ -841,8 +841,9 @@ def wait_for_ambari(ambari, maxrounds=10, check_inst=None):
                     cat = cat.replace("[Errno 14] HTTP Error 404 - Not Found".lower(), '')
                     cat = cat.replace("[Errno 14] HTTP Error 503 - Service Unavailable".lower(), '')
                     cat = cat.replace("No errors were found.".lower(), '')
-                    cat = cat.replace("no errors and warnings were found.".lower(), '')
+                    cat = cat.replace("no errors and warnings were found".lower(), '')
                     if "error" in cat or "exception" in cat or "failed" in cat:
+                        print cat
                         raise SystemError("Failure in ambari server start detected!")
         except ShellExecuteError:
             pass
@@ -985,11 +986,11 @@ def disable_security(remote, selinux=True, firewall=True, permanent=True):
                 remote.run("sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config")
         if firewall:
             try:
-                remote.run("systemctl stop firewalld")
+                remote.run("systemctl stop firewalld || true")
             except ShellExecuteError:
                 pass
             if permanent:
-                remote.run("systemctl disable firewalld")
+                remote.run("systemctl disable firewalld || true")
 
 
 def wait_until_up(remote, max_wait):

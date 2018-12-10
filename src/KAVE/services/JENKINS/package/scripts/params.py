@@ -25,6 +25,7 @@ hostname = config["hostname"]
 
 JENKINS_HOME = kc.default("configurations/jenkins/JENKINS_HOME", "/var/lib/jenkins", kc.is_valid_directory)
 JENKINS_PORT = kc.default("configurations/jenkins/JENKINS_PORT", "8080", kc.is_valid_port)
+JENKINS_HTTPS_PORT = kc.default("configurations/jenkins/JENKINS_HTTPS_PORT", "8443", kc.is_valid_port)
 JENKINS_USER = kc.default("configurations/jenkins/JENKINS_USER", "jenkins", kc.is_valid_username)
 JENKINS_ADMIN = kc.default("configurations/jenkins/JENKINS_ADMIN", "admin", kc.is_valid_username)
 JENKINS_ADMIN_EMAIL = default("configurations/jenkins/JENKINS_ADMIN_EMAIL", "default")
@@ -37,8 +38,13 @@ kc.is_valid_emailid(JENKINS_ADMIN_EMAIL, "jenkins/JENKINS_ADMIN_EMAIL")
 JENKINS_ADMIN_PASSWORD = config['configurations']['jenkins']['JENKINS_ADMIN_PASSWORD']
 Logger.sensitive_strings[JENKINS_ADMIN_PASSWORD] = "[PROTECTED]"
 
-download_version = default("configurations/jenkins/download_version", "1.642")
+download_version = default("configurations/jenkins/download_version", "2.129")
 plugins = default("configurations/jenkins/plugins",
-                  "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, gitlab-hook, "
-                  "gitlab-plugin, git-parameter, git-tag-message, matrix-project, "
-                  "scm-api, ssh-agent, sonar, sonargraph-plugin")
+                  "ghprb, git, git-client, github, github-api, gitlab-merge-request-jenkins, "
+                  "gitlab-plugin, git-parameter, git-tag-message, matrix-project, matrix-auth, "
+                  "scm-api, ssh-agent, sonar, sonargraph-plugin, "
+                  "workflow-support, javadoc, mailer, "
+                  "jackson2-api, display-url-api, credentials, maven-plugin, "
+                  "workflow-scm-step, apache-httpcomponents-client-4-api, workflow-api, "
+                  "jsch, structs, workflow-job, junit, script-security, bouncycastle-api, "
+                  "ssh-credentials, workflow-step-api, token-macro, plain-credentials, jquery")

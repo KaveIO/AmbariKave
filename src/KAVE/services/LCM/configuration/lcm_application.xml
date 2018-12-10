@@ -4,7 +4,7 @@
 <configuration>
 	<property>
       <name>lcm_releaseversion</name>
-      <value>0.2.4-SNAPSHOT</value>
+      <value>0.2.5-SNAPSHOT</value>
       <description>Version of LCM to install</description>
     </property>
     <property>

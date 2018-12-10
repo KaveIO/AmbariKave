@@ -41,9 +41,6 @@ class Archiva(Script):
         Execute('mv apache-archiva-2.2.0 %s' % (params.install_topdir + params.install_subdir))
         if os.path.exists(self.package):
             Execute('rm -f ' + self.package)
-        if os.path.exists('/etc/init.d/archiva'):
-            Execute('rm -f /etc/init.d/archiva')
-        Execute('ln -s %s/bin/archiva /etc/init.d/archiva' % (params.install_topdir + params.install_subdir))
 
         archiva_dict = json.dumps(params.archiva_admin_dict)
         curl_command = ('curl -H Content-type:application/json -d'
@@ -64,26 +61,26 @@ class Archiva(Script):
         self.configure(env)
         # stop needed otherwise start fails on RH7
         try:
-            Execute('service archiva stop')
+            Execute('systemctl stop archiva')
         except:
             pass
 
-        Execute('service archiva start > /dev/null')
+        Execute('systemctl start archiva > /dev/null')
 
     def stop(self, env):
-        Execute('service archiva stop')
+        Execute('systemctl stop archiva')
 
     def restart(self, env):
         self.configure(env)
-        Execute('service archiva restart > /dev/null')
+        Execute('systemctl restart archiva > /dev/null')
 
     def status(self, env):
         import subprocess
 
-        check = subprocess.Popen('service archiva status', shell=True)
+        check = subprocess.Popen('systemctl status archiva', shell=True)
         check.wait()
         if int(check.returncode) != 0:
-           raise ComponentIsNotRunning()
+            raise ComponentIsNotRunning()
         return True
 
     def configure(self, env):
@@ -97,6 +94,10 @@ class Archiva(Script):
              )
         File(params.install_topdir + params.install_subdir + "/conf/security.properties",
              content=Template("security.properties.j2"),
+             mode=0600
+             )
+        File(params.systemd_archiva_unitfile_path,
+             content=Template("archiva.service"),
              mode=0600
              )
 

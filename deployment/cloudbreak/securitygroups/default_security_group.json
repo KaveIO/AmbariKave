@@ -1,0 +1,31 @@
+{
+    "securityRules": [
+        {
+            "subnet": "<only-me>",
+            "ports": "9443",
+            "protocol": "tcp"
+        },
+        {
+            "subnet": "<cloudbreak-ip>",
+            "ports": "9443",
+            "protocol": "tcp"
+        },
+        {
+            "subnet": "<cloudbreak-ip>",
+            "ports": "22",
+            "protocol": "tcp"
+        },
+        
+        {
+            "subnet": "<only-me>",
+            "ports": "22",
+            "protocol": "tcp"
+        },
+        {
+            "subnet": "<only-me>",
+            "protocol": "tcp",
+            "ports": "443"
+        }
+        
+    ]
+}

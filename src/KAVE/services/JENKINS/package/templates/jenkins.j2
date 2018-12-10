@@ -7,7 +7,7 @@
 # Directory where Jenkins store its configuration and working
 # files (checkouts, build reports, artifacts, ...).
 #
-JENKINS_HOME="{{JENKINS_HOME}}"
+JENKINS_HOME="/var/lib/jenkins"
 
 ## Type:        string
 ## Default:     ""
@@ -26,7 +26,7 @@ JENKINS_JAVA_CMD=""
 # Be careful when you change this, as you need to update
 # permissions of $JENKINS_HOME and /var/log/jenkins.
 #
-JENKINS_USER="{{JENKINS_USER}}"
+JENKINS_USER="jenkins"
 
 ## Type:        string
 ## Default:     "-Djava.awt.headless=true"
@@ -43,7 +43,7 @@ JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true"
 # Port Jenkins is listening on.
 # Set to -1 to disable
 #
-JENKINS_PORT="{{JENKINS_PORT}}"
+JENKINS_PORT="-1"
 
 ## Type:        string
 ## Default:     ""
@@ -61,7 +61,7 @@ JENKINS_LISTEN_ADDRESS=""
 # HTTPS port Jenkins is listening on.
 # Default is disabled.
 #
-JENKINS_HTTPS_PORT=""
+JENKINS_HTTPS_PORT="8443"
 
 ## Type:        string
 ## Default:     ""
@@ -69,7 +69,7 @@ JENKINS_HTTPS_PORT=""
 ## Path to the keystore in JKS format (as created by the JDK 'keytool').
 # Default is disabled.
 #
-JENKINS_HTTPS_KEYSTORE=""
+JENKINS_HTTPS_KEYSTORE="$JENKINS_HOME/.ssl/jenkins.jks"
 
 ## Type:        string
 ## Default:     ""
@@ -78,7 +78,7 @@ JENKINS_HTTPS_KEYSTORE=""
 # Password to access the keystore defined in JENKINS_HTTPS_KEYSTORE.
 # Default is disabled.
 #
-JENKINS_HTTPS_KEYSTORE_PASSWORD=""
+JENKINS_HTTPS_KEYSTORE_PASSWORD="qaz123WSX"
 
 ## Type:        string
 ## Default:     ""
